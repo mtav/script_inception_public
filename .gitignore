@@ -1,0 +1,8 @@
+*~
+*.pyc
+
+# dolphin
+.directory
+
+# LibreOffice lock files
+.~lock.*.ods#

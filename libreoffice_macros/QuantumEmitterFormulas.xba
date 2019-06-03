@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="QuantumEmitterFormulas" script:language="StarBasic">REM  *****  BASIC  *****
+
+REM gamma (GHz)	spontaneous emission rate	3.33E-3
+REM deg (C*m)	Dipole moment of the oscillator	3.57E-30
+REM deg (Debye)	Dipole moment of the oscillator	1.07
+REM feg (no unit)	Oscillator strength	0.025
+
+Function get_gamma(tau)
+	REM tau (Hz)
+	REM unit: Hz
+	get_gamma = 1/tau
+End Function
+
+Function get_deg(n_os, lambda_os, tau)
+	REM n_os (no unit)
+	REM omega_os (Hz)
+	REM gamma (Hz)
+	REM unit: C*m
+	REM get_deg = SQR( (3*PI()*get_epsilon0()*get_c0()^3*get_hbar()*gamma)/(n_os*omega_os^3) )
+	get_deg = (SQR(3)/(4*PI()))*SQR((get_epsilon0()*get_h()*(lambda_os)^3)/(PI()*tau*n_os))
+End Function
+
+Function get_feg(lambda_os, deg)
+	REM omega_os (Hz)
+	REM deg (C*m)
+	REM unit: no unit
+	REM get_feg = (2*get_me()*omega_os*deg^2)/(get_e0()^2*get_hbar())
+	get_feg =(2*get_me()*(2*PI()*get_c0()/lambda_os)*deg^2) / (get_e0()^2*get_h()/(2*PI()))
+End Function
+
+</script:module>

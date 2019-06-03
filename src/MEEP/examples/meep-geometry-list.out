@@ -1,0 +1,106 @@
+-----------
+Initializing structure...
+Working in 3D dimensions.
+Computational cell is 1 x 1 x 1 with resolution 10
+     sphere, center = (0,0,0)
+          radius 0.1
+          dielectric constant epsilon diagonal = (1.21,1.22,1.23)
+     sphere, center = (2,0,0)
+          radius 0.2
+          dielectric constant epsilon diagonal = (1.21,1.22,1.23)
+     sphere, center = (2,2,0)
+          radius 0.3
+          dielectric constant epsilon diagonal = (1.21,1.22,1.23)
+     sphere, center = (0,2,0)
+          radius 0.4
+          dielectric constant epsilon diagonal = (1.21,1.22,1.23)
+     sphere, center = (0,0,2)
+          radius 0.5
+          dielectric constant epsilon diagonal = (1.21,1.22,1.23)
+     sphere, center = (2,0,2)
+          radius 0.6
+          dielectric constant epsilon diagonal = (1.21,1.22,1.23)
+     sphere, center = (2,2,2)
+          radius 0.7
+          dielectric constant epsilon diagonal = (1.21,1.22,1.23)
+     sphere, center = (0,2,2)
+          radius 0.8
+          dielectric constant epsilon diagonal = (1.21,1.22,1.23)
+     cylinder, center = (1,1,1)
+          radius 0.05, height 3.4641016151377544, axis (1, 1, 1)
+          dielectric constant epsilon diagonal = (21.2,31.2,41.2)
+     cylinder, center = (1,1,1)
+          radius 0.05, height 3.4641016151377544, axis (-1, 1, 1)
+          dielectric constant epsilon diagonal = (21.2,31.2,41.2)
+     cylinder, center = (1,1,1)
+          radius 0.05, height 3.4641016151377544, axis (-1, -1, 1)
+          dielectric constant epsilon diagonal = (21.2,31.2,41.2)
+     cylinder, center = (1,1,1)
+          radius 0.05, height 3.4641016151377544, axis (1, -1, 1)
+          dielectric constant epsilon diagonal = (21.2,31.2,41.2)
+     cone, center = (0,-5,-5)
+          radius 1, height 10, axis (1,0,0)
+          radius2 2
+          dielectric constant epsilon diagonal = (12.11,12.22,12.33)
+     cone, center = (-10,-5,-5)
+          radius 1, height 10, axis (-1,0,0)
+          radius2 2
+          dielectric constant epsilon diagonal = (12.11,12.22,12.33)
+     cone, center = (-5,0,-5)
+          radius 1, height 10, axis (0,1,0)
+          radius2 2
+          dielectric constant epsilon diagonal = (12.11,12.22,12.33)
+     cone, center = (-5,-10,-5)
+          radius 1, height 10, axis (0,-1,0)
+          radius2 2
+          dielectric constant epsilon diagonal = (12.11,12.22,12.33)
+     cone, center = (-5,-5,0)
+          radius 1, height 10, axis (0,0,1)
+          radius2 2
+          dielectric constant epsilon diagonal = (12.11,12.22,12.33)
+     cone, center = (-5,-5,-10)
+          radius 1, height 10, axis (0,0,-1)
+          radius2 2
+          dielectric constant epsilon diagonal = (12.11,12.22,12.33)
+     cone, center = (-5,-5,-5)
+          radius 0.5, height 30, axis (0,2,2)
+          radius2 0
+          dielectric constant epsilon diagonal = (12.11,12.22,12.33)
+     cone, center = (-5,-5,-5)
+          radius 0.5, height 30, axis (3,0,3)
+          radius2 0
+          dielectric constant epsilon diagonal = (12.11,12.22,12.33)
+     cone, center = (-5,-5,-5)
+          radius 0.5, height 30, axis (4,4,0)
+          radius2 0
+          dielectric constant epsilon diagonal = (12.11,12.22,12.33)
+     block, center = (1,1,1)
+          size (2,2,2)
+          axes (1,0,0), (0,1,0), (0,0,1)
+          dielectric constant epsilon diagonal = (12,12,12)
+     block, center = (2,2,2)
+          size (2.8284271247461903,2.8284271247461903,2.8284271247461903)
+          axes (0,1,1), (1,0,1), (1,1,0)
+          dielectric constant epsilon diagonal = (12,12,12)
+     block, center = (10,10,10)
+          size (1,2,3)
+          axes (-4,5,6), (7,-8,9), (10,11,-12)
+          dielectric constant epsilon diagonal = (12,12,12)
+     ellipsoid, center = (-7,6,2)
+          size (1,1,1)
+          axes (1,0,0), (0,1,0), (0,0,1)
+          dielectric constant epsilon diagonal = (12,12,12)
+     ellipsoid, center = (-7,6,2)
+          size (1,2,3)
+          axes (1,0,0), (0,1,0), (0,0,1)
+          dielectric constant epsilon diagonal = (12,12,12)
+     ellipsoid, center = (-7,6,2)
+          size (1,2,3)
+          axes (13,0,0), (0,11,0), (10,10,10)
+          dielectric constant epsilon diagonal = (12,12,12)
+     block, center = (-7,6,2)
+          size (1,2,3)
+          axes (13,0,0), (0,11,0), (10,10,10)
+          dielectric constant epsilon diagonal = (12,12,12)
+time for set_epsilon = 0.0113981 s
+-----------

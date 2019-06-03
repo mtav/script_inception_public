@@ -1,0 +1,16 @@
+# exclude BFDTD output
+exclude geom.geo
+exclude netgen.geo
+exclude from_rotated.geo
+
+# include BFDTD input files
+include *.in
+include *.geo
+include *.inp
+include *.sh
+
+# include all subdirectories
+include */
+
+# exclude everything else
+exclude *

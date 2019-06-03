@@ -1,0 +1,139 @@
+Current meshing system (or rather mess):
+========================================
+
+3D Mesh classes:
+----------------
+in bfdtd/bfdtd_parser.py:
+  class MeshBox(GeometryObject):
+    '''
+    GeometryObject whose only function is to provide a custom "mesh box".
+    Main attributes are the lists of *MeshParams* objects in X,Y,Z:
+      -xmesh_params
+      -ymesh_params
+      -zmesh_params
+    It also provides a getMeshingParameters() function.
+    NOTE: I might keep this class, just because of rotations for the meshs... Mmh... Or is GeometryObject enough if it gets the MeshParams stuff?
+    '''
+
+in bfdtd/meshingparameters.py:
+  class MeshingParameters(object):
+    '''
+    Object containing parameters that can be used for meshing (with the *subGridMultiLayer()* function for example).
+    The *getMeshingParameters()* of the various BFDTD objects return such an object for example.
+    
+    List of attributes:
+      -> maximum permittivity lists
+        -maxPermittivityVector_X
+        -maxPermittivityVector_Y
+        -maxPermittivityVector_Z
+      -> thickness lists
+        -thicknessVector_X
+        -thicknessVector_Y
+        -thicknessVector_Z
+      -> limit lists
+        -limits_X
+        -limits_Y
+        -limits_Z
+    
+    TODO: think about the best way to design this class and then do it.
+    Might be better to really have delta+thickness for each object and then some global MeshingParameters with addMeshingParameters function.
+    permittivity to delta conversion could be specified differently for each object.
+    thickness <-> limits
+    delta <-factor*1/sqrt(permittivity)-> permittivity <-sqrt-> refractive index
+    
+    TODO: Combine with MeshObject? Create way to merge 2 or more existing meshes (i.e. MeshObject objects)? Create MeshObject from set of MeshingParameters? Don't forget about MEEP and BFDTD subgridding.
+    TODO: support 1-D, 2-D (n-D?) meshing parameters as well
+    '''
+
+in bfdtd/meshobject.py:
+  class MeshObject(object):
+    '''
+    3D mesh class.
+    Just an object to store xmesh,ymesh,zmesh values, with various related utility functions like writeMesh(FILE)
+    Each BFDTDobject uses a single such MeshObject.
+    
+    TODO: Make it 1D? Or put 3D in the name?
+    
+    attributes:
+      xmesh: list of the position (not a thickness list!) of each line of the mesh in the x direction
+      ymesh: list of the position (not a thickness list!) of each line of the mesh in the y direction
+      zmesh: list of the position (not a thickness list!) of each line of the mesh in the z direction
+    
+    ex:
+    xmesh = [0, 0.25, 0.5, 0.75, 1] will create a [0.25, 0.25, 0.25, 0.25] thickness sequence in the XMESH object of the .inp file.
+    '''
+
+1D Mesh classes:
+----------------
+
+  class MeshPapa(object):
+    '''
+    Generic parent class used for *MeshParams* and *HeterogeneousMesh*.
+    NOTE: Temporary name. To be changed later, once everything is nicely in place.
+    '''
+  
+  class MeshParams(MeshPapa):
+    '''
+    Very basic class storing parameters for a homogeneous 1D mesh:
+      pos_min : minimum position
+      pos_max : maximum position
+      delta_max : maximum *delta*, i.e. cell thickness.
+      
+    It offers various useful get/set functions to get/set delta_max via refractive index, Ncells, directly, etc.
+    
+    NOTE: previously named HomogeneousMesh
+    '''
+
+  class HeterogeneousMesh(MeshPapa):
+    '''
+    Very basic class storing parameters for a heterogeneous 1D mesh:
+      PositionList : position list
+    
+    TODO: Rename to ArbitraryMesh ?
+    '''
+
+BFDTDobject utility functions:
+------------------------------
+in bfdtd/bfdtd_parser.py:
+  meshing_parameters = calculateMeshingParameters(self, minimum_mesh_delta_vector3)
+    '''
+    Returns a MeshingParameters object that can be used for meshing.
+    
+    It uses the *getMeshingParameters()* function and *useForMeshing* attribute of the various BFDTD objects.
+    
+    minimum_mesh_delta_vector3 : smallest cell size acceptable in the mesh. Because too small cells can cause Bristol FDTD to crash.
+    
+    meshing_parameters attributes:
+      meshing_parameters.maxPermittivityVector_X
+      meshing_parameters.thicknessVector_X
+      meshing_parameters.maxPermittivityVector_Y
+      meshing_parameters.thicknessVector_Y
+      meshing_parameters.maxPermittivityVector_Z
+      meshing_parameters.thicknessVector_Z
+    '''
+
+  autoMeshGeometryWithMaxNumberOfCells(self, Lambda, MAXCELLS = 1e7, a_min = 1, a_step = 1, a_start = 10)
+    '''
+    Calls autoMeshGeometry(Lambda/a) until it finds the biggest value of *a* (i.e. smallest cell size) so that Ncells < MAXCELLS
+    Returns the final value used for a.
+    '''
+
+  autoMeshGeometry(self, meshing_factor, minimum_mesh_delta_vector3 = [1e-3,1e-3,1e-3])
+    ''' Automatically mesh geometry so that the max cell size is meshing_factor*1/n in each object. '''
+
+Independent utility functions:
+------------------------------
+in meshing/subGridMultiLayer.py:
+
+  Mesh_ThicknessVector, Section_FinalDeltaVector = subGridMultiLayer(Section_MaxDeltaVector_in = [1.76, 2.1385, 2.3535, 1],Section_ThicknessVector_in = [1, 0.5, 1, 1])
+  
+  mesh_position_list = linspaces(part_limits, Ncells_per_part)
+
+in bfdtd/meshobject.py:
+  def mergeMeshingParameters(MeshParamsList, minimum_mesh_delta = 1e-3):
+    '''
+    Returns a mesh based on a list of *MeshParams* objects.
+    Original plan:
+      -Return parameters that can be used for meshing with subGridMultiLayer.
+      -Use in calculateMeshingParameters() function.
+    '''

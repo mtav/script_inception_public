@@ -1,0 +1,43 @@
+# depslib dependency file v1.0
+1284407274 source:h:\matlab\bris2meep\source\bris_translate.cpp
+  <iostream>
+  "bris_translate.hpp"
+
+1250782934 h:\matlab\bris2meep\source\bris_translate.hpp
+  <iostream>
+  <iomanip>
+  <vector>
+  <string>
+  <fstream>
+  <sstream>
+  <complex>
+  <cstdlib>
+  <locale>
+  <set>
+  <algorithm>
+  "bris_sim.hpp"
+
+1250784264 h:\matlab\bris2meep\source\bris_sim.hpp
+  <iostream>
+  <iomanip>
+  <vector>
+  <string>
+  <fstream>
+  <sstream>
+  <complex>
+  <cstdlib>
+  <locale>
+  <set>
+  <algorithm>
+
+1287756702 source:h:\matlab\bris2meep\source\main.cpp
+  <unistd.h>
+  "fdtdutils.hpp"
+
+1274903362 h:\matlab\bris2meep\source\fdtdutils.hpp
+  "bris_sim.hpp"
+  "bris_translate.hpp"
+
+1288014038 source:h:\matlab\bris2meep\source\bris_sim.cpp
+  "bris_sim.hpp"
+

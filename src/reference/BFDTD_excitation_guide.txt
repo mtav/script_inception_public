@@ -1,0 +1,32 @@
+(Using the FDTD09 Finite Difference Time Domain Program manual, Updated January 2013)
+
+From the manual:
+  "The most used options are 3 and 5 for baseband analyses"
+  i.e. "3 Raised cosine pulse" and "5 Gaussian"?
+
+  "or 6 and 12 for narrowband analyses where zero DC component is required"
+  i.e. "6 sinusoid with raised cosine attack" and "12 Wave packet"?
+
+Linking Chapter 4.4 to chapter 1.5.1 of the manual:
+===================================================
+  "Waveform type IDs" ("Field 14" of excitation entry options) -> chapter 1.5.1 documentation
+  -------------------------------------------------------------------------------------------
+  1 Trapezoidal pulse                                          -> undocumented
+  2 Square pulse                                               -> 1.5.1.a Square pulse.
+  3 Raised cosine pulse                                        -> 1.5.1.b Raised cosine pulse.
+  4 Sinusoid                                                   -> 1.5.1.c Sinusoid.
+  5 Gaussian                                                   -> 1.5.1.d Gaussian pulse:
+  6 sinusoid with raised cosine attack                         -> 1.5.1.e Raised cosine attack.
+  7 ???                                                        -> ???
+  8 Step with raised cosine attack                             -> undocumented
+  9 ???                                                        -> ???
+  10 Gaussian modulated sinusoid                               -> 1.5.1.h Gaussian modulated sinusoid.
+  11 Single cycle sinusoid in r.c. envelope                    -> 1.5.1.i Single cycle sinusoid with raised cosine envelope
+  12 Wave packet                                               -> undocumented
+  13 “Mike Butler” source                                      -> undocumented
+  14 Dependent source                                          -> 1.5.1.j A dependent source.
+  15 Double exponential                                        -> undocumented
+
+Unknown "waveform type IDs":
+  1.5.1.f Raised cosine modulated sinusoid.
+  1.5.1.g Half-raised cosine.

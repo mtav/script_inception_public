@@ -1,0 +1,71 @@
+#%Module########################################################################
+##
+## bfdtd modulefile
+##
+## TODO: Code can likely be improved a lot with better TCL knowledge
+## TODO: use symlinks instead of copy? (goes against idea of config files...) (better: improve bfdtd so it creates missing .config files... (or with mini-wrapper?))
+proc ModulesHelp { } {
+        puts stderr "Bristol FDTD"
+}
+
+module-whatis   "Bristol FDTD"
+
+if {! [info exists ::env(MODULE_PREFIX)]} {
+  puts stderr "ERROR: MODULE_PREFIX not defined."
+  exit 1
+}
+
+set bfdtd_bin_dir          [file join $::env(MODULE_PREFIX) bin]
+set bfdtd_config_src_dir   [file join $::env(MODULE_PREFIX) Development/script_inception_public/config/bfdtd_config]
+set bfdtd_config_dst_dir   ~/.config
+# set bfdtd_config_dst_dir   /tmp/.config/
+# set bfdtd_config_dst_dir   /tmp/tmp.xf3SiWbpWi
+
+# add to path
+append-path     PATH         $bfdtd_bin_dir
+
+# create ~/.config if missing
+if { ! [ file exists $bfdtd_config_dst_dir ] } {
+  file mkdir $bfdtd_config_dst_dir
+}
+
+# copy over bfdtd config files
+# catch {file copy $bfdtd_config_src_dir/fdtd64_2003  $bfdtd_config_src_dir/fdtd64_2008  $bfdtd_config_src_dir/fdtd64_2013  $bfdtd_config_src_dir/fdtd64_2014 $bfdtd_config_dst_dir}
+
+# puts stderr "[glob $bfdtd_config_src_dir/* $bfdtd_config_dst_dir]"
+# puts stderr "file copy [glob $bfdtd_config_src_dir/*] $bfdtd_config_dst_dir"
+
+# file copy -force [glob $bfdtd_config_src_dir/*] $bfdtd_config_dst_dir
+
+# catch {file copy [glob $bfdtd_config_src_dir/*] $bfdtd_config_dst_dir}
+
+# copy config files
+foreach config [glob $bfdtd_config_src_dir/*] {
+  # puts stderr "$config"
+  if { ! [catch { file copy $config $bfdtd_config_dst_dir } sError]} {
+    puts stderr "file copy $config $bfdtd_config_dst_dir"
+  }
+}
+
+##### try copying all at once
+# set bfdtd_configs [glob $bfdtd_config_src_dir/*]
+
+# # The {*} substitutes the words of the list given by what follows it as separate words; it's precisely right here.
+# # cf http://stackoverflow.com/questions/26846608/how-to-copy-multiple-files-with-tcl-file-command
+# if { ! [catch { file copy {*}$bfdtd_configs $bfdtd_config_dst_dir } sError]} {
+#   puts stderr "file copy $bfdtd_configs $bfdtd_config_dst_dir"
+# }
+# 
+# ##### try copying one by one
+# if { ! [catch { file copy $bfdtd_config_src_dir/fdtd64_2003 $bfdtd_config_dst_dir } sError]} {
+#   puts stderr "file copy $bfdtd_config_src_dir/fdtd64_2003 $bfdtd_config_dst_dir"
+# }
+# if { ! [catch { file copy $bfdtd_config_src_dir/fdtd64_2008 $bfdtd_config_dst_dir } sError]} {
+#   puts stderr "file copy $bfdtd_config_src_dir/fdtd64_2008 $bfdtd_config_dst_dir"
+# }
+# if { ! [catch { file copy $bfdtd_config_src_dir/fdtd64_2013 $bfdtd_config_dst_dir } sError]} {
+#   puts stderr "file copy $bfdtd_config_src_dir/fdtd64_2013 $bfdtd_config_dst_dir"
+# }
+# if { ! [catch { file copy $bfdtd_config_src_dir/fdtd64_2014 $bfdtd_config_dst_dir } sError]} {
+#   puts stderr "file copy $bfdtd_config_src_dir/fdtd64_2014 $bfdtd_config_dst_dir"
+# }

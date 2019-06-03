@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="NV" script:language="StarBasic">REM  NV-centres
+
+REM constants
+
+Function NV_get_n_os()
+	REM refractive index
+	REM unit: no unit
+	NV_get_n_os = 2.40
+End Function
+
+Function NV_get_lambda()
+	REM wavelength
+	REM unit: m
+	NV_get_lambda = 637*1e-9
+End Function
+
+Function NV_get_tau()
+	REM spontaneous emission lifetime
+	REM unit: s
+	NV_get_tau = 300*1e-9
+End Function
+
+REM computed quantum emitter parameters
+
+Function NV_get_gamma()
+	REM unit: Hz
+	NV_get_gamma = get_gamma(NV_get_tau())
+End Function
+
+Function NV_get_omega_os()
+	REM unit: Hz
+	NV_get_omega_os = 2*PI()*get_c0()/NV_get_lambda()
+End Function
+
+Function NV_get_deg()
+	REM unit: C*m
+	REM NV_get_deg = get_deg(NV_get_n_os(), NV_get_omega_os(), NV_get_gamma())
+	NV_get_deg = get_deg(NV_get_n_os, NV_get_lambda(), NV_get_tau())
+End Function
+
+Function NV_get_feg()
+	REM unit: no unit
+	REM NV_get_feg = get_feg(NV_get_omega_os(), NV_get_deg())
+	NV_get_feg = get_feg(NV_get_lambda(), NV_get_deg())
+End Function
+
+REM computed coupling parameters
+
+Function NV_get_g(Vn1, n_def)
+	REM unit: Hz (angular frequency)
+	On Error GoTo ErrorHandler
+	NV_get_g = get_g(Vn1, n_def, NV_get_gamma(), NV_get_lambda(), NV_get_n_os())
+	Exit Function
+	ErrorHandler:
+		NV_get_g = Error()
+End Function
+
+Function NV_get_coupling_strength_criteria(Q, Vn1, n_def)
+	REM unit: no unit
+	On Error GoTo ErrorHandler
+	NV_get_coupling_strength_criteria = get_coupling_strength_criteria(NV_get_g(Vn1, n_def), get_kappa(NV_get_lambda(), Q), NV_get_gamma())
+	Exit Function
+	ErrorHandler:
+		NV_get_coupling_strength_criteria = Error()
+End Function
+
+Function NV_get_coupling_strength_criteria_string(Q, Vn1, n_def)
+	REM returns string
+	NV_get_coupling_strength_criteria_string = get_coupling_strength_criteria_string(NV_get_g(Vn1, n_def), get_kappa(NV_get_lambda(), Q), NV_get_gamma())
+End Function
+
+</script:module>

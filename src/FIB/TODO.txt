@@ -1,0 +1,34 @@
+DONE:
+=====
+
+NOT DONE:
+=========
+OPTIONS:
+-filename option
+-prefix option
+-direction option
+-inner radius option
+-outer radius option
+-magnification option (allow magnitude greater then 10000)
+-step option
+-dwell time option
+-repetition number option
+
+FEATURES:
+-time+date stamp in filename
+-the produced pictures in mum and in pixel
+-ability to choose between dome,sawtooth,dome+ring,dome+angular ring,etc
+-implement use of material files to automatically calculate depth, current, dwell time
+-warn if file too big
+-allow splitting of file if too big or splitting into dome+ring,etc
+
+DOCUMENTATION:
+-What is ring width?
+-What is inner radius?
+-What is outer radius?
+-What is profile?
+
+OTHER:
+-Create single script
+-Create python script
+-Create interface

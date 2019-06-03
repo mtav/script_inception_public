@@ -1,0 +1,17 @@
+import os;from blender_scripts.bfdtd_import import *;importBristolFDTD(os.getenv("HOME")+'/Development/script_inception_public/geometries/qedc3_3_0525b.geo')
+
+from blender_scripts.testkubo import *; testkubo()
+
+~/bin/blender-2.58a-linux-glibc27-x86_64/blender --python ~/Development/script_inception_public/blender_scripts/testkubo.py
+~/bin/blender-2.60a-linux-glibc27-x86_64/blender --python ~/Development/script_inception_public/blender_scripts/testkubo.py
+
+links:
+http://www.blender.org/documentation/blender_python_api_2_58_1/bpy.ops.mesh.html?highlight=cylinder#bpy.ops.mesh.primitive_cylinder_add
+http://stackoverflow.com/questions/3657120/how-to-create-a-simple-mesh-in-blender-2-50-via-the-python-api
+http://sites.google.com/site/satishgoda/blender/learningblender25/introduction-to-blender-python-api
+http://www.blender.org/documentation/blender_python_api_2_57_release/
+https://mogurijin.wordpress.com/2010/08/17/how-to-update-blender-2-49-bge-scripts-to-2-5x/
+http://blenderscripting.blogspot.com/search/label/from_pydata
+http://blenderscripting.blogspot.com/
+http://wiki.blender.org/index.php/Dev:2.5/Source/Python/Mathutils#Consistent_Matrix_Constructor_Argument_order
+http://wiki.blender.org/index.php/Dev:2.5/Py/Scripts/Cookbook/Materials/Multiple_Materials

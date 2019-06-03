@@ -1,0 +1,6 @@
+Use numpy masked arrays to deal with incomplete datasets!!!
+https://docs.scipy.org/doc/numpy/reference/maskedarray.generic.html#rationale
+
+Quick ref:
+==========
+prntoh5:

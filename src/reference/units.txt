@@ -1,0 +1,29 @@
+Bristol FDTD units:
+===================
+Fu = frequency unit in excitation object
+Tu = time unit in .prn output files
+
+The following always holds:
+1e12*Fu*Tu = 1
+
+Usual case:
+-----------
+Fu = MHz = 1e6 Hz
+=> Tu = 1/(1e12*1e6 Hz) = 1e-18 s
+
+Usual conversions:
+------------------
+dt(mus)=dt(1e-18s)*1e-12
+dt(ns)=dt(1e-18s)*1e-9
+
+MEEP units:
+===========
+cf http://ab-initio.mit.edu/wiki/index.php/Meep_Introduction#Units_in_Meep
+
+MEEP<->reality:
+---------------
+f(MEEP)*c0/a = f(reality)
+L(MEEP)*a = L(reality)
+t(MEEP)*a/c0 = t(reality)
+
+with "a meters" in reality being "1" in MEEP

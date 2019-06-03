@@ -1,0 +1,7 @@
+successfully tested using:
+Python 2.7.8
+Python VTK 6.1.0 (custom installed)
+h5py    2.2.1
+HDF5    1.8.12
+numpy   1.8.2
+paraview version 4.1.0 (system installed)

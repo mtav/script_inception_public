@@ -1,0 +1,6 @@
+xyz
+boundary
+excitation E,H
+X+90:
+X'=X
+

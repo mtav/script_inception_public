@@ -1,0 +1,73 @@
+\usepgfplotslibrary{fillbetween}
+
+\pgfplotstableread{
+c gapmin gapmax gapsize
+1.0 0.36202869401035753 0.3893201512203343 7.264656725890699
+1.1 0.3470824686428545 0.3720798094692076 6.951794215896822
+1.2 0.3354240163886517 0.357826687847881 6.463079322480041
+1.3 0.32252024792483736 0.34586975029582145 6.986789878108144
+1.4 0.3149893236433376 0.33568674846275004 6.361821405978457
+1.4142135623730951 0.3141976919759682 0.3343628399107868 6.218432033215255
+}\loadedtable
+
+\begin{tikzpicture}
+
+\begin{axis}[
+scale only axis,
+axis y line*=left,
+title={Bangap of FCT woodpiles for a=566nm},
+xmin=1,
+xmax=sqrt(2),
+ymin=1.4,
+ymax=1.9,
+xlabel={c/a},
+ylabel={Wavelength ($\mu m$)},
+clip=false,
+extra x ticks={1.0, 1.2, 1.4142135623730951},
+extra x tick labels={BCC, FCT, FCC},
+every extra x tick/.style={yshift=-10pt, major tick length=0pt},
+xlabel shift=10pt,
+] % allows nodes to go outside of axis
+\addplot[name path=A,mark=+] table[x=c, y expr=0.566*1/\thisrow{gapmin}] {\loadedtable};
+\addplot[name path=B,mark=+] table[x=c, y expr=0.566*1/\thisrow{gapmax}] {\loadedtable};
+\addplot[gray] fill between[of=A and B];
+
+% \addplot[name path=C] table[x=c, y expr=0.566*1/(0.5*(\thisrow{gapmin}+\thisrow{gapmax}))] {\loadedtable};
+
+% \node[draw, fill=white] at (rel axis cs: 0.0, 0.9) {BCC};
+% \node[draw, fill=white] at (rel axis cs: 0.5, 0.9) {FCT};
+% \node[draw, fill=white] at (rel axis cs: 1.0, 0.9) {FCC};
+
+\draw[->,>=stealth] (axis cs: 1.1, 1.6) -- (axis cs: 1.0, 1.6);
+
+\end{axis}
+
+\begin{axis}[
+scale only axis,
+axis y line*=right,
+axis x line=none,
+xmin=1,
+xmax=sqrt(2),
+ymin=6.2,
+ymax=7.3,
+ylabel={$\Delta \omega / \omega$ (\%)},
+clip=false,
+]
+
+\addplot table[x=c, y=gapsize] {\loadedtable}
+[xshift=-3,yshift=0]
+node (src) [pos=0.8] {};
+
+\draw[blue, ->, >=stealth] (src) -- +(50,0);
+
+\end{axis}
+
+\end{tikzpicture}
+
+\tikz[align=left] \node[draw] {a is the distance between rods in one layer\\
+c is the vertical period (4 layers)\\
+rod width $w=0.365a$\\
+rod height $h=1.27w \cdot c/a$\\
+$\varepsilon_{rods}=9.9$\\
+$\varepsilon_{backfill}=1.0$\\
+using elliptical rods};

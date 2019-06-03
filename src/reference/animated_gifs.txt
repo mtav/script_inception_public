@@ -1,0 +1,6 @@
+# tools to create animated gifs and videos from a list of pictures
+superconvert.sh .eps .png
+superconvert.sh .png .gif
+convert   -delay 40   -loop 0   z*.Ey.max_0.1.png   zplane_2D_0.1.gif
+gifsicle --delay=100 --loop *.gif > yplane.gif
+ffmpeg -f image2 -r 1 -i x1a%02d.Ey.max_0.1.png -b 600k ./xplane.mp4

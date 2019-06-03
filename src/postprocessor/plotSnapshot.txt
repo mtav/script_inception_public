@@ -1,0 +1,65 @@
+current plotSnaphots params passed via handles:
+===============================================
+$ ack -o "handles\.[a-zA-Z_.0-9]+" plotSnapshot.m  | sort -u
+handles.AllHeaders
+handles.autosave
+handles.BFDTD_version
+handles.colorbarPosition
+handles.colour
+handles.contour
+handles.contour.ContourMatrix
+handles.contour.data
+handles.contour.handle
+handles.contour.header
+handles.contour.u1
+handles.contour.u2
+handles.contour.XData
+handles.contour.YData
+handles.contour.ZData
+handles.createFigure
+handles.cropData_Xmax
+handles.cropData_Xmin
+handles.cropData_Ymax
+handles.cropData_Ymin
+handles.cropData_Zmax
+handles.cropData_Zmin
+handles.data
+handles.dataSize
+handles.drawColorBar
+handles.drawTitle
+handles.geofile
+handles.geometry
+handles.grid
+handles.header
+handles.inpfile
+handles.interpolate
+handles.LimitToBox
+handles.LineWidth
+handles.modulus
+handles.plane
+handles.plotSnapshotType
+handles.surface
+handles.symmetricRange
+handles.useAdaptedMaxIfIsNaN
+
+dealt with:
+
+
+pre-computed:
+=============
+col = handles.col;
+handles.dataname = handles.AllHeaders(col);
+zlimits = [ handles.minplotvalue, handles.maxplotvalue ];
+
+spaghetti code that needs cleaning up:
+======================================
+-plotProbe
+-plotSnapshot
+-plot_MPB
+
+-> split up actions into subfunctions
+-> make it so they can be used separately: ex:
+  -data = loadData()
+  -fig = plotData()
+  -result = AnalyzeData()
+  -addInfo(fig, info)

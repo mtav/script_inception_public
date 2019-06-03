@@ -1,0 +1,198 @@
+#!/usr/bin/env python2
+# -*- coding: utf-8 -*-
+
+def manual_creation():
+  import vtk
+  import h5py
+  import numpy
+  import cmath
+
+  h5file = '/tmp/test.h5'
+  vtsfile = '/tmp/test.vts'
+  Nx,Ny,Nz = 3,4,5
+  Npoints = Nx*Ny*Nz
+
+  with h5py.File(h5file, "r") as f:
+
+    # create the vtkPoints structure for the coordinates
+    points = vtk.vtkPoints()
+    points.SetNumberOfPoints(Npoints)
+
+    # create the vtkDoubleArray structure for the data
+    Emod = vtk.vtkDoubleArray()
+    Emod.SetName('Emod')
+    Emod.SetNumberOfComponents(3)
+    Emod.SetNumberOfTuples(Npoints)
+    Emod.SetComponentName(0,'Exmod')
+    Emod.SetComponentName(1,'Eymod')
+    Emod.SetComponentName(2,'Ezmod')
+    Emod.FillComponent(0,0)
+    Emod.FillComponent(1,0)
+    Emod.FillComponent(2,0)
+
+    Emod2 = vtk.vtkDoubleArray()
+    Emod2.SetName('Emod2')
+    #Emod2.SetNumberOfComponents(1)
+    Emod2.SetNumberOfTuples(Npoints)
+    #Emod2.SetComponentName(0,'Emod2')
+    Emod2.FillComponent(0,0)
+
+    # fill the vtkPoints and vtkDoubleArray
+    for k in range(Nz):
+      for j in range(Ny):
+        for i in range(Nx):
+          offset = i + j*Nx + k*Nx*Ny
+          points.SetPoint(offset, numpy.array([i,j,k]))
+
+          E = f['data_fsnap'][i, j, k]['E']
+          H = f['data_fsnap'][i, j, k]['H']
+          
+          Exmod = abs(E[0])
+          Exre = E[0].real
+          Exim = E[0].imag
+          Exphase = cmath.phase(E[0])
+
+          Eymod = abs(E[1])
+          Eyre = E[1].real
+          Eyim = E[1].imag
+          Exphase = cmath.phase(E[1])
+
+          Ezmod = abs(E[2])
+          Ezre = E[2].real
+          Ezim = E[2].imag
+          Ezphase = cmath.phase(E[2])
+
+          Hxmod = abs(H[0])
+          Hxre = H[0].real
+          Hxim = H[0].imag
+          Hxphase = cmath.phase(H[0])
+
+          Hymod = abs(H[1])
+          Hyre = H[1].real
+          Hyim = H[1].imag
+          Hyphase = cmath.phase(H[1])
+
+          Hzmod = abs(H[2])
+          Hzre = H[2].real
+          Hzim = H[2].imag
+          Hzphase = cmath.phase(H[2])
+
+          #print(Ex,Ey,Ez,Hx,Hy,Hz)
+          Emod.SetTuple3(offset, Exmod, Eymod, Ezmod)
+          Emod2.SetTuple1(offset, Exmod**2 + Eymod**2 + Ezmod**2)
+    
+    # create structured grid
+    dataset_vts = vtk.vtkStructuredGrid()
+    dataset_vts.SetDimensions(Nx, Ny, Nz)
+    dataset_vts.SetPoints(points)
+    dataset_vts.GetPointData().AddArray(Emod)
+    dataset_vts.GetPointData().AddArray(Emod2)
+        
+    # write out .vts file
+    writer = vtk.vtkXMLStructuredGridWriter()
+    writer.SetInputData(dataset_vts)
+    writer.SetFileName(vtsfile)
+    writer.Write()
+
+    print('data read from {}'.format(h5file))
+    print('data written to {}'.format(vtsfile))
+  return
+
+def using_numpy_to_vtk():
+  import vtk
+  import h5py
+  import numpy
+  from vtk.util.numpy_support import numpy_to_vtk
+
+  h5file = '/tmp/test.h5'
+  vtsfile = '/tmp/test.vts'
+  Nx,Ny,Nz = 3,4,5
+  with h5py.File(h5file, "r") as f:
+
+    # create the vtkPoints structure for the coordinates
+    points = vtk.vtkPoints()
+    points.SetNumberOfPoints(Nx*Ny*Nz)
+
+    # create the vtkFloatArray structures for the data
+    Ex_np = f['data_tsnap']['E'][...,...,...,0].flatten(order='F')
+    Ex = numpy_to_vtk(Ex_np)
+    
+    Ey_np = f['data_tsnap']['E'][...,...,...,1].flatten(order='F')
+    Ey = numpy_to_vtk(Ey_np)
+    
+    Ez_np = f['data_tsnap']['E'][...,...,...,2].flatten(order='F')
+    Ez = numpy_to_vtk(Ez_np)
+    
+    Hx = numpy_to_vtk(f['data_tsnap']['H'][...,...,...,0].flatten(order='F'))
+    Hy = numpy_to_vtk(f['data_tsnap']['H'][...,...,...,1].flatten(order='F'))
+    Hz = numpy_to_vtk(f['data_tsnap']['H'][...,...,...,2].flatten(order='F'))
+    
+    Pow_np = f['data_tsnap']['Pow'][...].flatten(order='F')
+    Pow = numpy_to_vtk(Pow_np)
+    
+    material_np = f['data_tsnap']['material'][...].flatten(order='F')
+    material = numpy_to_vtk(material_np)
+
+    Ex.SetName('Ex')
+    Ey.SetName('Ey')
+    Ez.SetName('Ez')
+    Hx.SetName('Hx')
+    Hy.SetName('Hy')
+    Hz.SetName('Hz')
+    Pow.SetName('Pow')
+    material.SetName('material')
+
+    #dataset_dict = dict()
+    #for key in dataset_list:
+      #print('key = {}'.format(key))
+      
+      ## We need flat 1D data for VTK structures. Equivalent ways of achieving this:
+      ##  A.reshape(-1, order='F')
+      ##  A.flatten(order='F')
+      ##  A.ravel(order='F')
+      ##scalar = f[key][...].transpose().reshape(-1,1)
+      #scalar = f['data_tsnap'][...].reshape(-1,1, order='F') #  ‘F’ means to read / write the elements using Fortran-like index order, with the first index changing fastest, and the last index changing slowest. (VTK style)
+      #print(scalar)
+      #vtk_data = numpy_to_vtk(scalar)
+      ##vtk_data = vtk.vtkFloatArray()
+      #vtk_data.SetName(key)
+      ##vtk_data.SetNumberOfTuples(Nx*Ny*Nz)
+      #dataset_dict[key] = (f[key], vtk_data, scalar)
+
+    # fill the vtkPoints and vtkFloatArray
+    for k in range(Nz):
+      for j in range(Ny):
+        for i in range(Nx):
+          offset = i + j*Nx + k*Nx*Ny
+          points.SetPoint(offset, numpy.array([i,j,k]))
+    
+    # create structured grid
+    dataset_vts = vtk.vtkStructuredGrid()
+    dataset_vts.SetDimensions(Nx, Ny, Nz)
+    dataset_vts.SetPoints(points)
+    
+    # add scalar data to the grids
+    #for key in dataset_dict.keys():
+    dataset_vts.GetPointData().AddArray(Ex)
+    dataset_vts.GetPointData().AddArray(Ey)
+    dataset_vts.GetPointData().AddArray(Ez)
+    dataset_vts.GetPointData().AddArray(Hx)
+    dataset_vts.GetPointData().AddArray(Hy)
+    dataset_vts.GetPointData().AddArray(Hz)
+    dataset_vts.GetPointData().AddArray(Pow)
+    dataset_vts.GetPointData().AddArray(material)
+    
+    dataset_vts.GetPointData().SetActiveScalars('material')
+
+    # write out .vts file
+    writer = vtk.vtkXMLStructuredGridWriter()
+    writer.SetInputData(dataset_vts)
+    writer.SetFileName(vtsfile)
+    writer.Write()
+
+    print('data read from {}'.format(h5file))
+    print('data written to {}'.format(vtsfile))
+
+if __name__ == '__main__':
+  #using_numpy_to_vtk()
+  manual_creation()

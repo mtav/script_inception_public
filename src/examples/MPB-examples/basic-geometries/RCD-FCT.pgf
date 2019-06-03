@@ -1,0 +1,73 @@
+\usepgfplotslibrary{fillbetween}
+
+\pgfplotstableread{
+c gapmin gapmax gapsize
+1.0 0.38333549918263654 0.45661261129933706 17.448009276347587
+1.1 0.375803729214095 0.4521016224714836 18.43154971810473
+1.2 0.3664951239621498 0.44816564636482326 20.05019153429816
+1.3 0.3581083282086694 0.44493291447824185 21.623941998063362
+1.4 0.35039304777493935 0.44247181365972776 23.226849962344005
+1.4142135623730951 0.34953096776491543 0.44210014439144196 23.3869475832938
+}\loadedtable
+
+\begin{tikzpicture}
+
+\begin{axis}[
+scale only axis,
+axis y line*=left,
+title={Bangap of FCT RCD for a=566nm},
+xmin=1,
+xmax=sqrt(2),
+ymin=1.2,
+ymax=1.7,
+xlabel={c/a},
+ylabel={Wavelength ($\mu m$)},
+clip=false,
+extra x ticks={1.0, 1.2, 1.4142135623730951},
+extra x tick labels={BCC, FCT, FCC},
+every extra x tick/.style={yshift=-10pt, major tick length=0pt},
+xlabel shift=10pt,
+] % allows nodes to go outside of axis
+\addplot[name path=A,mark=+] table[x=c, y expr=0.566*1/\thisrow{gapmin}] {\loadedtable};
+\addplot[name path=B,mark=+] table[x=c, y expr=0.566*1/\thisrow{gapmax}] {\loadedtable};
+\addplot[gray] fill between[of=A and B];
+
+% \addplot[name path=C] table[x=c, y expr=0.566*1/(0.5*(\thisrow{gapmin}+\thisrow{gapmax}))] {\loadedtable};
+
+% \node[draw, fill=white] at (rel axis cs: 0.0, 0.9) {BCC};
+% \node[draw, fill=white] at (rel axis cs: 0.5, 0.9) {FCT};
+% \node[draw, fill=white] at (rel axis cs: 1.0, 0.9) {FCC};
+
+\draw[->,>=stealth] (axis cs: 1.1, 1.5) -- (axis cs: 1.0, 1.5);
+
+\end{axis}
+
+\begin{axis}[
+scale only axis,
+axis y line*=right,
+axis x line=none,
+xmin=1,
+xmax=sqrt(2),
+ymin=17,
+ymax=24,
+ylabel={$\Delta \omega / \omega$ (\%)},
+clip=false,
+]
+
+\addplot table[x=c, y=gapsize] {\loadedtable}
+[xshift=-3,yshift=0]
+node (src) [pos=0.8] {};
+
+\draw[blue, ->, >=stealth] (src) -- +(50,0);
+
+\end{axis}
+
+\end{tikzpicture}
+
+\tikz[align=left] \node[draw] {a is the distance between "rods" in one layer\\
+c is the vertical period (4 "layers")\\
+rod width $w=0.365a$\\
+rod height $h=w$\\
+$\varepsilon_{rods}=9.9$\\
+$\varepsilon_{backfill}=1.0$\\
+using circular rods};

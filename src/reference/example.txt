@@ -1,0 +1,17 @@
+** sample file
+
+type1
+{
+1 **x
+2 **y
+3 **z
+}
+
+** comments
+
+type2
+{
+1 **x
+2 **y
+3 **z
+}

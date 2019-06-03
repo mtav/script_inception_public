@@ -1,0 +1,19 @@
+import re
+
+str1='TYPE **name=NAME { 0 1 2 }'
+pattern_objects1 = re.compile("(?P<type>\w+)\s*\*\*name=(?P<name>[^{}]*){(?P<data>[^{}]*)}",re.DOTALL)
+objects1 = [m.groupdict() for m in pattern_objects1.finditer(str1)]
+objects1
+
+str2='TYPE { 0 1 2 }'
+pattern_objects2 = re.compile("(?P<type>\w+)\s*{(?P<data>[^{}]*)}",re.DOTALL)
+objects2 = [m.groupdict() for m in pattern_objects2.finditer(str2)]
+objects2
+
+pattern_objects = re.compile("(?P<type>\w+)\s* \*\*name= (?P<name>[^{}]*)   {(?P<data>[^{}]*)}",re.DOTALL)
+pattern_objects = re.compile("(?P<type>\w+)\s*           (?P<name>[^{}]+) ? {(?P<data>[^{}]*)}",re.DOTALL)
+
+pattern_objects = re.compile("(?P<type>\w+)\s*(?P<name>[^{}]+)?{(?P<data>[^{}]*)}",re.DOTALL); m = pattern_objects.match(str2); m.groups()
+('TYPE', None, ' 0 1 2 ')
+pattern_objects = re.compile("(?P<type>\w+)\s*(?P<name>[^{}]+)?{(?P<data>[^{}]*)}",re.DOTALL); m = pattern_objects.match(str1); m.groups()
+('TYPE', '**name=NAME ', ' 0 1 2 ')

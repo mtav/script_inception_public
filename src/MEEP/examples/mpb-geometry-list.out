@@ -1,0 +1,41 @@
+init-params: initializing eigensolver data
+Computing 1 bands with 1.000000e-07 tolerance.
+Working in 2 dimensions.
+Grid size is 10 x 10 x 1.
+Solving for 1 bands at a time.
+Creating Maxwell data...
+Allocating fields...
+Mesh size is 3.
+Lattice vectors:
+     (0.866025, 0.5, 0)
+     (0.866025, -0.5, 0)
+     (0, 0, 1)
+Cell volume = 0.866025
+Reciprocal lattice vectors (/ 2 pi):
+     (0.57735, 1, -0)
+     (0.57735, -1, 0)
+     (-0, 0, 1)
+Geometric objects:
+     sphere, center = (0,0,0)
+          radius 1
+          dielectric constant epsilon = 12
+     cylinder, center = (0,0,0)
+          radius 1, height 2, axis (0.381, 0.508001, 0.635001)
+          dielectric constant epsilon = 12
+     cone, center = (0,0,0)
+          radius 1, height 2, axis (0.381, 0.508001, 0.635001)
+          radius2 6
+          dielectric constant epsilon = 12
+     block, center = (0,0,0)
+          size (1,2,3)
+          axes (0.406138,0.507673,0.609208), (0.442719,0.505964,0.56921), (0.458831,0.504715,0.550598)
+          dielectric constant epsilon = 12
+     ellipsoid, center = (0,0,0)
+          size (1,2,3)
+          axes (0.406138,0.507673,0.609208), (0.442719,0.505964,0.56921), (0.458831,0.504715,0.550598)
+          dielectric constant epsilon = 12
+Geometric object tree has depth 1 and 45 object nodes (vs. 5 actual objects)
+Initializing dielectric function...
+0 k-points:
+Solving for band polarization: .
+Initializing fields to random numbers...

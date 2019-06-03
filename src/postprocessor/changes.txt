@@ -1,0 +1,15 @@
+Postprocessor version 3 03-10-07
+
+New features:
+    -text label showing currently loaded data file.
+    -automatic determination of negative values to allow proper axis range.
+    -check box to force modulus range 0 to maxval.
+    -cylinders changed to be plotted the correct way.
+
+Postprocessor Version 4.1 12-06-08
+
+    -modulus tick box changed so as to force absolute of data.
+
+Postprocessor Version 4.2 12-06-08
+
+    -contour plot added

@@ -1,0 +1,6 @@
+OPTS=-Fu/usr/local/languages/fpc-2.4.0/lib/fpc/2.4.0/units/x86_64-linux/rtl/
+
+all:
+	fpc $(OPTS) hello.pas
+clean:
+	rm -f *.o hello

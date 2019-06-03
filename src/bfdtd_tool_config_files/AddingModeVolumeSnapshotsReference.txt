@@ -1,0 +1,50 @@
+optional arguments:
+  -h, --help            show this help message and exit
+  -i INFILE, --infile INFILE
+                        input file(s) (.geo, .inp or .in) (can be more than
+                        one)
+  -v, --verbose         verbosity level
+  -o OUTFILE, --outfile OUTFILE
+                        output file
+  -d OUTDIR, --outdir OUTDIR
+                        output directory
+  -b BASENAME, --basename BASENAME
+                        output basename
+  --walltime WALLTIME   walltime in hours (default: 360 hours = 15*24 hours =
+                        15 days)
+
+Add mode volume snapshots:
+  --add-modevolume-snapshots
+                        Add frequency snapshots to calculate the mode volume
+  --slicing-direction {X,Y,Z}
+  --first FIRST         first iteration at which to take snapshot
+  --repetition REPETITION
+                        step in number of iterations at which to take
+                        snapshots
+  --starting_sample STARTING_SAMPLE
+                        starting sample for the snapshots
+  --iterations ITERATIONS
+                        number of iterations
+  --exe EXE             exe to use
+
+Ways of specifying the frequencies for the frequency snapshots:
+  --freqListFile FREQLISTFILE
+                        frequency list file format:
+                        PeakNo Frequency(Hz) Wavelength(nm) QFactor
+                        1      4.7257745e+14 634.37741293   40.4569
+                        2      4.9540615e+14 605.14480606   90.37
+                        Note: Only the frequency column is used.
+  --readFreqFromInput   read frequencies from input
+  --frequency_MHz f(MHz) [f(MHz) ...]
+                        frequency in MHz
+  --wavelength_mum lambda(µm) [lambda(µm) ...]
+                        wavelength in µm
+
+Using config files:
+===================
+bfdtd_tool.py  @CONFIGFILE [ADDITIONAL_ARGUMENTS]
+
+Examples:
+bfdtd_tool.py  @printNcells.cfg --infile=sim.in
+bfdtd_tool.py  @epsilonSnapshots.cfg --infile=sim.in
+bfdtd_tool.py  @addModeVolumeSnapshots.cfg 

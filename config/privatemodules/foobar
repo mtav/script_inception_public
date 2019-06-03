@@ -1,0 +1,53 @@
+#%Module########################################################################
+##
+## null modulefile
+##
+proc ModulesHelp { } {
+        global version
+
+        puts stderr "   This module does absolutely nothing."
+        puts stderr "   It's meant simply as a place holder in your"
+    puts stderr "   dot file initialization."
+        puts stderr "
+    Version $version
+"
+}
+
+module-whatis   "does absolutely nothing"
+
+# error "hello world"
+
+puts stderr "bip"
+
+exit 2
+
+# for Tcl script use only
+set     version      3.2.10
+
+append-path     MANPATH         /foobar
+
+puts stderr lolhuhu
+
+set x 24
+
+puts stderr "this is $x"
+puts stderr {uname machine}
+
+# $::env(PATH)
+# setenv variable value 
+# puts stderr "$bfdtd_config_dst_dir"
+# append-path     MANPATH         huhuh
+# append-path     MANPATH         ~/lolol
+# catch {file copy -force $bfdtd_config_src_dir/fdtd64_2003  $bfdtd_config_src_dir/fdtd64_2008  $bfdtd_config_src_dir/fdtd64_2013  $bfdtd_config_src_dir/fdtd64_2014 $bfdtd_config_dst_dir}
+
+# 
+# if {[catch {file copy -force $bfdtd_config_src_dir/fdtd64_2003  $bfdtd_config_src_dir/fdtd64_2008  $bfdtd_config_src_dir/fdtd64_2013  $bfdtd_config_src_dir/fdtd64_2014 $bfdtd_config_dst_dir} sError]} {
+#    FAIL "file copy failed: err:$sError from $bfdtd_config_src_dir to $bfdtd_config_dst_dir"
+# }
+
+# puts stderr "DONE"
+
+# if {! [info exists ::env(MODULE_PREFIX)]} {puts stderr "found $::env(MODULE_PREFIX)"}
+
+# puts stderr "LOLO"
+# exit 0

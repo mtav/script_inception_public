@@ -1,0 +1,21 @@
+# the old way:
+asciidoc -a toc README.txt
+
+# the new way:
+asciidoc ./README.asciidoc
+
+# to update gh-pages
+asciidoc -o index.html ./README.asciidoc
+git add index.html
+git commit -m "website update"
+git pull && git push
+git checkout gh-pages
+git checkout master index.html
+git commit -m "website update"
+git pull && git push
+git checkout master
+
+# asciidoc icon location:
+$ cat ~/.asciidoc/asciidoc.conf
+[attributes]
+iconsdir=/.../.asciidoc/images/icons/

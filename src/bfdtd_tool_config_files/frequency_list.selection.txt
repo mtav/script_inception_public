@@ -1,0 +1,4 @@
+PeakNo	Frequency(Hz)	Wavelength(nm)	QFactor	
+1	741	123	-146758
+1	852	123	-146758
+1	963	123	-146758

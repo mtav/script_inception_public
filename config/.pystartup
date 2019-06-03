@@ -1,0 +1,66 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
+# Add auto-completion and a stored history file of commands to your Python
+# interactive interpreter. Requires Python 2.0+, readline. Autocomplete is
+# bound to the Esc key by default (you can change it - see readline docs).
+#
+# Store the file in ~/.pystartup, and set an environment variable to point
+# to it:  "export PYTHONSTARTUP=/home/gsf/.pystartup" in bash.
+#
+# Note that PYTHONSTARTUP does *not* expand "~", so you have to put in the
+# full path to your home directory.
+
+import atexit
+import os
+import readline
+import rlcompleter
+import sys
+import warnings
+from glob import glob
+
+# change autocomplete to tab
+readline.parse_and_bind("tab: complete")
+
+historyPath = os.path.expanduser("~/.pyhistory")
+
+def save_history(historyPath=historyPath):
+    import readline
+    readline.write_history_file(historyPath)
+
+if os.path.exists(historyPath):
+    readline.read_history_file(historyPath)
+
+atexit.register(save_history)
+
+# anything not deleted (sys and os) will remain in the interpreter session
+del atexit, readline, rlcompleter, save_history, historyPath
+
+# ..note:: According to docs, using * is not recommended (should specify all or use the __init.py__ files), but for the moment, this is a simple working solution while things change a lot.
+import bfdtd
+
+from GWL.GWL_parser import *
+from constants.physcon import get_c0, get_e, get_eV, get_epsilon0, get_mu0, get_h, get_h_eVs, get_hb, get_me
+from utilities.brisFDTD_ID_info import *
+from utilities.harminv import getFrequencies
+from FIB import FIB
+
+# for modules which are only python3 compatible
+if sys.version_info[0] >= 3:
+  from utilities.prnutils import readPrnFile, writePrnFile
+
+import h5py
+import numpy as np
+# import * ?
+from numpy import array, cos, sin, tan, degrees, radians, arccos, arcsin, arctan, floor, ceil, ones, zeros, pi, linspace, log10, arctan2
+
+# convert warnings to errors
+# needs to be disabled for pygame and matplotlib :/
+# ..todo:: add matplotlib (python core) escape sequence warning exception (or turn warnings into error for custom modules?)
+
+#warnings.simplefilter("error")
+warnings.filterwarnings('ignore', message="the imp module is deprecated in favour of importlib; see the module's documentation for alternative uses", category=PendingDeprecationWarning, module='', lineno=0, append=False)
+#warnings.filterwarnings('ignore', category=DeprecationWarning)
+
+#warnings.simplefilter('ignore', category=PendingDeprecationWarning, lineno=0, append=False)
+#import imp

@@ -1,0 +1,65 @@
+/* [wxMaxima batch file version 1] [ DO NOT EDIT BY HAND! ]*/
+/* [ Created with wxMaxima version 14.12.1 ] */
+
+/* [wxMaxima: input   start ] */
+x:sin(theta)*cos(phi);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+y:sin(theta)*sin(phi);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+z:cos(theta);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+diff(x,theta)*dt+diff(x,phi)*dp;
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+dx:%o4;
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+diff(y,theta)*dt+diff(y,phi)*dp;
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+dy:%o6;
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+diff(z,theta)*dt+diff(z,phi)*dp;
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+dz:%o8;
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+expand(dx^2+dy^2+dz^2);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+factor(ev(expand(dx^2+dy^2+dz^2),dp=0));
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+factor(ev(expand(dx^2+dy^2+dz^2),dt=0));
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+trigsimp(%o12);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+trigsimp(%o11);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+trigsimp(expand(dx^2+dy^2+dz^2));
+/* [wxMaxima: input   end   ] */
+
+/* Maxima can't load/batch files which end with a comment! */
+"Created with wxMaxima"$

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="constants" script:language="StarBasic">REM constants:
+
+Function get_c0()
+	REM m/s
+	get_c0 = 299792458
+End Function
+
+Function get_me()
+	REM unit: kg
+	get_me = 9.10938291E-031
+End Function
+
+Function get_e0()
+	REM unit: coul
+	get_e0 = 1.602176462*10^(-19)
+End Function
+
+Function get_h()
+	REM unit: J*s
+	get_h = 6.62606876*10^(-34)
+End Function
+
+Function get_epsilon0()
+	REM unit: F/m
+	get_epsilon0 = 8.854187815*10^(-12)
+End Function
+
+Function get_hbar()
+	REM unit: J*s
+	get_hbar = get_h()/(2*PI())
+End Function
+
+</script:module>

@@ -1,0 +1,34 @@
+import bpy
+
+for i in bpy.data.objects:
+    i.hide_select = i.hide
+    i.hide_render = i.hide
+    i.hide = i.hide
+
+for i in bpy.data.objects: i.hide_render = i.hide
+
+C.object.data=bpy.data.meshes['Cylinder.078']
+C.object.data=bpy.data.meshes['Cylinder.078']
+
+import bpy
+
+for obj in bpy.data.objects:
+  if 'cell' in obj.name:
+    obj.data=bpy.data.meshes['Cylinder.078']
+
+for obj in bpy.context.selected_objects: obj.data=bpy.data.meshes['RCDlayer0']
+
+# set active object:
+context.scene.objects.active = active_object
+
+TODO:
+=====
+-Addon to copy hide settings from one to another for all objects or selected objects
+-Addon to add simple basis, with optional letters aligned to view/camera (or simply arrow/basis addon, or renderable empty?)
+-camera presets: square picture, "crop to visible", with added axes, etc
+-renderimage with layers? (text, axes, object)
+-export to Tikz/PGF/SVG/asymptote
+
+-same type snapshot could all use same plane mesh
+
+-rename mesh used for excitations to "arrow" or similar

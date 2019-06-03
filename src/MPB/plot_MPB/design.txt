@@ -1,0 +1,145 @@
+Terms:
+======
+fn = normalized frequency = a/lambda
+
+Plots we might want to do:
+==========================
+primary:
+--------
+-the usual band diagrams fn(k_index)
+-band diagrams as a function of angle fn(theta)
+  -> It should be possible to select an incidence plane by specifying an azimuth angle phi, to exclude k-points in other directions.
+  
+secondary:
+----------
+-k-point paths/positions
+-fn(kx,ky,kz) in cartesian (surface plot)
+-fn(k_theta, k_phi) in spherical
+-isofrequency surfaces
+-density of states DOS(fn)
+-geometry visualization
+-field visualization (including field-based calculations such as Poynting vectors)
+
+Additional features:
+====================
+-exploit symmetries to extrapolate data for points where it was not calculated (use of the irreducible Brillouin zone)
+-when filtering by azimuth angle, allow selecting phi, 0, pi-phi separately?
+
+Example calls:
+==============
+
+% set up data_info structure
+data_info = mpb_DataInfo_FCC();
+
+% read in data
+data = readMPB('data.csv', data_info);
+
+% plot selected bands for selected k-points
+for i = selected_bands
+  plot(data.k_index(selected_k_points), data.fn(selected_k_points, i));
+end
+
+% k-point path/positions
+plot3(data.k1_cartesian, data.k2_cartesian, data.k3_cartesian);
+scatter3(data.k1_cartesian, data.k2_cartesian, data.k3_cartesian);
+comet3(data.k1_cartesian, data.k2_cartesian, data.k3_cartesian);
+
+% fn(k_theta, k_phi) in "spherical"
+azimuth = data.k_azimuth;
+elevation = data.elevation;
+r = data.fn(:, 1);
+[x,y,z] = sph2cart(azimuth, elevation, r);
+scatter3(x,y,z);
+
+% filter out unwanted k-points, based on a given azimuth angle
+selected_data = filterDataByAzimuth(data, azimuth_list, tol);
+
+%%%%%%%%%%%%%%
+%%% scratchspace
+idx = find( (data.k_azimuth - azimuth_ref) < tol )
+
+for idx = 1:Nfields;
+  A = getfield(data, char(fieldnames(data)(idx)));
+  A()
+end
+
+for X = fieldnames(data)
+  selected_data.X = data.X(idx, :)
+  getfield(data, char(X))
+end
+getfield(a, char(fieldnames(a)(4)))
+fieldnames(a)
+%%%%%%%%%%%%%%
+
+% plot selected bands for selected k-points against angle (theta = pi/2 - "matlab elevation")
+for i = selected_bands
+  plot(selected_data.k_theta(selected_k_points), selected_data.fn(selected_k_points, n));
+end
+
+%%%%%%%%%%%%%%%%%
+% selections:
+-by azimuth: getIndicesByAzimuth(azimuth_list, tol);
+-by elevation
+-by k index
+-by band number: selected_bands = [1,3,5] % just create "manually"
+-by any k-point field:
+  -min, max range: getKpointIndicesByRange(mpbdata, F_name, min, max)
+  -list of values to match: getKpointIndicesByValue(mpbdata, F_name, val, tol)
+    -with tol == 0
+    -with tol != 0
+
+-> in principle only used for plotting in the form:
+plot(k-points(selected_k), bands(selected_k, selected_bands));
+
+We will need to be able to access given k-points by index to link a label to its k-point.
+ex:
+labels={'A','B','C'};
+labels_k_idx_list = linepace(1,Nkpoints,3);
+k_idx = labels_k_idx_list(2); % for B
+vline(k-points.azimuth(k_idx))
+
+%%%%%%%%%%%%%%%%%
+% sorting:
+-we should be able to easily sort to nicely connect scattered points
+plot(k(s), band(s,n));
+[ks,I] = sort(k(s));
+plot(ks, band(s,n)(I));
+
+%%%%%%%%%%%%%%%%%
+% structure design:
+-move klabels into data info or not?
+-data info could be created from .ctl/.out files, or additional info in .csv or separate file...
+
+%%%%%%%%%%%%%%%%%
+% wrappers:
+plot3_kpoints(x=kx, y=ky, z=kz);
+plotCylindrical(theta=kphi, rho=ktheta, z=fn);
+plotSpherical(theta=ktheta, phi=kphi, r=fn);
+plot3_projected(x=ki, y=kj, z=fn);
+plot_angular(x=ktheta, y=fn); phi = constant +/- tol
+plot_kindex(x=kindex, y=fn);
+
+Also measurement-like slices in (Xmeas,Ymeas,fn) space (based on a given projection plane at z=Zmeas):
+scatter(x=Xmeas, y=Ymeas); fn = constant +/- tol
+scatter(x=Ymeas, y=fn); Xmeas = constant +/- tol
+scatter(x=fn, y=Xmeas); Ymeas = constant +/- tol
+
+plot_MPB('data.csv'); -> default fn(k_index) plot
+plot_MPB('data.csv', 'vline_labels', {'A', 'B', 'C'}); -> default fn(k_index) plot + labels
+plot_MPB_angular('data.csv', 'data_info', data_info); -> fn(k_theta) plot for k-points where azimuth = pi/2, 0 or -pi/2 (to cover a full plane)
+plot_MPB_angular('data.csv', 'data_info', data_info, 'azimuth', [phi, 0, phi-pi]); -> fn(k_theta) plot for k-points where azimuth = phi, 0 or phi-pi (to cover a full plane) (phi should be in [0,pi], but if not, it will be set into that range via 2pi modulo)
+plot_MPB_kpoints('data.csv', 'data_info', data_info); -> plot k-point path
+
+TODO:
+=====
+-use specified "viewing/angle basis" which defines from which axis the elevation is measured...
+-it might be worth allowing any  of the plotting functions to take any cartesian basis as argument to use for projections and angles
+-create function returning a "viewing/angle basis" for use in functions
+-plotting functions could ask for fields to change what is plotted against what (dropdown lists in eventual GUI)
+-check class support of latest Octave (+ Matlab compatibility) -> could make things easier
+-finally go for python/Qt plotting again...
+-get lattice info from files somehow...
+-check lab-book for design notes and plot type overview
+-range limiting should be trivial using xlim,ylim,zlim if plot3 is always used (they do not hide things in front of the 3D box, but idea is same: simple range limiting based on selected axes, custom restriction functions can be added for advanced users later (*))
+-review angular base definition to allow for positive+negative angles (ex: simply use azimuth (range=[-pi,pi]) instead of elevation, or use matlab's elevation (range=[-pi/2,pi/2])) -> if put into fields (or get functions) and angle basis definition explained well (creation from two vectors defining an example angle (azimuth or any of the elevations)), should not be a problem for user. Just need to make things easy to understand in doc.
+-(*): example of advanced restriction function: slice through volumetric data using a "thick plane" and count number of modes in each "thick plane cell" (check VTK/VTU for support of such things)

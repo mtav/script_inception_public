@@ -1,0 +1,30 @@
+import bpy
+op = bpy.context.active_operator
+
+op.size = 1.0
+op.cornerCutRatio = 0.8299999833106995
+op.periods = (2, 3, 4)
+op.join = False
+op.use_size = False
+op.use_periods = False
+op.select_components = True
+op.TT000 = True
+op.TTppp = False
+op.TTpmm = False
+op.TTmpm = False
+op.TTmmp = False
+op.QTT0mm = False
+op.QTT0mp = False
+op.QTT0pm = False
+op.QTT0pp = False
+op.QTTm0m = False
+op.QTTm0p = False
+op.QTTp0m = False
+op.QTTp0p = False
+op.QTTmm0 = False
+op.QTTmp0 = False
+op.QTTpm0 = False
+op.QTTpp0 = False
+op.view_align = False
+op.location = (0.0, 0.0, 0.0)
+op.rotation = (0.0, -0.0, 0.0)

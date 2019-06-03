@@ -1,0 +1,517 @@
+diff --git a/mode_volume/BFDTD_loadVolumetricData.m b/mode_volume/BFDTD_loadVolumetricData.m
+index a6148e5..a2682e7 100644
+--- a/mode_volume/BFDTD_loadVolumetricData.m
++++ b/mode_volume/BFDTD_loadVolumetricData.m
+@@ -31,7 +31,7 @@ function ret = BFDTD_loadVolumetricData(varargin)
+   p = inputParserWrapper(p, 'addParamValue', 'columns', {'material', 'Exmod', 'Eymod', 'Ezmod'}, @iscell);
+   p = inputParserWrapper(p, 'addParamValue', 'justCheck', false, @islogical);
+   p = inputParserWrapper(p, 'addParamValue', 'pre_2008_BFDTD_version', false, @islogical);
+-  p = inputParserWrapper(p, 'addParamValue', 'DataSizeMax', 100e6, @isnumeric);
++  p = inputParserWrapper(p, 'addParamValue', 'DataSizeMax', 200e6, @isnumeric);
+   p = inputParserWrapper(p, 'addParamValue', 'probe_ident', '', @ischar); % normally read from .inp file, but this can be used if flag is missing, or to override flag settings
+   
+   p = inputParserWrapper(p, 'addParamValue', 'verbosity', 1, @isnumeric);
+@@ -66,7 +66,7 @@ function ret = BFDTD_loadVolumetricData(varargin)
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+   % prepare data storage based on mesh_file
+   
+-  printf('Loading mesh from %s\n', mesh_file);
++  fprintf('Loading mesh from %s\n', mesh_file);
+ 
+   % read BFDTD input files
+   pwd
+@@ -85,8 +85,8 @@ function ret = BFDTD_loadVolumetricData(varargin)
+   Nd = length(p.Results.columns);
+   Npts = Nx*Ny*Nz;
+   data_size = Npts * (Nd + 3 + 1);
+-  printf('Npts = %e\n', Npts);
+-  printf('data_size = %e\n', data_size);
++  fprintf('Npts = %e\n', Npts);
++  fprintf('data_size = %e\n', data_size);
+   if data_size > p.Results.DataSizeMax
+     error('Data size too big: data_size = %e*%e = %e > %e (increase DataSizeMax if needed)', Npts, Nd, data_size, p.Results.DataSizeMax);
+   end
+@@ -104,7 +104,7 @@ function ret = BFDTD_loadVolumetricData(varargin)
+   snap_time_number_fsnap = p.Results.snap_time_number_fsnap;
+   if isempty(snap_time_number_fsnap) || isnan(snap_time_number_fsnap)
+     [snap_time_number_fsnap, snap_time_number_fsnap_info] = getLastSnapTimeNumberOverall(inpfile_list, 'pre_2008_BFDTD_version', p.Results.pre_2008_BFDTD_version);
+-    printf('total_frequency_snapshots = %d\n', snap_time_number_fsnap_info.total_frequency_snapshots);
++    fprintf('total_frequency_snapshots = %d\n', snap_time_number_fsnap_info.total_frequency_snapshots);
+     if snap_time_number_fsnap_info.total_frequency_snapshots > 0
+       if isempty(snap_time_number_fsnap) || isnan(snap_time_number_fsnap)
+         error('Could not find a common snap_time_number for frequency snapshots.');
+@@ -112,7 +112,7 @@ function ret = BFDTD_loadVolumetricData(varargin)
+     end
+   end
+   
+-  printf('Using snap_time_number_fsnap = %d\n', snap_time_number_fsnap);
++  fprintf('Using snap_time_number_fsnap = %d\n', snap_time_number_fsnap);
+   
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+   
+@@ -143,7 +143,7 @@ function ret = BFDTD_loadVolumetricData(varargin)
+   % loop through .inp files
+   for inpfile_idx = 1:numel(inpfile_list)
+     inpfile = inpfile_list{inpfile_idx};
+-    printf('Processing file %d/%d: inpfile = %s\n', inpfile_idx, numel(inpfile_list), inpfile);
++    fprintf('Processing file %d/%d: inpfile = %s\n', inpfile_idx, numel(inpfile_list), inpfile);
+     
+     cd(original_directory);
+     cd(dirname(inpfile));
+@@ -159,20 +159,21 @@ function ret = BFDTD_loadVolumetricData(varargin)
+     numID_list_current = numID_list_per_inp{ mod(inpfile_idx - 1, numel(numID_list_per_inp)) + 1 };
+     
+     % loop through all time snapshots
+-    printf('Loading time snapshots...\n');
++    fprintf('Loading time snapshots...\n');
+     numID_list_tsnap = 1:numel(structured_entries.time_snapshots);
+     if ~isempty(numID_list_current)
+       numID_list_tsnap = intersect(numID_list_tsnap, numID_list_current);
+     end
+     for numID = numID_list_tsnap
+       
+-      printf('%d/%d\r', numID, numel(structured_entries.time_snapshots));
++      fprintf('%d/%d\r', numID, numel(structured_entries.time_snapshots));
+       
+       % get snapshot parameters
+       snapshot = structured_entries.time_snapshots(numID);
+       snapshot.C = 0.5*(snapshot.P1 + snapshot.P2);
+       snapshot.plane_bfdtd_index = snapshot.plane;
+-      snapshot.plane_letter = {'x','y','z'}{snapshot.plane_bfdtd_index};
++      plane_letter_list = {'x','y','z'};
++      snapshot.plane_letter = plane_letter_list{snapshot.plane_bfdtd_index};
+       snapshot.plane_position = snapshot.C(snapshot.plane_bfdtd_index);
+       
+       % update snapshot range info
+@@ -184,7 +185,7 @@ function ret = BFDTD_loadVolumetricData(varargin)
+       ret.info.time_snapshots.zmax = max([ret.info.time_snapshots.zmax, snapshot.P1(3), snapshot.P2(3)]);
+       
+       % get filename
+-      [ snapshot.snap_filename, alphaID, pair ] = numID_to_alphaID_TimeSnapshot(numID, snapshot.plane_letter, probe_ident, p.Results.snap_time_number_tsnap, 'pre_2008_BFDTD_version', p.Results.pre_2008_BFDTD_version);
++      [ snapshot.snap_filename, alphaID, pair ] = numID_to_alphaID_TimeSnapshot(numID, snapshot.plane_letter, probe_ident, p.Results.snap_time_number_tsnap); %, 'pre_2008_BFDTD_version', p.Results.pre_2008_BFDTD_version);
+       
+       if ~exist(snapshot.snap_filename, 'file')
+         error('File not found: %s', snapshot.snap_filename);
+@@ -208,23 +209,24 @@ function ret = BFDTD_loadVolumetricData(varargin)
+       end
+     
+     end
+-    printf('\n');
++    fprintf('\n');
+     
+     % loop through all frequency snapshots
+-    printf('Loading frequency snapshots...\n');
++    fprintf('Loading frequency snapshots...\n');
+     numID_list_fsnap = 1:numel(structured_entries.frequency_snapshots);
+     if ~isempty(numID_list_current)
+       numID_list_fsnap = intersect(numID_list_fsnap, numID_list_current);
+     end
+     for numID = numID_list_fsnap
+       
+-      printf('%d/%d\r', numID, numel(structured_entries.frequency_snapshots));
++      fprintf('%d/%d\r', numID, numel(structured_entries.frequency_snapshots));
+       
+       % get snapshot parameters
+       snapshot = structured_entries.frequency_snapshots(numID);
+       snapshot.C = 0.5*(snapshot.P1 + snapshot.P2);
+       snapshot.plane_bfdtd_index = snapshot.plane;
+-      snapshot.plane_letter = {'x','y','z'}{snapshot.plane_bfdtd_index};
++      plane_letter_list = {'x','y','z'};
++      snapshot.plane_letter = plane_letter_list{snapshot.plane_bfdtd_index};
+       snapshot.plane_position = snapshot.C(snapshot.plane_bfdtd_index);
+       frequency_list(end+1) = snapshot.frequency;
+       
+@@ -261,7 +263,7 @@ function ret = BFDTD_loadVolumetricData(varargin)
+       end
+     
+     end
+-    printf('\n');
++    fprintf('\n');
+ 
+   end
+   
+diff --git a/mode_volume/MV_convergence_process.m b/mode_volume/MV_convergence_process.m
+index 14262e9..d7fd5ac 100644
+--- a/mode_volume/MV_convergence_process.m
++++ b/mode_volume/MV_convergence_process.m
+@@ -21,7 +21,7 @@ function ret_new = MV_convergence_process(mesh_file, inpfile_list, outfile_basen
+   p = inputParserWrapper(p, 'parse', mesh_file, inpfile_list, outfile_basename, varargin{:});
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+   
+-  printf('=========> Processing %s \n', basename(outfile_basename));
++  fprintf('=========> Processing %s \n', basename(outfile_basename));
+   close all;
+   
+   %fsnap_dir = dirname(mesh_file);
+@@ -129,7 +129,7 @@ function ret_new = MV_convergence_process(mesh_file, inpfile_list, outfile_basen
+     %radius = alpha_radius*Rmax;
+     
+     progress = 100*idx./numel(alpha_list);
+-    printf('\n================> idx = %d/%d = %.2f%% ; alpha_volume = %f\n', idx, numel(alpha_list), progress, alpha_volume);
++    fprintf('\n================> idx = %d/%d = %.2f%% ; alpha_volume = %f\n', idx, numel(alpha_list), progress, alpha_volume);
+     
+     ret_new = calculateModeVolume2(ret_new, 'refractive_index_defect', p.Results.refractive_index_defect, 'mask_function', @(X,Y,Z) getVolumetricMaskBox(X, Y, Z, centro, radius));
+     ret_all{idx} = ret_new.MV;
+diff --git a/mode_volume/calculateModeVolume2.m b/mode_volume/calculateModeVolume2.m
+index 839cfce..2c4fc6b 100644
+--- a/mode_volume/calculateModeVolume2.m
++++ b/mode_volume/calculateModeVolume2.m
+@@ -38,7 +38,8 @@ function ret = calculateModeVolume2(ret, varargin)
+   
+   % integration
+   %if any(isnan(p.Results.integration_sphere_centre)) || any(isnan(p.Results.integration_sphere_radius))
+-  if ~is_function_handle(p.Results.mask_function)
++  %if ~is_function_handle(p.Results.mask_function)
++  if ~isa(p.Results.mask_function, 'function_handle')
+     % integrate over whole volume
+     nonzeros_idx = find(ret.data.energy_density);
+     ret.MV.TotalIntegrationVolume = sum(ret.data.dV(nonzeros_idx));
+@@ -72,12 +73,16 @@ function ret = calculateModeVolume2(ret, varargin)
+     %end
+     nonzeros_idx = find(mask .* ret.data.energy_density);
+     ret.MV.TotalIntegrationVolume = sum(ret.data.dV(nonzeros_idx));
+-    ret.MV.TotalMeshVolume = sum( (mask .* ret.data.dV)(:) );
+-    ret.MV.TotalEnergy = sum( (mask .* Energy)(:) );
++    foo = (mask .* ret.data.dV);
++    ret.MV.TotalMeshVolume = sum( foo(:) );
++    foo = (mask .* Energy);
++    ret.MV.TotalEnergy = sum( foo(:) );
+     
+     % get maxima info
+-    [ret.MV.MaximumEnergyDensity.value, ret.MV.MaximumEnergyDensity.linear_index] = max( (mask .* ret.data.energy_density)(:) );
+-    [ret.MV.MaximumE2.value, ret.MV.MaximumE2.linear_index] = max( (mask .* ret.data.Emod2)(:) );
++    foo = (mask .* ret.data.energy_density);
++    [ret.MV.MaximumEnergyDensity.value, ret.MV.MaximumEnergyDensity.linear_index] = max( foo(:) );
++    foo = (mask .* ret.data.Emod2);
++    [ret.MV.MaximumE2.value, ret.MV.MaximumE2.linear_index] = max( foo(:) );
+   end
+   
+   % get maxima locations
+diff --git a/utilities/common.py b/utilities/common.py
+index 73f8774..de1e295 100755
+--- a/utilities/common.py
++++ b/utilities/common.py
+@@ -23,14 +23,14 @@ def eng_string( x, format='%s', si=False):
+     e-9 etc.
+ 
+     E.g. with format='%.2f'::
+-    
++
+         1.23e-08 => 12.30e-9
+              123 => 123.00
+           1230.0 => 1.23e3
+       -1230000.0 => -1.23e6
+ 
+     and with si=True::
+-    
++
+           1230.0 => 1.23k
+       -1230000.0 => -1.23M
+ 
+@@ -61,7 +61,7 @@ def check_call_and_log(cmd, log_file_object):
+   '''
+   Custom extension of the *check_call* function from the python *subprocess* module.
+   It redirects *stderr* to *stdout* and prints both out to the screen, while also writing them to the file object *log_file_object*.
+-  
++
+   .. todo:: Creating a custom file object would be nicer and enable use of all the *subprocess* convenience functions.
+   '''
+   with subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT) as p:
+@@ -74,7 +74,7 @@ def check_call_and_log(cmd, log_file_object):
+   return 0
+ 
+ def runCommandAndStoreOutput(cmd, outfilename, verbosity=0):
+-  
++
+   if verbosity >= 1:
+     print('cmd = {}'.format(cmd))
+     print('outfilename = {}'.format(outfilename))
+@@ -83,26 +83,26 @@ def runCommandAndStoreOutput(cmd, outfilename, verbosity=0):
+       check_call_and_log(cmd, outFile)
+     else:
+       subprocess.check_call(cmd, stdout=outFile)
+-  
++
+   return
+ 
+ def runSimulation(exe, inFileName, outfilename=None, verbosity=0):
+   '''
+   Just a simple convenience function to run a simulation in the directory of the input file and then going back to the original working directory.
+   The output is saved in a file of the form ``basename(inFileName)+'.out'`` by default.
+-  
++
+   :param str exe: The executable to use.
+   :param str inFileName: The input file to use.
+   :param str outfilename: The output file to use (i.e. logfile). If *None*, a filename will be built by replacing the extension of *inFileName* with ".out". Default: None
+   :param int verbosity: If *verbosity*>=1, the final command used will be printed out. If *verbosity*>=2, the commands output will also be printed to screen. Default: 0
+   '''
+-  
++
+   if not os.path.isfile(inFileName):
+     raise UserWarning('File not found: {}'.format(inFileName))
+-  
++
+   if outfilename is None:
+     outfilename = os.path.splitext(os.path.basename(inFileName))[0]+'.out'
+-  
++
+   orig_cwd = os.getcwd()
+   os.chdir(os.path.dirname(os.path.abspath(inFileName)))
+   with open(outfilename,'w') as outFile:
+@@ -166,17 +166,17 @@ def symmetrifyAndSubtractOdd(vec,max):
+ def float_array(A):
+     '''
+     convert string array to float array
+-    
++
+     .. todo:: rename to float_list, since it returns a python list and not a numpy array, or replace with [f(i) for i in L]
+     '''
+     for i in range(len(A)):
+         A[i] = float(A[i])
+     return(A)
+-  
++
+ def int_array(A):
+     '''
+     convert string array to int array
+-    
++
+     .. todo:: rename to int_list, since it returns a python list and not a numpy array, or replace with [f(i) for i in L]
+     '''
+     for i in range(len(A)):
+@@ -186,24 +186,24 @@ def int_array(A):
+ def str2list(instr, numeric=True, array=True):
+   '''
+   Converts strings of the form '[1,2,3],[4,5,6],[7,8,9]' into a list of lists of the form [['1', '2', '3'], ['4', '5', '6'], ['7', '8', '9']]
+-  
++
+   * If numeric is set to True, converts all elements to float, otherwise leaves them as strings.
+   * If array is set to True, converts the lists to numpy arrays.
+   * If instr is not of type string, it raises a TypeError.
+-  
++
+   .. note:: Seems to only be used in the *weijeiWoodpile.py* script at the moment to deal with input from ConfigParser.
+   .. note:: This could be done with an eval-like function... I guess this is safer in the end?
+   '''
+-  
++
+   if not isinstance(instr, str):
+     raise TypeError('Invalid type for instr: {}. instr should be of type str.'.format(type(instr)))
+     #if isinstance(instr, (list, numpy.ndarray)):
+       #return(instr)
+     #else:
+       #raise TypeError('Invalid type for instr: {}. instr should be of type str, list or numpy.ndarray.'.format(type(instr)))
+-  
++
+   ret = []
+-  
++
+   listElements = re.compile("([^\[,\]]+)")
+   insideBrackets = re.compile("(\[[^\[\]]+\])")
+ 
+@@ -233,7 +233,7 @@ def is_number(s):
+ 
+ def addExtension(filename, default_extension):
+     ''' add default_extension if the file does not end in .geo or .inp '''
+-    
++
+     extension = getExtension(filename)
+     if extension == 'geo' or extension == 'inp':
+         return filename
+@@ -262,7 +262,7 @@ def getVecAlphaDirectionFromVar(var):
+   else:
+     print('unknown direction: '+str(var))
+     sys.exit(-1)
+-  
++
+ def planeNumberName(var):
+   ''' Returns numindex(1,2,3) and char('X','Y','Z') corresponding  to var(num or alpha index) '''
+   S = ['X','Y','Z']
+@@ -276,7 +276,7 @@ def planeNumberName(var):
+ 
+ # based on functions from http://stackoverflow.com/questions/2566412/find-nearest-value-in-numpy-array
+ def findNearest(a, a0):
+-    ''' Element in nd array `a` closest to the scalar value `a0` 
++    ''' Element in nd array `a` closest to the scalar value `a0`
+     returns (idx, a.flat[idx]) = (index of closest value, closest value)'''
+     a = array(a)
+     idx = numpy.abs(a - a0).argmin()
+@@ -284,7 +284,7 @@ def findNearest(a, a0):
+ 
+ def findNearestInSortedArray(a, a0, direction):
+   '''Find value in a closest to a0. Returns its index and the value.
+-  
++
+   * direction = -1: if a0 is not in a, choose closest, but smaller value
+   * direction = 0: just choose closest
+   * direction = +1: if a0 is not in a, choose closest, but larger value
+@@ -299,13 +299,13 @@ def findNearestInSortedArray(a, a0, direction):
+ 
+   # get index range closest to a0
+   idx_list = numpy.flatnonzero(abs(a-a0)==min(abs(a-a0)))
+-  
++
+   # select one index
+   if a0 <= a[idx_list[0]]:
+     idx = idx_list[0]
+   else:
+     idx = idx_list[-1]
+-  
++
+   # handle cases
+   if direction < 0 and a0 < a[idx] and idx-1 >= 0:
+     return(idx-1, a[idx-1])
+@@ -315,7 +315,7 @@ def findNearestInSortedArray(a, a0, direction):
+     return(idx, a[idx])
+ 
+ def addDoubleQuotesIfMissing(orig):
+-  
++
+   # simple solution
+   orig_quoted = '"'+str(orig).strip('"').strip('\'')+'"'
+ 
+@@ -329,7 +329,7 @@ def addDoubleQuotesIfMissing(orig):
+   #if len(orig) == 0:
+     #orig_quoted = Q + orig + Q
+   #elif len(woqi) > 0 and not (woqi[0] == Q and woqi[-1] == Q):
+-    #orig_quoted = Q + orig + Q    
++    #orig_quoted = Q + orig + Q
+   #else:
+     #orig_quoted = orig
+ 
+@@ -357,10 +357,10 @@ def difft_string(start,end):
+ 
+     SS = '%sh %smn %ss %sms'
+     return SS % (hh,mm,ss,ms)
+-    
++
+ def todatetime(time):
+     ''' converts a datetime.time object to a datetime.datetime object using the current date '''
+-    return datetime.datetime.today().replace(hour=time.hour, minute=time.minute, second=time.second, 
++    return datetime.datetime.today().replace(hour=time.hour, minute=time.minute, second=time.second,
+                                              microsecond=time.microsecond, tzinfo=time.tzinfo)
+ 
+ def timestodelta(starttime, endtime):
+@@ -370,21 +370,21 @@ def timestodelta(starttime, endtime):
+ # TODO: Start splitting up all those utilities into different files?
+ def rotation_matrix3(axis,theta):
+   '''Returns a rotation matrix of size 3 to rotate something around vector v by angle theta.
+-  
++
+   Usage::
+-  
++
+     v = numpy.array([3,5,0])
+     axis = numpy.array([4,4,1])
+-    theta = 1.2 
++    theta = 1.2
+     print(numpy.dot(rotation_matrix(axis,theta),v))
+-  
++
+   source: http://stackoverflow.com/questions/6802577/python-rotation-of-3d-vector
+-  
++
+   TODO: Replace with some existing complete geometry module???
+   '''
+-  
++
+   # this rotates the opposite way. Older version from website?:
+-  
++
+   #axis = axis/numpy.sqrt(numpy.dot(axis,axis))
+   #a = numpy.cos(theta/2)
+   #b,c,d = -axis*numpy.sin(theta/2)
+@@ -406,16 +406,16 @@ def rotation_matrix3(axis,theta):
+ 
+ def rotation_matrix4(axis,theta):
+   '''Returns a rotation matrix of size 4 to rotate something around vector v by angle theta.
+-  
++
+   Usage::
+-  
++
+     v = numpy.array([3,5,0])
+     axis = numpy.array([4,4,1])
+-    theta = 1.2 
++    theta = 1.2
+     print(numpy.dot(rotation_matrix(axis,theta),v))
+-  
++
+   source: http://stackoverflow.com/questions/6802577/python-rotation-of-3d-vector
+-  
++
+   .. todo:: Replace with some existing complete geometry module???
+   '''
+   axis = axis/numpy.sqrt(numpy.dot(axis,axis))
+@@ -470,7 +470,7 @@ def matlab_range(start, step, stop):
+   Returns a list of values going from *start* to *stop* with a step *step*, but so that all values are less than OR EQUAL TO *stop*.
+   i.e. it works like the matlab slice notation start:step:stop
+   or like numpy.arange(start, stop, step) but with values on the closed interval [start, stop].
+-  
++
+   .. todo:: Rewrite using an iterator or generator.
+   .. todo:: Check Matlab official doc on how slicing works. (or octave code, or check all possible cases)
+   .. todo:: Check if there is not already a similar function somewhere online/in numpy/elsewhere.
+@@ -489,7 +489,7 @@ def matlab_range(start, step, stop):
+     else:
+       if nextval >= stop:
+         L.append(nextval)
+-      
++
+     return(L)
+ 
+ def checkSnapshotNumber(filename, verbose=False):
+@@ -513,8 +513,8 @@ def checkSnapshotNumber(filename, verbose=False):
+ 
+   if verbose:
+     print('N_time_snaps = {}, N_freq_snaps = {}'.format(N_time_snaps, N_freq_snaps))
+-  
+-  if N_time_snaps > 99 or N_freq_snaps > 99:
++
++  if N_time_snaps > 99*2 or N_freq_snaps > 99*2:
+     raise Exception('More than 99 snapshots. This will not end well!!!')
+   return (N_time_snaps, N_freq_snaps)
+ 
+@@ -529,9 +529,9 @@ def unitVector(vec):
+ #def splitRange(Nmax_global, Nmax_local):
+   #'''
+   #To split a range of Nmax_global elements into chunks no bigger than Nmax_local.
+-  
++
+   #But numpy.array_split() is a much better existing solution!
+-  
++
+   #cf:
+     #http://stackoverflow.com/questions/24483182/python-split-list-into-n-chunks
+     #http://stackoverflow.com/questions/312443/how-do-you-split-a-list-into-evenly-sized-chunks
+@@ -542,11 +542,11 @@ def unitVector(vec):
+   #n1 = n2 + 1;
+   #m1 = Nmax_global - n2*Nparts;
+   #m2 = Nparts - m1;
+-  
++
+   ##range(n1)
+   ##range(n2)
+   ##ret = [n1*ones(m1,1); n2*ones(m2,1)];
+-  
++
+   ##msg = sprintf('sum(ret(:))=%d, Nsnaps=%d, max(ret(:))=%d, Nsnaps_max=%d\n', sum(ret(:)), Nsnaps, max(ret(:)), Nsnaps_max);
+   ##%printf(msg);
+   ##if (sum(ret(:)) ~= Nsnaps) || (max(ret(:)) > Nsnaps_max)
+diff --git a/utilities/getLastSnapTimeNumberOverall.m b/utilities/getLastSnapTimeNumberOverall.m
+index c4a1473..1b0ba3d 100644
+--- a/utilities/getLastSnapTimeNumberOverall.m
++++ b/utilities/getLastSnapTimeNumberOverall.m
+@@ -45,9 +45,10 @@ function [snap_time_number_fsnap_max_overall, snap_time_number_fsnap_info] = get
+       snapshot = structured_entries.frequency_snapshots(numID);
+       snapshot.C = 0.5*(snapshot.P1 + snapshot.P2);
+       snapshot.plane_bfdtd_index = snapshot.plane;
+-      snapshot.plane_letter = {'x','y','z'}{snapshot.plane_bfdtd_index};
++      plane_letter_list = {'x','y','z'};
++      snapshot.plane_letter = plane_letter_list{snapshot.plane_bfdtd_index};
+       snapshot.plane_position = snapshot.C(snapshot.plane_bfdtd_index);
+-      frequency_list(end+1) = snapshot.frequency;
++      %frequency_list(end+1) = snapshot.frequency;
+       
+       [ fsnap_filename, fsnap_alphaID, fsnap_pair ] = numID_to_alphaID_FrequencySnapshot(numID, 'snap_plane', snapshot.plane_letter, 'probe_ident', structured_entries.flag.id, 'snap_time_number', 0, 'pre_2008_BFDTD_version', p.Results.pre_2008_BFDTD_version);
+       prefix = [snapshot.plane_letter, fsnap_alphaID, structured_entries.flag.id];

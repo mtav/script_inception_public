@@ -1,0 +1,24 @@
+/* The tetrahedron centres */
+R0 : [ sqrt(2)/4,   1/sqrt(6),     sqrt(3)/4]$
+R1 : [-sqrt(2)/4,   1/sqrt(6),     sqrt(3)/4]$
+R2 : [         0, -1/sqrt(24),     sqrt(3)/4]$
+
+G0 : [ sqrt(2)/4,           0,  7*sqrt(3)/12]$
+G1 : [         0,   sqrt(6)/4,  7*sqrt(3)/12]$
+G2 : [-sqrt(2)/4,           0,  7*sqrt(3)/12]$
+
+B0 : [ sqrt(2)/4,  -1/sqrt(6), 11*sqrt(3)/12]$
+B1 : [         0,  1/sqrt(24), 11*sqrt(3)/12]$
+B2 : [-sqrt(2)/4,  -1/sqrt(6), 11*sqrt(3)/12]$
+
+/* cell type 1 parameters */
+offset1 : [ sqrt(2)/4, 0, 11*sqrt(3)/24]$
+u1 : [sqrt(2)/4, -sqrt(6)/4, 0]$
+v1 : [sqrt(2)/4,  sqrt(6)/4, 0]$
+w1 : [0, 0, sqrt(3)]$
+
+/* cell type 2 parameters */
+offset2 : [-sqrt(2)/4, 0, 11*sqrt(3)/24]$
+u2 : [sqrt(2)/2, 0, 0]$
+v2 : [0, sqrt(6)/2, 0]$
+w2 : [0, 0, sqrt(3)]$

@@ -1,0 +1,8 @@
+peak 1:
+xmin=623.8656987295826
+xmax=649.4555353901997
+lambda=634.7730 nm
+
+Q = 322.9788
+
+$DATA/IN/loncar_resonance_3/loncar_resonance_3_300000_1_1

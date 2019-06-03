@@ -1,0 +1,19 @@
+#%Module########################################################################
+##
+## MEEP modulefile
+##
+proc ModulesHelp { } {
+  global infostr
+  puts stderr $infostr
+}
+
+set infostr "Shared binaries for the photonics group. Includes serial versions of MEEP and MPB."
+
+module-whatis $infostr
+
+if {! [info exists ::env(MODULE_PREFIX)]} {
+  puts stderr "ERROR: MODULE_PREFIX not defined."
+  exit 1
+}
+
+append-path     PATH         [file join $::env(MODULE_PREFIX) opt/bin]

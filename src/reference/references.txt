@@ -1,0 +1,40 @@
+Reference stuff:
+================
+
+  % extract blocks
+  pattern_blocks = '^(?<type>\w+).*?\{(?<data>[^\{\}]*?)\}';
+  [tokens_blocks match_blocks names_blocks] =  regexp(cleantext, pattern_blocks, 'tokens', 'match', 'names', 'lineanchors', 'warnings');
+
+To append to a cell array in octave (DO NOT DO a=[a,foo]):
+ a{end+1}=664543
+
+to get a list of sample filenames for freq snapshots:
+filelist ={}; for numID=1:836; filelist{end+1} = numID_to_alphaID(numID, 'z', '_f.i.g.h.t_', mod(numID,100)); end;
+
+To test it:
+
+filelist ={}; for numID=1:836; filelist{end+1} = numID_to_alphaID(numID, 'z', '_f.i.g.h.t_', mod(numID,100)); end;
+FrequencySnapshotList = {};
+for idx=1:length(filelist)
+  disp(filelist{idx});
+  if ~isempty(regexp(filelist{idx},'^[xyz][a-z{|}~][a-z{]?.*\d\d\.(prn|dat)$','ignorecase'))
+    FrequencySnapshotList{end+1} = filelist{idx};
+    unknown = 0;
+  end
+end
+size(filelist)
+size(FrequencySnapshotList)
+
+  % REFERENCE LEGACY CODE:
+  % SSH-related stuff
+  %  ftp1=getAvailableSSH(hostname,1,'sftp',username);
+  %  mput(ftp1,inFile,fileBasenameWithExtension);
+  %  rund(ftp1,hcommand)
+  %  rund(hcommand)
+  %  mget(ftp1,remoteOutFile,path_str);
+
+Useful Matlab commands:
+=======================
+class:  Return class name of object.
+whos: List current variables, long form. 
+strcat: Concatenate strings.

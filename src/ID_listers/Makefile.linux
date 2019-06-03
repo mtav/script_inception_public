@@ -1,0 +1,26 @@
+OPTS=-Fu/usr/local/languages/fpc-2.4.0/lib/fpc/2.4.0/units/x86_64-linux/rtl/
+
+#TODO: Fix: /usr/bin/ld: warning: link.res contains output sections; did you forget -T?
+#TODO: simplify/improve Makefile
+#TODO: CLI options for the pascal ID programs
+#TODO: name binaries .bin to avoid constant changes to .gitignore?
+
+all: Probe_IDs FrequencySnapshot_IDs FrequencySnapshot_IDs_2008 TimeSnapshot_IDs ModeFilteredProbe_IDs
+
+Probe_IDs: Probe_IDs.pas
+	fpc $(OPTS) Probe_IDs.pas
+
+FrequencySnapshot_IDs: FrequencySnapshot_IDs.pas
+	fpc $(OPTS) FrequencySnapshot_IDs.pas
+
+FrequencySnapshot_IDs_2008: FrequencySnapshot_IDs_2008.pas
+	fpc $(OPTS) FrequencySnapshot_IDs_2008.pas
+
+TimeSnapshot_IDs: TimeSnapshot_IDs.pas
+	fpc $(OPTS) TimeSnapshot_IDs.pas
+
+ModeFilteredProbe_IDs: ModeFilteredProbe_IDs.pas
+	fpc $(OPTS) ModeFilteredProbe_IDs.pas
+
+clean:
+	rm -f *.o Probe_IDs FrequencySnapshot_IDs TimeSnapshot_IDs ModeFilteredProbe_IDs

@@ -1,0 +1,21 @@
+Quick setup guide:
+------------------
+-Install 32-bit version of VTK 6.1.0 and h5py with/for python 2.7.
+-Copy h5py module to the vtkpython path from whereever it got installed (or adapt PYTHONPATH, but this might break your python3 setup)
+-Add vtkpython.exe location to Windows PATH.
+
+Usage:
+------
+-Put .stl file in directory.
+-Edit vtkpython-stltoh5.bat according to your needs.
+-Double-click on vtkpython-stltoh5.bat to run it.
+-This should create .h5,.vtp and .vts files.
+
+MEEP usage:
+-----------
+Use this line in your MEEP/MPB scripts:
+(set-param! epsilon-input-file "foo.h5")
+
+Example .ctl file:
+------------------
+diamond.ctl

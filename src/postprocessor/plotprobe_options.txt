@@ -1,0 +1,40 @@
+  % necessary options
+  %% already implemented
+  if isfield(handles,'ProbeFile')==0; error('handles.ProbeFile missing.'); end;
+  if isfield(handles,'col')==0; error('handles.col missing.'); end;
+
+  % general options
+  %% already implemented
+  if isfield(handles,'autosave')==0; handles.autosave = false; end;
+
+  %% to be implemented later maybe
+  if isfield(handles,'imageSaveBasename')==0; handles.imageSaveBasename = ''; end;
+  if isfield(handles,'verbosity')==0; handles.verbosity = 0; end;
+
+  % plotProbe specific options
+  if isfield(handles,'tmin_mus')==0; handles.tmin_mus = 6e-8; end; % affects everything!
+  if isfield(handles,'tmax_mus')==0; handles.tmax_mus = -1; end;
+
+  if isfield(handles,'harminv_lambdaLow_mum')==0; handles.harminv_lambdaLow_mum = -1; end; % affects harminv run
+  if isfield(handles,'harminv_lambdaHigh_mum')==0; handles.harminv_lambdaHigh_mum = -1; end;
+
+  if isfield(handles,'useFFTrange')==0; handles.useFFTrange = true; end; % affects peak searching range
+  if isfield(handles,'FFTrange_min_mum')==0; handles.FFTrange_min_mum = 0.100; end;
+  if isfield(handles,'FFTrange_max_mum')==0; handles.FFTrange_max_mum = 1.500; end;
+
+  if isfield(handles,'autoZoomFFT')==0; handles.autoZoomFFT = true; end; % only affects plot
+
+  % Not so useful options: to maybe be implemented later or removed
+  if isfield(handles,'DoAnalysis')==0; handles.DoAnalysis = true; end;
+  if isfield(handles,'plotLorentzFit')==0; handles.plotLorentzFit = false; end;
+  if isfield(handles,'computeLorentz')==0; handles.computeLorentz = false; end;
+  if isfield(handles,'computeHarminvLocal')==0; handles.computeHarminvLocal = false; end;
+  if isfield(handles,'computeHarminvGlobal')==0; handles.computeHarminvGlobal = true; end;
+  if isfield(handles,'Qtext')==0; handles.Qtext = true; end;
+  if isfield(handles,'peakStars')==0; handles.peakStars = true; end;
+
+  if isfield(handles,'ViewingWindowSize_mum')==0; handles.ViewingWindowSize_mum = 0.200; end;
+  if isfield(handles,'ViewingWindowThreshold')==0; handles.ViewingWindowThreshold = 1e-3; end;
+
+  if isfield(handles,'hide_figures')==0; handles.hide_figures = false; end;
+  if isfield(handles,'plotNothing')==0; handles.plotNothing = false; end;

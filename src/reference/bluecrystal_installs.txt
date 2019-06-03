@@ -1,0 +1,26 @@
+SWIG:
+=====
+./configure --prefix=$HOME/opt/  --without-pcre 
+make
+make install
+
+MEEP:
+=====
+module load gnu_builds/hdf5.mpi
+module load gnu_builds/gsl-1.13
+module load gnu_builds/gsl
+export CPPFLAGS="-I/usr/local/gnu_builds/gsl/include -I/usr/local/gnu_builds/gsl-1.13/include -I/usr/local/gnu_builds/hdf5/serial/include/ -I$HOME/opt/include"
+export LDFLAGS="-L/usr/local/gnu_builds/hdf5/serial/lib -L$HOME/opt/lib"
+./configure --prefix=$HOME/opt --with-libctl=$HOME/opt/share/libctl/ --enable-shared --with-pic
+make
+make install clean
+
+FFTW:
+=====
+./configure --prefix=$HOME/opt/ --with-pic 
+make
+make install
+
+python-MEEP:
+============
+python setup.py install --prefix $HOME/opt/lib

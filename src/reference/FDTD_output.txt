@@ -1,0 +1,203 @@
+FDTD data output:
+=================
+snapshot:
+['Ex', 'Ey', 'Ez', 'Hx', 'Hy', 'Hz', 'Pow', 'material']
+-> E(vec3, float), H(vec3, float), Pow(float), material(float)
+
+frequency snapshot:
+['Exmod', 'Exre', 'Exim', 'Eymod', 'Eyre', 'Eyim', 'Ezmod', 'Ezre', 'Ezim', 'Hxmod', 'Hxre', 'Hxim', 'Hymod', 'Hyre', 'Hyim', 'Hzmod', 'Hzre', 'Hzim']
+-> E(vec3, complex), H(vec3, complex)
+
+probe:
+['Ex' 'Ey' 'Ez' 'Hx' 'Hy' 'Hz' 'pow']
+-> E(vec3, float), H(vec3, float), Pow(float)
+shape = time_index
+
+/grid/xmesh
+/grid/ymesh
+/grid/zmesh
+/grid/lattice_vectors
+/grid/timestep
+
+/data/
+/data/epsilon
+/data/frequency-domain/frequency-0/frequency
+/data/frequency-domain/frequency-0/E
+/data/frequency-domain/frequency-0/H
+/data/frequency-domain/frequency-0/EnergyDensity
+
+/data/snapshots/0
+/data/snapshots/1
+
+/data/frequency_snapshots/0
+/data/frequency_snapshots/1
+
+/data/probes
+/data/probes/0
+/data/probes/1
+
+shape (idx_x, idx_y, idx_z, idx_t)
+
+Nx=Ny=Nz=100
+data_epsilon = numpy.zeros([Nx,Ny,Nz], dtype=[('epsilon', float)])
+data_fields = numpy.zeros([Nx,Ny,Nz], dtype=[('E', complex, 3), ('H', complex, 3)])
+
+data storage:
+=============
+-unstructured grid would make sense for BFDTD output: easy to implement
+-problems with unstructured grid:
+  -no "plane thickness"/"cell size" information -> required for MV calculation
+  -risk of overlapping point data if multiple intersecting snapshots are read in! -> incorrect volume integrations!
+-possible solutions:
+  -maybe there is a VTK function to populate structured grid from set of unstructured grids -> TODO: INVESTIGATE!!!
+  -just use structured grid during read-in + make sure snapshot planes are on grid lines!
+-cf VTK user guide for temporal data management (need to give time range for each data set somehow, has to be stored in HDF5 and VTK output files)
+-time-dependent epsilon values could be interesting, so maybe store them in the same way as time snapshots?
+-need sparse storage! i.e. any undefined values do not take up space
+
+Long-term goal:
+===============
+-temporal data included
+-cross-software compatibility (i.e. currently BFDTD, MEEP, MPB, OpenEMS)
+-include geometry information
+-dimension parametrization if possible (scripting support (with GUI) might make this less important)
+-unit support?
+-Easy calculation+visualization of things like poynting vectors, modulus of any vectors, vector fields, energy density, etc
+-energy density, poynting vectors, etc should not be stored, unless their computation takes a long time. Only minimal amount of data should be stored and the rest computed during visualization/analysis. With ability to save computed value to various formats if desired of course. -> via interface + scripting support!
+
+Problems to solve:
+------------------
+-How to combine FreeCAD+VTK? Design + analysis?
+-How to store input and output? Separately or combined?
+-MEEP, MPB and OpenEMS data formats?
+-Lumerical data format?
+
+Example:
+========
+Nx = 2
+Ny = 3
+Nz = 4
+Nt = 1
+eps = numpy.zeros([Nx,Ny,Nz], dtype=float)
+tsnap = numpy.zeros([Nx,Ny,Nz,Nt], dtype=[('E', float, 3), ('H', float, 3), ('Pow', float)])
+fsnap = numpy.zeros([Nx,Ny,Nz,Nt], dtype=[('E', complex, 3), ('H', complex, 3)])
+for i in range(Nx):
+  for j in range(Ny):
+    for k in range(Nz):
+      val = i*Ny*Nz + j*Nz + k
+      eps[i,j,k] = val
+      tsnap['E'] = array([val, val, val])
+      tsnap['H'] = array([val, val, val])
+      tsnap['Pow'] = val
+      fsnap['E'] = array([val+val*1j, val+val*1j, val+val*1j])
+      fsnap['H'] = array([val+val*1j, val+val*1j, val+val*1j])
+
+Size considerations:
+====================
+RCD example:
+epsilon storage:
+-.prn files: 43.7 MB
+-.h5 file: 74.4 MB
+-.vts file: 35.7 MB
+
+fsnaps would add at least 6 values + 1 for energy density
+
+11 "timesteps" (or frequencies)
+>>> 40 + 40*7*11
+3120 MB
+1 timestep:
+>>> 40 + 40*7
+320 MB
+
+Using one .h5/.vts file per "timestep"/data type:
+-------------------------------------------------
+good:
+-easy management with file manager: easy to delete/update/etc
+-convenient with split-up runs: epsilon/Ex/Ey/Ez
+-easy animation by simply properly naming the .vts files
+-possible consistency between .prn file indexing and .vts file indexing
+-no need to deal with time info when reading/storing data
+-fast loading/opening
+-easier to pass around
+
+bad:
+-lots of files
+-mesh info duplication
+
+Using single big .h5/.vts file (or one per excitation direction maybe):
+-----------------------------------------------------------------------
+good:
+-single file, minimal or no data duplication
+-easy to organize data from multiple sims without messing things up. Even the input files (geometry, etc) could be included in the giant file (with compression as potential added benefit).
+-easier to pass around all necessary "files/data"
+-easier data integrity checking
+
+bad:
+-possibly huge filesizes, maybe over 4GB (-> additional filesystem issues (FAT32...))
+-requires custom tools to manage datasets (add/remove/update/etc)
+-slow loading/opening if not done efficiently
+-hard to pass small files around via USB stick or mail (ex: send someone single probe data) -> solution: extract necessary data into separate file (or just use original .prn if still available)
+-harder to fix potential data corruption / recover data
+
+Current best solution:
+----------------------
+for a given sim:
+  epsilon/epsilon.h5
+  Ex/fsnap.0.h5
+  Ex/fsnap.1.h5
+  Ex/fsnap.2.h5
+  Ey/fsnap.0.h5
+  Ey/fsnap.1.h5
+  Ey/fsnap.2.h5
+  Ez/fsnap.0.h5
+  Ez/fsnap.1.h5
+  Ez/fsnap.2.h5
+
+-> same layout for .vts files
+
+alternative:
+------------
+-create global data storage class/object
+-pass files to read to fill in data structure
+-write out data structure into arbitrarily named .h5/.vts files
+-> files can contain whatever user chooses and named flexibly, i.e. user can choose giant combo file or multiple smaller files!
+How it should work:
+sim.readData() # read all available data
+sim.readData(snapshot_object, snap_time_number) # read specific snapshot/snap_time_number
+sim.writeHDF5() # write all known data to basename + '.h5'
+sim.writeHDF5('foo.h5') # write all known data to 'foo.h5'
+sim.writeHDF5('foo.h5', select=['epsilon', 'fsnap', 'tsnap', etc]) # write specific data to 'foo.h5'
+
+-> Sounds nice in theory, but because we need to count snapshots to know which file to is which, might as well read all in...
+
+utilities:
+----------
+-Create EM-data class?
+ex:
+data = EMdata()
+data.setMesh()
+data.setTimeStep()
+data.setSnapTimeNumberMax()
+data.setFrequencyDomainData(x, y, z, snap_time_number, E)
+data.
+
+Problems:
+~~~~~~~~~
+-probes are pure time data -> how will they be stored? in their own .h5 file?
+-every snapshot, probe, etc can have different start, stop, step values, leading to different snap_time_number values and meanings... :/ -> This should be a warning about giving users too much flexibility!
+-> Code should be flexible enough to accomodate this shit...
+-> but that can be dealt with later. For current/most cases, it should be safe to assume same basic params for probes, tsnaps and fsnaps respectively...
+
+Related source files:
+=====================
+bfdtd/bfdtd_parser.py
+bfdtd/snapshot.py
+testing/test_BFDTD_getFileName.py
+testing/test_read_data.py
+h5_vtk_stl_converters/h5utils.py
+PyVTK_hacking/gaussian_dataset.py
+
+TODO:
+=====
+-Make h5tovts support conversion of vector/complex data. (.h5 file data storage seems ok now)
+-BUG: hdfview does not support complex data. :(

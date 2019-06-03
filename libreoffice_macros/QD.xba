@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="QD" script:language="StarBasic">REM  InGaAs quantum dots
+
+REM constants
+
+Function QD_get_n_os()
+	REM refractive index
+	REM unit: no unit
+	QD_get_n_os = 3.55
+End Function
+
+Function QD_get_lambda()
+	REM wavelength
+	REM unit: m
+	QD_get_lambda = 940*1e-9
+End Function
+
+Function QD_get_tau()
+	REM spontaneous emission lifetime
+	REM unit: s
+	QD_get_tau = 1*1e-9
+End Function
+
+REM computed quantum emitter parameters
+
+Function QD_get_gamma()
+	REM unit: Hz
+	QD_get_gamma = get_gamma(QD_get_tau())
+End Function
+
+Function QD_get_omega_os()
+	REM unit: Hz
+	QD_get_omega_os = 2*PI()*get_c0()/QD_get_lambda()
+End Function
+
+Function QD_get_deg()
+	REM unit: C*m
+	REM QD_get_deg = get_deg(QD_get_n_os(), QD_get_omega_os(), QD_get_gamma())
+	QD_get_deg = get_deg(QD_get_n_os, QD_get_lambda(), QD_get_tau())
+End Function
+
+Function QD_get_feg()
+	REM unit: no unit
+	REM QD_get_feg = get_feg(QD_get_omega_os(), QD_get_deg())
+	QD_get_feg = get_feg(QD_get_lambda(), QD_get_deg())
+End Function
+
+REM computed coupling parameters
+
+Function QD_get_g(Vn1, n_def)
+	REM unit: Hz
+	QD_get_g = get_g(Vn1, n_def, QD_get_gamma(), QD_get_lambda(), QD_get_n_os())
+End Function
+
+Function QD_get_coupling_strength_criteria(Q, Vn1, n_def)
+	REM unit: no unit
+	QD_get_coupling_strength_criteria = get_coupling_strength_criteria(QD_get_g(Vn1, n_def), get_kappa(QD_get_lambda(), Q), QD_get_gamma())
+End Function
+
+Function QD_get_coupling_strength_criteria_string(Q, Vn1, n_def)
+	REM returns string
+	QD_get_coupling_strength_criteria_string = get_coupling_strength_criteria_string(QD_get_g(Vn1, n_def), get_kappa(QD_get_lambda(), Q), QD_get_gamma())
+End Function
+
+</script:module>

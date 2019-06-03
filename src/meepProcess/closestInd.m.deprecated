@@ -1,0 +1,10 @@
+% Finds the index of the closest point of a given vector or matrix to the
+% given point.
+
+function [ind,val]=closestInd(M,p)
+M=abs(M-p);
+val=M;
+for m=1:ndims(M)
+    val=min(val);
+end
+ind=find(M==val);

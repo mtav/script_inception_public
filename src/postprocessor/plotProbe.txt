@@ -1,0 +1,62 @@
+    [handles.header, handles.data] = readPrnFile(handles.ProbeFile);
+
+  time_mus = 1e-12*handles.data(:,1);
+
+  dt_mus = time_mus(2)-time_mus(1);  % handles.data(*,1) being in 10^-18 s (because input frequency is in 10^6 Hz), dt is in 10^-18 s/1e-12 = 10^-6 s
+
+  data_time_domain = handles.data(:,handles.col);
+
+      fid = fopen(harminvDataFile,'w+');
+      %fprintf(fid,'%2.8e\r\n',handles.data(:,handles.col));
+      fprintf(fid,'%2.8e\r\n',data_time_domain);
+      fclose(fid);
+
+      [ status, lambdaH_mum, Q, outFile, err, minErrInd, frequency, decay_constant, amplitude, phase ] = doHarminv(harminvDataFile, dt_mus, handles.harminv_lambdaLow_mum, handles.harminv_lambdaHigh_mum, outFile, cmdFile);
+
+
+function [fft_out,lambda,freq] = calcFFT(datain,dt,NFFT)
+  % function [fft_out,lambda,freq] = calcFFT(datain,dt,NFFT)
+  % datain = datain value in time domain
+  % dt = timestep in time domain
+  % NFFT = double the number of points you want in the output
+  % fft_out = magnitude 
+  % freq = frequency
+  % lambda = wavelength = c0/freq
+  % TODO: disable use of NFFT wherever it is still used.
+
+  N = length(datain);
+  Nhalf = ceil(N/2);
+  NFFT = 2*Nhalf;
+  
+  freq_full = linspace(0, ((NFFT-1)/NFFT)*(1/dt), NFFT);
+  fft_out_full = fft(datain, NFFT);
+
+  % We skip the first frequency to avoid divide by 0 later.
+  % TODO: Fix outside code instead to check for Inf value in lambda range?
+  freq = freq_full(2:Nhalf);
+  fft_out = fft_out_full(2:Nhalf);
+
+  % calculate wavelength for convenience
+  lambda = get_c0()./freq;
+
+  % make sure all vectors are column vectors
+  fft_out = fft_out(:);
+  lambda = lambda(:);
+  freq = freq(:);
+
+end
+
+
+  [calcFFT_output, lambda_vec_mum, freq_vec_Mhz] = calcFFT(data_time_domain, dt_mus);
+
+
+  Y = calcFFT_output.* conj(calcFFT_output);
+
+      plot(handles.FFT_scalingFactor*1e-3*X,Y);
+
+Summary:
+========
+we plot |fourier(E(t))|^2
+and calculate f0 and "Q=pi*f/decay" using E(t) in harminv
+the FWHM=delta(omega) of the fourier(E(t)) signal is FWHM=delta(omega)=2*"decay"
+but the FWHM=delta(omega) of the |fourier(E(t))|^2 signal is FWHM=delta(omega)=2*sqrt{sqrt{2}-1}*"decay"

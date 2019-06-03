@@ -1,0 +1,33 @@
+sines -n100000 0.01+0.001i 0.5+0.001i 0.4+0.001i > /tmp/in
+└─(^_^)(42)(17:07)─> harminv  0-1 < /tmp/in
+frequency, decay constant, Q, amplitude, phase, error
+0.01, 1.000000e-03, 31.4159, 1, -1.0472, 4.316378e-14
+└─(^_^)(43)(17:07)─> harminv  0.4-1 < /tmp/in
+frequency, decay constant, Q, amplitude, phase, error
+0.01, 1.000000e-03, 31.4159, 1, -1.0472, 2.911127e-14
+└─(^_^)(44)(17:07)─> harminv  0.4-10 < /tmp/in
+frequency, decay constant, Q, amplitude, phase, error
+0.01, 1.000000e-03, 31.4159, 1, -1.0472, 9.561886e-14
+
+-> only finds one harmonic
+
+>> d=dlmread('/tmp/in'); plot(real(d))
+>> plot(real(fft(d)))
+
+-> shows 3 peaks
+
+What is wrong with harminv in this case?
+Why does it even find frequencies outside the range?
+
+# increasing max error works, but why is the error so big?:
+
+harminv -v -E3  -Q 0.1 0.3-1 < ~/Development/script_inception_public/harminv_investigation/signal_example.txt
+# harminv: 100000 inputs, dt = 1
+frequency, decay constant, Q, amplitude, phase, error
+# searching frequency range 0.3 - 1
+# using 100 spectral basis functions, density 0.00142857
+0.01, 1.000000e-03, 31.4159, 1, -1.0472, 6.137462e-14
+0.4, 1.000000e-03, 1256.64, 3, 3.14159, 1.250000e+00
+0.5, 1.000000e-03, 1570.8, 2, 1.0472, 9.999999e-01
+# harminv: 3/3 modes are ok: errs <= 3.000000e+00 and inf * 6.137462e-14
+, amps >= 0, -1.000000e+00 * 3, |Q| >= 0.1

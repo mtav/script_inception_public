@@ -1,0 +1,2 @@
+batchReadPRN3('~/Labortablo/rectangular_holes.bottomN_6.topN_3.excitationType_Zm1/')
+p01a.prn_Ez_parameters.txt

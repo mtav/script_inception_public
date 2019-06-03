@@ -1,0 +1,19 @@
+#%Module########################################################################
+##
+## null modulefile
+##
+proc ModulesHelp { } {
+        global version
+
+        puts stderr "	This module does absolutely nothing."
+        puts stderr "	It's meant simply as a place holder in your"
+	puts stderr "	dot file initialization."
+        puts stderr "
+	Version $version
+"
+}
+
+module-whatis	"does absolutely nothing"
+
+# for Tcl script use only
+set     version      3.2.10

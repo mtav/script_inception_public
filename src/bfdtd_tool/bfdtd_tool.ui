@@ -1,0 +1,1033 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>909</width>
+    <height>881</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>BFDTD tool</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QVBoxLayout" name="verticalLayout_6">
+    <item>
+     <widget class="QScrollArea" name="scrollArea">
+      <property name="verticalScrollBarPolicy">
+       <enum>Qt::ScrollBarAsNeeded</enum>
+      </property>
+      <property name="horizontalScrollBarPolicy">
+       <enum>Qt::ScrollBarAsNeeded</enum>
+      </property>
+      <property name="widgetResizable">
+       <bool>true</bool>
+      </property>
+      <widget class="QWidget" name="scrollAreaWidgetContents">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>0</y>
+         <width>887</width>
+         <height>810</height>
+        </rect>
+       </property>
+       <layout class="QVBoxLayout" name="verticalLayout_7">
+        <item>
+         <layout class="QVBoxLayout" name="verticalLayout_2">
+          <item>
+           <widget class="QTabWidget" name="tabWidget">
+            <property name="currentIndex">
+             <number>0</number>
+            </property>
+            <widget class="QWidget" name="tab">
+             <attribute name="title">
+              <string>Input files</string>
+             </attribute>
+             <layout class="QVBoxLayout" name="verticalLayout_4">
+              <item>
+               <widget class="QListWidget" name="listWidget_InputFiles">
+                <property name="selectionMode">
+                 <enum>QAbstractItemView::ExtendedSelection</enum>
+                </property>
+                <property name="selectionRectVisible">
+                 <bool>true</bool>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <layout class="QHBoxLayout" name="horizontalLayout_6">
+                <item>
+                 <widget class="QPushButton" name="pushButton_addInputFiles">
+                  <property name="text">
+                   <string>Add input files...</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QCheckBox" name="checkBox_DirectLoad">
+                  <property name="text">
+                   <string>Direct load</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <spacer name="horizontalSpacer">
+                  <property name="orientation">
+                   <enum>Qt::Horizontal</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>40</width>
+                    <height>20</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+               </layout>
+              </item>
+              <item>
+               <layout class="QHBoxLayout" name="horizontalLayout_9">
+                <item>
+                 <widget class="QPushButton" name="pushButton_removeInputFiles">
+                  <property name="text">
+                   <string>Remove selected input files</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QPushButton" name="pushButton_moveInputFileUp">
+                  <property name="text">
+                   <string>Move up</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QPushButton" name="pushButton_moveInputFileDown">
+                  <property name="text">
+                   <string>Move down</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QPushButton" name="pushButton_clearList">
+                  <property name="text">
+                   <string>Clear list</string>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </item>
+              <item>
+               <layout class="QHBoxLayout" name="horizontalLayout_10">
+                <item>
+                 <widget class="QPushButton" name="pushButton_loadInputFiles">
+                  <property name="text">
+                   <string>Load input files</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <spacer name="horizontalSpacer_2">
+                  <property name="orientation">
+                   <enum>Qt::Horizontal</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>40</width>
+                    <height>20</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+               </layout>
+              </item>
+             </layout>
+            </widget>
+            <widget class="QWidget" name="tab_3">
+             <attribute name="title">
+              <string>Parameters</string>
+             </attribute>
+             <widget class="QLabel" name="label_15">
+              <property name="geometry">
+               <rect>
+                <x>460</x>
+                <y>40</y>
+                <width>161</width>
+                <height>17</height>
+               </rect>
+              </property>
+              <property name="text">
+               <string>Shellscript parameters:</string>
+              </property>
+             </widget>
+             <widget class="QLabel" name="label_16">
+              <property name="geometry">
+               <rect>
+                <x>20</x>
+                <y>30</y>
+                <width>161</width>
+                <height>17</height>
+               </rect>
+              </property>
+              <property name="text">
+               <string>Snapshot parameters:</string>
+              </property>
+             </widget>
+             <widget class="QPushButton" name="pushButton_12">
+              <property name="geometry">
+               <rect>
+                <x>520</x>
+                <y>260</y>
+                <width>201</width>
+                <height>27</height>
+               </rect>
+              </property>
+              <property name="text">
+               <string>Load parameters from file...</string>
+              </property>
+             </widget>
+             <widget class="QPushButton" name="pushButton_7">
+              <property name="geometry">
+               <rect>
+                <x>270</x>
+                <y>270</y>
+                <width>201</width>
+                <height>27</height>
+               </rect>
+              </property>
+              <property name="text">
+               <string>Load parameters from file...</string>
+              </property>
+             </widget>
+             <widget class="QListView" name="listView_3">
+              <property name="geometry">
+               <rect>
+                <x>710</x>
+                <y>130</y>
+                <width>111</width>
+                <height>101</height>
+               </rect>
+              </property>
+             </widget>
+             <widget class="QLabel" name="label_13">
+              <property name="geometry">
+               <rect>
+                <x>20</x>
+                <y>310</y>
+                <width>101</width>
+                <height>17</height>
+               </rect>
+              </property>
+              <property name="text">
+               <string>Output:</string>
+              </property>
+             </widget>
+             <widget class="QLabel" name="label_11">
+              <property name="geometry">
+               <rect>
+                <x>110</x>
+                <y>320</y>
+                <width>121</width>
+                <height>17</height>
+               </rect>
+              </property>
+              <property name="text">
+               <string>Slicing direction:</string>
+              </property>
+             </widget>
+             <widget class="QLabel" name="label_17">
+              <property name="geometry">
+               <rect>
+                <x>120</x>
+                <y>290</y>
+                <width>62</width>
+                <height>17</height>
+               </rect>
+              </property>
+              <property name="text">
+               <string>X:</string>
+              </property>
+             </widget>
+             <widget class="QComboBox" name="comboBox_3">
+              <property name="geometry">
+               <rect>
+                <x>290</x>
+                <y>330</y>
+                <width>87</width>
+                <height>29</height>
+               </rect>
+              </property>
+             </widget>
+             <widget class="QTableWidget" name="tableWidget">
+              <property name="geometry">
+               <rect>
+                <x>60</x>
+                <y>60</y>
+                <width>351</width>
+                <height>192</height>
+               </rect>
+              </property>
+              <property name="acceptDrops">
+               <bool>true</bool>
+              </property>
+              <property name="dragEnabled">
+               <bool>true</bool>
+              </property>
+              <property name="dragDropOverwriteMode">
+               <bool>false</bool>
+              </property>
+              <property name="dragDropMode">
+               <enum>QAbstractItemView::InternalMove</enum>
+              </property>
+              <property name="defaultDropAction">
+               <enum>Qt::IgnoreAction</enum>
+              </property>
+              <property name="selectionMode">
+               <enum>QAbstractItemView::MultiSelection</enum>
+              </property>
+              <property name="sortingEnabled">
+               <bool>false</bool>
+              </property>
+              <row>
+               <property name="text">
+                <string>0</string>
+               </property>
+              </row>
+              <row>
+               <property name="text">
+                <string>1</string>
+               </property>
+              </row>
+              <row>
+               <property name="text">
+                <string>2</string>
+               </property>
+              </row>
+              <row>
+               <property name="text">
+                <string>3</string>
+               </property>
+              </row>
+              <row>
+               <property name="text">
+                <string>4</string>
+               </property>
+              </row>
+              <column>
+               <property name="text">
+                <string>a</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string>b</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string>c</string>
+               </property>
+              </column>
+              <item row="0" column="0">
+               <property name="text">
+                <string>456</string>
+               </property>
+              </item>
+              <item row="0" column="1">
+               <property name="text">
+                <string>54</string>
+               </property>
+              </item>
+              <item row="0" column="2">
+               <property name="text">
+                <string>456899</string>
+               </property>
+              </item>
+              <item row="1" column="0">
+               <property name="text">
+                <string>1</string>
+               </property>
+              </item>
+              <item row="1" column="1">
+               <property name="text">
+                <string>24524</string>
+               </property>
+              </item>
+              <item row="1" column="2">
+               <property name="text">
+                <string>4689</string>
+               </property>
+              </item>
+              <item row="2" column="0">
+               <property name="text">
+                <string>4444</string>
+               </property>
+              </item>
+              <item row="2" column="1">
+               <property name="text">
+                <string>1</string>
+               </property>
+              </item>
+              <item row="2" column="2">
+               <property name="text">
+                <string>47</string>
+               </property>
+              </item>
+              <item row="3" column="0">
+               <property name="text">
+                <string>478</string>
+               </property>
+              </item>
+              <item row="3" column="1">
+               <property name="text">
+                <string>45</string>
+               </property>
+              </item>
+              <item row="3" column="2">
+               <property name="text">
+                <string>47</string>
+               </property>
+              </item>
+              <item row="4" column="0">
+               <property name="text">
+                <string>75896</string>
+               </property>
+              </item>
+              <item row="4" column="1">
+               <property name="text">
+                <string>1</string>
+               </property>
+              </item>
+              <item row="4" column="2">
+               <property name="text">
+                <string>4777</string>
+               </property>
+              </item>
+             </widget>
+             <widget class="QListWidget" name="listWidget">
+              <property name="geometry">
+               <rect>
+                <x>430</x>
+                <y>70</y>
+                <width>256</width>
+                <height>161</height>
+               </rect>
+              </property>
+              <property name="dragEnabled">
+               <bool>true</bool>
+              </property>
+              <property name="dragDropMode">
+               <enum>QAbstractItemView::InternalMove</enum>
+              </property>
+              <item>
+               <property name="text">
+                <string>gdfg</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>hhhhhhhhhh</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>bbbbbbbbbb</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>asda</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>aaaaaaaaaaaa</string>
+               </property>
+              </item>
+             </widget>
+            </widget>
+            <widget class="QWidget" name="tab_4">
+             <attribute name="title">
+              <string>Frequency list</string>
+             </attribute>
+             <layout class="QVBoxLayout" name="verticalLayout_5">
+              <item>
+               <layout class="QHBoxLayout" name="horizontalLayout_7">
+                <item>
+                 <widget class="QTableWidget" name="tableWidget_Frequencies">
+                  <property name="dragEnabled">
+                   <bool>true</bool>
+                  </property>
+                  <property name="dragDropOverwriteMode">
+                   <bool>false</bool>
+                  </property>
+                  <property name="dragDropMode">
+                   <enum>QAbstractItemView::DragOnly</enum>
+                  </property>
+                  <property name="selectionBehavior">
+                   <enum>QAbstractItemView::SelectRows</enum>
+                  </property>
+                  <property name="sortingEnabled">
+                   <bool>true</bool>
+                  </property>
+                  <attribute name="horizontalHeaderDefaultSectionSize">
+                   <number>150</number>
+                  </attribute>
+                  <attribute name="horizontalHeaderStretchLastSection">
+                   <bool>true</bool>
+                  </attribute>
+                  <column>
+                   <property name="text">
+                    <string>Frequency (MHz)</string>
+                   </property>
+                  </column>
+                  <column>
+                   <property name="text">
+                    <string>Wavelength (mum)</string>
+                   </property>
+                  </column>
+                  <column>
+                   <property name="text">
+                    <string>Comment</string>
+                   </property>
+                  </column>
+                 </widget>
+                </item>
+                <item>
+                 <layout class="QVBoxLayout" name="verticalLayout">
+                  <item>
+                   <widget class="QPushButton" name="pushButton_AddFrequency">
+                    <property name="text">
+                     <string>Add frequency</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QPushButton" name="pushButton_AddFrequencyFromFrequencyList">
+                    <property name="text">
+                     <string>Add from frequency list file...</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QPushButton" name="pushButton_AddFrequencyFromInpFile">
+                    <property name="text">
+                     <string>Add from .inp file...</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QPushButton" name="pushButton_RemoveFrequency">
+                    <property name="text">
+                     <string>Remove selected frequencies</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QPushButton" name="pushButton_moveFrequencyUp">
+                    <property name="text">
+                     <string>Move up</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QPushButton" name="pushButton_moveFrequencyDown">
+                    <property name="text">
+                     <string>Move down</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QPushButton" name="pushButton_clearFrequencyList">
+                    <property name="text">
+                     <string>Clear list</string>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </item>
+               </layout>
+              </item>
+              <item>
+               <layout class="QHBoxLayout" name="horizontalLayout_11">
+                <item>
+                 <layout class="QFormLayout" name="formLayout_3">
+                  <item row="0" column="0">
+                   <widget class="QLabel" name="label_8">
+                    <property name="text">
+                     <string>Starting sample:</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="0" column="1">
+                   <widget class="QSpinBox" name="spinBox_StartingSample">
+                    <property name="minimum">
+                     <number>1</number>
+                    </property>
+                    <property name="maximum">
+                     <number>100000000</number>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="1" column="0">
+                   <widget class="QLabel" name="label_9">
+                    <property name="text">
+                     <string>First:</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="1" column="1">
+                   <widget class="QSpinBox" name="spinBox_First">
+                    <property name="minimum">
+                     <number>1</number>
+                    </property>
+                    <property name="maximum">
+                     <number>100000000</number>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="2" column="0">
+                   <widget class="QLabel" name="label_10">
+                    <property name="text">
+                     <string>Repetition:</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="2" column="1">
+                   <widget class="QSpinBox" name="spinBox_Repetition">
+                    <property name="minimum">
+                     <number>1</number>
+                    </property>
+                    <property name="maximum">
+                     <number>100000000</number>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </item>
+                <item>
+                 <spacer name="horizontalSpacer_3">
+                  <property name="orientation">
+                   <enum>Qt::Horizontal</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>40</width>
+                    <height>20</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+               </layout>
+              </item>
+             </layout>
+            </widget>
+            <widget class="QWidget" name="tab_5">
+             <attribute name="title">
+              <string>Emitter position</string>
+             </attribute>
+            </widget>
+           </widget>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout">
+            <item>
+             <widget class="QLabel" name="label_2">
+              <property name="text">
+               <string>Output directory:</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLineEdit" name="lineEdit_OutputDirectory"/>
+            </item>
+            <item>
+             <widget class="QPushButton" name="pushButton_SelectOutputDirectory">
+              <property name="text">
+               <string>Select directory...</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_2">
+            <item>
+             <widget class="QLabel" name="label_3">
+              <property name="text">
+               <string>Basename:</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLineEdit" name="lineEdit_BaseName"/>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_3">
+            <item>
+             <widget class="QLabel" name="label_5">
+              <property name="text">
+               <string>Operation:</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QComboBox" name="comboBox_Operation">
+              <item>
+               <property name="text">
+                <string>Add central snapshots</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Print number of cells</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Add mode volume snapshots</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Convert frequency to epsilon snapshots</string>
+               </property>
+              </item>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="pushButton_Run">
+              <property name="text">
+               <string>Run operation</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QGridLayout" name="gridLayout">
+            <item row="0" column="0">
+             <widget class="QCheckBox" name="checkBox_removeProbes">
+              <property name="text">
+               <string>Remove probes</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="1" rowspan="2">
+             <widget class="QCheckBox" name="checkBox_removeTimeAndEpsilonSnapshots">
+              <property name="text">
+               <string>Remove time and epsilon snapshots</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="2" rowspan="2">
+             <widget class="QCheckBox" name="checkBox_removeFrequencySnapshots">
+              <property name="text">
+               <string>Remove frequency snapshots</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="0" rowspan="2">
+             <widget class="QCheckBox" name="checkBox_removeGeometryObjects">
+              <property name="text">
+               <string>Remove geometry objects</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="2">
+             <widget class="QCheckBox" name="checkBox_clearFileList">
+              <property name="text">
+               <string>Clear file list (for .in file)</string>
+              </property>
+              <property name="checked">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_8">
+            <item>
+             <widget class="QGroupBox" name="groupBox">
+              <property name="title">
+               <string>Location for Central snapshots and mode volume snapshots:</string>
+              </property>
+              <layout class="QVBoxLayout" name="verticalLayout_3">
+               <item>
+                <layout class="QHBoxLayout" name="horizontalLayout_5">
+                 <item>
+                  <widget class="QRadioButton" name="radioButton_ArbitraryLocation">
+                   <property name="text">
+                    <string>Arbitrary location</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <layout class="QHBoxLayout" name="horizontalLayout_4">
+                   <item>
+                    <widget class="QRadioButton" name="radioButton_ObjectLocation">
+                     <property name="text">
+                      <string>Object location</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="QComboBox" name="comboBox_ObjectLocation"/>
+                   </item>
+                  </layout>
+                 </item>
+                </layout>
+               </item>
+               <item>
+                <layout class="QFormLayout" name="formLayout_2">
+                 <item row="0" column="0">
+                  <widget class="QLabel" name="label_19">
+                   <property name="text">
+                    <string>X:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="1">
+                  <widget class="QLineEdit" name="lineEdit_X">
+                   <property name="text">
+                    <string>0</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="0">
+                  <widget class="QLabel" name="label_20">
+                   <property name="text">
+                    <string>Y:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="1">
+                  <widget class="QLineEdit" name="lineEdit_Y">
+                   <property name="text">
+                    <string>0</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="2" column="0">
+                  <widget class="QLabel" name="label_21">
+                   <property name="text">
+                    <string>Z:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="2" column="1">
+                  <widget class="QLineEdit" name="lineEdit_Z">
+                   <property name="text">
+                    <string>0</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+              </layout>
+             </widget>
+            </item>
+            <item>
+             <layout class="QFormLayout" name="formLayout">
+              <item row="0" column="0">
+               <widget class="QLabel" name="label_18">
+                <property name="text">
+                 <string>Number of cells:</string>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="1">
+               <widget class="QLineEdit" name="lineEdit_Ncells">
+                <property name="enabled">
+                 <bool>true</bool>
+                </property>
+                <property name="text">
+                 <string/>
+                </property>
+                <property name="readOnly">
+                 <bool>true</bool>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="0">
+               <widget class="QLabel" name="label_7">
+                <property name="text">
+                 <string>Iterations:</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="1">
+               <widget class="QSpinBox" name="spinBox_Niterations">
+                <property name="minimum">
+                 <number>1</number>
+                </property>
+                <property name="maximum">
+                 <number>10000000</number>
+                </property>
+                <property name="singleStep">
+                 <number>1000</number>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="0">
+               <widget class="QLabel" name="label_4">
+                <property name="text">
+                 <string>Walltime:</string>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="1">
+               <widget class="QSpinBox" name="spinBox_Walltime">
+                <property name="minimum">
+                 <number>1</number>
+                </property>
+                <property name="maximum">
+                 <number>360</number>
+                </property>
+               </widget>
+              </item>
+              <item row="3" column="0">
+               <widget class="QLabel" name="label_6">
+                <property name="text">
+                 <string>Executable:</string>
+                </property>
+               </widget>
+              </item>
+              <item row="3" column="1">
+               <widget class="QComboBox" name="comboBox_Executable">
+                <property name="editable">
+                 <bool>true</bool>
+                </property>
+                <property name="currentIndex">
+                 <number>2</number>
+                </property>
+                <item>
+                 <property name="text">
+                  <string>fdtd64_2003</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>fdtd64_2008</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>fdtd64_2013</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>fdtd64_2013_dispersive</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>fdtd64_withRotation</string>
+                 </property>
+                </item>
+               </widget>
+              </item>
+              <item row="4" column="0">
+               <widget class="QLabel" name="label_14">
+                <property name="text">
+                 <string>Verbosity:</string>
+                </property>
+               </widget>
+              </item>
+              <item row="4" column="1">
+               <widget class="QSpinBox" name="spinBox_Verbosity"/>
+              </item>
+             </layout>
+            </item>
+           </layout>
+          </item>
+         </layout>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>909</width>
+     <height>27</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuFile">
+    <property name="title">
+     <string>File</string>
+    </property>
+    <addaction name="actionSaveConfig"/>
+    <addaction name="actionSaveConfigAs"/>
+    <addaction name="actionLoadConfig"/>
+   </widget>
+   <widget class="QMenu" name="menuEdit">
+    <property name="title">
+     <string>Settings</string>
+    </property>
+    <addaction name="actionPreferences"/>
+   </widget>
+   <widget class="QMenu" name="menuHelp">
+    <property name="title">
+     <string>Help</string>
+    </property>
+   </widget>
+   <addaction name="menuFile"/>
+   <addaction name="menuEdit"/>
+   <addaction name="menuHelp"/>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+  <action name="actionPreferences">
+   <property name="text">
+    <string>Preferences...</string>
+   </property>
+  </action>
+  <action name="actionSaveConfigAs">
+   <property name="text">
+    <string>Save config as...</string>
+   </property>
+  </action>
+  <action name="actionLoadConfig">
+   <property name="text">
+    <string>Load config...</string>
+   </property>
+  </action>
+  <action name="actionSaveConfig">
+   <property name="text">
+    <string>Save config</string>
+   </property>
+  </action>
+ </widget>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>pushButton_clearList</sender>
+   <signal>clicked()</signal>
+   <receiver>listWidget_InputFiles</receiver>
+   <slot>clear()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>772</x>
+     <y>436</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>454</x>
+     <y>234</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>

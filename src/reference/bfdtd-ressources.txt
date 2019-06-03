@@ -1,0 +1,8 @@
+size=[4.0000000000000027, 4.0000000000000027, 4.0000000000000027]
+resolution=[199, 200, 200]
+no geometry, no probes, no snapshots
+RSS: 541164kiB Time: 1:08.99
+
+After adding EpsilonBoxFull
+epsilonSnapshot: 200
+RSS: 591160kiB Time: 2:01.25

@@ -1,0 +1,16 @@
+TODO:
+-printf->fprintf
+-printf(*\r*) -> waitbar() and/or fprintf('\b',1,nchar) + nchar=fprintf(...)
+-warn if one .inp file has more than 99 snaps and auto-truncate
+-merge in changes done on daniel PC
+-add autosave of MV info and/or create print(ret) functions
+-direct load+calc MV wrapper?
+-getSnapParams() function to deal with {x,y,z}{idx} issue?
+-func to do flatten+sum? i.e. sum(f(:))? (because matlab cannot do (a+b)(:)) or maybe simply a(:) .* b(:)? -> check how to reduce mem usage: are vars deleted after last use?
+-make sure missing tsnaps or fsnaps do not affect results (ex: loading less tsnaps than fsnaps or vice-versa)
+
+function printf(msg, varargin)
+	disp(sprintf(msg, varargin{:}));
+end
+
+-strsplit() only exists in Matlab versions >= 2013, does not exist in v2012 -> need to create custom function? -> It is used in BFDTD parsing.

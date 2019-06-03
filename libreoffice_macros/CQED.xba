@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="CQED" script:language="StarBasic">REM CQED formulas
+
+Function get_kappa(lambda, Q)
+	REM unit: Hz
+	get_kappa = 2*PI()*get_c0()/(lambda*Q)
+End Function
+
+Function get_g(Vn1, n_def, gamma_os, lambda_os, n_os)
+	REM unit: Hz
+	get_g = SQR( (3*get_c0()*gamma_os*n_def) / (8*PI()*Vn1*lambda_os*n_os) )
+End Function
+
+Function get_coupling_strength_criteria(g, kappa, gamma)
+	REM unit: no unit
+	get_coupling_strength_criteria = (4*g)/(kappa+gamma)
+End Function
+
+Function get_coupling_strength_criteria_string(g, kappa, gamma)
+	REM returns string
+	If get_coupling_strength_criteria(g, kappa, gamma) &gt; 1 Then
+		get_coupling_strength_criteria_string = &quot;Strong&quot;
+    Else
+		get_coupling_strength_criteria_string = &quot;Weak&quot;
+    End If
+End Function
+
+Function get_Vn1(Veff, lambda, n_def)
+	REM Veff (m^3)
+	REM lambda (m)
+	REM unit: no unit
+	get_Vn1 = Veff/(lambda/n_def)^3
+End Function
+
+Function get_PurcellFactor_weak_coupling_approximation(Q, Veff, lambda, n_def)
+	REM Veff (m^3)
+	REM lambda (m)
+	REM unit: no unit
+	get_PurcellFactor_weak_coupling_approximation = (3*Q) / (4*pi^2*get_Vn1(Veff, lambda, n_def))
+End Function
+
+</script:module>

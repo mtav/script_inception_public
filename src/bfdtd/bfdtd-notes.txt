@@ -1,0 +1,43 @@
+Bristol FDTD notes:
+====================
+
+entry order matters:
+--------------------
+
+When using .in files, the order of objects must be as follows:
+
+-"input objects" (anything, except mesh): flag, boundaries, excitations, probes, etc
+-mesh
+-"geometric objects" (anything, except box): blocks, cylinders, etc
+-box
+
+end statements:
+---------------
+Adding an "end" statement in a BFDTD input file causes bfdtd to stop reading the rest of the file.
+
+But "end" is not required in input files!
+If missing, BFDFD will just read until the end of the file.
+
+example:
+~~~~~~~~
+  probe
+  {
+  ...
+  }
+
+  probe
+  {
+  ...
+  }
+
+  end ** this line causes bfdtd to stop reading the rest of this file!
+
+  probe
+  {
+  ...
+  }
+
+  probe
+  {
+  ...
+  }

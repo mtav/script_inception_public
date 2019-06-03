@@ -1,0 +1,225 @@
+function batchReadPRN(localFolder,~)
+
+colnumP=2; % 2:Ex, 3:Ey, 4:Ez
+TEOnly=0;
+computeHarminv=1;
+lambdaLow=1.4 %0.62; %set min lamda  0.90    GaAs or Si ? = 526.39 nm – 549.00 nm
+lambdaHigh=2.4; %set max lamda  0.98         GaP:       ? = 505.2892  nm ~ 519.8683 nm
+
+if nargin==0
+    localFolder=uigetdir('D:\Simulations\BFDTD');
+end
+
+% download=0;
+% 
+% hostname='BC2';
+% username='ANONYMIZED';
+% searchFolder='ANONYMIZED/ANONYMIZED/Simulations/BFDTD/FDTD_2003_new_090810/case1';
+% searchStr='Ey';
+% dirList=sshDirList(hostname, username,searchFolder,searchStr,1);
+% 
+% for mm=1:length(dirList)
+%     remoteFolder=dirList{mm};
+%     indd=strfind(remoteFolder,'/');
+%     ll=remoteFolder(indd(7):end);
+%     localFolder=['J:\optics\Erman',ll];
+% %% DOWNLOAD FROM REMOTE
+% if download
+%     hostname='BC2';
+%     username='ANONYMIZED';
+% %     localFolder='D:\Simulations\BFDTD\FDTD_2003_new_090810/case1/0.475a=142.5nm/Ey';
+%     mkdir(localFolder);
+% 
+% %     remoteFolder='ANONYMIZED/ANONYMIZED/Simulations/BFDTD/FDTD_2003_new_090810/case1/0.475a=142.5nm/Ey';
+%     ftp1=getAvailableSSH(hostname,1,'sftp');
+% 
+%     mget(ftp1,[remoteFolder,'/*'],localFolder)
+% end
+
+%%
+clf
+isRecord=0;
+colnum=6;  %3 Exmod 6Eymod 15HyMod 
+
+files=[];
+% files=[files;dir([localFolder,'\x*.prn'])];
+% files=[files,;dir([localFolder,'\y*.prn'])];
+% files=[files,;dir([localFolder,'\z*.prn'])];
+
+numFiles=length(files);
+figure(1)
+if (isRecord)
+    mov=avifile([projectFolder,filePrefix,'6.avi'],'fps',4,'quality',100,'compression','Cinepak');
+end
+
+if computeHarminv
+    harminvFolder=[localFolder,'\harminv\'];
+    mkdir(harminvFolder); 
+end
+        
+
+for m=1:1:numFiles
+    filename=[localFolder,'\',files(m).name];
+    [header, data]=readPrnFile(filename);
+    
+    colx=data(:,1);
+    u=unique(colx);
+    nx=length(u);
+    ny=length(colx)/nx;
+
+    x=data(1:ny:end,1);
+    y=data(1:ny,2);
+    
+    
+    Field=(reshape(data(:,colnum),ny,nx));
+%     figure(1)
+%     set(gcf,'Position',[0,0, 2*size(Field,2)/size(Field,1)*800, 800 ])
+    dx=x(2)-x(1);
+    if TEOnly && files(m).name(1)~='x'
+        xAx=[x,x+max(x)+dx]; xAx=xAx(1:end-1);
+        imagesc(y,xAx,[Field,fliplr(Field(:,1:end-1))]');
+        colorbar
+    else
+        if files(m).name(1)=='x'
+            imagesc(y,x,Field');
+        else
+            imagesc(x,y,Field);
+        end
+    end
+%     axis equal
+%     imagesc(Field);
+    
+    title([files(m).name,'  ',header{colnum}]);
+    xlabel('microns')
+    ylabel('microns')
+    set(gca,'YDir','normal')
+    
+    imageName=[filename,'_',header{colnum},'.png'];
+    saveas(gcf,imageName,'png');
+    
+    pause(.2)
+    if (isRecord)
+        F = getframe(gca);
+        mov = addframe(mov,F);
+        imageName=[filename,'.png'];
+        
+    end
+end
+
+if (isRecord)
+    mov=close(mov);
+end
+
+clf
+
+filesP=dir([localFolder,'\p*.prn']);
+
+for m=1:length(filesP)
+    filename=[localFolder,'\',filesP(m).name];
+    [header, data]=readPrnFile(filename);   
+    figure(1);clf
+    plot(data(:,1)*1e-9,data(:,colnumP))
+    title([filesP(m).name,'  ',header{colnumP}]);
+    xlabel('time (ns)');
+    imageName=[filename,'_',header{colnumP},'.png'];
+    saveas(gcf,imageName,'png');
+    saveas(gcf,[imageName,'.fig'],'fig');
+
+    dt=1e-12*(data(2,1)-data(1,1));  % Normally the data in probe file is in values of 1e*18 seconds
+    [Y,lambda]=bFFT(data(:,colnumP),dt);
+    Mag=2*abs(Y);
+    
+    aver=sum(Mag)/length(Mag);
+    delta=(max(Mag)-aver)/3;
+   
+    if (delta<0)
+        return;
+    end
+
+    peaks=peakdet(Mag, delta/3,lambda);
+    
+%     indMax=min(find(lambda==min(peaks(:,1)))+250,length(lambda));
+%     indMin=max(find(lambda==max(peaks(:,1)))-250,1);
+
+    wavelength=1e3*lambda;
+%     wavelength=1e3*lambda(indMin:indMax); %Unit of wavelength is nm.
+%     Mag=Mag(indMin:indMax);
+    figure(2);hold off;
+    plot(wavelength,Mag);
+    xlim(1e3*[0.8*min(peaks(:,1)),1.2*max(peaks(:,1))])
+    
+    title([filesP(m).name,' ',header{colnumP},'  Spectrum at Timestep:',num2str(length(data))])
+    xlabel('Wavelength (nm)')
+    ylabel('Mag')
+    
+   
+%FOR HARMINV 
+%     c0=299792458;
+%     harminvDataFile=[strrep(filename,'.prn','_harminv'),'_',header{colnumP},'.txt'];
+
+    if computeHarminv   
+        harminvDataFile=[strrep([harminvFolder,'\',filesP(m).name],'.prn','_harminv'),'_',header{colnumP},'.txt'];
+        fid=fopen(harminvDataFile,'w+');
+        fprintf(fid,'%2.8e\r\n',data(:,colnumP));
+        % fprintf(fid,'%2.8e\t%2.8e\r\n',[(1:length(field))*dtreal;field']);
+        fclose(fid);
+        
+        [lambdaH,Q,outFile,err,minErrInd]=doHarminv(harminvDataFile,dt,lambdaLow,lambdaHigh);
+        
+        figure(4); clf
+        plot(lambdaH,Q,'r','LineWidth',2);
+        hold on
+        rel=1./err; rel=rel/max(rel)*max(Q);
+        plot(lambdaH,rel,':')
+        hold off
+        xlim([lambdaLow lambdaHigh])
+        
+        if length(Q)
+            ylim(sort([0 1.1*max(Q)]))
+        end
+      
+%         hold on
+%         plotyy(lambda(minErrInd),Q(minErrInd),'or')
+        title([filename,'_',header{colnumP}],'interpreter','none')
+        xlabel('wavelength(um)')
+        ylabel('Q Factor')
+        
+        saveas(gcf,[outFile,'.png'],'png');
+        saveas(gcf,[outFile,'.fig'],'fig');
+        
+        parametersFile=[filename,'_',header{colnumP},'_parameters.txt'];
+        fid=fopen(parametersFile,'w+');
+        fprintf(fid,'PeakNo\tFrequency(Hz)\tWavelength(nm)\tQFactor\t\r\n');
+        
+        for n=1:size(peaks,1)
+            figure(2); hold on;
+            plot(1e3*peaks(n,1),peaks(n,2),'r*')
+            [indS,val]=closestInd(lambdaH,peaks(n,1));
+            peakWaveLength=1e3*peaks(n,1);
+            peakValue=peaks(n,2);
+            text(peakWaveLength,peakValue,['Q=',num2str(Q(indS))],'FontSize',16);
+            %% Write peaks to a text file.
+            fprintf(fid,'%i\t%2.8g\t%2.11g\t%2.8g\r\n',n,c0/peakWaveLength*1e9,peakWaveLength,Q(indS));
+        end
+        fclose(fid);     
+    end
+    
+    figure(2)
+    imageName=[filename,'_probeFFT_',header{colnumP},'.png'];
+    saveas(gcf,imageName,'png');
+    saveas(gcf,[imageName,'.fig'],'fig');
+end
+
+end
+% if (exist('infilename'))
+%     ind=max(strfind(infilename,'\'));
+% %     InPathName=infilename(1:ind);
+% %     [InFileName,InPathName] = uigetfile('*.prn','Select input prn-file',InPathName); 
+% %     infilename=[InPathName,InFileName];
+%     S21=GetS21(infilename,[localFolder,'\i3a00.prn']);
+% else
+%     [InFileName,InPathName] = uigetfile('*.prn','Select input prn-file','D:\fdtd');
+%     infilename=[InPathName,InFileName];
+% %     GetS21(infilename);
+% end
+%     

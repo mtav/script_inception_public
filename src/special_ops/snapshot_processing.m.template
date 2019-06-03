@@ -1,0 +1,93 @@
+handles.geofile = 'grating_2.0mum_Nbot24_Ntop33_taper4.geo';
+handles.inpfile = 'grating_2.0mum_Nbot24_Ntop33_taper4.inp';
+handles.geometry = true;
+handles.createFigure = false;
+
+[entries,FDTDobj] = GEO_INP_reader({handles.geofile,handles.inpfile});
+
+N=13;
+xsnap = findPrnByName({handles.inpfile,handles.geofile},'X frequency snapshot',N);
+ysnap = findPrnByName({handles.inpfile,handles.geofile},'Y frequency snapshot',N);
+zsnap = findPrnByName({handles.inpfile,handles.geofile},'Z frequency snapshot',N);
+
+column_ID = 6; %Eymod
+
+for i = 1:length(xsnap)
+%for i = 1:5
+
+	[AllHeaders, xdata] = readPrnFile(xsnap{i});
+
+	fraction = 5./9.;
+
+	xdata = xdata(:,column_ID);
+	Xmax = fraction*max(xdata) + (1-fraction)*mean(xdata);
+
+	[header, ydata] = readPrnFile(ysnap{i});
+	ydata = ydata(:,column_ID);
+	Ymax = fraction*max(ydata) + (1-fraction)*mean(ydata);
+
+	[header, zdata] = readPrnFile(zsnap{i});
+	zdata = zdata(:,column_ID);
+	Zmax = fraction*max(zdata) + (1-fraction)*mean(zdata);
+
+	zlimits = [NaN,NaN];
+	zlimits = [0,min([Xmax,Ymax,Zmax])];
+
+	Nsnap = alphaID_to_numID(xsnap{i},FDTDobj.flag.id);
+	freq_snap_MHz = FDTDobj.frequency_snapshots(Nsnap).frequency;
+	lambda_snap_mum = get_c0()/freq_snap_MHz;
+	lambda_snap_nm = lambda_snap_mum*1e3;
+
+	%close all;
+	figure;
+	hold on;
+	handles.drawColorBar = true;
+	handles.drawTitle = false;
+	%subplot(2,2,[2,4]);
+	subplot(1,3,1);
+	handle_xplot = plotSnapshot(xsnap{i},column_ID,zlimits,handles,90);
+
+	handles.drawColorBar = false;
+	handles.drawTitle = false;
+	%subplot(2,2,1);
+	subplot(1,3,2);
+	handle_yplot = plotSnapshot(ysnap{i},column_ID,zlimits,handles,0);
+	%subplot(2,2,3);
+	subplot(1,3,3);
+	handle_zplot = plotSnapshot(zsnap{i},column_ID,zlimits,handles,-90);
+	%[Xmax,Ymax,Zmax]
+
+	title_base = [xsnap{i},',',ysnap{i},',',zsnap{i}];
+	title_full = [title_base, ' : ', char(AllHeaders(column_ID)), ' at ',  num2str(lambda_snap_nm), ' nm, ', num2str(freq_snap_MHz),' MHz'];
+	handle_title = mtit(title_full,'FontWeight','bold','Interpreter','none');
+
+	set(handle_title.th,'Position',[0.3954973118279571,1.0148387096774194,9.160254037844387]);
+	set(handle_xplot.handle_colorbar,'Position',[0.20994225543478254,0.1126315789473683,0.013020833333333329,0.7886842105263159]);
+	set(handle_xplot.handle_axis,'Position',[0.24145833333333333,0.10684210526315786,0.21340579710144927,0.815]);
+	set(handle_yplot.handle_axis,'Position',[0.41860960144927534,0.11,0.2134057971014493,0.815]);
+	set(handle_zplot.handle_axis,'Position',[0.5207608695652168,0.10684210526315785,0.21340579710144925,0.815]);
+
+	imageSaveNameFinal = [num2str(lambda_snap_nm,'%0.3f'),'nm'];
+	set(gcf,'Name',imageSaveNameFinal);
+	set(gcf, 'Position',[1281,27,1920,950]);
+	saveas(gcf,[imageSaveNameFinal,'.fig']);
+	%saveas(gcf,[imageSaveNameFinal,'.png']);
+	%print(gcf,'-dpng','-r300',[imageSaveNameFinal,'.png']);
+
+	% save image as on screen!
+	set(gcf,'PaperPositionMode','auto');
+	print(gcf,'-dpng','-zbuffer','-r200',[imageSaveNameFinal,'.png']);
+	%print(gcf,'-dpng',[imageSaveNameFinal,'.png']);
+	close(gcf);
+end
+
+% list peak wavelengths
+for Nsnap = 1:length(FDTDobj.frequency_snapshots)
+	if FDTDobj.frequency_snapshots(Nsnap).plane == 1
+		freq_snap_MHz = FDTDobj.frequency_snapshots(Nsnap).frequency;
+		lambda_snap_mum = get_c0()/freq_snap_MHz;
+		lambda_snap_nm = lambda_snap_mum*1e3;
+		disp([num2str(Nsnap),' : ',num2str(lambda_snap_nm)]);
+	end
+end
+

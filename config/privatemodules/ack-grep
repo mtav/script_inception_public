@@ -1,0 +1,19 @@
+#%Module########################################################################
+##
+## ack-grep modulefile
+##
+proc ModulesHelp { } {
+  global infostr
+  puts stderr $infostr
+}
+
+set infostr "ack-grep: https://beyondgrep.com/"
+
+module-whatis $infostr
+
+if {! [info exists ::env(MODULE_PREFIX)]} {
+  puts stderr "ERROR: MODULE_PREFIX not defined."
+  exit 1
+}
+
+append-path     PATH         [file join $::env(MODULE_PREFIX) bin]

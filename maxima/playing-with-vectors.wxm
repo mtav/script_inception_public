@@ -1,0 +1,304 @@
+/* [wxMaxima batch file version 1] [ DO NOT EDIT BY HAND! ]*/
+/* [ Created with wxMaxima version 16.12.2 ] */
+
+/* [wxMaxima: input   start ] */
+u:[1,2,3]$
+v:[2,3,4];
+u+v;
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+u.v;
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+u*v;
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+load("vect");
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+u~v;
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+wxbuild_info()$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+wxbug_report()$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+express(u~v);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+R0 : [ sqrt(2)/4,   1/sqrt(6),     sqrt(3)/4];
+
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+R0 : [ sqrt(2)/4,   1/sqrt(6),     sqrt(3)/4];
+
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+R1 : [-sqrt(2)/4,   1/sqrt(6),     sqrt(3)/4];
+R2 : [         0, -1/sqrt(24),     sqrt(3)/4];
+
+G0 : [ sqrt(2)/4,           0,  7*sqrt(3)/12];
+G1 : [         0,   sqrt(6)/4,  7*sqrt(3)/12];
+G2 : [-sqrt(2)/4,           0,  7*sqrt(3)/12];
+
+B0 : [ sqrt(2)/4,  -1/sqrt(6), 11*sqrt(3)/12];
+B1 : [         0,  1/sqrt(24), 11*sqrt(3)/12];
+B2 : [-sqrt(2)/4,  -1/sqrt(6), 11*sqrt(3)/12];
+
+/* cell type 1 parameters */
+offset1 : [ sqrt(2)/4, 0, 11*sqrt(3)/24];
+u1 : [sqrt(2)/4, -sqrt(6)/4, 0];
+v1 : [sqrt(2)/4,  sqrt(6)/4, 0];
+w1 : [0, 0, sqrt(3)]
+
+/* cell type 2 parameters */
+offset2 : [-sqrt(2)/4, 0, 11*sqrt(3)/24];
+u2 : [sqrt(2)/2, 0, 0];
+v2 : [0, sqrt(6)/2, 0];
+w2 : [0, 0, sqrt(3)];
+
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+offset_2 : [-sqrt(2)/4, 0, 11*sqrt(3)/24];
+
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+offset_2 : [-sqrt(2)/4, 0, 11*sqrt(3)/24];
+
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+ -->	offset_2 : [-sqrt(2)/4, 0, 11*sqrt(3)/24];
+	
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+ -->	offset_2 : [-sqrt(2)/4, 0, 11*sqrt(3)/24];
+	
+
+
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+R0 : [ sqrt(2)/4,   1/sqrt(6),     sqrt(3)/4];
+R1 : [-sqrt(2)/4,   1/sqrt(6),     sqrt(3)/4];
+R2 : [         0, -1/sqrt(24),     sqrt(3)/4];
+
+G0 : [ sqrt(2)/4,           0,  7*sqrt(3)/12];
+G1 : [         0,   sqrt(6)/4,  7*sqrt(3)/12];
+G2 : [-sqrt(2)/4,           0,  7*sqrt(3)/12];
+
+B0 : [ sqrt(2)/4,  -1/sqrt(6), 11*sqrt(3)/12];
+B1 : [         0,  1/sqrt(24), 11*sqrt(3)/12];
+B2 : [-sqrt(2)/4,  -1/sqrt(6), 11*sqrt(3)/12];
+
+/* cell type 1 parameters */
+offset_1 : [ sqrt(2)/4, 0, 11*sqrt(3)/24];
+u1 : [sqrt(2)/4, -sqrt(6)/4, 0];
+v1 : [sqrt(2)/4,  sqrt(6)/4, 0];
+w1 : [0, 0, sqrt(3)]
+
+/* cell type 2 parameters */
+offset_2 : [-sqrt(2)/4, 0, 11*sqrt(3)/24];
+u2 : [sqrt(2)/2, 0, 0];
+v2 : [0, sqrt(6)/2, 0];
+w2 : [0, 0, sqrt(3)];
+
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+/* The tetrahedron centres */
+R0 : [ sqrt(2)/4,   1/sqrt(6),     sqrt(3)/4]$
+R1 : [-sqrt(2)/4,   1/sqrt(6),     sqrt(3)/4]$
+R2 : [         0, -1/sqrt(24),     sqrt(3)/4]$
+
+G0 : [ sqrt(2)/4,           0,  7*sqrt(3)/12]$
+G1 : [         0,   sqrt(6)/4,  7*sqrt(3)/12]$
+G2 : [-sqrt(2)/4,           0,  7*sqrt(3)/12]$
+
+B0 : [ sqrt(2)/4,  -1/sqrt(6), 11*sqrt(3)/12]$
+B1 : [         0,  1/sqrt(24), 11*sqrt(3)/12]$
+B2 : [-sqrt(2)/4,  -1/sqrt(6), 11*sqrt(3)/12]$
+
+/* cell type 1 parameters */
+offset_1 : [ sqrt(2)/4, 0, 11*sqrt(3)/24]$
+u1 : [sqrt(2)/4, -sqrt(6)/4, 0]$
+v1 : [sqrt(2)/4,  sqrt(6)/4, 0]$
+w1 : [0, 0, sqrt(3)]
+
+/* cell type 2 parameters */
+offset_2 : [-sqrt(2)/4, 0, 11*sqrt(3)/24]$
+u2 : [sqrt(2)/2, 0, 0]$
+v2 : [0, sqrt(6)/2, 0]$
+w2 : [0, 0, sqrt(3)]$
+
+/* [wxMaxima: input   end   ] */
+
+
+
+/* [wxMaxima: input   start ] */
+R0 : [ sqrt(2)/4,   1/sqrt(6),     sqrt(3)/4]$
+
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+R1 : [-sqrt(2)/4,   1/sqrt(6),     sqrt(3)/4]$
+R2 : [         0, -1/sqrt(24),     sqrt(3)/4]$
+
+G0 : [ sqrt(2)/4,           0,  7*sqrt(3)/12]$
+G1 : [         0,   sqrt(6)/4,  7*sqrt(3)/12]$
+G2 : [-sqrt(2)/4,           0,  7*sqrt(3)/12]$
+
+B0 : [ sqrt(2)/4,  -1/sqrt(6), 11*sqrt(3)/12]$
+B1 : [         0,  1/sqrt(24), 11*sqrt(3)/12]$
+B2 : [-sqrt(2)/4,  -1/sqrt(6), 11*sqrt(3)/12]$
+
+/* cell type 1 parameters */
+offset1 : [ sqrt(2)/4, 0, 11*sqrt(3)/24]$
+u1 : [sqrt(2)/4, -sqrt(6)/4, 0]$
+v1 : [sqrt(2)/4,  sqrt(6)/4, 0]$
+w1 : [0, 0, sqrt(3)]$
+
+/* cell type 2 parameters */
+offset2 : [-sqrt(2)/4, 0, 11*sqrt(3)/24]$
+u2 : [sqrt(2)/2, 0, 0]$
+v2 : [0, sqrt(6)/2, 0]$
+w2 : [0, 0, sqrt(3)]$
+
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+b2;
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+B2;
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+B2-G2;
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+B1-G2;
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+R2-G2;
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+ratsimp([1/2^(3/2),-1/(2*sqrt(6)),sqrt(3)/4-7/(4*sqrt(3))]);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+ratsimp(2^(3/2));
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+factor(1/2^(3/2));
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+ratsimp(sqrt(6));
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+simplify(%);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+p:R0; q:R1; f:R2; g:G0;
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+is( equal( vectorsimp( (p~q).(f~g) + (q~f).(p~g) + (f~p).(q~g) ), 0));
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+vectorsimp(%), expandall;
+
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+is(equal(%));
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+is(equal(0,0));
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+is(equal((p~q).(f~g) + (q~f).(p~g) + (f~p).(q~g), 0))
+;
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+vectorsimp((p~q).(f~g) + (q~f).(p~g) + (f~p).(q~g)); expandall;
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+is( equal( vectorsimp( (p~q).(f~g) + (q~f).(p~g) + (f~p).(q~g) ), 0));
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+vectorsimp(%), expandall;
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+(p~q).(f~g) + (q~f).(p~g) + (f~p).(q~g);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+ratsimp(-[-1/2^(3/2),1/sqrt(6),sqrt(3)/4] . [1/2^(3/2),1/sqrt(6),sqrt(3)/4]~[0,-1/(2*sqrt(6)),sqrt(3)/4]~[1/2^(3/2),0,7/(4*sqrt(3))]+[0,-1/(2*sqrt(6)),sqrt(3)/4] . [1/2^(3/2),1/sqrt(6),sqrt(3)/4]~[-1/2^(3/2),1/sqrt(6),sqrt(3)/4]~[1/2^(3/2),0,7/(4*sqrt(3))]+[0,-1/(2*sqrt(6)),sqrt(3)/4] . [-1/2^(3/2),1/sqrt(6),sqrt(3)/4]~[1/2^(3/2),0,7/(4*sqrt(3))]~[1/2^(3/2),1/sqrt(6),sqrt(3)/4]);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+vectorsimp(%), expandall;
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+vectorsimp(ratsimp( (p~q).(f~g) + (q~f).(p~g) + (f~p).(q~g) ));expandall;
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+(p~q).(f~g) + (q~f).(p~g) + (f~p).(q~g);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+vectorsimp(%);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+expandall;
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+vectorsimp(%), expandall;
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+(p~q).(f~g) + (q~f).(p~g) + (f~p).(q~g);
+ratsimp(%);
+vectorsimp(%);
+expandall;
+/* [wxMaxima: input   end   ] */
+
+/* Maxima can't load/batch files which end with a comment! */
+"Created with wxMaxima"$

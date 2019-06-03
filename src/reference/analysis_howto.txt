@@ -1,0 +1,64 @@
+cd F:\DATA\IN\GOOD\loncar_test_32000_1_1_7
+open_in_blender('loncar_test_32000_1_1_7.in')
+analyzePRN('p078id.prn')
+view->property editor
+change X axis to 500-800
+
+    [header, data] = readPrnFile([filebasename,'.prn']);
+    [calcFFT_output, lambda_vec] = calcFFT(data(:,probe_col),dt, 2^19);
+    plot(10^3*lambda_vec, calcFFT_output.* conj(calcFFT_output),'-b+');
+        
+[header, data] = readPrnFile('p078id.prn');
+[calcFFT_output, lambda_vec] = calcFFT(data(:,2),dt, 2^19);
+plot(10^3*lambda_vec, calcFFT_output.* conj(calcFFT_output),'-b+');
+
+harminv:
+create_harminv_input_files
+
+[INFILENAME,AMPLITUDE,TIME_OFFSET,TIME_CONSTANT,FREQUENCY]=just_signal_2('F:\DATA\just_signal_test_2','electro_hack_6');
+
+% read the PRN file
+[header, data] = readPrnFile('time_probe.prn');
+
+% calculate timestep
+% WARNING: The timestep is considered to be constant here!!!
+dt = 1e-12*(data(2,1)-data(1,1));  % data(*,1) being in 10^-18 s (because input frequency is in 10^6 Hz), dt is in 10^-18 s/1e-12 = 10^-6 s
+
+% calculate the FFT
+% (with NFFT = double the number of points you want in the output = 2^19)
+% (probe_col = whatever column you want from the time probe file, i.e. Ex,Ey,etc)
+[cFFT_output, lambda_vec, freq_vec] = calcFFT(data(:,probe_col),dt, 2^19);
+
+% convert lambda to nm
+lambda_vec = 1e3*lambda_vec;
+
+% define X and Y for the fitting (Y = power)
+X = lambda_vec;
+Y = cFFT_output.* conj(cFFT_output);
+
+% plot the FFT to locate the resonance peak
+plot(X,Y);
+
+% limit the data to an [xmin,xmax] fitting range based on the previous plot
+[Xzoom,Yzoom]=zoomPlot(X,Y,xmin,xmax);
+
+% plot the zoomed in peak in red
+plot(Xzoom,Yzoom,'r');
+
+% calculate some fit start values from the peak
+[x0, y0, A, FWHM] = getLorentzStartValues(Xzoom, Yzoom, 0);
+vStart = [x0, y0, A, FWHM];
+
+% plot the start fit in green
+hold on; %to plot the fits over the simulation data
+plot(Xzoom,lorentz(vStart,Xzoom),'g');
+
+% fit the peak with a lorentz function
+[x0, y0, A, FWHM] = mylorentzfit(Xzoom, Yzoom, vStart, 0);
+vEnd = [x0, y0, A, FWHM];
+
+% plot the final fit in blue
+plot(Xzoom,lorentz(vEnd,Xzoom),'b');
+
+% calculate the Q factor
+Q = vEnd(1)/vEnd(4);

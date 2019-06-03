@@ -1,0 +1,11 @@
+# exclude large output
+exclude *.h5
+exclude *.vtk
+
+include *.uniq.dat
+
+# include all subdirectories
+include */
+
+# exclude everything else
+exclude *

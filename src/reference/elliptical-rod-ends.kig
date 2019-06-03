@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE KigDocument>
+<KigDocument CompatibilityVersion="0.7.0" grid="1" Version="1.0" axes="1">
+ <CoordinateSystem>Euclidean</CoordinateSystem>
+ <Hierarchy>
+  <Data id="1" type="double">0</Data>
+  <Data id="2" type="double">0.479627</Data>
+  <Data id="3" type="double">0</Data>
+  <Data id="4" type="double">0</Data>
+  <Data id="5" type="int">-1</Data>
+  <Data id="6" type="int">-1</Data>
+  <Data id="7" type="int">1</Data>
+  <Data id="8" type="double">2</Data>
+  <Data id="9" type="int">1</Data>
+  <Data id="10" type="double">2</Data>
+  <Object id="11" type="FixedPoint">
+   <Parent id="10"/>
+   <Parent id="4"/>
+  </Object>
+  <Data id="12" type="double">0</Data>
+  <Data id="13" type="double">-2</Data>
+  <Object id="14" type="FixedPoint">
+   <Parent id="3"/>
+   <Parent id="13"/>
+  </Object>
+  <Data id="15" type="double">0</Data>
+  <Data id="16" type="double">0.135576</Data>
+  <Data id="17" type="double">0.819948</Data>
+  <Object id="18" type="FixedPoint">
+   <Parent id="15"/>
+   <Parent id="1"/>
+  </Object>
+  <Object id="19" type="FixedPoint">
+   <Parent id="12"/>
+   <Parent id="8"/>
+  </Object>
+  <Object id="20" type="LineAB">
+   <Parent id="18"/>
+   <Parent id="19"/>
+  </Object>
+  <Object id="21" type="EllipseBFFP">
+   <Parent id="19"/>
+   <Parent id="14"/>
+   <Parent id="11"/>
+  </Object>
+  <Object id="22" type="ConicLineIntersection">
+   <Parent id="21"/>
+   <Parent id="20"/>
+   <Parent id="5"/>
+  </Object>
+  <Object id="23" type="ConicLineIntersection">
+   <Parent id="21"/>
+   <Parent id="20"/>
+   <Parent id="9"/>
+  </Object>
+  <Object id="24" type="CircleBCP">
+   <Parent id="18"/>
+   <Parent id="23"/>
+  </Object>
+  <Object id="25" type="ConstrainedPoint">
+   <Parent id="2"/>
+   <Parent id="21"/>
+  </Object>
+  <Object id="26" type="LinePerpend">
+   <Parent id="20"/>
+   <Parent id="25"/>
+  </Object>
+  <Object id="27" type="ConicLineIntersection">
+   <Parent id="24"/>
+   <Parent id="26"/>
+   <Parent id="6"/>
+  </Object>
+  <Object id="28" type="LineAB">
+   <Parent id="18"/>
+   <Parent id="27"/>
+  </Object>
+  <Object id="29" type="LinePerpend">
+   <Parent id="28"/>
+   <Parent id="27"/>
+  </Object>
+  <Object id="30" type="LineLineIntersection">
+   <Parent id="29"/>
+   <Parent id="20"/>
+  </Object>
+  <Object id="31" type="LineAB">
+   <Parent id="30"/>
+   <Parent id="25"/>
+  </Object>
+  <Object id="32" type="ConstrainedPoint">
+   <Parent id="16"/>
+   <Parent id="31"/>
+  </Object>
+  <Object id="33" type="RayAB">
+   <Parent id="25"/>
+   <Parent id="32"/>
+  </Object>
+  <Object id="34" type="LineParallel">
+   <Parent id="33"/>
+   <Parent id="23"/>
+  </Object>
+  <Object id="35" type="ConicLineIntersection">
+   <Parent id="24"/>
+   <Parent id="26"/>
+   <Parent id="7"/>
+  </Object>
+  <Object id="36" type="LineAB">
+   <Parent id="18"/>
+   <Parent id="25"/>
+  </Object>
+  <Object id="37" type="ConicLineOtherIntersection">
+   <Parent id="21"/>
+   <Parent id="36"/>
+   <Parent id="25"/>
+  </Object>
+  <Object id="38" type="LineParallel">
+   <Parent id="31"/>
+   <Parent id="37"/>
+  </Object>
+  <Object id="39" type="LineLineIntersection">
+   <Parent id="38"/>
+   <Parent id="20"/>
+  </Object>
+  <Object id="40" type="ConstrainedPoint">
+   <Parent id="17"/>
+   <Parent id="38"/>
+  </Object>
+  <Object id="41" type="RayAB">
+   <Parent id="37"/>
+   <Parent id="40"/>
+  </Object>
+  <Object id="42" type="LineParallel">
+   <Parent id="41"/>
+   <Parent id="22"/>
+  </Object>
+  <Object id="43" type="LinePerpend">
+   <Parent id="33"/>
+   <Parent id="18"/>
+  </Object>
+ </Hierarchy>
+ <View>
+  <Draw color="#0000ff" point-style="Round" shown="true" width="-1" namecalcer="none" object="37" font="Noto Sans,10,-1,0,50,0,0,0,0,0,Regular" style="SolidLine"/>
+  <Draw color="#ff0000" point-style="Round" shown="true" width="-1" namecalcer="none" object="21" font="Noto Sans,10,-1,0,50,0,0,0,0,0,Regular" style="SolidLine"/>
+  <Draw color="#0000ff" point-style="Round" shown="true" width="-1" namecalcer="none" object="18" font="Noto Sans,10,-1,0,50,0,0,0,0,0,Regular" style="SolidLine"/>
+  <Draw color="#ff0000" point-style="Round" shown="true" width="-1" namecalcer="none" object="41" font="Noto Sans,10,-1,0,50,0,0,0,0,0,Regular" style="SolidLine"/>
+  <Draw color="#0000ff" point-style="Round" shown="true" width="-1" namecalcer="none" object="35" font="Noto Sans,10,-1,0,50,0,0,0,0,0,Regular" style="SolidLine"/>
+  <Draw color="#0000ff" point-style="Round" shown="true" width="-1" namecalcer="none" object="36" font="Noto Sans,10,-1,0,50,0,0,0,0,0,Regular" style="SolidLine"/>
+  <Draw color="#ff0000" point-style="Round" shown="true" width="-1" namecalcer="none" object="33" font="Noto Sans,10,-1,0,50,0,0,0,0,0,Regular" style="SolidLine"/>
+  <Draw color="#0000ff" point-style="Round" shown="true" width="-1" namecalcer="none" object="23" font="Noto Sans,10,-1,0,50,0,0,0,0,0,Regular" style="SolidLine"/>
+  <Draw color="#0000ff" point-style="Round" shown="true" width="-1" namecalcer="none" object="32" font="Noto Sans,10,-1,0,50,0,0,0,0,0,Regular" style="SolidLine"/>
+  <Draw color="#0000ff" point-style="Round" shown="true" width="-1" namecalcer="none" object="11" font="Noto Sans,10,-1,0,50,0,0,0,0,0,Regular" style="SolidLine"/>
+  <Draw color="#0000ff" point-style="Round" shown="true" width="-1" namecalcer="none" object="19" font="Noto Sans,10,-1,0,50,0,0,0,0,0,Regular" style="SolidLine"/>
+  <Draw color="#0000ff" point-style="Round" shown="true" width="-1" namecalcer="none" object="14" font="Noto Sans,10,-1,0,50,0,0,0,0,0,Regular" style="SolidLine"/>
+  <Draw color="#0000ff" point-style="Round" shown="true" width="-1" namecalcer="none" object="27" font="Noto Sans,10,-1,0,50,0,0,0,0,0,Regular" style="SolidLine"/>
+  <Draw color="#0000ff" point-style="Round" shown="true" width="-1" namecalcer="none" object="28" font="Noto Sans,10,-1,0,50,0,0,0,0,0,Regular" style="SolidLine"/>
+  <Draw color="#0000ff" point-style="Round" shown="true" width="-1" namecalcer="none" object="29" font="Noto Sans,10,-1,0,50,0,0,0,0,0,Regular" style="SolidLine"/>
+  <Draw color="#0000ff" point-style="Round" shown="true" width="-1" namecalcer="none" object="20" font="Noto Sans,10,-1,0,50,0,0,0,0,0,Regular" style="SolidLine"/>
+  <Draw color="#0000ff" point-style="Round" shown="true" width="-1" namecalcer="none" object="34" font="Noto Sans,10,-1,0,50,0,0,0,0,0,Regular" style="DashLine"/>
+  <Draw color="#0000ff" point-style="Round" shown="true" width="-1" namecalcer="none" object="24" font="Noto Sans,10,-1,0,50,0,0,0,0,0,Regular" style="SolidLine"/>
+  <Draw color="#0000ff" point-style="Round" shown="true" width="-1" namecalcer="none" object="22" font="Noto Sans,10,-1,0,50,0,0,0,0,0,Regular" style="SolidLine"/>
+  <Draw color="#0000ff" point-style="Round" shown="false" width="-1" namecalcer="none" object="38" font="Noto Sans,10,-1,0,50,0,0,0,0,0,Regular" style="SolidLine"/>
+  <Draw color="#0000ff" point-style="Round" shown="true" width="-1" namecalcer="none" object="26" font="Noto Sans,10,-1,0,50,0,0,0,0,0,Regular" style="SolidLine"/>
+  <Draw color="#0000ff" point-style="Round" shown="true" width="-1" namecalcer="none" object="30" font="Noto Sans,10,-1,0,50,0,0,0,0,0,Regular" style="SolidLine"/>
+  <Draw color="#0000ff" point-style="Round" shown="false" width="-1" namecalcer="none" object="31" font="Noto Sans,10,-1,0,50,0,0,0,0,0,Regular" style="SolidLine"/>
+  <Draw color="#0000ff" point-style="Round" shown="true" width="-1" namecalcer="none" object="25" font="Noto Sans,10,-1,0,50,0,0,0,0,0,Regular" style="SolidLine"/>
+  <Draw color="#0000ff" point-style="Round" shown="true" width="-1" namecalcer="none" object="39" font="Noto Sans,10,-1,0,50,0,0,0,0,0,Regular" style="SolidLine"/>
+  <Draw color="#0000ff" point-style="Round" shown="true" width="-1" namecalcer="none" object="42" font="Noto Sans,10,-1,0,50,0,0,0,0,0,Regular" style="DashLine"/>
+  <Draw color="#0000ff" point-style="Round" shown="true" width="-1" namecalcer="none" object="40" font="Noto Sans,10,-1,0,50,0,0,0,0,0,Regular" style="SolidLine"/>
+  <Draw color="#0000ff" point-style="Round" shown="true" width="-1" namecalcer="none" object="43" font="Noto Sans,10,-1,0,50,0,0,0,0,0,Regular" style="DashLine"/>
+ </View>
+</KigDocument>

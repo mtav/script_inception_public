@@ -1,0 +1,11 @@
+LDOS_tutorial = load('LDOS-tutorial.csv');
+close all;
+figure;
+hold on;
+semilogy(LDOS_tutorial(:,1), LDOS_tutorial(:,3), 'bo-', 'MarkerFaceColor', 'blue');
+semilogy(LDOS_tutorial(:,1), LDOS_tutorial(:,4), 'rs-', 'MarkerFaceColor', 'red');
+legend('2Q/(\pi \omega V))', 'dft-ldos');
+%  legend('2Q/(pi omega V))', 'dft-ldos');
+xlabel('a/w');
+ylabel('LDOS');
+saveas_fig_and_png(gcf, 'LDOS');

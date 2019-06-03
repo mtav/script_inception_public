@@ -1,0 +1,49 @@
+**GEOMETRY FILE
+
+BLOCK **name=block
+{
+0.000000E+00 **XL
+0.000000E+00 **YL
+0.000000E+00 **ZL
+1.000000E+00 **XU
+1.000000E+00 **YU
+1.000000E+00 **ZU
+4.000000E+00 **relative Permittivity
+0.000000E+00 **Conductivity
+}
+
+BLOCK **name=block
+{
+2.000000E+00 **XL
+0.000000E+00 **YL
+0.000000E+00 **ZL
+3.000000E+00 **XU
+1.000000E+00 **YU
+1.000000E+00 **ZU
+9.000000E+00 **relative Permittivity
+0.000000E+00 **Conductivity
+}
+
+BLOCK **name=block
+{
+4.000000E+00 **XL
+0.000000E+00 **YL
+0.000000E+00 **ZL
+5.000000E+00 **XU
+1.000000E+00 **YU
+1.000000E+00 **ZU
+1.600000E+01 **relative Permittivity
+0.000000E+00 **Conductivity
+}
+
+BOX  **name=box
+{
+0.000000E+00 **XL
+0.000000E+00 **YL
+0.000000E+00 **ZL
+1.000000E+00 **XU
+1.000000E+00 **YU
+1.000000E+00 **ZU
+}
+
+end

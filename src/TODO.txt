@@ -1,0 +1,16 @@
+.. todo:: Create random snapshot generator to test various functions.
+.. todo:: SIP-WIDE: Replace all sys.exit() with raise or similar calls + all print to stderr with warning/logging module functions
+.. todo:: SIP-wide TODO.rst document
+.. todo:: Notes about BFDTD inconsistencies.
+.. todo:: Make modules python2 compatible (at least BFDTD parser) (make sure division is imported from future!)
+.. todo:: Add basic MPB examples + use them to validate h5tovts.py script
+.. todo:: blender scripts for RCD/woodpile/etc-creation
+.. todo:: blender script for lattice creation (ex: FCC-unit-cell)
+.. todo:: blender script to import .ctl geometries
+.. todo:: lattice export to STL? (no faces, just edges) other format?
+
+.. todo:: python2+3 compatibility
+.. todo:: FreeCAD integration (step 1: use FreeCAD for design + Paraview for data visualization + Blender for making nice pictures, step 2: integrated GUI using FreeCAD+VTK libraries)
+
+Concrete test directory for BFDTD->VTS conversion:
+  ~/local_mount/ANONYMIZED@BC3/DATA/RCD111/RCD111-size=10x10x10-n_defect=3.30.n_crystal=1.00.n_backfill=3.30-defectPos=2.0-sphere/epsilon
