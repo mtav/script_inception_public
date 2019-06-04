@@ -1,0 +1,1542 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>GWL package &#8212; script_inception_public  documentation</title>
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="bfdtd package" href="bfdtd.html" />
+    <link rel="prev" title="FIB package" href="FIB.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="bfdtd.html" title="bfdtd package"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="FIB.html" title="FIB package"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">script_inception_public  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="script_inception_public.html" accesskey="U">package</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="gwl-package">
+<h1>GWL package<a class="headerlink" href="#gwl-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-GWL.GWL_parser">
+<span id="gwl-gwl-parser-module"></span><h2>GWL.GWL_parser module<a class="headerlink" href="#module-GWL.GWL_parser" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="GWL.GWL_parser.GWLobject">
+<em class="property">class </em><code class="descclassname">GWL.GWL_parser.</code><code class="descname">GWLobject</code><a class="reference internal" href="_modules/GWL/GWL_parser.html#GWLobject"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.GWL_parser.GWLobject" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>This is the main class used to read/write/create GWL files for the Nanoscribe.</p>
+<p>Basic usage example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/usr/bin/env python3</span>
+<span class="kn">from</span> <span class="nn">GWL.GWL_parser</span> <span class="k">import</span> <span class="n">GWLobject</span>
+
+<span class="n">obj</span> <span class="o">=</span> <span class="n">GWLobject</span><span class="p">()</span>
+<span class="n">obj</span><span class="o">.</span><span class="n">addVoxel</span><span class="p">([</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">40</span><span class="p">])</span>
+<span class="n">obj</span><span class="o">.</span><span class="n">addVoxel</span><span class="p">([</span><span class="mi">11</span><span class="p">,</span> <span class="mi">21</span><span class="p">,</span> <span class="mi">31</span><span class="p">,</span> <span class="mi">41</span><span class="p">])</span>
+<span class="n">obj</span><span class="o">.</span><span class="n">addVoxel</span><span class="p">([</span><span class="mi">12</span><span class="p">,</span> <span class="mi">22</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">42</span><span class="p">])</span>
+<span class="n">obj</span><span class="o">.</span><span class="n">startNewVoxelSequence</span><span class="p">()</span>
+<span class="n">obj</span><span class="o">.</span><span class="n">addVoxel</span><span class="p">([</span><span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">])</span>
+<span class="n">obj</span><span class="o">.</span><span class="n">addVoxel</span><span class="p">([</span><span class="mi">8</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">10</span><span class="p">])</span>
+<span class="n">obj</span><span class="o">.</span><span class="n">addVoxel</span><span class="p">([</span><span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">])</span>
+<span class="n">obj</span><span class="o">.</span><span class="n">addVoxel</span><span class="p">([</span><span class="mi">8</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">10</span><span class="p">])</span>
+<span class="n">obj</span><span class="o">.</span><span class="n">startNewVoxelSequence</span><span class="p">()</span>
+<span class="n">obj</span><span class="o">.</span><span class="n">addVoxel</span><span class="p">([</span><span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">])</span>
+<span class="n">obj</span><span class="o">.</span><span class="n">addVoxel</span><span class="p">([</span><span class="mi">8</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">10</span><span class="p">])</span>
+<span class="n">obj</span><span class="o">.</span><span class="n">writeGWL</span><span class="p">(</span><span class="s1">&#39;foo.gwl&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This should produce a file named ‘foo.gwl’ containing:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mf">10.000</span>  <span class="mf">20.000</span>  <span class="mf">30.000</span>  <span class="mf">40.000</span>
+<span class="mf">11.000</span>  <span class="mf">21.000</span>  <span class="mf">31.000</span>  <span class="mf">41.000</span>
+<span class="mf">12.000</span>  <span class="mf">22.000</span>  <span class="mf">32.000</span>  <span class="mf">42.000</span>
+<span class="n">Write</span>
+<span class="mf">5.000</span>   <span class="mf">6.000</span>   <span class="mf">7.000</span>
+<span class="mf">8.000</span>   <span class="mf">9.000</span>   <span class="mf">10.000</span>
+<span class="mf">5.000</span>   <span class="mf">6.000</span>   <span class="mf">7.000</span>
+<span class="mf">8.000</span>   <span class="mf">9.000</span>   <span class="mf">10.000</span>
+<span class="n">Write</span>
+<span class="mf">5.000</span>   <span class="mf">6.000</span>   <span class="mf">7.000</span>
+<span class="mf">8.000</span>   <span class="mf">9.000</span>   <span class="mf">10.000</span>
+<span class="n">Write</span>
+</pre></div>
+</div>
+<p><strong>Attributes</strong>:</p>
+<ul class="simple">
+<li>Writing settings:</li>
+</ul>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Variables:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference internal" href="#GWL.GWL_parser.GWLobject.set_lower_to_origin" title="GWL.GWL_parser.GWLobject.set_lower_to_origin"><strong>set_lower_to_origin</strong></a> – If true, offsets the structure so that the lower corner is at (0,0,0). Defaults to False.</li>
+<li><a class="reference internal" href="#GWL.GWL_parser.GWLobject.write_power" title="GWL.GWL_parser.GWLobject.write_power"><strong>write_power</strong></a> – Write out power values. Defaults to False.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<ul class="simple">
+<li>Power compensation settings (set the slope to zero for a constant power):</li>
+</ul>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Variables:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference internal" href="#GWL.GWL_parser.GWLobject.PC_laser_power_at_z0" title="GWL.GWL_parser.GWLobject.PC_laser_power_at_z0"><strong>PC_laser_power_at_z0</strong></a> – PC_laser_power_at_z0. Defaults to 100.</li>
+<li><a class="reference internal" href="#GWL.GWL_parser.GWLobject.PC_slope" title="GWL.GWL_parser.GWLobject.PC_slope"><strong>PC_slope</strong></a> – PC_slope (set the slope to zero for a constant power). Defaults to 0.</li>
+<li><a class="reference internal" href="#GWL.GWL_parser.GWLobject.PC_interfaceAt" title="GWL.GWL_parser.GWLobject.PC_interfaceAt"><strong>PC_interfaceAt</strong></a> – PC_interfaceAt. Defaults to 0.</li>
+<li><a class="reference internal" href="#GWL.GWL_parser.GWLobject.PC_float_height" title="GWL.GWL_parser.GWLobject.PC_float_height"><strong>PC_float_height</strong></a> – PC_float_height. Defaults to 0.</li>
+<li><a class="reference internal" href="#GWL.GWL_parser.GWLobject.PC_bool_InverseWriting" title="GWL.GWL_parser.GWLobject.PC_bool_InverseWriting"><strong>PC_bool_InverseWriting</strong></a> – PC_bool_InverseWriting. Defaults to False.</li>
+<li><a class="reference internal" href="#GWL.GWL_parser.GWLobject.PC_bool_LaserPowerCommand" title="GWL.GWL_parser.GWLobject.PC_bool_LaserPowerCommand"><strong>PC_bool_LaserPowerCommand</strong></a> – PC_bool_LaserPowerCommand.  Defaults to False.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">They currently only have an effect when <a class="reference internal" href="#GWL.GWL_parser.GWLobject.writeGWLWithPowerCompensation" title="GWL.GWL_parser.GWLobject.writeGWLWithPowerCompensation"><code class="xref py py-func docutils literal notranslate"><span class="pre">writeGWLWithPowerCompensation()</span></code></a> is used. Not when <a class="reference internal" href="#GWL.GWL_parser.GWLobject.writeGWL" title="GWL.GWL_parser.GWLobject.writeGWL"><code class="xref py py-func docutils literal notranslate"><span class="pre">writeGWL()</span></code></a> is used.</p>
+</div>
+<p><strong>Inner workings</strong>:</p>
+<blockquote>
+<div><p>The voxels are stored in <strong>GWL_voxels</strong>.
+This is the most important attribute.
+It stores all voxels in a list of the form [ write_sequence_0, write_sequence_1, … ] where:</p>
+<ul class="simple">
+<li>the write_sequence_i are of the form [voxel_0, voxel_1, …]</li>
+<li>the voxel_i of the form [x, y, z] or [x, y, z, power].</li>
+</ul>
+</div></blockquote>
+<dl class="attribute">
+<dt id="GWL.GWL_parser.GWLobject.DwellTime">
+<code class="descname">DwellTime</code><em class="property"> = None</em><a class="headerlink" href="#GWL.GWL_parser.GWLobject.DwellTime" title="Permalink to this definition">¶</a></dt>
+<dd><p>in ms = 1e-3 seconds</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="GWL.GWL_parser.GWLobject.GWL_voxels">
+<code class="descname">GWL_voxels</code><em class="property"> = None</em><a class="headerlink" href="#GWL.GWL_parser.GWLobject.GWL_voxels" title="Permalink to this definition">¶</a></dt>
+<dd><p>“List of lists of voxels”.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="GWL.GWL_parser.GWLobject.PC_bool_InverseWriting">
+<code class="descname">PC_bool_InverseWriting</code><em class="property"> = None</em><a class="headerlink" href="#GWL.GWL_parser.GWLobject.PC_bool_InverseWriting" title="Permalink to this definition">¶</a></dt>
+<dd><p>PC_bool_InverseWriting</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="GWL.GWL_parser.GWLobject.PC_bool_LaserPowerCommand">
+<code class="descname">PC_bool_LaserPowerCommand</code><em class="property"> = None</em><a class="headerlink" href="#GWL.GWL_parser.GWLobject.PC_bool_LaserPowerCommand" title="Permalink to this definition">¶</a></dt>
+<dd><p>PC_bool_LaserPowerCommand</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="GWL.GWL_parser.GWLobject.PC_float_height">
+<code class="descname">PC_float_height</code><em class="property"> = None</em><a class="headerlink" href="#GWL.GWL_parser.GWLobject.PC_float_height" title="Permalink to this definition">¶</a></dt>
+<dd><p>PC_float_height</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="GWL.GWL_parser.GWLobject.PC_interfaceAt">
+<code class="descname">PC_interfaceAt</code><em class="property"> = None</em><a class="headerlink" href="#GWL.GWL_parser.GWLobject.PC_interfaceAt" title="Permalink to this definition">¶</a></dt>
+<dd><p>PC_interfaceAt</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="GWL.GWL_parser.GWLobject.PC_laser_power_at_z0">
+<code class="descname">PC_laser_power_at_z0</code><em class="property"> = None</em><a class="headerlink" href="#GWL.GWL_parser.GWLobject.PC_laser_power_at_z0" title="Permalink to this definition">¶</a></dt>
+<dd><p>PC_laser_power_at_z0</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="GWL.GWL_parser.GWLobject.PC_slope">
+<code class="descname">PC_slope</code><em class="property"> = None</em><a class="headerlink" href="#GWL.GWL_parser.GWLobject.PC_slope" title="Permalink to this definition">¶</a></dt>
+<dd><p>PC_slope (set the slope to zero for a constant power)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="GWL.GWL_parser.GWLobject.PositionMaximum">
+<code class="descname">PositionMaximum</code><em class="property"> = None</em><a class="headerlink" href="#GWL.GWL_parser.GWLobject.PositionMaximum" title="Permalink to this definition">¶</a></dt>
+<dd><p>Maximum of X, Y, Z and power. Updated with updateLimits() and retrievable with getLimits().</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="GWL.GWL_parser.GWLobject.PositionMinimum">
+<code class="descname">PositionMinimum</code><em class="property"> = None</em><a class="headerlink" href="#GWL.GWL_parser.GWLobject.PositionMinimum" title="Permalink to this definition">¶</a></dt>
+<dd><p>Minimum of X, Y, Z and power. Updated with updateLimits() and retrievable with getLimits().</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="GWL.GWL_parser.GWLobject.addBlockCentroSize">
+<code class="descname">addBlockCentroSize</code><span class="sig-paren">(</span><em>centro</em>, <em>size</em>, <em>LineDistance_Horizontal=0.1</em>, <em>LineDistance_Vertical=0.2</em>, <em>BottomToTop=False</em>, <em>direction=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/GWL_parser.html#GWLobject.addBlockCentroSize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.GWL_parser.GWLobject.addBlockCentroSize" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="GWL.GWL_parser.GWLobject.addBlockLowerUpper">
+<code class="descname">addBlockLowerUpper</code><span class="sig-paren">(</span><em>lower</em>, <em>upper</em>, <em>LineDistance_Horizontal=0.1</em>, <em>LineDistance_Vertical=0.2</em>, <em>BottomToTop=False</em>, <em>direction=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/GWL_parser.html#GWLobject.addBlockLowerUpper"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.GWL_parser.GWLobject.addBlockLowerUpper" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="GWL.GWL_parser.GWLobject.addFlatLine">
+<code class="descname">addFlatLine</code><span class="sig-paren">(</span><em>P1</em>, <em>P2</em>, <em>line_distance</em>, <em>line_number</em>, <em>power=-1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/GWL_parser.html#GWLobject.addFlatLine"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.GWL_parser.GWLobject.addFlatLine" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="GWL.GWL_parser.GWLobject.addGWLobject">
+<code class="descname">addGWLobject</code><span class="sig-paren">(</span><em>obj</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/GWL_parser.html#GWLobject.addGWLobject"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.GWL_parser.GWLobject.addGWLobject" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="GWL.GWL_parser.GWLobject.addHorizontalCircle">
+<code class="descname">addHorizontalCircle</code><span class="sig-paren">(</span><em>center</em>, <em>radius</em>, <em>power</em>, <em>PointDistance_max</em>, <em>startAngle=0</em>, <em>endAngle=6.283185307179586</em>, <em>closed_loop=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/GWL_parser.html#GWLobject.addHorizontalCircle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.GWL_parser.GWLobject.addHorizontalCircle" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="GWL.GWL_parser.GWLobject.addHorizontalDisk">
+<code class="descname">addHorizontalDisk</code><span class="sig-paren">(</span><em>center</em>, <em>radius</em>, <em>power</em>, <em>PointDistance</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/GWL_parser.html#GWLobject.addHorizontalDisk"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.GWL_parser.GWLobject.addHorizontalDisk" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="GWL.GWL_parser.GWLobject.addHorizontalGrating">
+<code class="descname">addHorizontalGrating</code><span class="sig-paren">(</span><em>P1</em>, <em>P2</em>, <em>LineNumber</em>, <em>LineDistance</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/GWL_parser.html#GWLobject.addHorizontalGrating"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.GWL_parser.GWLobject.addHorizontalGrating" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="GWL.GWL_parser.GWLobject.addLine">
+<code class="descname">addLine</code><span class="sig-paren">(</span><em>P1</em>, <em>P2</em>, <em>power=-1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/GWL_parser.html#GWLobject.addLine"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.GWL_parser.GWLobject.addLine" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="GWL.GWL_parser.GWLobject.addLineCylinder">
+<code class="descname">addLineCylinder</code><span class="sig-paren">(</span><em>P1</em>, <em>P2</em>, <em>power</em>, <em>inner_radius</em>, <em>outer_radius</em>, <em>PointDistance_r</em>, <em>PointDistance_theta</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/GWL_parser.html#GWLobject.addLineCylinder"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.GWL_parser.GWLobject.addLineCylinder" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="GWL.GWL_parser.GWLobject.addPowerCompensation">
+<code class="descname">addPowerCompensation</code><span class="sig-paren">(</span><em>laser_power_at_z0</em>, <em>K</em>, <em>interfaceAt=0</em>, <em>bool_InverseWriting=False</em>, <em>float_height=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/GWL_parser.html#GWLobject.addPowerCompensation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.GWL_parser.GWLobject.addPowerCompensation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a 4th power component to voxels based on the formula:</p>
+<ul class="simple">
+<li>LP(Z) = (1+K*(Z-interfaceAt))*LP(0) if bool_InverseWriting=False</li>
+<li>LP(Z) = (1+K*((H-Z)+interfaceAt))*LP(0) if bool_InverseWriting=True</li>
+</ul>
+</dd></dl>
+
+<dl class="method">
+<dt id="GWL.GWL_parser.GWLobject.addSphere">
+<code class="descname">addSphere</code><span class="sig-paren">(</span><em>center</em>, <em>radius</em>, <em>power</em>, <em>HorizontalPointDistance</em>, <em>VerticalPointDistance</em>, <em>solid=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/GWL_parser.html#GWLobject.addSphere"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.GWL_parser.GWLobject.addSphere" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="GWL.GWL_parser.GWLobject.addTubeWithVerticalLines">
+<code class="descname">addTubeWithVerticalLines</code><span class="sig-paren">(</span><em>centro</em>, <em>inner_radius</em>, <em>outer_radius</em>, <em>height</em>, <em>power</em>, <em>PointDistance_r</em>, <em>PointDistance_theta</em>, <em>downwardWriting=True</em>, <em>zigzag=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/GWL_parser.html#GWLobject.addTubeWithVerticalLines"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.GWL_parser.GWLobject.addTubeWithVerticalLines" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="GWL.GWL_parser.GWLobject.addVoxel">
+<code class="descname">addVoxel</code><span class="sig-paren">(</span><em>voxel</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/GWL_parser.html#GWLobject.addVoxel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.GWL_parser.GWLobject.addVoxel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds a voxel to the last “writing sequence”. If there is none, a new one will be created.
+Equivalent to adding a line of the form “x y z [power]” in your .gwl file.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="GWL.GWL_parser.GWLobject.addXblock">
+<code class="descname">addXblock</code><span class="sig-paren">(</span><em>P1</em>, <em>P2</em>, <em>LineNumber_Horizontal=None</em>, <em>LineDistance_Horizontal=0.1</em>, <em>LineNumber_Vertical=None</em>, <em>LineDistance_Vertical=0.2</em>, <em>BottomToTop=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/GWL_parser.html#GWLobject.addXblock"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.GWL_parser.GWLobject.addXblock" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="GWL.GWL_parser.GWLobject.addYblock">
+<code class="descname">addYblock</code><span class="sig-paren">(</span><em>P1</em>, <em>P2</em>, <em>LineNumber_Horizontal=None</em>, <em>LineDistance_Horizontal=0.1</em>, <em>LineNumber_Vertical=None</em>, <em>LineDistance_Vertical=0.2</em>, <em>BottomToTop=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/GWL_parser.html#GWLobject.addYblock"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.GWL_parser.GWLobject.addYblock" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="GWL.GWL_parser.GWLobject.addZGrating">
+<code class="descname">addZGrating</code><span class="sig-paren">(</span><em>P1</em>, <em>P2</em>, <em>LineNumber</em>, <em>LineDistance</em>, <em>BottomToTop=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/GWL_parser.html#GWLobject.addZGrating"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.GWL_parser.GWLobject.addZGrating" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="GWL.GWL_parser.GWLobject.addZblock">
+<code class="descname">addZblock</code><span class="sig-paren">(</span><em>P1</em>, <em>P2</em>, <em>LineNumber_X=None</em>, <em>LineDistance_X=0.1</em>, <em>LineNumber_Y=None</em>, <em>LineDistance_Y=0.1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/GWL_parser.html#GWLobject.addZblock"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.GWL_parser.GWLobject.addZblock" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="GWL.GWL_parser.GWLobject.add_arguments">
+<code class="descname">add_arguments</code><span class="sig-paren">(</span><em>parser</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/GWL_parser.html#GWLobject.add_arguments"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.GWL_parser.GWLobject.add_arguments" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds GWLobject related arguments to the given <em>parser</em> (an argparse.ArgumentParser instance).</p>
+<p>See also: <a class="reference internal" href="#GWL.GWL_parser.GWLobject.setAttributesFromParsedOptions" title="GWL.GWL_parser.GWLobject.setAttributesFromParsedOptions"><code class="xref py py-func docutils literal notranslate"><span class="pre">setAttributesFromParsedOptions()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="GWL.GWL_parser.GWLobject.appendVoxels">
+<code class="descname">appendVoxels</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/GWL_parser.html#GWLobject.appendVoxels"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.GWL_parser.GWLobject.appendVoxels" title="Permalink to this definition">¶</a></dt>
+<dd><p>“append” a “line of voxels”</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="GWL.GWL_parser.GWLobject.applyOffset">
+<code class="descname">applyOffset</code><span class="sig-paren">(</span><em>offset</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/GWL_parser.html#GWLobject.applyOffset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.GWL_parser.GWLobject.applyOffset" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="GWL.GWL_parser.GWLobject.applyTransformationMatrix">
+<code class="descname">applyTransformationMatrix</code><span class="sig-paren">(</span><em>P</em>, <em>centro</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/GWL_parser.html#GWLobject.applyTransformationMatrix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.GWL_parser.GWLobject.applyTransformationMatrix" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="GWL.GWL_parser.GWLobject.clear">
+<code class="descname">clear</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/GWL_parser.html#GWLobject.clear"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.GWL_parser.GWLobject.clear" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="GWL.GWL_parser.GWLobject.extendVoxels">
+<code class="descname">extendVoxels</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/GWL_parser.html#GWLobject.extendVoxels"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.GWL_parser.GWLobject.extendVoxels" title="Permalink to this definition">¶</a></dt>
+<dd><p>“extend” with multiple “lines of voxels”</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="GWL.GWL_parser.GWLobject.getLastVoxel">
+<code class="descname">getLastVoxel</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/GWL_parser.html#GWLobject.getLastVoxel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.GWL_parser.GWLobject.getLastVoxel" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="GWL.GWL_parser.GWLobject.getLimits">
+<code class="descname">getLimits</code><span class="sig-paren">(</span><em>update_limits=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/GWL_parser.html#GWLobject.getLimits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.GWL_parser.GWLobject.getLimits" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function returns the minimum and maximum x,y,z coordinates.</p>
+<p>To optimize speed, it only returns the currently stored limits, which should be computed while adding voxels.
+To update the limits, call updateLimits().</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>update_limits</strong> (<em>bool</em>) – If true, updateLimits() will be called.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">(PositionMinimum, PositionMaximum) where PositionMinimum and PositionMaximum are lists of size 4 containing [Xmin, Ymin, Zmin, Pmin] and [Xmax, Ymax, Zmax, Pmax] respectively.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="GWL.GWL_parser.GWLobject.getMeshData">
+<code class="descname">getMeshData</code><span class="sig-paren">(</span><em>position=[0, 0, 0]</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/GWL_parser.html#GWLobject.getMeshData"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.GWL_parser.GWLobject.getMeshData" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="GWL.GWL_parser.GWLobject.getMinDistanceBetweenVoxels">
+<code class="descname">getMinDistanceBetweenVoxels</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/GWL_parser.html#GWLobject.getMinDistanceBetweenVoxels"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.GWL_parser.GWLobject.getMinDistanceBetweenVoxels" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="GWL.GWL_parser.GWLobject.getNvoxels">
+<code class="descname">getNvoxels</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/GWL_parser.html#GWLobject.getNvoxels"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.GWL_parser.GWLobject.getNvoxels" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="GWL.GWL_parser.GWLobject.getPower">
+<code class="descname">getPower</code><span class="sig-paren">(</span><em>z</em>, <em>PC_laser_power_at_z0=None</em>, <em>PC_slope=None</em>, <em>PC_interfaceAt=None</em>, <em>PC_bool_InverseWriting=None</em>, <em>PC_float_height=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/GWL_parser.html#GWLobject.getPower"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.GWL_parser.GWLobject.getPower" title="Permalink to this definition">¶</a></dt>
+<dd><p>calculate power for a given z position</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="GWL.GWL_parser.GWLobject.getVoxels">
+<code class="descname">getVoxels</code><span class="sig-paren">(</span><em>L</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/GWL_parser.html#GWLobject.getVoxels"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.GWL_parser.GWLobject.getVoxels" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list of the voxels in the form specified in <a class="reference internal" href="#GWL.GWL_parser.GWLobject.setVoxels" title="GWL.GWL_parser.GWLobject.setVoxels"><code class="xref py py-func docutils literal notranslate"><span class="pre">setVoxels()</span></code></a>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="GWL.GWL_parser.GWLobject.get_argument_parser">
+<code class="descname">get_argument_parser</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/GWL_parser.html#GWLobject.get_argument_parser"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.GWL_parser.GWLobject.get_argument_parser" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="GWL.GWL_parser.GWLobject.maxDistanceBetweenLines">
+<code class="descname">maxDistanceBetweenLines</code><em class="property"> = None</em><a class="headerlink" href="#GWL.GWL_parser.GWLobject.maxDistanceBetweenLines" title="Permalink to this definition">¶</a></dt>
+<dd><p>maximum acceptable distance from end of one line to start of next one</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="GWL.GWL_parser.GWLobject.minDistanceBetweenLines">
+<code class="descname">minDistanceBetweenLines</code><em class="property"> = None</em><a class="headerlink" href="#GWL.GWL_parser.GWLobject.minDistanceBetweenLines" title="Permalink to this definition">¶</a></dt>
+<dd><p>shortest distance from end of one line to start of next one</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="GWL.GWL_parser.GWLobject.readGWL">
+<code class="descname">readGWL</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/GWL_parser.html#GWLobject.readGWL"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.GWL_parser.GWLobject.readGWL" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="GWL.GWL_parser.GWLobject.readSubstitutes">
+<code class="descname">readSubstitutes</code><span class="sig-paren">(</span><em>subsFile</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/GWL_parser.html#GWLobject.readSubstitutes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.GWL_parser.GWLobject.readSubstitutes" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="GWL.GWL_parser.GWLobject.reverse">
+<code class="descname">reverse</code><span class="sig-paren">(</span><em>reverse_line_order=True</em>, <em>reverse_voxel_order_per_line=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/GWL_parser.html#GWLobject.reverse"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.GWL_parser.GWLobject.reverse" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reverse the order of the voxels. Unlike  <a class="reference internal" href="#GWL.GWL_parser.GWLobject.reverse_line_order_on_write" title="GWL.GWL_parser.GWLobject.reverse_line_order_on_write"><code class="xref py py-attr docutils literal notranslate"><span class="pre">reverse_line_order_on_write</span></code></a> and <a class="reference internal" href="#GWL.GWL_parser.GWLobject.reverse_voxel_order_per_line_on_write" title="GWL.GWL_parser.GWLobject.reverse_voxel_order_per_line_on_write"><code class="xref py py-attr docutils literal notranslate"><span class="pre">reverse_voxel_order_per_line_on_write</span></code></a>, this applies directly.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>reverse_line_order</strong> – <p>If True, the order of the lines will be reversed, i.e.:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">voxel0</span>
+<span class="n">voxel1</span>
+<span class="n">voxel2</span>
+<span class="n">Write</span>
+<span class="n">voxel3</span>
+<span class="n">voxel4</span>
+<span class="n">voxel5</span>
+<span class="n">Write</span>
+</pre></div>
+</div>
+<p>becomes:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">voxel3</span>
+<span class="n">voxel4</span>
+<span class="n">voxel5</span>
+<span class="n">Write</span>
+<span class="n">voxel0</span>
+<span class="n">voxel1</span>
+<span class="n">voxel2</span>
+<span class="n">Write</span>
+</pre></div>
+</div>
+</li>
+<li><strong>reverse_voxel_order_per_line</strong> – <p>If True, the order of the voxels in each line will be reversed, i.e.:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">voxel0</span>
+<span class="n">voxel1</span>
+<span class="n">voxel2</span>
+<span class="n">Write</span>
+<span class="n">voxel3</span>
+<span class="n">voxel4</span>
+<span class="n">voxel5</span>
+<span class="n">Write</span>
+</pre></div>
+</div>
+<p>becomes:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">voxel2</span>
+<span class="n">voxel1</span>
+<span class="n">voxel0</span>
+<span class="n">Write</span>
+<span class="n">voxel5</span>
+<span class="n">voxel4</span>
+<span class="n">voxel3</span>
+<span class="n">Write</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">None</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="GWL.GWL_parser.GWLobject.reverse_line_order_on_write">
+<code class="descname">reverse_line_order_on_write</code><em class="property"> = None</em><a class="headerlink" href="#GWL.GWL_parser.GWLobject.reverse_line_order_on_write" title="Permalink to this definition">¶</a></dt>
+<dd><p>If True, the order of the lines will be reversed <strong>during writing</strong>. See also: <a class="reference internal" href="#GWL.GWL_parser.GWLobject.reverse" title="GWL.GWL_parser.GWLobject.reverse"><code class="xref py py-func docutils literal notranslate"><span class="pre">reverse()</span></code></a></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="GWL.GWL_parser.GWLobject.reverse_voxel_order_per_line_on_write">
+<code class="descname">reverse_voxel_order_per_line_on_write</code><em class="property"> = None</em><a class="headerlink" href="#GWL.GWL_parser.GWLobject.reverse_voxel_order_per_line_on_write" title="Permalink to this definition">¶</a></dt>
+<dd><p>If True, the order of the voxels in each line will be reversed <strong>during writing</strong>. See also: <a class="reference internal" href="#GWL.GWL_parser.GWLobject.reverse" title="GWL.GWL_parser.GWLobject.reverse"><code class="xref py py-func docutils literal notranslate"><span class="pre">reverse()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="GWL.GWL_parser.GWLobject.rotate">
+<code class="descname">rotate</code><span class="sig-paren">(</span><em>axis_point</em>, <em>axis_direction</em>, <em>angle_degrees</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/GWL_parser.html#GWLobject.rotate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.GWL_parser.GWLobject.rotate" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="GWL.GWL_parser.GWLobject.setAttributesFromParsedOptions">
+<code class="descname">setAttributesFromParsedOptions</code><span class="sig-paren">(</span><em>options</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/GWL_parser.html#GWLobject.setAttributesFromParsedOptions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.GWL_parser.GWLobject.setAttributesFromParsedOptions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the object’s attributes based on the ones from the <em>options</em> object (usually an argparse.ArgumentParser instance).</p>
+<p>See also: <a class="reference internal" href="#GWL.GWL_parser.GWLobject.add_arguments" title="GWL.GWL_parser.GWLobject.add_arguments"><code class="xref py py-func docutils literal notranslate"><span class="pre">add_arguments()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="GWL.GWL_parser.GWLobject.setVoxels">
+<code class="descname">setVoxels</code><span class="sig-paren">(</span><em>L</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/GWL_parser.html#GWLobject.setVoxels"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.GWL_parser.GWLobject.setVoxels" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the voxels as a list of the form [[v0,v1,…], [vA,vB,…], …] where v* are voxel coordinates, i.e. [X,Y,Z] or [X,Y,Z,power].</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="GWL.GWL_parser.GWLobject.set_lower_to_origin">
+<code class="descname">set_lower_to_origin</code><em class="property"> = None</em><a class="headerlink" href="#GWL.GWL_parser.GWLobject.set_lower_to_origin" title="Permalink to this definition">¶</a></dt>
+<dd><p>If true, offsets the structure so that the lower corner is at (0,0,0)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="GWL.GWL_parser.GWLobject.startNewVoxelSequence">
+<code class="descname">startNewVoxelSequence</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/GWL_parser.html#GWLobject.startNewVoxelSequence"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.GWL_parser.GWLobject.startNewVoxelSequence" title="Permalink to this definition">¶</a></dt>
+<dd><p>Starts a new voxel sequence, i.e. “adds a Write command” if you already had a “voxel sequence” before it when creating the .gwl file.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="GWL.GWL_parser.GWLobject.updateLimits">
+<code class="descname">updateLimits</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/GWL_parser.html#GWLobject.updateLimits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.GWL_parser.GWLobject.updateLimits" title="Permalink to this definition">¶</a></dt>
+<dd><p>Updates the PositionMinimum and PositionMaximum attributes.</p>
+<p>See also getLimits().</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">(PositionMinimum, PositionMaximum) where PositionMinimum and PositionMaximum are lists of size 4 containing [Xmin, Ymin, Zmin, Pmin] and [Xmax, Ymax, Zmax, Pmax] respectively.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="GWL.GWL_parser.GWLobject.writeGWL">
+<code class="descname">writeGWL</code><span class="sig-paren">(</span><em>filename, writingOffset=[0, 0, 0, 0], bool_LaserPowerCommand=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/GWL_parser.html#GWLobject.writeGWL"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.GWL_parser.GWLobject.writeGWL" title="Permalink to this definition">¶</a></dt>
+<dd><p>Writes out the GWL file.
+This function is old and does not use the new power compensation attributes.</p>
+<p>See also: <a class="reference internal" href="#GWL.GWL_parser.GWLobject.writeGWLWithPowerCompensation" title="GWL.GWL_parser.GWLobject.writeGWLWithPowerCompensation"><code class="xref py py-func docutils literal notranslate"><span class="pre">writeGWLWithPowerCompensation()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="GWL.GWL_parser.GWLobject.writeGWLWithPowerCompensation">
+<code class="descname">writeGWLWithPowerCompensation</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/GWL_parser.html#GWLobject.writeGWLWithPowerCompensation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.GWL_parser.GWLobject.writeGWLWithPowerCompensation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Writes out the GWL file, but using the GWLobject’s attributes related to power compensation.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>The latest Nanowrite software supports new commands allowing easy changes to the power compensation (power slope, etc).
+Please test and use those instead. If they work, it will make functions like this one mostly obsolete.
+The new GWL commands are: psPowerProfile, psLoadPowerProfiles, psPowerSlope</p>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">FindInterfaceAt</span> <span class="mf">0.5</span>
+<span class="n">PowerScaling</span> <span class="mf">1.5</span>
+<span class="n">LaserPower</span> <span class="mi">3</span>
+<span class="n">psPowerSlope</span> <span class="mi">2</span>
+<span class="mi">0</span> <span class="mi">0</span> <span class="mi">0</span>
+<span class="mi">0</span> <span class="mi">0</span> <span class="mi">10</span>
+<span class="n">Write</span>
+</pre></div>
+</div>
+<p>This should be equivalent to the old:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">0</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">3</span>
+<span class="mi">0</span> <span class="mi">0</span> <span class="mi">10</span> <span class="mf">90.0</span> <span class="o">%</span> <span class="o">=</span> <span class="mi">3</span> <span class="o">*</span> <span class="mi">1</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="mi">2</span><span class="o">*</span><span class="p">(</span><span class="n">z</span><span class="o">-</span><span class="mf">0.5</span><span class="p">))</span><span class="o">*</span><span class="mf">1.5</span>
+<span class="n">Write</span>
+</pre></div>
+</div>
+<p>The formula used is:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">LPeff</span> <span class="o">=</span> <span class="n">LaserPower</span> <span class="o">*</span> <span class="n">eta</span><span class="p">(</span><span class="o">|</span><span class="n">nu</span><span class="o">|</span><span class="p">)</span> <span class="o">*</span> <span class="n">mu</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>with:</p>
+<div class="last highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">eta</span><span class="p">(</span><span class="o">|</span><span class="n">nu</span><span class="o">|</span><span class="p">)</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">mu</span><span class="p">(</span><span class="n">z</span><span class="p">)</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">psPowerSlope</span><span class="o">*</span><span class="p">(</span><span class="n">z</span><span class="o">-</span><span class="n">FindInterfaceAt</span><span class="p">))</span><span class="o">*</span><span class="n">PowerScaling</span>
+</pre></div>
+</div>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="GWL.GWL_parser.GWLobject.write_power">
+<code class="descname">write_power</code><em class="property"> = None</em><a class="headerlink" href="#GWL.GWL_parser.GWLobject.write_power" title="Permalink to this definition">¶</a></dt>
+<dd><p>write out power values</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="GWL.GWL_parser.calculateNvoxelsAndInterVoxelDistance">
+<code class="descclassname">GWL.GWL_parser.</code><code class="descname">calculateNvoxelsAndInterVoxelDistance</code><span class="sig-paren">(</span><em>Length</em>, <em>Voxelsize</em>, <em>Overlap</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/GWL_parser.html#calculateNvoxelsAndInterVoxelDistance"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.GWL_parser.calculateNvoxelsAndInterVoxelDistance" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calulates the number of voxels and the distance between them so that they fit into length “Length” with an overlap “Overlap”, i.e. so that:</p>
+<ul class="simple">
+<li>InterVoxelDistance = (1-Overlap)*Voxelsize</li>
+<li>(Nvoxels-1)*InterVoxelDistance + Voxelsize &lt;= Length</li>
+</ul>
+</dd></dl>
+
+<dl class="function">
+<dt id="GWL.GWL_parser.main">
+<code class="descclassname">GWL.GWL_parser.</code><code class="descname">main</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/GWL_parser.html#main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.GWL_parser.main" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="GWL.GWL_parser.test1">
+<code class="descclassname">GWL.GWL_parser.</code><code class="descname">test1</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/GWL_parser.html#test1"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.GWL_parser.test1" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="GWL.GWL_parser.test2">
+<code class="descclassname">GWL.GWL_parser.</code><code class="descname">test2</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/GWL_parser.html#test2"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.GWL_parser.test2" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-GWL.SpiralSphere">
+<span id="gwl-spiralsphere-module"></span><h2>GWL.SpiralSphere module<a class="headerlink" href="#module-GWL.SpiralSphere" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="GWL.SpiralSphere.SpiralSphere">
+<em class="property">class </em><code class="descclassname">GWL.SpiralSphere.</code><code class="descname">SpiralSphere</code><a class="reference internal" href="_modules/GWL/SpiralSphere.html#SpiralSphere"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.SpiralSphere.SpiralSphere" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#GWL.GWL_parser.GWLobject" title="GWL.GWL_parser.GWLobject"><code class="xref py py-class docutils literal notranslate"><span class="pre">GWL.GWL_parser.GWLobject</span></code></a></p>
+<dl class="method">
+<dt id="GWL.SpiralSphere.SpiralSphere.computePoints">
+<code class="descname">computePoints</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/SpiralSphere.html#SpiralSphere.computePoints"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.SpiralSphere.SpiralSphere.computePoints" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="GWL.SpiralSphere.SpiralSphere.getDiametre">
+<code class="descname">getDiametre</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/SpiralSphere.html#SpiralSphere.getDiametre"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.SpiralSphere.SpiralSphere.getDiametre" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="GWL.SpiralSphere.SpiralSphere.getMeshData">
+<code class="descname">getMeshData</code><span class="sig-paren">(</span><em>position=[0, 0, 0]</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/SpiralSphere.html#SpiralSphere.getMeshData"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.SpiralSphere.SpiralSphere.getMeshData" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="GWL.SpiralSphere.SpiralSphere.getRadius">
+<code class="descname">getRadius</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/SpiralSphere.html#SpiralSphere.getRadius"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.SpiralSphere.SpiralSphere.getRadius" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="GWL.SpiralSphere.SpiralSphere.setDiametre">
+<code class="descname">setDiametre</code><span class="sig-paren">(</span><em>diametre</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/SpiralSphere.html#SpiralSphere.setDiametre"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.SpiralSphere.SpiralSphere.setDiametre" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="GWL.SpiralSphere.SpiralSphere.setRadius">
+<code class="descname">setRadius</code><span class="sig-paren">(</span><em>radius</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/SpiralSphere.html#SpiralSphere.setRadius"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.SpiralSphere.SpiralSphere.setRadius" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="GWL.SpiralSphere.SpiralSphere.writeGWL">
+<code class="descname">writeGWL</code><span class="sig-paren">(</span><em>filename, writingOffset=[0, 0, 0, 0]</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/SpiralSphere.html#SpiralSphere.writeGWL"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.SpiralSphere.SpiralSphere.writeGWL" title="Permalink to this definition">¶</a></dt>
+<dd><p>Writes out the GWL file.
+This function is old and does not use the new power compensation attributes.</p>
+<p>See also: <code class="xref py py-func docutils literal notranslate"><span class="pre">writeGWLWithPowerCompensation()</span></code></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="GWL.SpiralSphere.main">
+<code class="descclassname">GWL.SpiralSphere.</code><code class="descname">main</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/SpiralSphere.html#main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.SpiralSphere.main" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="GWL.SpiralSphere.test">
+<code class="descclassname">GWL.SpiralSphere.</code><code class="descname">test</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/SpiralSphere.html#test"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.SpiralSphere.test" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-GWL.bmesh">
+<span id="gwl-bmesh-module"></span><h2>GWL.bmesh module<a class="headerlink" href="#module-GWL.bmesh" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="GWL.bmesh.BMEdgeSeq">
+<em class="property">class </em><code class="descclassname">GWL.bmesh.</code><code class="descname">BMEdgeSeq</code><a class="reference internal" href="_modules/GWL/bmesh.html#BMEdgeSeq"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.bmesh.BMEdgeSeq" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="method">
+<dt id="GWL.bmesh.BMEdgeSeq.new">
+<code class="descname">new</code><span class="sig-paren">(</span><em>v_list</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/bmesh.html#BMEdgeSeq.new"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.bmesh.BMEdgeSeq.new" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="GWL.bmesh.BMFaceSeq">
+<em class="property">class </em><code class="descclassname">GWL.bmesh.</code><code class="descname">BMFaceSeq</code><a class="reference internal" href="_modules/GWL/bmesh.html#BMFaceSeq"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.bmesh.BMFaceSeq" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="method">
+<dt id="GWL.bmesh.BMFaceSeq.new">
+<code class="descname">new</code><span class="sig-paren">(</span><em>v_list</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/bmesh.html#BMFaceSeq.new"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.bmesh.BMFaceSeq.new" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="GWL.bmesh.BMVert">
+<em class="property">class </em><code class="descclassname">GWL.bmesh.</code><code class="descname">BMVert</code><span class="sig-paren">(</span><em>co=(0</em>, <em>0</em>, <em>0)</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/bmesh.html#BMVert"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.bmesh.BMVert" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="GWL.bmesh.BMVertSeq">
+<em class="property">class </em><code class="descclassname">GWL.bmesh.</code><code class="descname">BMVertSeq</code><a class="reference internal" href="_modules/GWL/bmesh.html#BMVertSeq"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.bmesh.BMVertSeq" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="method">
+<dt id="GWL.bmesh.BMVertSeq.new">
+<code class="descname">new</code><span class="sig-paren">(</span><em>v_co</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/bmesh.html#BMVertSeq.new"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.bmesh.BMVertSeq.new" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="GWL.bmesh.BMesh">
+<em class="property">class </em><code class="descclassname">GWL.bmesh.</code><code class="descname">BMesh</code><a class="reference internal" href="_modules/GWL/bmesh.html#BMesh"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.bmesh.BMesh" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+</dd></dl>
+
+<dl class="function">
+<dt id="GWL.bmesh.new">
+<code class="descclassname">GWL.bmesh.</code><code class="descname">new</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/bmesh.html#new"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.bmesh.new" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-GWL.box">
+<span id="gwl-box-module"></span><h2>GWL.box module<a class="headerlink" href="#module-GWL.box" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="GWL.box.createElevatedBoxWithSubstrate">
+<code class="descclassname">GWL.box.</code><code class="descname">createElevatedBoxWithSubstrate</code><span class="sig-paren">(</span><em>DSTDIR</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/box.html#createElevatedBoxWithSubstrate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.box.createElevatedBoxWithSubstrate" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="GWL.box.createLegs">
+<code class="descclassname">GWL.box.</code><code class="descname">createLegs</code><span class="sig-paren">(</span><em>DSTDIR, NAME='Legs.gwl', wall_thickness=1, leg_height=3, hole_width=4, box_size=10, overshoot=1, LineDistance_Horizontal=0.35, LineDistance_Vertical=0.35, BottomToTop=False, writingOffset=[0, 0, 0, 0]</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/box.html#createLegs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.box.createLegs" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="GWL.box.createSimpleBox">
+<code class="descclassname">GWL.box.</code><code class="descname">createSimpleBox</code><span class="sig-paren">(</span><em>DSTDIR, NAME='SimpleBox.gwl', box_size=10, wall_height=5, wall_thickness=0, overshoot=3, LineDistance_Horizontal=0.35, LineDistance_Vertical=0.35, BottomToTop=False, writingOffset=[0, 0, 0, 0]</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/box.html#createSimpleBox"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.box.createSimpleBox" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="GWL.box.createSubstrate">
+<code class="descclassname">GWL.box.</code><code class="descname">createSubstrate</code><span class="sig-paren">(</span><em>DSTDIR, NAME='Substrate.gwl', box_size=10, substrate_height=1, LineDistance_Horizontal=0.35, LineDistance_Vertical=0.35, BottomToTop=False, writingOffset=[0, 0, 0, 0]</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/box.html#createSubstrate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.box.createSubstrate" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="GWL.box.main">
+<code class="descclassname">GWL.box.</code><code class="descname">main</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/box.html#main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.box.main" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-GWL.foobar_file">
+<span id="gwl-foobar-file-module"></span><h2>GWL.foobar_file module<a class="headerlink" href="#module-GWL.foobar_file" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="GWL.foobar_file.foobarClass">
+<em class="property">class </em><code class="descclassname">GWL.foobar_file.</code><code class="descname">foobarClass</code><a class="reference internal" href="_modules/GWL/foobar_file.html#foobarClass"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.foobar_file.foobarClass" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#GWL.GWL_parser.GWLobject" title="GWL.GWL_parser.GWLobject"><code class="xref py py-class docutils literal notranslate"><span class="pre">GWL.GWL_parser.GWLobject</span></code></a></p>
+<dl class="method">
+<dt id="GWL.foobar_file.foobarClass.setProperty">
+<code class="descname">setProperty</code><span class="sig-paren">(</span><em>N</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/foobar_file.html#foobarClass.setProperty"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.foobar_file.foobarClass.setProperty" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-GWL.generate_sphere">
+<span id="gwl-generate-sphere-module"></span><h2>GWL.generate_sphere module<a class="headerlink" href="#module-GWL.generate_sphere" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-GWL.parallelepiped">
+<span id="gwl-parallelepiped-module"></span><h2>GWL.parallelepiped module<a class="headerlink" href="#module-GWL.parallelepiped" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="GWL.parallelepiped.Parallelepiped">
+<em class="property">class </em><code class="descclassname">GWL.parallelepiped.</code><code class="descname">Parallelepiped</code><a class="reference internal" href="_modules/GWL/parallelepiped.html#Parallelepiped"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.parallelepiped.Parallelepiped" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#GWL.GWL_parser.GWLobject" title="GWL.GWL_parser.GWLobject"><code class="xref py py-class docutils literal notranslate"><span class="pre">GWL.GWL_parser.GWLobject</span></code></a></p>
+<p>A parallelepiped (i.e., a brick, possibly with non-orthogonal axes).</p>
+<p>The block will be filled with lines going along e1, in layers in the (e1,e2) plane, stacked along e3.</p>
+<dl class="attribute">
+<dt id="GWL.parallelepiped.Parallelepiped.LineNumber_vec3">
+<code class="descname">LineNumber_vec3</code><em class="property"> = [5, 5, 5]</em><a class="headerlink" href="#GWL.parallelepiped.Parallelepiped.LineNumber_vec3" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="GWL.parallelepiped.Parallelepiped.center_vec3">
+<code class="descname">center_vec3</code><em class="property"> = array([0, 0, 0])</em><a class="headerlink" href="#GWL.parallelepiped.Parallelepiped.center_vec3" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="GWL.parallelepiped.Parallelepiped.computeOutline">
+<code class="descname">computeOutline</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/parallelepiped.html#Parallelepiped.computeOutline"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.parallelepiped.Parallelepiped.computeOutline" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="GWL.parallelepiped.Parallelepiped.computePoints">
+<code class="descname">computePoints</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/parallelepiped.html#Parallelepiped.computePoints"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.parallelepiped.Parallelepiped.computePoints" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="GWL.parallelepiped.Parallelepiped.computeVectors">
+<code class="descname">computeVectors</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/parallelepiped.html#Parallelepiped.computeVectors"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.parallelepiped.Parallelepiped.computeVectors" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="GWL.parallelepiped.Parallelepiped.connected">
+<code class="descname">connected</code><em class="property"> = False</em><a class="headerlink" href="#GWL.parallelepiped.Parallelepiped.connected" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="GWL.parallelepiped.Parallelepiped.e1_vec3">
+<code class="descname">e1_vec3</code><em class="property"> = array([1, 0, 0])</em><a class="headerlink" href="#GWL.parallelepiped.Parallelepiped.e1_vec3" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="GWL.parallelepiped.Parallelepiped.e2_vec3">
+<code class="descname">e2_vec3</code><em class="property"> = array([0, 1, 0])</em><a class="headerlink" href="#GWL.parallelepiped.Parallelepiped.e2_vec3" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="GWL.parallelepiped.Parallelepiped.e3_vec3">
+<code class="descname">e3_vec3</code><em class="property"> = array([0, 0, 1])</em><a class="headerlink" href="#GWL.parallelepiped.Parallelepiped.e3_vec3" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="GWL.parallelepiped.Parallelepiped.getMeshData">
+<code class="descname">getMeshData</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/parallelepiped.html#Parallelepiped.getMeshData"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.parallelepiped.Parallelepiped.getMeshData" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="GWL.parallelepiped.Parallelepiped.getMinMaxPoints">
+<code class="descname">getMinMaxPoints</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/parallelepiped.html#Parallelepiped.getMinMaxPoints"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.parallelepiped.Parallelepiped.getMinMaxPoints" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="GWL.parallelepiped.Parallelepiped.getNormalizedVectors">
+<code class="descname">getNormalizedVectors</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/parallelepiped.html#Parallelepiped.getNormalizedVectors"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.parallelepiped.Parallelepiped.getNormalizedVectors" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="GWL.parallelepiped.Parallelepiped.overlap_vec3">
+<code class="descname">overlap_vec3</code><em class="property"> = array([0. , 0. , 0.5])</em><a class="headerlink" href="#GWL.parallelepiped.Parallelepiped.overlap_vec3" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="GWL.parallelepiped.Parallelepiped.overlap_vec3_xyz">
+<code class="descname">overlap_vec3_xyz</code><em class="property"> = array([0. , 0. , 0.5])</em><a class="headerlink" href="#GWL.parallelepiped.Parallelepiped.overlap_vec3_xyz" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="GWL.parallelepiped.Parallelepiped.setFromLine">
+<code class="descname">setFromLine</code><span class="sig-paren">(</span><em>A</em>, <em>B</em>, <em>rod_width</em>, <em>rod_height</em>, <em>orthogonal</em>, <em>orientation</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/parallelepiped.html#Parallelepiped.setFromLine"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.parallelepiped.Parallelepiped.setFromLine" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="GWL.parallelepiped.Parallelepiped.setSizeFromVectors">
+<code class="descname">setSizeFromVectors</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/parallelepiped.html#Parallelepiped.setSizeFromVectors"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.parallelepiped.Parallelepiped.setSizeFromVectors" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="GWL.parallelepiped.Parallelepiped.size_vec3">
+<code class="descname">size_vec3</code><em class="property"> = array([1, 1, 1])</em><a class="headerlink" href="#GWL.parallelepiped.Parallelepiped.size_vec3" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="GWL.parallelepiped.Parallelepiped.voxelsize_vec3">
+<code class="descname">voxelsize_vec3</code><em class="property"> = array([0.15, 0.15, 0.45])</em><a class="headerlink" href="#GWL.parallelepiped.Parallelepiped.voxelsize_vec3" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="GWL.parallelepiped.Parallelepiped.voxelsize_vec3_xyz">
+<code class="descname">voxelsize_vec3_xyz</code><em class="property"> = array([0.15, 0.15, 0.45])</em><a class="headerlink" href="#GWL.parallelepiped.Parallelepiped.voxelsize_vec3_xyz" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="GWL.parallelepiped.Parallelepiped.writeGWL">
+<code class="descname">writeGWL</code><span class="sig-paren">(</span><em>filename, writingOffset=[0, 0, 0, 0]</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/parallelepiped.html#Parallelepiped.writeGWL"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.parallelepiped.Parallelepiped.writeGWL" title="Permalink to this definition">¶</a></dt>
+<dd><p>Writes out the GWL file.
+This function is old and does not use the new power compensation attributes.</p>
+<p>See also: <code class="xref py py-func docutils literal notranslate"><span class="pre">writeGWLWithPowerCompensation()</span></code></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="GWL.parallelepiped.test0">
+<code class="descclassname">GWL.parallelepiped.</code><code class="descname">test0</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/parallelepiped.html#test0"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.parallelepiped.test0" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="GWL.parallelepiped.test1">
+<code class="descclassname">GWL.parallelepiped.</code><code class="descname">test1</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/parallelepiped.html#test1"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.parallelepiped.test1" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-GWL.rotation_example">
+<span id="gwl-rotation-example-module"></span><h2>GWL.rotation_example module<a class="headerlink" href="#module-GWL.rotation_example" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-GWL.tilted_grating">
+<span id="gwl-tilted-grating-module"></span><h2>GWL.tilted_grating module<a class="headerlink" href="#module-GWL.tilted_grating" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="GWL.tilted_grating.TiltedGrating">
+<em class="property">class </em><code class="descclassname">GWL.tilted_grating.</code><code class="descname">TiltedGrating</code><a class="reference internal" href="_modules/GWL/tilted_grating.html#TiltedGrating"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.tilted_grating.TiltedGrating" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#GWL.GWL_parser.GWLobject" title="GWL.GWL_parser.GWLobject"><code class="xref py py-class docutils literal notranslate"><span class="pre">GWL.GWL_parser.GWLobject</span></code></a></p>
+<dl class="method">
+<dt id="GWL.tilted_grating.TiltedGrating.computePoints">
+<code class="descname">computePoints</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/tilted_grating.html#TiltedGrating.computePoints"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.tilted_grating.TiltedGrating.computePoints" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="GWL.tilted_grating.TiltedGrating.getMeshData">
+<code class="descname">getMeshData</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/tilted_grating.html#TiltedGrating.getMeshData"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.tilted_grating.TiltedGrating.getMeshData" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="GWL.tilted_grating.TiltedGrating.writeGWL">
+<code class="descname">writeGWL</code><span class="sig-paren">(</span><em>filename, writingOffset=[0, 0, 0, 0]</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/tilted_grating.html#TiltedGrating.writeGWL"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.tilted_grating.TiltedGrating.writeGWL" title="Permalink to this definition">¶</a></dt>
+<dd><p>Writes out the GWL file.
+This function is old and does not use the new power compensation attributes.</p>
+<p>See also: <code class="xref py py-func docutils literal notranslate"><span class="pre">writeGWLWithPowerCompensation()</span></code></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="GWL.tilted_grating.block_example">
+<code class="descclassname">GWL.tilted_grating.</code><code class="descname">block_example</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/tilted_grating.html#block_example"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.tilted_grating.block_example" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="GWL.tilted_grating.block_example_2">
+<code class="descclassname">GWL.tilted_grating.</code><code class="descname">block_example_2</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/tilted_grating.html#block_example_2"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.tilted_grating.block_example_2" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="GWL.tilted_grating.main">
+<code class="descclassname">GWL.tilted_grating.</code><code class="descname">main</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/tilted_grating.html#main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.tilted_grating.main" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-GWL.tube">
+<span id="gwl-tube-module"></span><h2>GWL.tube module<a class="headerlink" href="#module-GWL.tube" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="GWL.tube.HalfTubeLargeWithInnerAndOuter">
+<em class="property">class </em><code class="descclassname">GWL.tube.</code><code class="descname">HalfTubeLargeWithInnerAndOuter</code><a class="reference internal" href="_modules/GWL/tube.html#HalfTubeLargeWithInnerAndOuter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.tube.HalfTubeLargeWithInnerAndOuter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#GWL.tube.TubePapa" title="GWL.tube.TubePapa"><code class="xref py py-class docutils literal notranslate"><span class="pre">GWL.tube.TubePapa</span></code></a></p>
+<dl class="method">
+<dt id="GWL.tube.HalfTubeLargeWithInnerAndOuter.computePoints">
+<code class="descname">computePoints</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/tube.html#HalfTubeLargeWithInnerAndOuter.computePoints"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.tube.HalfTubeLargeWithInnerAndOuter.computePoints" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="GWL.tube.HorizontalCircleTubeWithConstantAngularStep">
+<em class="property">class </em><code class="descclassname">GWL.tube.</code><code class="descname">HorizontalCircleTubeWithConstantAngularStep</code><a class="reference internal" href="_modules/GWL/tube.html#HorizontalCircleTubeWithConstantAngularStep"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.tube.HorizontalCircleTubeWithConstantAngularStep" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#GWL.GWL_parser.GWLobject" title="GWL.GWL_parser.GWLobject"><code class="xref py py-class docutils literal notranslate"><span class="pre">GWL.GWL_parser.GWLobject</span></code></a></p>
+<dl class="method">
+<dt id="GWL.tube.HorizontalCircleTubeWithConstantAngularStep.computePoints">
+<code class="descname">computePoints</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/tube.html#HorizontalCircleTubeWithConstantAngularStep.computePoints"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.tube.HorizontalCircleTubeWithConstantAngularStep.computePoints" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="GWL.tube.HorizontalCircleTubeWithConstantAngularStep.getMeshData">
+<code class="descname">getMeshData</code><span class="sig-paren">(</span><em>position=[0, 0, 0]</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/tube.html#HorizontalCircleTubeWithConstantAngularStep.getMeshData"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.tube.HorizontalCircleTubeWithConstantAngularStep.getMeshData" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="GWL.tube.HorizontalCircleTubeWithConstantAngularStep.setCentro">
+<code class="descname">setCentro</code><span class="sig-paren">(</span><em>vec3or4</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/tube.html#HorizontalCircleTubeWithConstantAngularStep.setCentro"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.tube.HorizontalCircleTubeWithConstantAngularStep.setCentro" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="GWL.tube.HorizontalCircleTubeWithConstantAngularStep.setNumberOfSteps_R">
+<code class="descname">setNumberOfSteps_R</code><span class="sig-paren">(</span><em>NumberOfSteps_R</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/tube.html#HorizontalCircleTubeWithConstantAngularStep.setNumberOfSteps_R"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.tube.HorizontalCircleTubeWithConstantAngularStep.setNumberOfSteps_R" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="GWL.tube.HorizontalCircleTubeWithConstantAngularStep.setNumberOfSteps_Theta">
+<code class="descname">setNumberOfSteps_Theta</code><span class="sig-paren">(</span><em>NumberOfSteps_Theta</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/tube.html#HorizontalCircleTubeWithConstantAngularStep.setNumberOfSteps_Theta"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.tube.HorizontalCircleTubeWithConstantAngularStep.setNumberOfSteps_Theta" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="GWL.tube.HorizontalCircleTubeWithConstantAngularStep.setNumberOfSteps_Z">
+<code class="descname">setNumberOfSteps_Z</code><span class="sig-paren">(</span><em>NumberOfSteps_Z</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/tube.html#HorizontalCircleTubeWithConstantAngularStep.setNumberOfSteps_Z"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.tube.HorizontalCircleTubeWithConstantAngularStep.setNumberOfSteps_Z" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="GWL.tube.HorizontalCircleTubeWithConstantAngularStep.setStart_R">
+<code class="descname">setStart_R</code><span class="sig-paren">(</span><em>Start_R</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/tube.html#HorizontalCircleTubeWithConstantAngularStep.setStart_R"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.tube.HorizontalCircleTubeWithConstantAngularStep.setStart_R" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="GWL.tube.HorizontalCircleTubeWithConstantAngularStep.setStart_ThetaDegrees">
+<code class="descname">setStart_ThetaDegrees</code><span class="sig-paren">(</span><em>Start_ThetaDegrees</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/tube.html#HorizontalCircleTubeWithConstantAngularStep.setStart_ThetaDegrees"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.tube.HorizontalCircleTubeWithConstantAngularStep.setStart_ThetaDegrees" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="GWL.tube.HorizontalCircleTubeWithConstantAngularStep.setStart_Z">
+<code class="descname">setStart_Z</code><span class="sig-paren">(</span><em>Start_Z</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/tube.html#HorizontalCircleTubeWithConstantAngularStep.setStart_Z"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.tube.HorizontalCircleTubeWithConstantAngularStep.setStart_Z" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="GWL.tube.HorizontalCircleTubeWithConstantAngularStep.setStepSize_R">
+<code class="descname">setStepSize_R</code><span class="sig-paren">(</span><em>StepSize_R</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/tube.html#HorizontalCircleTubeWithConstantAngularStep.setStepSize_R"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.tube.HorizontalCircleTubeWithConstantAngularStep.setStepSize_R" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="GWL.tube.HorizontalCircleTubeWithConstantAngularStep.setStepSize_ThetaDegrees">
+<code class="descname">setStepSize_ThetaDegrees</code><span class="sig-paren">(</span><em>StepSize_ThetaDegrees</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/tube.html#HorizontalCircleTubeWithConstantAngularStep.setStepSize_ThetaDegrees"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.tube.HorizontalCircleTubeWithConstantAngularStep.setStepSize_ThetaDegrees" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="GWL.tube.HorizontalCircleTubeWithConstantAngularStep.setStepSize_Z">
+<code class="descname">setStepSize_Z</code><span class="sig-paren">(</span><em>StepSize_Z</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/tube.html#HorizontalCircleTubeWithConstantAngularStep.setStepSize_Z"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.tube.HorizontalCircleTubeWithConstantAngularStep.setStepSize_Z" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="GWL.tube.TruncatedTube">
+<em class="property">class </em><code class="descclassname">GWL.tube.</code><code class="descname">TruncatedTube</code><a class="reference internal" href="_modules/GWL/tube.html#TruncatedTube"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.tube.TruncatedTube" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#GWL.GWL_parser.GWLobject" title="GWL.GWL_parser.GWLobject"><code class="xref py py-class docutils literal notranslate"><span class="pre">GWL.GWL_parser.GWLobject</span></code></a></p>
+<dl class="method">
+<dt id="GWL.tube.TruncatedTube.computePoints">
+<code class="descname">computePoints</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/tube.html#TruncatedTube.computePoints"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.tube.TruncatedTube.computePoints" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="GWL.tube.TruncatedTube.getMeshData">
+<code class="descname">getMeshData</code><span class="sig-paren">(</span><em>position=[0, 0, 0]</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/tube.html#TruncatedTube.getMeshData"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.tube.TruncatedTube.getMeshData" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="GWL.tube.TruncatedTube.writeGWL">
+<code class="descname">writeGWL</code><span class="sig-paren">(</span><em>filename, writingOffset=[0, 0, 0, 0]</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/tube.html#TruncatedTube.writeGWL"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.tube.TruncatedTube.writeGWL" title="Permalink to this definition">¶</a></dt>
+<dd><p>Writes out the GWL file.
+This function is old and does not use the new power compensation attributes.</p>
+<p>See also: <code class="xref py py-func docutils literal notranslate"><span class="pre">writeGWLWithPowerCompensation()</span></code></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="GWL.tube.Tube">
+<em class="property">class </em><code class="descclassname">GWL.tube.</code><code class="descname">Tube</code><a class="reference internal" href="_modules/GWL/tube.html#Tube"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.tube.Tube" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#GWL.GWL_parser.GWLobject" title="GWL.GWL_parser.GWLobject"><code class="xref py py-class docutils literal notranslate"><span class="pre">GWL.GWL_parser.GWLobject</span></code></a></p>
+<p>This class allows you to create “tubes”, i.e. cylinders with an optional inner radius.</p>
+<p>There are three writing methods available:</p>
+<ul class="simple">
+<li>horizontal disks</li>
+<li>vertical lines</li>
+<li>spirals (with or without additional flat disks on top and bottom)</li>
+</ul>
+<dl class="method">
+<dt id="GWL.tube.Tube.addTube">
+<code class="descname">addTube</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/tube.html#Tube.addTube"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.tube.Tube.addTube" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="GWL.tube.Tube.computePoints">
+<code class="descname">computePoints</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/tube.html#Tube.computePoints"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.tube.Tube.computePoints" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="GWL.tube.Tube.getMeshData">
+<code class="descname">getMeshData</code><span class="sig-paren">(</span><em>position=[0, 0, 0]</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/tube.html#Tube.getMeshData"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.tube.Tube.getMeshData" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="GWL.tube.Tube.setAngularStepDegrees">
+<code class="descname">setAngularStepDegrees</code><span class="sig-paren">(</span><em>x</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/tube.html#Tube.setAngularStepDegrees"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.tube.Tube.setAngularStepDegrees" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="GWL.tube.Tube.setCentro">
+<code class="descname">setCentro</code><span class="sig-paren">(</span><em>vec3</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/tube.html#Tube.setCentro"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.tube.Tube.setCentro" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="GWL.tube.Tube.setHeight">
+<code class="descname">setHeight</code><span class="sig-paren">(</span><em>height</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/tube.html#Tube.setHeight"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.tube.Tube.setHeight" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="GWL.tube.Tube.setInnerRadius">
+<code class="descname">setInnerRadius</code><span class="sig-paren">(</span><em>inner_radius</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/tube.html#Tube.setInnerRadius"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.tube.Tube.setInnerRadius" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="GWL.tube.Tube.setNumberOfSteps_R">
+<code class="descname">setNumberOfSteps_R</code><span class="sig-paren">(</span><em>x</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/tube.html#Tube.setNumberOfSteps_R"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.tube.Tube.setNumberOfSteps_R" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="GWL.tube.Tube.setNumberOfSteps_Theta">
+<code class="descname">setNumberOfSteps_Theta</code><span class="sig-paren">(</span><em>x</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/tube.html#Tube.setNumberOfSteps_Theta"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.tube.Tube.setNumberOfSteps_Theta" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="GWL.tube.Tube.setNumberOfSteps_Z">
+<code class="descname">setNumberOfSteps_Z</code><span class="sig-paren">(</span><em>x</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/tube.html#Tube.setNumberOfSteps_Z"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.tube.Tube.setNumberOfSteps_Z" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="GWL.tube.Tube.setOuterRadius">
+<code class="descname">setOuterRadius</code><span class="sig-paren">(</span><em>outer_radius</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/tube.html#Tube.setOuterRadius"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.tube.Tube.setOuterRadius" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="GWL.tube.Tube.setStart_R">
+<code class="descname">setStart_R</code><span class="sig-paren">(</span><em>x</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/tube.html#Tube.setStart_R"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.tube.Tube.setStart_R" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="GWL.tube.Tube.setStart_ThetaDegrees">
+<code class="descname">setStart_ThetaDegrees</code><span class="sig-paren">(</span><em>x</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/tube.html#Tube.setStart_ThetaDegrees"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.tube.Tube.setStart_ThetaDegrees" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="GWL.tube.Tube.setStart_Z">
+<code class="descname">setStart_Z</code><span class="sig-paren">(</span><em>x</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/tube.html#Tube.setStart_Z"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.tube.Tube.setStart_Z" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="GWL.tube.Tube.setStepSize_R">
+<code class="descname">setStepSize_R</code><span class="sig-paren">(</span><em>x</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/tube.html#Tube.setStepSize_R"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.tube.Tube.setStepSize_R" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="GWL.tube.Tube.setStepSize_ThetaDegrees">
+<code class="descname">setStepSize_ThetaDegrees</code><span class="sig-paren">(</span><em>x</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/tube.html#Tube.setStepSize_ThetaDegrees"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.tube.Tube.setStepSize_ThetaDegrees" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="GWL.tube.Tube.setStepSize_Z">
+<code class="descname">setStepSize_Z</code><span class="sig-paren">(</span><em>x</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/tube.html#Tube.setStepSize_Z"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.tube.Tube.setStepSize_Z" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="GWL.tube.Tube.writeGWL">
+<code class="descname">writeGWL</code><span class="sig-paren">(</span><em>filename, writingOffset=[0, 0, 0, 0]</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/tube.html#Tube.writeGWL"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.tube.Tube.writeGWL" title="Permalink to this definition">¶</a></dt>
+<dd><p>Writes out the GWL file.
+This function is old and does not use the new power compensation attributes.</p>
+<p>See also: <code class="xref py py-func docutils literal notranslate"><span class="pre">writeGWLWithPowerCompensation()</span></code></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="GWL.tube.TubeLarge">
+<em class="property">class </em><code class="descclassname">GWL.tube.</code><code class="descname">TubeLarge</code><a class="reference internal" href="_modules/GWL/tube.html#TubeLarge"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.tube.TubeLarge" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#GWL.tube.TubePapa" title="GWL.tube.TubePapa"><code class="xref py py-class docutils literal notranslate"><span class="pre">GWL.tube.TubePapa</span></code></a></p>
+<dl class="method">
+<dt id="GWL.tube.TubeLarge.computePoints">
+<code class="descname">computePoints</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/tube.html#TubeLarge.computePoints"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.tube.TubeLarge.computePoints" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="GWL.tube.TubePapa">
+<em class="property">class </em><code class="descclassname">GWL.tube.</code><code class="descname">TubePapa</code><a class="reference internal" href="_modules/GWL/tube.html#TubePapa"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.tube.TubePapa" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#GWL.GWL_parser.GWLobject" title="GWL.GWL_parser.GWLobject"><code class="xref py py-class docutils literal notranslate"><span class="pre">GWL.GWL_parser.GWLobject</span></code></a></p>
+<dl class="method">
+<dt id="GWL.tube.TubePapa.computePoints">
+<code class="descname">computePoints</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/tube.html#TubePapa.computePoints"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.tube.TubePapa.computePoints" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="GWL.tube.TubePapa.getMeshData">
+<code class="descname">getMeshData</code><span class="sig-paren">(</span><em>position=[0, 0, 0]</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/tube.html#TubePapa.getMeshData"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.tube.TubePapa.getMeshData" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="GWL.tube.TubePapa.writeGWL">
+<code class="descname">writeGWL</code><span class="sig-paren">(</span><em>filename, writingOffset=[0, 0, 0, 0]</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/tube.html#TubePapa.writeGWL"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.tube.TubePapa.writeGWL" title="Permalink to this definition">¶</a></dt>
+<dd><p>Writes out the GWL file.
+This function is old and does not use the new power compensation attributes.</p>
+<p>See also: <code class="xref py py-func docutils literal notranslate"><span class="pre">writeGWLWithPowerCompensation()</span></code></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="GWL.tube.suppressorFunction_Xmax">
+<code class="descclassname">GWL.tube.</code><code class="descname">suppressorFunction_Xmax</code><span class="sig-paren">(</span><em>A</em>, <em>B</em>, <em>Xmin</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/tube.html#suppressorFunction_Xmax"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.tube.suppressorFunction_Xmax" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="GWL.tube.testTruncatedTube">
+<code class="descclassname">GWL.tube.</code><code class="descname">testTruncatedTube</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/tube.html#testTruncatedTube"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.tube.testTruncatedTube" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="GWL.tube.testTube">
+<code class="descclassname">GWL.tube.</code><code class="descname">testTube</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/tube.html#testTube"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.tube.testTube" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="GWL.tube.usage_example">
+<code class="descclassname">GWL.tube.</code><code class="descname">usage_example</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/tube.html#usage_example"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.tube.usage_example" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-GWL.woodpile">
+<span id="gwl-woodpile-module"></span><h2>GWL.woodpile module<a class="headerlink" href="#module-GWL.woodpile" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="GWL.woodpile.Woodpile">
+<em class="property">class </em><code class="descclassname">GWL.woodpile.</code><code class="descname">Woodpile</code><a class="reference internal" href="_modules/GWL/woodpile.html#Woodpile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.woodpile.Woodpile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>This class allows you to create BFDTD and GWL files for a woodpile crystal.</p>
+<dl class="attribute">
+<dt id="GWL.woodpile.Woodpile.NRodsPerLayer_X">
+<code class="descname">NRodsPerLayer_X</code><a class="headerlink" href="#GWL.woodpile.Woodpile.NRodsPerLayer_X" title="Permalink to this definition">¶</a></dt>
+<dd><p>Number of rods in a layer in the X direction</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="GWL.woodpile.Woodpile.NRodsPerLayer_Y">
+<code class="descname">NRodsPerLayer_Y</code><a class="headerlink" href="#GWL.woodpile.Woodpile.NRodsPerLayer_Y" title="Permalink to this definition">¶</a></dt>
+<dd><p>Number of rods in a layer in the Y direction</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="GWL.woodpile.Woodpile.Nlayers_Z">
+<code class="descname">Nlayers_Z</code><a class="headerlink" href="#GWL.woodpile.Woodpile.Nlayers_Z" title="Permalink to this definition">¶</a></dt>
+<dd><p>Number of layers in the Z direction</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="GWL.woodpile.Woodpile.adaptXYMinMax">
+<code class="descname">adaptXYMinMax</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/woodpile.html#Woodpile.adaptXYMinMax"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.woodpile.Woodpile.adaptXYMinMax" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="GWL.woodpile.Woodpile.getGWLandBFDTDobjects">
+<code class="descname">getGWLandBFDTDobjects</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/woodpile.html#Woodpile.getGWLandBFDTDobjects"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.woodpile.Woodpile.getGWLandBFDTDobjects" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="GWL.woodpile.Woodpile.setLineNumberAndDistance_XY">
+<code class="descname">setLineNumberAndDistance_XY</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/woodpile.html#Woodpile.setLineNumberAndDistance_XY"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.woodpile.Woodpile.setLineNumberAndDistance_XY" title="Permalink to this definition">¶</a></dt>
+<dd><p>set LineNumber and LineDistance (WARNING: will set rod width accordingly)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="GWL.woodpile.Woodpile.setLineNumberAndDistance_Z">
+<code class="descname">setLineNumberAndDistance_Z</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/woodpile.html#Woodpile.setLineNumberAndDistance_Z"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.woodpile.Woodpile.setLineNumberAndDistance_Z" title="Permalink to this definition">¶</a></dt>
+<dd><p>set LineNumber and LineDistance (WARNING: will set rod height accordingly)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="GWL.woodpile.Woodpile.setOverlap3">
+<code class="descname">setOverlap3</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/woodpile.html#Woodpile.setOverlap3"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.woodpile.Woodpile.setOverlap3" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="GWL.woodpile.Woodpile.setRodHeight">
+<code class="descname">setRodHeight</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/woodpile.html#Woodpile.setRodHeight"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.woodpile.Woodpile.setRodHeight" title="Permalink to this definition">¶</a></dt>
+<dd><p>set rod height (WARNING: will set LineNumber and LineDistance accordingly)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="GWL.woodpile.Woodpile.setRodType">
+<code class="descname">setRodType</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/woodpile.html#Woodpile.setRodType"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.woodpile.Woodpile.setRodType" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="GWL.woodpile.Woodpile.setRodWidth">
+<code class="descname">setRodWidth</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/woodpile.html#Woodpile.setRodWidth"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.woodpile.Woodpile.setRodWidth" title="Permalink to this definition">¶</a></dt>
+<dd><p>set rod width (WARNING: will set LineNumber and LineDistance accordingly)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="GWL.woodpile.Woodpile.setVoxelSize3">
+<code class="descname">setVoxelSize3</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/woodpile.html#Woodpile.setVoxelSize3"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.woodpile.Woodpile.setVoxelSize3" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="GWL.woodpile.Woodpile.writeBFDTD">
+<code class="descname">writeBFDTD</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/woodpile.html#Woodpile.writeBFDTD"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.woodpile.Woodpile.writeBFDTD" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="GWL.woodpile.Woodpile.writeGWL">
+<code class="descname">writeGWL</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/woodpile.html#Woodpile.writeGWL"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.woodpile.Woodpile.writeGWL" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="GWL.woodpile.Woodpile.write_BFDTD">
+<code class="descname">write_BFDTD</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/woodpile.html#Woodpile.write_BFDTD"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.woodpile.Woodpile.write_BFDTD" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="GWL.woodpile.Woodpile.write_GWL">
+<code class="descname">write_GWL</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/woodpile.html#Woodpile.write_GWL"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.woodpile.Woodpile.write_GWL" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="GWL.woodpile.main">
+<code class="descclassname">GWL.woodpile.</code><code class="descname">main</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/woodpile.html#main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.woodpile.main" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-GWL.woodpile_grid">
+<span id="gwl-woodpile-grid-module"></span><h2>GWL.woodpile_grid module<a class="headerlink" href="#module-GWL.woodpile_grid" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="GWL.woodpile_grid.commonHeader">
+<code class="descclassname">GWL.woodpile_grid.</code><code class="descname">commonHeader</code><span class="sig-paren">(</span><em>file</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/woodpile_grid.html#commonHeader"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.woodpile_grid.commonHeader" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="GWL.woodpile_grid.createMainFile">
+<code class="descclassname">GWL.woodpile_grid.</code><code class="descname">createMainFile</code><span class="sig-paren">(</span><em>filename</em>, <em>VoxelFile</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/woodpile_grid.html#createMainFile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.woodpile_grid.createMainFile" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="GWL.woodpile_grid.createMainFile2">
+<code class="descclassname">GWL.woodpile_grid.</code><code class="descname">createMainFile2</code><span class="sig-paren">(</span><em>filename</em>, <em>file_list</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/woodpile_grid.html#createMainFile2"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.woodpile_grid.createMainFile2" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="GWL.woodpile_grid.createMasterFile">
+<code class="descclassname">GWL.woodpile_grid.</code><code class="descname">createMasterFile</code><span class="sig-paren">(</span><em>filename</em>, <em>mainfile_list</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/woodpile_grid.html#createMasterFile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.woodpile_grid.createMasterFile" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="GWL.woodpile_grid.createSingleMainFile">
+<code class="descclassname">GWL.woodpile_grid.</code><code class="descname">createSingleMainFile</code><span class="sig-paren">(</span><em>filename</em>, <em>VoxelFile</em>, <em>LaserPower</em>, <em>ScanSpeed</em>, <em>Xoffset</em>, <em>Yoffset</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/woodpile_grid.html#createSingleMainFile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.woodpile_grid.createSingleMainFile" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="GWL.woodpile_grid.createSubFiles">
+<code class="descclassname">GWL.woodpile_grid.</code><code class="descname">createSubFiles</code><span class="sig-paren">(</span><em>DSTDIR</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/woodpile_grid.html#createSubFiles"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.woodpile_grid.createSubFiles" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="GWL.woodpile_grid.createSubFiles2">
+<code class="descclassname">GWL.woodpile_grid.</code><code class="descname">createSubFiles2</code><span class="sig-paren">(</span><em>DSTDIR</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/woodpile_grid.html#createSubFiles2"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.woodpile_grid.createSubFiles2" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="GWL.woodpile_grid.createSubFiles3">
+<code class="descclassname">GWL.woodpile_grid.</code><code class="descname">createSubFiles3</code><span class="sig-paren">(</span><em>DSTDIR</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/woodpile_grid.html#createSubFiles3"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.woodpile_grid.createSubFiles3" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="GWL.woodpile_grid.single_woodpile">
+<code class="descclassname">GWL.woodpile_grid.</code><code class="descname">single_woodpile</code><span class="sig-paren">(</span><em>DSTDIR</em>, <em>NX</em>, <em>NY</em>, <em>NZ</em>, <em>interRodDistance</em>, <em>LaserPower</em>, <em>ScanSpeed</em>, <em>BottomToTop</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/woodpile_grid.html#single_woodpile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.woodpile_grid.single_woodpile" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-GWL.SpiralPhasePlate">
+<span id="gwl-spiralphaseplate-module"></span><h2>GWL.SpiralPhasePlate module<a class="headerlink" href="#module-GWL.SpiralPhasePlate" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="GWL.SpiralPhasePlate.SpiralPhasePlate">
+<em class="property">class </em><code class="descclassname">GWL.SpiralPhasePlate.</code><code class="descname">SpiralPhasePlate</code><a class="reference internal" href="_modules/GWL/SpiralPhasePlate.html#SpiralPhasePlate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.SpiralPhasePlate.SpiralPhasePlate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#GWL.GWL_parser.GWLobject" title="GWL.GWL_parser.GWLobject"><code class="xref py py-class docutils literal notranslate"><span class="pre">GWL.GWL_parser.GWLobject</span></code></a></p>
+<p>Spiral phase plate</p>
+<p>Original algorithm and documentation by Dave Philips.
+Code ported to python3 by Mike Taverne, with added PyQt GUI and Blender addon.</p>
+<p>This program generates coordinates to draw a spiral phase plate in the nanoscribe.
+The coordinates are ordered from top to bottom.
+Each layer is a series of concentric circels, with the z values changed to draw the appropriate tilted surface with a step.
+Each layer is drawn from the inside out (I’m not sure if inside out or outside in is best).
+I had some earlier problems with the disk spliting apart when developed at the discontinuity, so I have made sure that each ring is properly joined to itself.</p>
+<p>There is a commented out if stataement in the middle of the coordinate for loop (lines 57 and 60), if you uncomment this then it will truncate the coordinates when their z values go negative.</p>
+<p>The coordinates are produced in a big list with Nan in place of where nanoscribe needs a ‘write’ command.
+At the end, the coordinates are written to a file called ‘spiralphaseplate.gwl’, and the lines containing Nans are converted to ‘write’.</p>
+<p>If the coordinate list is less than 5000 rows long then it is also plotted within Matlab.</p>
+<p>Check that the created file is the same as the one created by the Matlab script:
+octave Phase_plate.m &amp;&amp; ./rewriteGWL.py spiralphaseplate.gwl spiralphaseplate.PP.gwl &amp;&amp; python3 Phase_plate.py &amp;&amp; ./rewriteGWL.py spiralphaseplate2.gwl spiralphaseplate2.PP.gwl &amp;&amp; diff spiralphaseplate.PP.gwl spiralphaseplate2.PP.gwl &amp;&amp; checkcmd</p>
+<p>octave Phase_plate.m
+./rewriteGWL.py spiralphaseplate.gwl spiralphaseplate.PP.gwl
+python3 Phase_plate.py
+diff spiralphaseplate.PP.gwl /tmp/spiralphaseplate.gwl
+grep -c Write spiralphaseplate.PP.gwl /tmp/spiralphaseplate.gwl</p>
+<p>for i in 1 2 3 4; do diff -q “$HOME/Desktop/spiralphaseplate_${i}.gwl” “/tmp/spiralphaseplate_${i}.PP.gwl”; done</p>
+<p>Structural Parameter Inputs:</p>
+<dl class="attribute">
+<dt id="GWL.SpiralPhasePlate.SpiralPhasePlate.N_Discontinuities">
+<code class="descname">N_Discontinuities</code><em class="property"> = None</em><a class="headerlink" href="#GWL.SpiralPhasePlate.SpiralPhasePlate.N_Discontinuities" title="Permalink to this definition">¶</a></dt>
+<dd><p>number of steps around 360 degrees - this parameter is redundant as when you’re fabricating it, you only ever need 1 step, the height of which you can change to be any multiple of 2pi</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="GWL.SpiralPhasePlate.SpiralPhasePlate.N_HeightSteps">
+<code class="descname">N_HeightSteps</code><em class="property"> = None</em><a class="headerlink" href="#GWL.SpiralPhasePlate.SpiralPhasePlate.N_HeightSteps" title="Permalink to this definition">¶</a></dt>
+<dd><p>number of additional layers to draw beyond the top layer, i.e. if N_HeightSteps = 2, then total number of layers in the structure = 3)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="GWL.SpiralPhasePlate.SpiralPhasePlate.add_arguments">
+<code class="descname">add_arguments</code><span class="sig-paren">(</span><em>parser</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/SpiralPhasePlate.html#SpiralPhasePlate.add_arguments"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.SpiralPhasePlate.SpiralPhasePlate.add_arguments" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds GWLobject related arguments to the given <em>parser</em> (an argparse.ArgumentParser instance).</p>
+<p>See also: <a class="reference internal" href="#GWL.SpiralPhasePlate.SpiralPhasePlate.setAttributesFromParsedOptions" title="GWL.SpiralPhasePlate.SpiralPhasePlate.setAttributesFromParsedOptions"><code class="xref py py-func docutils literal notranslate"><span class="pre">setAttributesFromParsedOptions()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="GWL.SpiralPhasePlate.SpiralPhasePlate.computePoints">
+<code class="descname">computePoints</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/SpiralPhasePlate.html#SpiralPhasePlate.computePoints"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.SpiralPhasePlate.SpiralPhasePlate.computePoints" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="GWL.SpiralPhasePlate.SpiralPhasePlate.get_argument_parser">
+<code class="descname">get_argument_parser</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/SpiralPhasePlate.html#SpiralPhasePlate.get_argument_parser"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.SpiralPhasePlate.SpiralPhasePlate.get_argument_parser" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="GWL.SpiralPhasePlate.SpiralPhasePlate.heightStep">
+<code class="descname">heightStep</code><em class="property"> = None</em><a class="headerlink" href="#GWL.SpiralPhasePlate.SpiralPhasePlate.heightStep" title="Permalink to this definition">¶</a></dt>
+<dd><p>distance appart of each layer, in microns</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="GWL.SpiralPhasePlate.SpiralPhasePlate.maxHeight">
+<code class="descname">maxHeight</code><em class="property"> = None</em><a class="headerlink" href="#GWL.SpiralPhasePlate.SpiralPhasePlate.maxHeight" title="Permalink to this definition">¶</a></dt>
+<dd><p>height of phase step in microns</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="GWL.SpiralPhasePlate.SpiralPhasePlate.phiStep">
+<code class="descname">phiStep</code><em class="property"> = None</em><a class="headerlink" href="#GWL.SpiralPhasePlate.SpiralPhasePlate.phiStep" title="Permalink to this definition">¶</a></dt>
+<dd><p>angular separation of each writing anchor point around a circle, in degrees</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="GWL.SpiralPhasePlate.SpiralPhasePlate.radialStep">
+<code class="descname">radialStep</code><em class="property"> = None</em><a class="headerlink" href="#GWL.SpiralPhasePlate.SpiralPhasePlate.radialStep" title="Permalink to this definition">¶</a></dt>
+<dd><p>distance apart of each ring, in microns</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="GWL.SpiralPhasePlate.SpiralPhasePlate.radius">
+<code class="descname">radius</code><em class="property"> = None</em><a class="headerlink" href="#GWL.SpiralPhasePlate.SpiralPhasePlate.radius" title="Permalink to this definition">¶</a></dt>
+<dd><p>radius of phase plate in microns</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="GWL.SpiralPhasePlate.SpiralPhasePlate.setAttributesFromParsedOptions">
+<code class="descname">setAttributesFromParsedOptions</code><span class="sig-paren">(</span><em>options</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/SpiralPhasePlate.html#SpiralPhasePlate.setAttributesFromParsedOptions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.SpiralPhasePlate.SpiralPhasePlate.setAttributesFromParsedOptions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the object’s attributes based on the ones from the <em>options</em> object (usually an argparse.ArgumentParser instance).</p>
+<p>See also: <a class="reference internal" href="#GWL.SpiralPhasePlate.SpiralPhasePlate.add_arguments" title="GWL.SpiralPhasePlate.SpiralPhasePlate.add_arguments"><code class="xref py py-func docutils literal notranslate"><span class="pre">add_arguments()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="GWL.SpiralPhasePlate.SpiralPhasePlate.writeFromParsedOptions">
+<code class="descname">writeFromParsedOptions</code><span class="sig-paren">(</span><em>options</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/SpiralPhasePlate.html#SpiralPhasePlate.writeFromParsedOptions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.SpiralPhasePlate.SpiralPhasePlate.writeFromParsedOptions" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="GWL.SpiralPhasePlate.testGWLobject">
+<code class="descclassname">GWL.SpiralPhasePlate.</code><code class="descname">testGWLobject</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/SpiralPhasePlate.html#testGWLobject"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.SpiralPhasePlate.testGWLobject" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="GWL.SpiralPhasePlate.testSpirals">
+<code class="descclassname">GWL.SpiralPhasePlate.</code><code class="descname">testSpirals</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/SpiralPhasePlate.html#testSpirals"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.SpiralPhasePlate.testSpirals" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-GWL">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-GWL" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">GWL package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-GWL.GWL_parser">GWL.GWL_parser module</a></li>
+<li><a class="reference internal" href="#module-GWL.SpiralSphere">GWL.SpiralSphere module</a></li>
+<li><a class="reference internal" href="#module-GWL.bmesh">GWL.bmesh module</a></li>
+<li><a class="reference internal" href="#module-GWL.box">GWL.box module</a></li>
+<li><a class="reference internal" href="#module-GWL.foobar_file">GWL.foobar_file module</a></li>
+<li><a class="reference internal" href="#module-GWL.generate_sphere">GWL.generate_sphere module</a></li>
+<li><a class="reference internal" href="#module-GWL.parallelepiped">GWL.parallelepiped module</a></li>
+<li><a class="reference internal" href="#module-GWL.rotation_example">GWL.rotation_example module</a></li>
+<li><a class="reference internal" href="#module-GWL.tilted_grating">GWL.tilted_grating module</a></li>
+<li><a class="reference internal" href="#module-GWL.tube">GWL.tube module</a></li>
+<li><a class="reference internal" href="#module-GWL.woodpile">GWL.woodpile module</a></li>
+<li><a class="reference internal" href="#module-GWL.woodpile_grid">GWL.woodpile_grid module</a></li>
+<li><a class="reference internal" href="#module-GWL.SpiralPhasePlate">GWL.SpiralPhasePlate module</a></li>
+<li><a class="reference internal" href="#module-GWL">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="FIB.html"
+                        title="previous chapter">FIB package</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="bfdtd.html"
+                        title="next chapter">bfdtd package</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/GWL.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="bfdtd.html" title="bfdtd package"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="FIB.html" title="FIB package"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">script_inception_public  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="script_inception_public.html" >package</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2014, Mike Taverne.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.9.
+    </div>
+  </body>
+</html>

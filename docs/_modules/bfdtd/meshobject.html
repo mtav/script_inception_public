@@ -1,0 +1,390 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>bfdtd.meshobject &#8212; script_inception_public  documentation</title>
+    <link rel="stylesheet" href="../../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">script_inception_public  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for bfdtd.meshobject</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python3</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
+
+<span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">.. note:: **Doc cleanup. Disregard this at the moment.**</span>
+
+<span class="sd">.. todo:: mesh based on position instead of just thicknesses? More flexibility if ever needed... (like now :/)</span>
+<span class="sd">.. todo:: Use arrays or lists? -&gt; lists, because we are not dealing with vectors. And if we ever need vector-like behaviour, it is easy to switch to an array.</span>
+
+<span class="sd">  * GENERIC 1-D MESH CLASSES:</span>
+
+<span class="sd">    .. note:: This will go into external 1-D MeshObjects (of which there will be heterogeneous (arbitrary mesh) and homogeneous ones (meshing parameters)).</span>
+<span class="sd">    .. note:: Each Geometry object will be able to have a set of MeshObjects of one or both types. HeteroMeshs can be created from sets of homo+hetero meshs.</span>
+<span class="sd">    .. note:: There may be a parent generic MeshObject class.</span>
+
+<span class="sd">    .. todo:: Ability somehow to mix 1D,2D,3D meshes (infinity thickness/delta value? new classes? &quot;useForMeshing&quot; attribute? &lt;- sounds good)</span>
+
+<span class="sd">  * Other:</span>
+
+<span class="sd">    .. todo:: 3-D MESH CLASS</span>
+<span class="sd">    .. todo:: Cleanup, get rid of deprecated mesh system, make sure everything works</span>
+
+<span class="sd">    .. todo:: mesh merging functions + mesh conversion functions</span>
+<span class="sd">    .. todo:: Generic 1-D function to merge meshing parameters of the form [lower, upper, maxDelta]</span>
+<span class="sd">    .. todo:: Make BFDTD import show meshboxes + add X-ray option to .geo/.inp files + group objects from same file into one group&quot;</span>
+<span class="sd">    .. todo:: Add possibility to order meshboxes manually (ex: force to top, to bottom, to make one delta_max/N have priority over others)</span>
+<span class="sd">    .. todo:: Add &quot;dynamic meshboxes&quot;: ex: N=3 everywhere where that meshbox gains priority. ex: Meshbox(xmin=2, xmax=10, N=3). Other meshboxes split it into 4 regions. Make each region be split into N=3 regions.</span>
+
+<span class="sd">.. todo:: sanitize class system:</span>
+
+<span class="sd">  * class MeshBox(Geometry_object):</span>
+<span class="sd">  * class MeshingParameters(object):</span>
+<span class="sd">  * class MeshObject(object):</span>
+
+<span class="sd">.. todo:: Allow delta specification directly or with factor where delta=factor*lambda/n (current system, easier to scale if needed)?</span>
+<span class="sd">.. todo:: parameter in geometry objects to enable/disable use of meshing parameters + allow custom meshing parameters per geometry object</span>
+
+<span class="sd">.. note:: **The following class names are all temporary and subject to change!**</span>
+<span class="sd">&#39;&#39;&#39;</span>
+
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">division</span>
+
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">numpy</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
+<span class="kn">from</span> <span class="nn">numpy</span> <span class="k">import</span> <span class="n">array</span><span class="p">,</span> <span class="n">ceil</span>
+
+<span class="kn">from</span> <span class="nn">meshing.meshing</span> <span class="k">import</span> <span class="n">subGridMultiLayer</span><span class="p">,</span> <span class="n">increaseResolution</span>
+<span class="kn">from</span> <span class="nn">utilities.common</span> <span class="k">import</span> <span class="n">findNearestInSortedArray</span>
+
+<span class="kn">from</span> <span class="nn">.BFDTDentry</span> <span class="k">import</span> <span class="n">BFDTDentry</span>
+<span class="kn">from</span> <span class="nn">.meshobject</span> <span class="k">import</span> <span class="o">*</span>
+
+<div class="viewcode-block" id="MeshObject"><a class="viewcode-back" href="../../bfdtd.html#bfdtd.meshobject.MeshObject">[docs]</a><span class="k">class</span> <span class="nc">MeshObject</span><span class="p">(</span><span class="n">BFDTDentry</span><span class="p">):</span>
+  <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">  3D mesh class.</span>
+<span class="sd">  </span>
+<span class="sd">  Just an object to store xmesh,ymesh,zmesh values, with various related utility functions like writeMesh(FILE)</span>
+<span class="sd">  Each BFDTDobject uses a single such MeshObject.</span>
+<span class="sd">  </span>
+<span class="sd">  .. todo:: Make it 1D? Or put 3D in the name?</span>
+<span class="sd">  </span>
+<span class="sd">  attributes:</span>
+<span class="sd">  </span>
+<span class="sd">    * xmesh: list of the position (not a thickness list!) of each line of the mesh in the x direction</span>
+<span class="sd">    * ymesh: list of the position (not a thickness list!) of each line of the mesh in the y direction</span>
+<span class="sd">    * zmesh: list of the position (not a thickness list!) of each line of the mesh in the z direction</span>
+<span class="sd">  </span>
+<span class="sd">  Example:</span>
+<span class="sd">  </span>
+<span class="sd">    xmesh = [0, 0.25, 0.5, 0.75, 1] will create a [0.25, 0.25, 0.25, 0.25] thickness sequence in the XMESH object of the .inp file.</span>
+<span class="sd">  </span>
+<span class="sd">  &#39;&#39;&#39;</span>
+  <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;mesh&#39;</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">xmesh</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">ymesh</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">zmesh</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
+  
+<div class="viewcode-block" id="MeshObject.setXmesh"><a class="viewcode-back" href="../../bfdtd.html#bfdtd.meshobject.MeshObject.setXmesh">[docs]</a>  <span class="k">def</span> <span class="nf">setXmesh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">xmesh</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">xmesh</span> <span class="o">=</span> <span class="n">xmesh</span></div>
+<div class="viewcode-block" id="MeshObject.setYmesh"><a class="viewcode-back" href="../../bfdtd.html#bfdtd.meshobject.MeshObject.setYmesh">[docs]</a>  <span class="k">def</span> <span class="nf">setYmesh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">ymesh</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">ymesh</span> <span class="o">=</span> <span class="n">ymesh</span></div>
+<div class="viewcode-block" id="MeshObject.setZmesh"><a class="viewcode-back" href="../../bfdtd.html#bfdtd.meshobject.MeshObject.setZmesh">[docs]</a>  <span class="k">def</span> <span class="nf">setZmesh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">zmesh</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">zmesh</span> <span class="o">=</span> <span class="n">zmesh</span></div>
+<div class="viewcode-block" id="MeshObject.setMesh"><a class="viewcode-back" href="../../bfdtd.html#bfdtd.meshobject.MeshObject.setMesh">[docs]</a>  <span class="k">def</span> <span class="nf">setMesh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">xmesh</span><span class="p">,</span><span class="n">ymesh</span><span class="p">,</span><span class="n">zmesh</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">xmesh</span> <span class="o">=</span> <span class="n">xmesh</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">ymesh</span> <span class="o">=</span> <span class="n">ymesh</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">zmesh</span> <span class="o">=</span> <span class="n">zmesh</span></div>
+    
+<div class="viewcode-block" id="MeshObject.getXmesh"><a class="viewcode-back" href="../../bfdtd.html#bfdtd.meshobject.MeshObject.getXmesh">[docs]</a>  <span class="k">def</span> <span class="nf">getXmesh</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">return</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">xmesh</span><span class="p">)</span></div>
+<div class="viewcode-block" id="MeshObject.getYmesh"><a class="viewcode-back" href="../../bfdtd.html#bfdtd.meshobject.MeshObject.getYmesh">[docs]</a>  <span class="k">def</span> <span class="nf">getYmesh</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">return</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ymesh</span><span class="p">)</span></div>
+<div class="viewcode-block" id="MeshObject.getZmesh"><a class="viewcode-back" href="../../bfdtd.html#bfdtd.meshobject.MeshObject.getZmesh">[docs]</a>  <span class="k">def</span> <span class="nf">getZmesh</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">return</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">zmesh</span><span class="p">)</span></div>
+<div class="viewcode-block" id="MeshObject.getMesh"><a class="viewcode-back" href="../../bfdtd.html#bfdtd.meshobject.MeshObject.getMesh">[docs]</a>  <span class="k">def</span> <span class="nf">getMesh</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">return</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">xmesh</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">ymesh</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">zmesh</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="MeshObject.setXmeshDelta"><a class="viewcode-back" href="../../bfdtd.html#bfdtd.meshobject.MeshObject.setXmeshDelta">[docs]</a>  <span class="k">def</span> <span class="nf">setXmeshDelta</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">xmesh_delta</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">xmesh</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">cumsum</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">hstack</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span><span class="n">xmesh_delta</span><span class="p">)))</span></div>
+<div class="viewcode-block" id="MeshObject.setYmeshDelta"><a class="viewcode-back" href="../../bfdtd.html#bfdtd.meshobject.MeshObject.setYmeshDelta">[docs]</a>  <span class="k">def</span> <span class="nf">setYmeshDelta</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">ymesh_delta</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">ymesh</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">cumsum</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">hstack</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span><span class="n">ymesh_delta</span><span class="p">)))</span></div>
+<div class="viewcode-block" id="MeshObject.setZmeshDelta"><a class="viewcode-back" href="../../bfdtd.html#bfdtd.meshobject.MeshObject.setZmeshDelta">[docs]</a>  <span class="k">def</span> <span class="nf">setZmeshDelta</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">zmesh_delta</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">zmesh</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">cumsum</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">hstack</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span><span class="n">zmesh_delta</span><span class="p">)))</span></div>
+<div class="viewcode-block" id="MeshObject.setMeshDelta"><a class="viewcode-back" href="../../bfdtd.html#bfdtd.meshobject.MeshObject.setMeshDelta">[docs]</a>  <span class="k">def</span> <span class="nf">setMeshDelta</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">xmesh_delta</span><span class="p">,</span><span class="n">ymesh_delta</span><span class="p">,</span><span class="n">zmesh_delta</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">xmesh</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">cumsum</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">hstack</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span><span class="n">xmesh_delta</span><span class="p">)))</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">ymesh</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">cumsum</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">hstack</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span><span class="n">ymesh_delta</span><span class="p">)))</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">zmesh</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">cumsum</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">hstack</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span><span class="n">zmesh_delta</span><span class="p">)))</span></div>
+  
+<div class="viewcode-block" id="MeshObject.getXmeshDelta"><a class="viewcode-back" href="../../bfdtd.html#bfdtd.meshobject.MeshObject.getXmeshDelta">[docs]</a>  <span class="k">def</span> <span class="nf">getXmeshDelta</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">return</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">xmesh</span><span class="p">))</span></div>
+<div class="viewcode-block" id="MeshObject.getYmeshDelta"><a class="viewcode-back" href="../../bfdtd.html#bfdtd.meshobject.MeshObject.getYmeshDelta">[docs]</a>  <span class="k">def</span> <span class="nf">getYmeshDelta</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">return</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ymesh</span><span class="p">))</span></div>
+<div class="viewcode-block" id="MeshObject.getZmeshDelta"><a class="viewcode-back" href="../../bfdtd.html#bfdtd.meshobject.MeshObject.getZmeshDelta">[docs]</a>  <span class="k">def</span> <span class="nf">getZmeshDelta</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">return</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">zmesh</span><span class="p">))</span></div>
+<div class="viewcode-block" id="MeshObject.getMeshDelta"><a class="viewcode-back" href="../../bfdtd.html#bfdtd.meshobject.MeshObject.getMeshDelta">[docs]</a>  <span class="k">def</span> <span class="nf">getMeshDelta</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">return</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">xmesh</span><span class="p">),</span><span class="n">numpy</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ymesh</span><span class="p">),</span><span class="n">numpy</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">zmesh</span><span class="p">))</span></div>
+    
+<div class="viewcode-block" id="MeshObject.getMinDeltas"><a class="viewcode-back" href="../../bfdtd.html#bfdtd.meshobject.MeshObject.getMinDeltas">[docs]</a>  <span class="k">def</span> <span class="nf">getMinDeltas</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="n">dx</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">getXmeshDelta</span><span class="p">())</span>
+    <span class="n">dy</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">getYmeshDelta</span><span class="p">())</span>
+    <span class="n">dz</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">getZmeshDelta</span><span class="p">())</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">dx</span><span class="p">,</span><span class="n">dy</span><span class="p">,</span><span class="n">dz</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="MeshObject.setSizeAndResolution"><a class="viewcode-back" href="../../bfdtd.html#bfdtd.meshobject.MeshObject.setSizeAndResolution">[docs]</a>  <span class="k">def</span> <span class="nf">setSizeAndResolution</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">size_vec3</span><span class="p">,</span> <span class="n">N_vec3</span><span class="p">,</span> <span class="n">Ncells_per_unit</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Sets the size and resolution in all 3 directions.</span>
+<span class="sd">    </span>
+<span class="sd">    The **Ncells_per_unit=True** option can be used to obtain MEEP/MPB-like behaviour, i.e. resolution will be in cells per distance unit, i.e. cells/micron or cells/metre.</span>
+<span class="sd">    In this case, the number of cells in a given direction is set to **N[i] = ceil(N_vec3[i] * size_vec3[i])**, i.e. increased resolution is preferred if size is not integer.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">if</span> <span class="n">Ncells_per_unit</span><span class="p">:</span>
+      <span class="n">Nx</span> <span class="o">=</span> <span class="n">N_vec3</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">size_vec3</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+      <span class="n">Ny</span> <span class="o">=</span> <span class="n">N_vec3</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">size_vec3</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+      <span class="n">Nz</span> <span class="o">=</span> <span class="n">N_vec3</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">*</span> <span class="n">size_vec3</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+      <span class="n">Nx</span> <span class="o">=</span> <span class="n">N_vec3</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+      <span class="n">Ny</span> <span class="o">=</span> <span class="n">N_vec3</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+      <span class="n">Nz</span> <span class="o">=</span> <span class="n">N_vec3</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+    
+    <span class="c1"># just making sure they are all &quot;integers&quot; (ceil returns floats if input is float), even though linspace accepts floats</span>
+    <span class="n">Nx</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">ceil</span><span class="p">(</span><span class="n">Nx</span><span class="p">))</span>
+    <span class="n">Ny</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">ceil</span><span class="p">(</span><span class="n">Ny</span><span class="p">))</span>
+    <span class="n">Nz</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">ceil</span><span class="p">(</span><span class="n">Nz</span><span class="p">))</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">xmesh</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">size_vec3</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">Nx</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">ymesh</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">size_vec3</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">Ny</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">zmesh</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">size_vec3</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">Nz</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">size_vec3</span><span class="p">,</span> <span class="p">(</span><span class="n">Nx</span><span class="p">,</span><span class="n">Ny</span><span class="p">,</span><span class="n">Nz</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="MeshObject.getXmeshCentres"><a class="viewcode-back" href="../../bfdtd.html#bfdtd.meshobject.MeshObject.getXmeshCentres">[docs]</a>  <span class="k">def</span> <span class="nf">getXmeshCentres</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">[</span> <span class="mf">0.5</span><span class="o">*</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">xmesh</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">xmesh</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">xmesh</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">)]</span></div>
+
+<div class="viewcode-block" id="MeshObject.getYmeshCentres"><a class="viewcode-back" href="../../bfdtd.html#bfdtd.meshobject.MeshObject.getYmeshCentres">[docs]</a>  <span class="k">def</span> <span class="nf">getYmeshCentres</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">[</span> <span class="mf">0.5</span><span class="o">*</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ymesh</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">ymesh</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ymesh</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">)]</span></div>
+
+<div class="viewcode-block" id="MeshObject.getZmeshCentres"><a class="viewcode-back" href="../../bfdtd.html#bfdtd.meshobject.MeshObject.getZmeshCentres">[docs]</a>  <span class="k">def</span> <span class="nf">getZmeshCentres</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">[</span> <span class="mf">0.5</span><span class="o">*</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">zmesh</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">zmesh</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">zmesh</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">)]</span></div>
+
+<div class="viewcode-block" id="MeshObject.getNcells"><a class="viewcode-back" href="../../bfdtd.html#bfdtd.meshobject.MeshObject.getNcells">[docs]</a>  <span class="k">def</span> <span class="nf">getNcells</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39; Returns the number of cells in the mesh. &#39;&#39;&#39;</span>
+    <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">getXmeshDelta</span><span class="p">())</span><span class="o">*</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">getYmeshDelta</span><span class="p">())</span><span class="o">*</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">getZmeshDelta</span><span class="p">())</span></div>
+
+<div class="viewcode-block" id="MeshObject.getSizeAndResolution"><a class="viewcode-back" href="../../bfdtd.html#bfdtd.meshobject.MeshObject.getSizeAndResolution">[docs]</a>  <span class="k">def</span> <span class="nf">getSizeAndResolution</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">xmesh</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">ymesh</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">zmesh</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]],[</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">getXmeshDelta</span><span class="p">()),</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">getYmeshDelta</span><span class="p">()),</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">getZmeshDelta</span><span class="p">())])</span></div>
+
+<div class="viewcode-block" id="MeshObject.getExtension"><a class="viewcode-back" href="../../bfdtd.html#bfdtd.meshobject.MeshObject.getExtension">[docs]</a>  <span class="k">def</span> <span class="nf">getExtension</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">xmesh</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">ymesh</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">zmesh</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">xmesh</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">ymesh</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">zmesh</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]])</span></div>
+
+<div class="viewcode-block" id="MeshObject.getNearest"><a class="viewcode-back" href="../../bfdtd.html#bfdtd.meshobject.MeshObject.getNearest">[docs]</a>  <span class="k">def</span> <span class="nf">getNearest</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">direction</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+    <span class="n">x_idx</span><span class="p">,</span> <span class="n">x_val</span> <span class="o">=</span> <span class="n">findNearestInSortedArray</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">getXmesh</span><span class="p">(),</span> <span class="n">P</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">direction</span><span class="p">)</span>
+    <span class="n">y_idx</span><span class="p">,</span> <span class="n">y_val</span> <span class="o">=</span> <span class="n">findNearestInSortedArray</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">getYmesh</span><span class="p">(),</span> <span class="n">P</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">direction</span><span class="p">)</span>
+    <span class="n">z_idx</span><span class="p">,</span> <span class="n">z_val</span> <span class="o">=</span> <span class="n">findNearestInSortedArray</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">getZmesh</span><span class="p">(),</span> <span class="n">P</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">direction</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">x_idx</span><span class="p">,</span> <span class="n">y_idx</span><span class="p">,</span> <span class="n">z_idx</span><span class="p">),</span> <span class="p">(</span><span class="n">x_val</span><span class="p">,</span> <span class="n">y_val</span><span class="p">,</span> <span class="n">z_val</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="MeshObject.getIndexRange"><a class="viewcode-back" href="../../bfdtd.html#bfdtd.meshobject.MeshObject.getIndexRange">[docs]</a>  <span class="k">def</span> <span class="nf">getIndexRange</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lower</span><span class="p">,</span> <span class="n">upper</span><span class="p">,</span> <span class="n">direction</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Convenience function to get absolute and relative index ranges based on a given real coordinates based block volume.</span>
+<span class="sd">    </span>
+<span class="sd">    Returns (idx_L, idx_U, relative_index_range_x, relative_index_range_y, relative_index_range_z)</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">idx_L</span><span class="p">,</span> <span class="n">val_L</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getNearest</span><span class="p">(</span><span class="n">lower</span><span class="p">,</span> <span class="n">direction</span><span class="p">)</span>
+    <span class="n">idx_U</span><span class="p">,</span> <span class="n">val_U</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getNearest</span><span class="p">(</span><span class="n">upper</span><span class="p">,</span> <span class="n">direction</span><span class="p">)</span>
+    <span class="n">size</span><span class="p">,</span> <span class="n">res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getSizeAndResolution</span><span class="p">()</span>
+    <span class="n">relative_index_range_x</span> <span class="o">=</span> <span class="p">(</span><span class="n">idx_L</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">/</span><span class="n">res</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">idx_U</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">/</span><span class="n">res</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">relative_index_range_y</span> <span class="o">=</span> <span class="p">(</span><span class="n">idx_L</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">/</span><span class="n">res</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">idx_U</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">/</span><span class="n">res</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">relative_index_range_z</span> <span class="o">=</span> <span class="p">(</span><span class="n">idx_L</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">/</span><span class="n">res</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">idx_U</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">/</span><span class="n">res</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">idx_L</span><span class="p">,</span> <span class="n">idx_U</span><span class="p">,</span> <span class="n">relative_index_range_x</span><span class="p">,</span> <span class="n">relative_index_range_y</span><span class="p">,</span> <span class="n">relative_index_range_z</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="MeshObject.writeMesh"><a class="viewcode-back" href="../../bfdtd.html#bfdtd.meshobject.MeshObject.writeMesh">[docs]</a>  <span class="k">def</span> <span class="nf">writeMesh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">FILE</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="p">):</span>
+    <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;writeMesh() is deprecated, please use write_entry() instead.&quot;</span><span class="p">,</span> <span class="ne">DeprecationWarning</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">write_entry</span><span class="p">(</span><span class="n">FILE</span><span class="o">=</span><span class="n">FILE</span><span class="p">)</span>
+    <span class="k">return</span></div>
+    
+<div class="viewcode-block" id="MeshObject.write_entry"><a class="viewcode-back" href="../../bfdtd.html#bfdtd.meshobject.MeshObject.write_entry">[docs]</a>  <span class="k">def</span> <span class="nf">write_entry</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">FILE</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    writes mesh to FILE</span>
+<span class="sd">    .. todo:: should be renamed to write_entry() for better standardization... (+ choose better name than write_entry() for all, like write(), writeEntry()?)</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="c1"># mesh X</span>
+    <span class="n">FILE</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;XMESH **name=&#39;</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="o">+</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">FILE</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;{</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">getXmeshDelta</span><span class="p">())):</span>
+      <span class="n">FILE</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%E</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">getXmeshDelta</span><span class="p">()[</span><span class="n">i</span><span class="p">])</span>
+    <span class="n">FILE</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">FILE</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+  
+    <span class="c1"># mesh Y</span>
+    <span class="n">FILE</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;YMESH **name=&#39;</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="o">+</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">FILE</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;{</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">getYmeshDelta</span><span class="p">())):</span>
+      <span class="n">FILE</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%E</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">getYmeshDelta</span><span class="p">()[</span><span class="n">i</span><span class="p">])</span>
+    <span class="n">FILE</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">FILE</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+  
+    <span class="c1"># mesh Z</span>
+    <span class="n">FILE</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;ZMESH **name=&#39;</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="o">+</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">FILE</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;{</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">getZmeshDelta</span><span class="p">())):</span>
+      <span class="n">FILE</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%E</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">getZmeshDelta</span><span class="p">()[</span><span class="n">i</span><span class="p">])</span>
+    <span class="n">FILE</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">FILE</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="k">return</span></div></div>
+
+<div class="viewcode-block" id="MeshingParameters"><a class="viewcode-back" href="../../bfdtd.html#bfdtd.meshobject.MeshingParameters">[docs]</a><span class="k">class</span> <span class="nc">MeshingParameters</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+  <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">  Object containing parameters that can be used for meshing (with the *subGridMultiLayer()* function for example).</span>
+<span class="sd">  The *getMeshingParameters()* of the various BFDTD objects return such an object for example.</span>
+<span class="sd">  </span>
+<span class="sd">  List of attributes:</span>
+<span class="sd">    * maximum permittivity lists</span>
+<span class="sd">      * maxPermittivityVector_X</span>
+<span class="sd">      * maxPermittivityVector_Y</span>
+<span class="sd">      * maxPermittivityVector_Z</span>
+<span class="sd">    * thickness lists</span>
+<span class="sd">      * thicknessVector_X</span>
+<span class="sd">      * thicknessVector_Y</span>
+<span class="sd">      * thicknessVector_Z</span>
+<span class="sd">    * limit lists</span>
+<span class="sd">      * limits_X</span>
+<span class="sd">      * limits_Y</span>
+<span class="sd">      * limits_Z</span>
+<span class="sd">  </span>
+<span class="sd">  .. todo::</span>
+<span class="sd">            Think about the best way to design this class and then do it.</span>
+<span class="sd">  </span>
+<span class="sd">              Might be better to really have delta+thickness for each object and then some global MeshingParameters with addMeshingParameters function.</span>
+<span class="sd">              </span>
+<span class="sd">              Permittivity to delta conversion could be specified differently for each object.</span>
+<span class="sd">              </span>
+<span class="sd">              * thickness &lt;-&gt; limits</span>
+<span class="sd">              * delta &lt;-factor*1/sqrt(permittivity)-&gt; permittivity &lt;-sqrt-&gt; refractive index</span>
+<span class="sd">  </span>
+<span class="sd">  .. todo:: Combine with MeshObject? Create way to merge 2 or more existing meshes (i.e. MeshObject objects)? Create MeshObject from set of MeshingParameters? Don&#39;t forget about MEEP and BFDTD subgridding.</span>
+<span class="sd">  .. todo:: support 1-D, 2-D (n-D?) meshing parameters as well</span>
+<span class="sd">  &#39;&#39;&#39;</span>
+  
+  <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">maxPermittivityVector_X</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">thicknessVector_X</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">maxPermittivityVector_Y</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">thicknessVector_Y</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">maxPermittivityVector_Z</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">thicknessVector_Z</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">limits_X</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">limits_Y</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">limits_Z</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span>
+    
+  <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="n">ret</span> <span class="o">=</span> <span class="s1">&#39;maxPermittivityVector_X = &#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">maxPermittivityVector_X</span><span class="p">)</span><span class="o">+</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span>
+    <span class="n">ret</span> <span class="o">+=</span> <span class="s1">&#39;thicknessVector_X = &#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">thicknessVector_X</span><span class="p">)</span><span class="o">+</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span>
+    <span class="n">ret</span> <span class="o">+=</span> <span class="s1">&#39;maxPermittivityVector_Y = &#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">maxPermittivityVector_Y</span><span class="p">)</span><span class="o">+</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span>
+    <span class="n">ret</span> <span class="o">+=</span> <span class="s1">&#39;thicknessVector_Y = &#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">thicknessVector_Y</span><span class="p">)</span><span class="o">+</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span>
+    <span class="n">ret</span> <span class="o">+=</span> <span class="s1">&#39;maxPermittivityVector_Z = &#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">maxPermittivityVector_Z</span><span class="p">)</span><span class="o">+</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span>
+    <span class="n">ret</span> <span class="o">+=</span> <span class="s1">&#39;thicknessVector_Z = &#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">thicknessVector_Z</span><span class="p">)</span><span class="o">+</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span>
+    <span class="n">ret</span> <span class="o">+=</span> <span class="s1">&#39;limits_X = &#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">limits_X</span><span class="p">)</span><span class="o">+</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span>
+    <span class="n">ret</span> <span class="o">+=</span> <span class="s1">&#39;limits_Y = &#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">limits_Y</span><span class="p">)</span><span class="o">+</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span>
+    <span class="n">ret</span> <span class="o">+=</span> <span class="s1">&#39;limits_Z = &#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">limits_Z</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">ret</span>
+  
+<div class="viewcode-block" id="MeshingParameters.addLimits_X"><a class="viewcode-back" href="../../bfdtd.html#bfdtd.meshobject.MeshingParameters.addLimits_X">[docs]</a>  <span class="k">def</span> <span class="nf">addLimits_X</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">limits</span><span class="p">,</span><span class="n">permittivity</span><span class="p">):</span>
+    <span class="c1">#print(limits)</span>
+    <span class="c1">#print(permittivity)</span>
+    <span class="c1">#print(limits.shape)</span>
+    <span class="c1">#print(permittivity.shape)</span>
+    
+    <span class="bp">self</span><span class="o">.</span><span class="n">limits_X</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">vstack</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">limits_X</span><span class="p">,</span><span class="n">limits</span><span class="p">])</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">maxPermittivityVector_X</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">vstack</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">maxPermittivityVector_X</span><span class="p">,</span><span class="n">permittivity</span><span class="p">])</span></div>
+    
+<div class="viewcode-block" id="MeshingParameters.addLimits_Y"><a class="viewcode-back" href="../../bfdtd.html#bfdtd.meshobject.MeshingParameters.addLimits_Y">[docs]</a>  <span class="k">def</span> <span class="nf">addLimits_Y</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">limits</span><span class="p">,</span><span class="n">permittivity</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">limits_Y</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">vstack</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">limits_Y</span><span class="p">,</span><span class="n">limits</span><span class="p">])</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">maxPermittivityVector_Y</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">vstack</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">maxPermittivityVector_Y</span><span class="p">,</span><span class="n">permittivity</span><span class="p">])</span></div>
+    
+<div class="viewcode-block" id="MeshingParameters.addLimits_Z"><a class="viewcode-back" href="../../bfdtd.html#bfdtd.meshobject.MeshingParameters.addLimits_Z">[docs]</a>  <span class="k">def</span> <span class="nf">addLimits_Z</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">limits</span><span class="p">,</span><span class="n">permittivity</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">limits_Z</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">vstack</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">limits_Z</span><span class="p">,</span><span class="n">limits</span><span class="p">])</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">maxPermittivityVector_Z</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">vstack</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">maxPermittivityVector_Z</span><span class="p">,</span><span class="n">permittivity</span><span class="p">])</span></div></div>
+
+<div class="viewcode-block" id="increaseResolution3D"><a class="viewcode-back" href="../../bfdtd.html#bfdtd.meshobject.increaseResolution3D">[docs]</a><span class="k">def</span> <span class="nf">increaseResolution3D</span><span class="p">(</span><span class="n">mesh_orig</span><span class="p">,</span> <span class="n">Nx</span><span class="p">,</span> <span class="n">Ny</span><span class="p">,</span> <span class="n">Nz</span><span class="p">):</span>
+  <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">  Applies increaseResolution() to all three directions and return a new MeshObject.</span>
+<span class="sd">  &#39;&#39;&#39;</span>
+  <span class="n">mesh_new</span> <span class="o">=</span> <span class="n">MeshObject</span><span class="p">()</span>
+  <span class="n">mesh_new</span><span class="o">.</span><span class="n">setXmesh</span><span class="p">(</span><span class="n">increaseResolution</span><span class="p">(</span><span class="n">mesh_orig</span><span class="o">.</span><span class="n">getXmesh</span><span class="p">(),</span> <span class="n">Nx</span><span class="p">))</span>
+  <span class="n">mesh_new</span><span class="o">.</span><span class="n">setYmesh</span><span class="p">(</span><span class="n">increaseResolution</span><span class="p">(</span><span class="n">mesh_orig</span><span class="o">.</span><span class="n">getYmesh</span><span class="p">(),</span> <span class="n">Ny</span><span class="p">))</span>
+  <span class="n">mesh_new</span><span class="o">.</span><span class="n">setZmesh</span><span class="p">(</span><span class="n">increaseResolution</span><span class="p">(</span><span class="n">mesh_orig</span><span class="o">.</span><span class="n">getZmesh</span><span class="p">(),</span> <span class="n">Nz</span><span class="p">))</span>
+  <span class="k">return</span> <span class="n">mesh_new</span></div>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+  <span class="k">pass</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">script_inception_public  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2014, Mike Taverne.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.9.
+    </div>
+  </body>
+</html>

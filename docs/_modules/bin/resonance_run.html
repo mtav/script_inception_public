@@ -1,0 +1,266 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>bin.resonance_run &#8212; script_inception_public  documentation</title>
+    <link rel="stylesheet" href="../../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">script_inception_public  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for bin.resonance_run</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python3</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">argparse</span>
+<span class="kn">import</span> <span class="nn">tempfile</span>
+
+<span class="kn">import</span> <span class="nn">bfdtd</span>
+<span class="kn">from</span> <span class="nn">utilities.harminv</span> <span class="k">import</span> <span class="n">getFrequencies</span>
+<span class="kn">import</span> <span class="nn">geometries.DBR</span>
+<span class="kn">from</span> <span class="nn">constants.physcon</span> <span class="k">import</span> <span class="n">get_c0</span>
+
+<span class="c1">#def resonance_run(src, dst, freqListFile, fileBaseName=None, walltime=360):</span>
+<div class="viewcode-block" id="resonance_run"><a class="viewcode-back" href="../../bin.html#bin.resonance_run.resonance_run">[docs]</a><span class="k">def</span> <span class="nf">resonance_run</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
+  <span class="sd">&#39;&#39;&#39; Copy src to dst with added frequency snapshots from freqListFile &#39;&#39;&#39;</span>
+  <span class="n">src</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">src</span><span class="p">)</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">sep</span><span class="p">)</span>
+  <span class="n">dst</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">dst</span><span class="p">)</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">sep</span><span class="p">)</span>
+  <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">src</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">src</span> <span class="o">+</span><span class="s1">&#39; is a directory&#39;</span><span class="p">)</span>
+    <span class="n">sim</span> <span class="o">=</span> <span class="n">bfdtd</span><span class="o">.</span><span class="n">readBristolFDTD</span><span class="p">(</span><span class="n">src</span><span class="o">+</span><span class="n">os</span><span class="o">.</span><span class="n">sep</span><span class="o">+</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">src</span><span class="p">)</span><span class="o">+</span><span class="s1">&#39;.in&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">args</span><span class="o">.</span><span class="n">fileBaseName</span><span class="p">:</span>
+      <span class="n">fileBaseName</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">src</span><span class="p">)</span>
+  <span class="k">else</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">src</span> <span class="o">+</span><span class="s1">&#39; is not a directory&#39;</span><span class="p">)</span>
+    <span class="n">sim</span> <span class="o">=</span> <span class="n">bfdtd</span><span class="o">.</span><span class="n">readBristolFDTD</span><span class="p">(</span><span class="n">src</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">args</span><span class="o">.</span><span class="n">fileBaseName</span><span class="p">:</span>
+      <span class="n">fileBaseName</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">src</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
+  
+  <span class="n">freqs</span> <span class="o">=</span> <span class="n">getFrequencies</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">freqListFile</span><span class="p">)</span>
+  
+  <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;---&#39;</span><span class="p">)</span>
+  <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Frequencies:&#39;</span><span class="p">)</span>
+  <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">freqs</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+  <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;---&#39;</span><span class="p">)</span>
+  
+  <span class="c1"># get src snapshot lists</span>
+  <span class="p">(</span><span class="n">all_time_snapshots</span><span class="p">,</span> <span class="n">time_snapshots</span><span class="p">,</span> <span class="n">epsilon_snapshots</span><span class="p">,</span> <span class="n">mode_filtered_probes</span><span class="p">)</span> <span class="o">=</span> <span class="n">sim</span><span class="o">.</span><span class="n">getAllTimeSnapshots</span><span class="p">()</span>
+  <span class="n">fsnap_list</span> <span class="o">=</span> <span class="n">sim</span><span class="o">.</span><span class="n">getFrequencySnapshots</span><span class="p">()</span>
+  
+  <span class="n">new_snapshot_list</span> <span class="o">=</span> <span class="p">[]</span>
+  
+  <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">frequency_to_energy</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">fsnap</span> <span class="ow">in</span> <span class="n">fsnap_list</span><span class="p">:</span>
+      <span class="n">energy_snapshot</span> <span class="o">=</span> <span class="n">bfdtd</span><span class="o">.</span><span class="n">EnergySnapshot</span><span class="p">()</span>
+      <span class="n">energy_snapshot</span><span class="o">.</span><span class="n">setFromSnapshot</span><span class="p">(</span><span class="n">fsnap</span><span class="p">)</span>
+      <span class="n">energy_snapshot</span><span class="o">.</span><span class="n">setFrequencies</span><span class="p">(</span><span class="n">freqs</span><span class="p">)</span>
+      <span class="n">new_snapshot_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">energy_snapshot</span><span class="p">)</span>
+  
+  <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">new_central</span><span class="p">:</span>
+    <span class="n">box</span> <span class="o">=</span> <span class="n">bfdtd</span><span class="o">.</span><span class="n">SnapshotBoxXYZ</span><span class="p">()</span>
+    <span class="n">exc</span> <span class="o">=</span> <span class="n">sim</span><span class="o">.</span><span class="n">getExcitations</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">intersection_at_P1</span><span class="p">:</span>
+      <span class="p">(</span><span class="n">P1</span><span class="p">,</span> <span class="n">P2</span><span class="p">)</span> <span class="o">=</span> <span class="n">exc</span><span class="o">.</span><span class="n">getExtension</span><span class="p">()</span>
+      <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;P1 = </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">P1</span><span class="p">))</span>
+      <span class="n">box</span><span class="o">.</span><span class="n">setIntersectionPoint</span><span class="p">(</span><span class="n">P1</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+      <span class="n">box</span><span class="o">.</span><span class="n">setIntersectionPoint</span><span class="p">(</span><span class="n">exc</span><span class="o">.</span><span class="n">getCentro</span><span class="p">())</span>
+    <span class="n">energy_snapshot</span> <span class="o">=</span> <span class="n">bfdtd</span><span class="o">.</span><span class="n">EnergySnapshot</span><span class="p">()</span>
+    <span class="n">energy_snapshot</span><span class="o">.</span><span class="n">setFrequencies</span><span class="p">(</span><span class="n">freqs</span><span class="p">)</span>
+    <span class="n">box</span><span class="o">.</span><span class="n">setBaseSnapshot</span><span class="p">(</span><span class="n">energy_snapshot</span><span class="p">)</span>
+    <span class="n">new_snapshot_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">box</span><span class="p">)</span>
+  
+  <span class="nb">print</span><span class="p">(</span><span class="n">new_snapshot_list</span><span class="p">)</span>
+  <span class="nb">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">new_snapshot_list</span><span class="p">))</span>
+  
+  <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">clearAllSnapshots</span><span class="p">:</span>
+    <span class="n">sim</span><span class="o">.</span><span class="n">clearAllSnapshots</span><span class="p">()</span>
+  <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">clearEpsilonSnapshots</span><span class="p">:</span>
+    <span class="n">sim</span><span class="o">.</span><span class="n">clearEpsilonSnapshots</span><span class="p">()</span>
+  <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">clearFrequencySnapshots</span><span class="p">:</span>
+    <span class="n">sim</span><span class="o">.</span><span class="n">clearFrequencySnapshots</span><span class="p">()</span>
+  <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">clearModeFilteredProbes</span><span class="p">:</span>
+    <span class="n">sim</span><span class="o">.</span><span class="n">clearModeFilteredProbes</span><span class="p">()</span>
+  <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">clearTimeSnapshots</span><span class="p">:</span>
+    <span class="n">sim</span><span class="o">.</span><span class="n">clearTimeSnapshots</span><span class="p">()</span>
+  <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">clearProbes</span><span class="p">:</span>
+    <span class="n">sim</span><span class="o">.</span><span class="n">clearProbes</span><span class="p">()</span>
+  <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">clearGeometry</span><span class="p">:</span>
+    <span class="n">sim</span><span class="o">.</span><span class="n">clearGeometry</span><span class="p">()</span>
+  
+  <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">iterations</span><span class="p">:</span>
+    <span class="n">sim</span><span class="o">.</span><span class="n">setIterations</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">iterations</span><span class="p">)</span>
+  
+  <span class="n">sim</span><span class="o">.</span><span class="n">appendSnapshot</span><span class="p">(</span><span class="n">new_snapshot_list</span><span class="p">)</span>
+  
+  <span class="n">exc</span> <span class="o">=</span> <span class="n">sim</span><span class="o">.</span><span class="n">getExcitations</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+  <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">source_frequency_range</span><span class="p">:</span>
+    <span class="n">exc</span><span class="o">.</span><span class="n">setFrequencyRange</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="o">.</span><span class="n">source_frequency_range</span><span class="p">)</span>
+  <span class="k">elif</span> <span class="n">args</span><span class="o">.</span><span class="n">source_wavelength_range</span><span class="p">:</span>
+    <span class="n">exc</span><span class="o">.</span><span class="n">setWavelengthRange</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="o">.</span><span class="n">source_wavelength_range</span><span class="p">)</span>
+  <span class="k">elif</span> <span class="n">args</span><span class="o">.</span><span class="n">source_frequency_range_from_DBR</span><span class="p">:</span>
+    <span class="n">wavelength</span><span class="p">,</span> <span class="n">nLow</span><span class="p">,</span> <span class="n">nHigh</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">source_frequency_range_from_DBR</span>
+    <span class="n">obj</span> <span class="o">=</span> <span class="n">geometries</span><span class="o">.</span><span class="n">DBR</span><span class="o">.</span><span class="n">DBR</span><span class="p">(</span><span class="n">wavelength</span><span class="p">,</span> <span class="n">nLow</span><span class="p">,</span> <span class="n">nHigh</span><span class="p">)</span>
+    <span class="n">fmin</span><span class="p">,</span> <span class="n">fmax</span> <span class="o">=</span> <span class="n">obj</span><span class="o">.</span><span class="n">getFrequencyRange</span><span class="p">()</span>
+    <span class="n">exc</span><span class="o">.</span><span class="n">setFrequencyRange</span><span class="p">(</span><span class="n">fmin</span><span class="p">,</span> <span class="n">fmax</span><span class="p">)</span>
+  <span class="k">elif</span> <span class="n">args</span><span class="o">.</span><span class="n">source_frequency_range_max</span><span class="p">:</span>
+    <span class="n">lambda0</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">source_frequency_range_max</span>
+    <span class="n">f0</span> <span class="o">=</span> <span class="n">get_c0</span><span class="p">()</span><span class="o">/</span><span class="n">lambda0</span>
+    <span class="n">delta_f</span> <span class="o">=</span> <span class="n">f0</span><span class="o">/</span><span class="mi">4</span>
+    <span class="n">fmin</span> <span class="o">=</span> <span class="n">f0</span> <span class="o">-</span> <span class="n">delta_f</span><span class="o">/</span><span class="mi">2</span>
+    <span class="n">fmax</span> <span class="o">=</span> <span class="n">f0</span> <span class="o">+</span> <span class="n">delta_f</span><span class="o">/</span><span class="mi">2</span>
+    <span class="n">exc</span><span class="o">.</span><span class="n">setFrequencyRange</span><span class="p">(</span><span class="n">fmin</span><span class="p">,</span> <span class="n">fmax</span><span class="p">)</span>
+  
+  <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;FrequencyRange = </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">exc</span><span class="o">.</span><span class="n">getFrequencyRange</span><span class="p">())</span> <span class="p">)</span>
+  <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;WavelengthRange = </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">exc</span><span class="o">.</span><span class="n">getWavelengthRange</span><span class="p">())</span> <span class="p">)</span>
+  <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;exc.getPeriod() = </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">exc</span><span class="o">.</span><span class="n">getPeriod</span><span class="p">())</span> <span class="p">)</span>
+  <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;exc.getTimeConstant() = </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">exc</span><span class="o">.</span><span class="n">getTimeConstant</span><span class="p">())</span> <span class="p">)</span>
+  <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;exc.getPeriod()/exc.getTimeConstant() = </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">exc</span><span class="o">.</span><span class="n">getPeriod</span><span class="p">()</span><span class="o">/</span><span class="n">exc</span><span class="o">.</span><span class="n">getTimeConstant</span><span class="p">()))</span>
+  
+  <span class="n">exc</span><span class="o">.</span><span class="n">setStartTime</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+  
+  <span class="n">sim</span><span class="o">.</span><span class="n">printInfo</span><span class="p">()</span>
+  
+  <span class="n">sim</span><span class="o">.</span><span class="n">setFileBaseName</span><span class="p">(</span><span class="n">fileBaseName</span><span class="p">)</span>
+  <span class="n">sim</span><span class="o">.</span><span class="n">setWallTime</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">walltime</span><span class="p">)</span>
+  <span class="n">sim</span><span class="o">.</span><span class="n">setAutosetNFrequencySnapshots</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+  
+  <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">run_source</span><span class="p">:</span>
+    <span class="n">sim</span><span class="o">.</span><span class="n">setSizeAndResolution</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">32</span><span class="p">,</span><span class="mi">32</span><span class="p">,</span><span class="mi">32</span><span class="p">])</span>
+    <span class="n">sim</span><span class="o">.</span><span class="n">getBoundaries</span><span class="p">()</span><span class="o">.</span><span class="n">setBoundaryConditionsNormal</span><span class="p">()</span>
+    <span class="n">sim</span><span class="o">.</span><span class="n">clearAllSnapshots</span><span class="p">()</span>
+    <span class="n">sim</span><span class="o">.</span><span class="n">clearProbes</span><span class="p">()</span>
+    <span class="n">sim</span><span class="o">.</span><span class="n">clearGeometry</span><span class="p">()</span>
+    
+    <span class="n">exc</span> <span class="o">=</span> <span class="n">sim</span><span class="o">.</span><span class="n">getExcitations</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">exc</span><span class="o">.</span><span class="n">setLocation</span><span class="p">(</span><span class="n">sim</span><span class="o">.</span><span class="n">getCentro</span><span class="p">())</span>
+    <span class="n">exc</span><span class="o">.</span><span class="n">setSize</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
+    
+    <span class="n">p</span> <span class="o">=</span> <span class="n">sim</span><span class="o">.</span><span class="n">appendProbe</span><span class="p">(</span><span class="n">bfdtd</span><span class="o">.</span><span class="n">Probe</span><span class="p">())</span>
+    <span class="n">p</span><span class="o">.</span><span class="n">setStep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">p</span><span class="o">.</span><span class="n">setLocation</span><span class="p">(</span><span class="n">exc</span><span class="o">.</span><span class="n">getLocation</span><span class="p">())</span>
+    
+    <span class="n">sim</span><span class="o">.</span><span class="n">setSimulationTime</span><span class="p">(</span><span class="n">sim</span><span class="o">.</span><span class="n">getExcitationEndTimeMax</span><span class="p">())</span>
+  
+  <span class="n">sim</span><span class="o">.</span><span class="n">writeTorqueJobDirectory</span><span class="p">(</span><span class="n">dst</span><span class="p">)</span>
+  <span class="c1">#sim.writeAll(dst, fileBaseName)</span>
+  <span class="c1">#sim.writeShellScript(os.path.join(dst, fileBaseName+&#39;.sh&#39;))</span>
+  
+  <span class="nb">print</span><span class="p">(</span><span class="n">sim</span><span class="o">.</span><span class="n">getSnapshots</span><span class="p">())</span>
+  <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">sim</span><span class="o">.</span><span class="n">getSnapshots</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">getName</span><span class="p">())</span></div>
+
+<div class="viewcode-block" id="main"><a class="viewcode-back" href="../../bin.html#bin.resonance_run.main">[docs]</a><span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="n">argv</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+  <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">  Copy src to dst with added frequency snapshots from freqListFile</span>
+<span class="sd">  &#39;&#39;&#39;</span>
+  <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">()</span>
+  <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;src&#39;</span><span class="p">)</span>
+  <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;dst&#39;</span><span class="p">)</span>
+  <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;freqListFile&#39;</span><span class="p">)</span>
+  <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-b&#39;</span><span class="p">,</span> <span class="s1">&#39;--basename&#39;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s1">&#39;fileBaseName&#39;</span><span class="p">)</span>
+  <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-w&#39;</span><span class="p">,</span> <span class="s1">&#39;--walltime&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">360</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+  <span class="c1">#group = parser.add_mutually_exclusive_group(required=True)</span>
+  <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--frequency-to-energy&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">)</span>
+  <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--new-central&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">)</span>
+  <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--intersection-at-P1&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">)</span>
+  
+  <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--iterations&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+  
+  <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--clearAllSnapshots&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">)</span>
+  <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--clearEpsilonSnapshots&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">)</span>
+  <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--clearFrequencySnapshots&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">)</span>
+  <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--clearModeFilteredProbes&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">)</span>
+  <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--clearTimeSnapshots&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">)</span>
+  <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--clearProbes&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">)</span>
+  <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--clearGeometry&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">)</span>
+  
+  <span class="n">excitation_range_group</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_mutually_exclusive_group</span><span class="p">()</span>
+  <span class="n">excitation_range_group</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-lr&#39;</span><span class="p">,</span> <span class="s1">&#39;--source-wavelength-range&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">metavar</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;LAMBDA_MIN&#39;</span><span class="p">,</span> <span class="s1">&#39;LAMBDA_MAX&#39;</span><span class="p">))</span>
+  <span class="n">excitation_range_group</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-fr&#39;</span><span class="p">,</span> <span class="s1">&#39;--source-frequency-range&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">metavar</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;FMIN&#39;</span><span class="p">,</span> <span class="s1">&#39;FMAX&#39;</span><span class="p">))</span>
+  <span class="n">excitation_range_group</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--source-frequency-range-from-DBR&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">metavar</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;wavelength&#39;</span><span class="p">,</span> <span class="s1">&#39;nLow&#39;</span><span class="p">,</span> <span class="s1">&#39;nHigh&#39;</span><span class="p">))</span>
+  <span class="n">excitation_range_group</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--source-frequency-range-max&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span> <span class="n">metavar</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;wavelength&#39;</span><span class="p">),</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;sets delta_f = f0/4 = c0/(4*lambda0)&#39;</span><span class="p">)</span>
+  
+  <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--run-source&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;create a special run to check the source properties&#39;</span><span class="p">)</span>
+  
+  <span class="n">args</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span>
+  <span class="nb">print</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+  
+  <span class="c1">#resonance_run(args.src, args.dst, args.freqListFile, fileBaseName=args.basename, walltime=args.walltime, args)</span>
+  <span class="n">resonance_run</span><span class="p">(</span><span class="n">args</span><span class="p">)</span></div>
+  
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+  <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">script_inception_public  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2014, Mike Taverne.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.9.
+    </div>
+  </body>
+</html>

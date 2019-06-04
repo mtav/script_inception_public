@@ -1,0 +1,283 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>special_ops.woodpile_generator_Xu_rotated_around_Z &#8212; script_inception_public  documentation</title>
+    <link rel="stylesheet" href="../../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">script_inception_public  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for special_ops.woodpile_generator_Xu_rotated_around_Z</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python3</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
+
+<span class="kn">from</span> <span class="nn">GWL.woodpile</span> <span class="k">import</span> <span class="o">*</span>
+
+<span class="kn">from</span> <span class="nn">GWL.box</span> <span class="k">import</span> <span class="o">*</span>
+
+<span class="kn">from</span> <span class="nn">GWL.GWL_parser</span> <span class="k">import</span> <span class="n">GWLobject</span>
+
+
+<div class="viewcode-block" id="createWoodpile"><a class="viewcode-back" href="../../special_ops.html#special_ops.woodpile_generator_Xu_rotated_around_Z.createWoodpile">[docs]</a><span class="k">def</span> <span class="nf">createWoodpile</span><span class="p">(</span><span class="n">DSTDIR</span><span class="p">,</span> <span class="n">VerticalPeriod</span><span class="p">,</span> <span class="n">w_factor</span><span class="p">,</span> <span class="n">box_size_X</span><span class="p">,</span> <span class="n">box_size_Y</span><span class="p">,</span> <span class="n">n_layers</span><span class="p">,</span> <span class="n">laser_power_at_z0</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">interfaceAt</span><span class="p">,</span> <span class="n">rotationAngleDegrees</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+  <span class="n">d_value</span> <span class="o">=</span> <span class="n">VerticalPeriod</span><span class="o">/</span><span class="n">numpy</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="c1"># Distance between two adjacent logs</span>
+
+<span class="c1">##  box_size = 50</span>
+  <span class="c1">#box_size = 50</span>
+
+  <span class="n">n_logs_X</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">box_size_X</span><span class="o">/</span><span class="n">d_value</span><span class="p">)</span> <span class="c1"># number of logs in each layer</span>
+  <span class="nb">print</span><span class="p">(</span><span class="n">n_logs_X</span><span class="p">)</span>
+  <span class="n">n_logs_Y</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">box_size_Y</span><span class="o">/</span><span class="n">d_value</span><span class="p">)</span> <span class="c1"># number of logs in each layer</span>
+  <span class="nb">print</span><span class="p">(</span><span class="n">n_logs_Y</span><span class="p">)</span>
+
+  <span class="n">w</span> <span class="o">=</span> <span class="n">w_factor</span><span class="o">*</span><span class="n">VerticalPeriod</span> <span class="c1"># width of the logs</span>
+  <span class="n">h</span> <span class="o">=</span> <span class="mf">0.25</span><span class="o">*</span><span class="n">VerticalPeriod</span> <span class="c1"># heigth of logs (should be 1/4 for fcc to not overlap)</span>
+  <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;w = &#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">w</span><span class="p">))</span>
+  <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;h = &#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">h</span><span class="p">))</span>
+
+  <span class="c1">#L = (n_logs-1)*d_value+w+d_value # Length of logs (should &gt; (n_logs-1)*d_value+w)</span>
+  <span class="c1">#n_layers = 4*4 # Number of layers of logs required</span>
+
+  <span class="n">wall_thickness</span> <span class="o">=</span> <span class="mi">0</span>
+  <span class="n">XL</span> <span class="o">=</span> <span class="mf">0.5</span><span class="o">*</span><span class="n">wall_thickness</span> <span class="c1"># Lower edge of the simulation domain in x direction.</span>
+  <span class="n">YL</span> <span class="o">=</span> <span class="mf">0.5</span><span class="o">*</span><span class="n">wall_thickness</span> <span class="c1"># Lower edge of the simulation domain in y direction.</span>
+  <span class="n">ZL</span> <span class="o">=</span> <span class="mi">0</span> <span class="c1"># Lower edge of the simulation domain in z direction.</span>
+
+  <span class="n">XU</span> <span class="o">=</span> <span class="n">XL</span> <span class="o">+</span> <span class="n">box_size_X</span> <span class="c1"># Upper edge of the simulation domain in x direction.</span>
+  <span class="n">YU</span> <span class="o">=</span> <span class="n">YL</span> <span class="o">+</span> <span class="n">box_size_Y</span> <span class="c1"># Upper edge of the simulation domain in y direction.</span>
+  <span class="n">ZU</span> <span class="o">=</span> <span class="mi">4</span> <span class="c1"># Upper edge of the simulation domain in z direction.</span>
+
+  <span class="n">Nlayers_Z</span> <span class="o">=</span> <span class="n">n_layers</span>
+  <span class="n">NRodsPerLayer_X</span> <span class="o">=</span> <span class="n">n_logs_X</span>
+  <span class="n">NRodsPerLayer_Y</span> <span class="o">=</span> <span class="n">n_logs_Y</span>
+
+  <span class="n">woodpile_Zoffset</span> <span class="o">=</span> <span class="mf">0.5</span><span class="o">*</span><span class="n">h</span>
+  <span class="n">wall_height</span> <span class="o">=</span> <span class="n">n_layers</span><span class="o">*</span><span class="n">h</span>
+
+  <span class="n">leg_width</span> <span class="o">=</span> <span class="mi">5</span>
+
+  <span class="n">BottomToTop</span> <span class="o">=</span> <span class="kc">False</span>
+
+  <span class="n">woodpile_obj</span> <span class="o">=</span> <span class="n">Woodpile</span><span class="p">()</span>
+  <span class="n">woodpile_obj</span><span class="o">.</span><span class="n">BottomToTop</span> <span class="o">=</span> <span class="mi">1</span>
+  <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Nlayers_Z=&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">Nlayers_Z</span><span class="p">))</span>
+  <span class="n">woodpile_obj</span><span class="o">.</span><span class="n">Nlayers_Z</span> <span class="o">=</span> <span class="n">Nlayers_Z</span>
+  <span class="n">woodpile_obj</span><span class="o">.</span><span class="n">NRodsPerLayer_X</span> <span class="o">=</span> <span class="n">NRodsPerLayer_X</span>
+  <span class="n">woodpile_obj</span><span class="o">.</span><span class="n">NRodsPerLayer_Y</span> <span class="o">=</span> <span class="n">NRodsPerLayer_Y</span>
+  <span class="n">woodpile_obj</span><span class="o">.</span><span class="n">interRodDistance</span> <span class="o">=</span> <span class="n">d_value</span>
+  <span class="n">woodpile_obj</span><span class="o">.</span><span class="n">interLayerDistance</span> <span class="o">=</span> <span class="n">h</span>
+
+  <span class="c1"># new overlap handling function</span>
+  <span class="n">voxel_width</span> <span class="o">=</span> <span class="mf">0.150</span> <span class="c1"># in mum</span>
+  <span class="n">voxel_height</span> <span class="o">=</span> <span class="mf">0.300</span> <span class="c1"># in mum</span>
+
+  <span class="p">(</span><span class="n">woodpile_obj</span><span class="o">.</span><span class="n">LineNumber_X</span><span class="p">,</span> <span class="n">woodpile_obj</span><span class="o">.</span><span class="n">LineDistance_X</span><span class="p">)</span> <span class="o">=</span> <span class="n">calculateNvoxelsAndInterVoxelDistance</span><span class="p">(</span><span class="n">Length</span><span class="o">=</span><span class="n">w</span><span class="p">,</span><span class="n">Voxelsize</span><span class="o">=</span><span class="n">voxel_width</span><span class="p">,</span><span class="n">Overlap</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+  <span class="p">(</span><span class="n">woodpile_obj</span><span class="o">.</span><span class="n">LineNumber_Y</span><span class="p">,</span> <span class="n">woodpile_obj</span><span class="o">.</span><span class="n">LineDistance_Y</span><span class="p">)</span> <span class="o">=</span> <span class="n">calculateNvoxelsAndInterVoxelDistance</span><span class="p">(</span><span class="n">Length</span><span class="o">=</span><span class="n">w</span><span class="p">,</span><span class="n">Voxelsize</span><span class="o">=</span><span class="n">voxel_width</span><span class="p">,</span><span class="n">Overlap</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+  <span class="p">(</span><span class="n">woodpile_obj</span><span class="o">.</span><span class="n">LineNumber_Z</span><span class="p">,</span> <span class="n">woodpile_obj</span><span class="o">.</span><span class="n">LineDistance_Z</span><span class="p">)</span> <span class="o">=</span> <span class="n">calculateNvoxelsAndInterVoxelDistance</span><span class="p">(</span><span class="n">Length</span><span class="o">=</span><span class="n">h</span><span class="p">,</span><span class="n">Voxelsize</span><span class="o">=</span><span class="n">voxel_height</span><span class="p">,</span><span class="n">Overlap</span><span class="o">=</span><span class="mf">0.99</span><span class="p">)</span>
+
+  <span class="n">woodpile_obj</span><span class="o">.</span><span class="n">LineDistance_X</span> <span class="o">=</span> <span class="mf">0.067</span>
+  <span class="n">woodpile_obj</span><span class="o">.</span><span class="n">LineDistance_Y</span> <span class="o">=</span> <span class="mf">0.067</span>
+  <span class="n">woodpile_obj</span><span class="o">.</span><span class="n">LineDistance_Z</span> <span class="o">=</span> <span class="mf">0.067</span>
+
+  <span class="c1"># change this manually to set number of lines</span>
+  <span class="n">woodpile_obj</span><span class="o">.</span><span class="n">LineNumber_X</span> <span class="o">=</span> <span class="mi">2</span>
+  <span class="n">woodpile_obj</span><span class="o">.</span><span class="n">LineNumber_Y</span> <span class="o">=</span> <span class="mi">4</span>
+  <span class="n">woodpile_obj</span><span class="o">.</span><span class="n">LineNumber_Z</span> <span class="o">=</span> <span class="mi">4</span>
+
+  <span class="c1">#woodpile_obj.LineNumber_X = 1</span>
+  <span class="c1">#woodpile_obj.LineNumber_Y = 1</span>
+  <span class="c1">#woodpile_obj.LineNumber_Z = 1</span>
+
+  <span class="n">woodpile_obj</span><span class="o">.</span><span class="n">initialDirection</span> <span class="o">=</span> <span class="mi">0</span>
+
+  <span class="n">woodpile_obj</span><span class="o">.</span><span class="n">initialLayerType_X</span> <span class="o">=</span> <span class="mi">0</span>
+  <span class="n">woodpile_obj</span><span class="o">.</span><span class="n">initialLayerType_Y</span> <span class="o">=</span> <span class="mi">0</span>
+
+  <span class="n">woodpile_obj</span><span class="o">.</span><span class="n">Xmin</span> <span class="o">=</span> <span class="n">XL</span>
+  <span class="n">woodpile_obj</span><span class="o">.</span><span class="n">Xmax</span> <span class="o">=</span> <span class="n">XU</span>
+  <span class="n">woodpile_obj</span><span class="o">.</span><span class="n">Ymin</span> <span class="o">=</span> <span class="n">YL</span>
+  <span class="n">woodpile_obj</span><span class="o">.</span><span class="n">Ymax</span> <span class="o">=</span> <span class="n">YU</span>
+
+<span class="c1">#  woodpile_obj.Xoffset = 0.5*(w + woodpile_obj.interRodDistance)</span>
+<span class="c1">#  woodpile_obj.Yoffset = 0.5*(w + woodpile_obj.interRodDistance)</span>
+
+  <span class="n">woodpile_obj</span><span class="o">.</span><span class="n">isSymmetrical</span> <span class="o">=</span> <span class="kc">True</span>
+  <span class="n">woodpile_obj</span><span class="o">.</span><span class="n">adaptXYMinMax</span><span class="p">()</span>
+
+
+
+  <span class="k">if</span> <span class="n">filename</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">subfilename</span> <span class="o">=</span> <span class="s1">&#39;woodpile.a_</span><span class="si">%.3f</span><span class="s1">.w_factor_</span><span class="si">%.3f</span><span class="s1">.size_%.fx%.f.layer_%.f.gwl&#39;</span><span class="o">%</span> <span class="p">(</span><span class="n">VerticalPeriod</span><span class="p">,</span><span class="n">w_factor</span><span class="p">,</span><span class="n">box_size_X</span><span class="p">,</span><span class="n">box_size_Y</span><span class="p">,</span><span class="n">n_layers</span><span class="p">)</span>
+    <span class="n">filename</span> <span class="o">=</span> <span class="n">DSTDIR</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">sep</span> <span class="o">+</span> <span class="n">subfilename</span>
+  
+  <span class="p">(</span><span class="n">GWL_obj</span><span class="p">,</span> <span class="n">tmp</span><span class="p">)</span> <span class="o">=</span> <span class="n">woodpile_obj</span><span class="o">.</span><span class="n">getGWLandBFDTDobjects</span><span class="p">()</span>
+
+  <span class="n">GWL_obj</span><span class="o">.</span><span class="n">rotate</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="n">rotationAngleDegrees</span><span class="p">)</span>
+  
+  <span class="n">GWL_obj</span><span class="o">.</span><span class="n">addPowerCompensation</span><span class="p">(</span><span class="n">laser_power_at_z0</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">interfaceAt</span><span class="p">);</span>
+  <span class="n">GWL_obj</span><span class="o">.</span><span class="n">writeGWL</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">writingOffset</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="n">woodpile_Zoffset</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="p">)</span></div>
+
+<span class="c1">##def createWoodpileGroup(DSTDIR):</span>
+<span class="c1">##    wa_list = []</span>
+<span class="c1">##</span>
+<span class="c1">##    ##nlog_1-nouter_1.52/band.out.dat</span>
+<span class="c1">##    #a=0.9759; w=0.2*a</span>
+<span class="c1">##    #wa_list.append((w,a))</span>
+<span class="c1">##</span>
+<span class="c1">##    ##nlog_1-nouter_2.1/band.out.dat</span>
+<span class="c1">##    #a=0.7342; w=0.2*a</span>
+<span class="c1">##    #wa_list.append((w,a))</span>
+<span class="c1">##</span>
+<span class="c1">##    ##nlog_1-nouter_2.4/band.out.dat</span>
+<span class="c1">##    #a=0.65035; w=0.2*a</span>
+<span class="c1">##    #wa_list.append((w,a))</span>
+<span class="c1">##</span>
+<span class="c1">##    ##nlog_2.1-nouter_1.52/band.out.dat</span>
+<span class="c1">##    #a=0.78831; w=0.2*a</span>
+<span class="c1">##    #wa_list.append((w,a))</span>
+<span class="c1">##</span>
+<span class="c1">##    ##nlog_2.4-nouter_1.52/band.out.dat</span>
+<span class="c1">##    #a=0.73662; w=0.2*a</span>
+<span class="c1">##    #wa_list.append((w,a))</span>
+<span class="c1">##</span>
+<span class="c1">##    ##nlog_1.52-nouter_2.1/band.out.dat</span>
+<span class="c1">##    #a=0.69664; w=0.2*a</span>
+<span class="c1">##    #wa_list.append((w,a))</span>
+<span class="c1">##</span>
+<span class="c1">##    ##nlog_1.52-nouter_2.4/band.out.dat</span>
+<span class="c1">##    #a=0.6213; w=0.2*a</span>
+<span class="c1">##    #wa_list.append((w,a))</span>
+<span class="c1">##</span>
+<span class="c1">##    #nlog_1.52-nouter_1/band.out.dat</span>
+<span class="c1">##    a=1.1421; w_factor=0.2</span>
+<span class="c1">##    wa_list.append((w_factor,a))</span>
+<span class="c1">##</span>
+<span class="c1">##    #nlog_2.1-nouter_1/band.out.dat</span>
+<span class="c1">##    a=0.95138; w_factor=1/numpy.sqrt(2)-0.2</span>
+<span class="c1">##    wa_list.append((w_factor,a))</span>
+<span class="c1">##</span>
+<span class="c1">##    #nlog_2.4-nouter_1/band.out.dat</span>
+<span class="c1">##    a=0.87318; w_factor=1/numpy.sqrt(2)-0.2</span>
+<span class="c1">##    wa_list.append((w_factor,a))</span>
+<span class="c1">##</span>
+<span class="c1">##    for (w_factor,a) in wa_list:</span>
+<span class="c1">##      createWoodpile(DSTDIR,a,w_factor)</span>
+
+<div class="viewcode-block" id="main"><a class="viewcode-back" href="../../special_ops.html#special_ops.woodpile_generator_Xu_rotated_around_Z.main">[docs]</a><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+  <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">1</span><span class="p">:</span>
+    <span class="n">DSTDIR</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+  <span class="k">else</span><span class="p">:</span>
+    <span class="n">DSTDIR</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()</span>
+
+  <span class="c1">#createWoodpileGroup(DSTDIR)</span>
+  <span class="c1">#print( &#39;Output in &#39; + os.getcwd())</span>
+
+  <span class="n">VerticalPeriod</span> <span class="o">=</span> <span class="mf">1.277</span><span class="p">;</span>
+  <span class="n">w_factor</span> <span class="o">=</span> <span class="mf">0.31</span><span class="p">;</span>
+  <span class="n">box_size_X</span> <span class="o">=</span> <span class="mi">50</span><span class="p">;</span>
+  <span class="n">box_size_Y</span> <span class="o">=</span> <span class="n">box_size_X</span><span class="p">;</span>
+  <span class="n">n_layers</span> <span class="o">=</span> <span class="mi">10</span><span class="o">*</span><span class="mi">2</span><span class="p">;</span>
+
+  <span class="n">K</span><span class="o">=</span><span class="mf">0.015</span><span class="p">;</span>
+  <span class="n">interfaceAt</span><span class="o">=</span><span class="mi">1</span><span class="p">;</span>
+  <span class="c1">#for laser_power_at_z0 in [25,26,27,28]:</span>
+    <span class="c1">#for rotatedBy90degrees in [True, False]:</span>
+      <span class="c1">#createWoodpile(DSTDIR, VerticalPeriod, w_factor, box_size_X, box_size_Y, n_layers, laser_power_at_z0, K, interfaceAt, rotatedBy90degrees=rotatedBy90degrees, filename=&#39;K{:.3f}_woodpile.a_{:.3f}.w_factor_{:.3f}.size_{}.layer_{}_P{}.rotated_{}.gwl&#39;.format(K, VerticalPeriod, w_factor, box_size_X, n_layers, laser_power_at_z0, rotatedBy90degrees));</span>
+
+  <span class="c1">#rotatedBy90degrees=True</span>
+  <span class="c1">#for laser_power_at_z0 in [25,26,27,28]:</span>
+    <span class="c1">#createWoodpile(DSTDIR, VerticalPeriod, w_factor, box_size_X, box_size_Y, n_layers, laser_power_at_z0, K, interfaceAt, rotatedBy90degrees=rotatedBy90degrees, filename=&#39;K{:.3f}_woodpile.a_{:.3f}.w_factor_{:.3f}.size_{}.layer_{}_P{}.rotated_{}.4lines.gwl&#39;.format(K, VerticalPeriod, w_factor, box_size_X, n_layers, laser_power_at_z0, rotatedBy90degrees));</span>
+
+  <span class="c1">#rotatedBy90degrees=True</span>
+  <span class="c1">#laser_power_at_z0=25</span>
+  <span class="c1">#filename=&#39;test.gwl&#39;</span>
+  <span class="c1">#createWoodpile(DSTDIR, VerticalPeriod, w_factor, box_size_X, box_size_Y, n_layers, laser_power_at_z0, K, interfaceAt, rotatedBy90degrees=rotatedBy90degrees, filename=filename);</span>
+
+  <span class="c1">#for n_layers in [8,10,12,16]:</span>
+    <span class="c1">#for laser_power_at_z0 in [25,26,27,28]:</span>
+  <span class="k">for</span> <span class="n">n_layers</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">16</span><span class="p">]:</span>
+    <span class="k">for</span> <span class="n">laser_power_at_z0</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">27</span><span class="p">]:</span>
+      <span class="k">for</span> <span class="n">alpha</span> <span class="ow">in</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">45</span><span class="p">,</span><span class="mi">10</span><span class="p">):</span>
+        <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;K</span><span class="si">{:.3f}</span><span class="s1">_woodpile.a_</span><span class="si">{:.3f}</span><span class="s1">.w_factor_</span><span class="si">{:.3f}</span><span class="s1">.size_</span><span class="si">{}</span><span class="s1">.layer_</span><span class="si">{}</span><span class="s1">_P</span><span class="si">{}</span><span class="s1">.alpha_</span><span class="si">{}</span><span class="s1">.4line.gwl&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">K</span><span class="p">,</span> <span class="n">VerticalPeriod</span><span class="p">,</span> <span class="n">w_factor</span><span class="p">,</span> <span class="n">box_size_X</span><span class="p">,</span> <span class="n">n_layers</span><span class="p">,</span> <span class="n">laser_power_at_z0</span><span class="p">,</span> <span class="n">alpha</span><span class="p">)</span>
+        <span class="n">createWoodpile</span><span class="p">(</span><span class="n">DSTDIR</span><span class="p">,</span> <span class="n">VerticalPeriod</span><span class="p">,</span> <span class="n">w_factor</span><span class="p">,</span> <span class="n">box_size_X</span><span class="p">,</span> <span class="n">box_size_Y</span><span class="p">,</span> <span class="n">n_layers</span><span class="p">,</span> <span class="n">laser_power_at_z0</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">interfaceAt</span><span class="p">,</span> <span class="n">rotationAngleDegrees</span><span class="o">=</span><span class="n">alpha</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="n">filename</span><span class="p">);</span></div>
+
+<span class="c1">##  leg_box_size=20</span>
+<span class="c1">##  leg_height=4*VerticalPeriod+1</span>
+<span class="c1">##</span>
+<span class="c1">##  legfilename = &#39;legs.size_%.f.height_%.3f.gwl&#39;% (leg_box_size,leg_height)</span>
+<span class="c1">##  createLegs(DSTDIR,NAME=legfilename,box_size=leg_box_size,leg_height=leg_height,hole_width=2,wall_thickness=1,overshoot=2.5,writingOffset=[0,0,0,0])</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+  <span class="n">main</span><span class="p">()</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">script_inception_public  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2014, Mike Taverne.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.9.
+    </div>
+  </body>
+</html>

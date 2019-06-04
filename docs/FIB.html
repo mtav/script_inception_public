@@ -1,0 +1,181 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>FIB package &#8212; script_inception_public  documentation</title>
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="GWL package" href="GWL.html" />
+    <link rel="prev" title="package" href="script_inception_public.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="GWL.html" title="GWL package"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="script_inception_public.html" title="package"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">script_inception_public  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="script_inception_public.html" accesskey="U">package</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="fib-package">
+<h1>FIB package<a class="headerlink" href="#fib-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-FIB.FIB">
+<span id="fib-fib-module"></span><h2>FIB.FIB module<a class="headerlink" href="#module-FIB.FIB" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="FIB.FIB.FIBdistanceHorizontal">
+<code class="descclassname">FIB.FIB.</code><code class="descname">FIBdistanceHorizontal</code><span class="sig-paren">(</span><em>tilt_deg</em>, <em>magnification</em>, <em>distance_on_picture_pxl</em>, <em>angle_to_horizontal_deg=90</em>, <em>horizontal_width_of_picture_pxl=1024</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/FIB/FIB.html#FIBdistanceHorizontal"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#FIB.FIB.FIBdistanceHorizontal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the horizontal distance in mum based on the visible distance in pixels on the picture.
+Warning: formula for angled segments hasn’t been fully verified yet.
+distance_on_picture_pxl, angle_to_horizontal_deg : Properties of the segment to measure on the picture, as given by the Gimp measurement tool for example.
+tilt_deg : Tilt of the sample relative to the FIB. Can be read from the picture legend.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="FIB.FIB.FIBdistanceVertical">
+<code class="descclassname">FIB.FIB.</code><code class="descname">FIBdistanceVertical</code><span class="sig-paren">(</span><em>tilt_deg</em>, <em>magnification</em>, <em>distance_on_picture_pxl</em>, <em>horizontal_width_of_picture_pxl=1024</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/FIB/FIB.html#FIBdistanceVertical"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#FIB.FIB.FIBdistanceVertical" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the vertical distance in mum based on the visible distance in pixels on the picture. 
+Warning: Always assumes a vertical pixel distance measurement (because it’s the only thing making sense assuming an orthographic projection)
+tilt_deg : Tilt of the sample relative to the FIB. Can be read from the picture legend.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="FIB.FIB.getMagFromScreenSizeInMicrons">
+<code class="descclassname">FIB.FIB.</code><code class="descname">getMagFromScreenSizeInMicrons</code><span class="sig-paren">(</span><em>HFW_mum</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/FIB/FIB.html#getMagFromScreenSizeInMicrons"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#FIB.FIB.getMagFromScreenSizeInMicrons" title="Permalink to this definition">¶</a></dt>
+<dd><p>HFW_mum : size in micrometers of the area of the sample visible on the screen.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="FIB.FIB.getPixelsPerMicron">
+<code class="descclassname">FIB.FIB.</code><code class="descname">getPixelsPerMicron</code><span class="sig-paren">(</span><em>mag</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/FIB/FIB.html#getPixelsPerMicron"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#FIB.FIB.getPixelsPerMicron" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns the number of pixels per micrometer for the given magnification “mag”.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="FIB.FIB.getResolution">
+<code class="descclassname">FIB.FIB.</code><code class="descname">getResolution</code><span class="sig-paren">(</span><em>mag</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/FIB/FIB.html#getResolution"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#FIB.FIB.getResolution" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns (res_mum_per_pxl, HFW_mum) where:
+res_mum_per_pxl : resolution in micrometers per pixel
+HFW_mum : size in micrometers of the area of the sample visible on the screen.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="FIB.FIB.getSpotSize">
+<code class="descclassname">FIB.FIB.</code><code class="descname">getSpotSize</code><span class="sig-paren">(</span><em>beamCurrent</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/FIB/FIB.html#getSpotSize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#FIB.FIB.getSpotSize" title="Permalink to this definition">¶</a></dt>
+<dd><p>function spotSize_mum = getSpotSize(beamCurrent)</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="FIB.FIB.readStrFile">
+<code class="descclassname">FIB.FIB.</code><code class="descname">readStrFile</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/FIB/FIB.html#readStrFile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#FIB.FIB.readStrFile" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-FIB.streamFileTest">
+<span id="fib-streamfiletest-module"></span><h2>FIB.streamFileTest module<a class="headerlink" href="#module-FIB.streamFileTest" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-FIB">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-FIB" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">FIB package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-FIB.FIB">FIB.FIB module</a></li>
+<li><a class="reference internal" href="#module-FIB.streamFileTest">FIB.streamFileTest module</a></li>
+<li><a class="reference internal" href="#module-FIB">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="script_inception_public.html"
+                        title="previous chapter">package</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="GWL.html"
+                        title="next chapter">GWL package</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/FIB.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="GWL.html" title="GWL package"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="script_inception_public.html" title="package"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">script_inception_public  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="script_inception_public.html" >package</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2014, Mike Taverne.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.9.
+    </div>
+  </body>
+</html>

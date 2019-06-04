@@ -1,0 +1,376 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>GWL.woodpile &#8212; script_inception_public  documentation</title>
+    <link rel="stylesheet" href="../../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">script_inception_public  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for GWL.woodpile</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python3</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span>
+<span class="kn">import</span> <span class="nn">bfdtd</span>
+<span class="kn">from</span> <span class="nn">GWL.GWL_parser</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">bfdtd.bfdtd_parser</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">import</span> <span class="nn">GWL.tilted_grating</span>
+
+<div class="viewcode-block" id="Woodpile"><a class="viewcode-back" href="../../GWL.html#GWL.woodpile.Woodpile">[docs]</a><span class="k">class</span> <span class="nc">Woodpile</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+  
+  <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">  This class allows you to create BFDTD and GWL files for a woodpile crystal.</span>
+<span class="sd">  </span>
+<span class="sd">  .. todo:: Is there a better way to define properties? (shorter code)</span>
+<span class="sd">  .. todo:: Same as with meshing: First carefully think through the GWL/BFDTD woodpile system, then implement. Should be as flexible as possible (offsets, shifts, etc), while remaining simple to use.</span>
+<span class="sd">  &#39;&#39;&#39;</span>
+  <span class="nd">@property</span>
+  <span class="k">def</span> <span class="nf">Nlayers_Z</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+      <span class="sd">&quot;&quot;&quot;Number of layers in the Z direction&quot;&quot;&quot;</span>
+      <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_Nlayers_Z</span>
+
+  <span class="nd">@Nlayers_Z</span><span class="o">.</span><span class="n">setter</span>
+  <span class="k">def</span> <span class="nf">Nlayers_Z</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">_Nlayers_Z</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Could not convert value to an integer.&quot;</span><span class="p">)</span>
+        <span class="k">raise</span>
+
+  <span class="nd">@property</span>
+  <span class="k">def</span> <span class="nf">NRodsPerLayer_X</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+      <span class="sd">&quot;&quot;&quot;Number of rods in a layer in the X direction&quot;&quot;&quot;</span>
+      <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_NRodsPerLayer_X</span>
+
+  <span class="nd">@NRodsPerLayer_X</span><span class="o">.</span><span class="n">setter</span>
+  <span class="k">def</span> <span class="nf">NRodsPerLayer_X</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">_NRodsPerLayer_X</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Could not convert value to an integer.&quot;</span><span class="p">)</span>
+        <span class="k">raise</span>
+
+  <span class="nd">@property</span>
+  <span class="k">def</span> <span class="nf">NRodsPerLayer_Y</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+      <span class="sd">&quot;&quot;&quot;Number of rods in a layer in the Y direction&quot;&quot;&quot;</span>
+      <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_NRodsPerLayer_Y</span>
+
+  <span class="nd">@NRodsPerLayer_Y</span><span class="o">.</span><span class="n">setter</span>
+  <span class="k">def</span> <span class="nf">NRodsPerLayer_Y</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">_NRodsPerLayer_Y</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Could not convert value to an integer.&quot;</span><span class="p">)</span>
+        <span class="k">raise</span>
+
+  <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_Nlayers_Z</span> <span class="o">=</span> <span class="mi">12</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_NRodsPerLayer_X</span> <span class="o">=</span> <span class="mi">17</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_NRodsPerLayer_Y</span> <span class="o">=</span> <span class="mi">17</span>
+
+    <span class="c1"># TODO: create get/set functions for rod width/height + interRodDistance/interLayerDistance</span>
+    <span class="c1"># NOTE: Keep rod width/height + interRodDistance/interLayerDistance, etc separate for more flexibility or not?</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">rod_width</span> <span class="o">=</span> <span class="mf">0.100</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">rod_height</span> <span class="o">=</span> <span class="mf">0.200</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">LineNumber_X</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">LineDistance_X</span> <span class="o">=</span> <span class="mf">0.050</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">LineNumber_Y</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">LineDistance_Y</span> <span class="o">=</span> <span class="mf">0.050</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">LineNumber_Z</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">LineDistance_Z</span> <span class="o">=</span> <span class="mf">0.100</span>
+
+    <span class="c1"># TODO: Pass function/class name directly in order the facilitate extendability. Might require arguments to be class attributes so the function/class can access them.</span>
+    <span class="c1">#self.rod_type = &#39;line&#39;</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">rod_type</span> <span class="o">=</span> <span class="s1">&#39;block&#39;</span>
+    <span class="c1">#self.rod_type = &#39;cylinder&#39;</span>
+    
+    <span class="bp">self</span><span class="o">.</span><span class="n">interLayerDistance</span> <span class="o">=</span> <span class="mf">0.212</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">interRodDistance</span> <span class="o">=</span> <span class="mf">0.600</span>
+
+    <span class="c1"># TODO: Get rid of this, since there are already GWL translating functions?</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">offset</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span> <span class="c1"># general offset of the whole structure, added to all points</span>
+
+    <span class="c1"># self.bottomLayerYPeriodic = True: -&gt;first written layer will be periodic in the Y direction</span>
+    <span class="c1"># else: first written layer will be periodic in the X direction</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">bottomLayerYPeriodic</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">BottomToTop</span> <span class="o">=</span> <span class="kc">False</span> <span class="c1"># True=write from bottom to top, False=write from top to bottom    </span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">isSymmetrical</span> <span class="o">=</span> <span class="kc">True</span> <span class="c1"># If True, the layers will alternate between N and N+1 rods per layer to enable central symmetry, otherwise all layers will have the same number of rods.</span>
+    
+    <span class="c1"># These variables determine whether the first written layer of type X-periodic or Y-periodic is shifted or not.</span>
+    <span class="c1"># The following layers will be changed accordingly. Essentially, it allows vertical shifting of the layers.</span>
+    <span class="c1"># This allows you to create &quot;ADCB&quot; instead of &quot;ABCD&quot; woodpiles.</span>
+    <span class="c1"># (affected by BottomToTop! (TODO: fix this))</span>
+    <span class="c1"># TODO: Allow creation of &quot;ABAB&quot; woodpiles... Or even more complex?</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">shiftInitialLayerType_X</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">shiftInitialLayerType_Y</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="c1"># TODO: find better name? redundant with X/Yoffset and X/Ymin/max, no?</span>
+    <span class="c1">#self.additionalRodLength = 0</span>
+
+    <span class="c1"># TODO: create setSize functions?</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">Xmin</span> <span class="o">=</span> <span class="o">-</span><span class="mf">5.5</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">Xmax</span> <span class="o">=</span> <span class="mf">5.5</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">Ymin</span> <span class="o">=</span> <span class="o">-</span><span class="mf">5.5</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">Ymax</span> <span class="o">=</span> <span class="mf">5.5</span>
+    
+    <span class="c1"># additional separate offsets for X and Y layers...</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">Xoffset</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">Yoffset</span> <span class="o">=</span> <span class="mi">0</span>
+
+<div class="viewcode-block" id="Woodpile.setRodType"><a class="viewcode-back" href="../../GWL.html#GWL.woodpile.Woodpile.setRodType">[docs]</a>  <span class="k">def</span> <span class="nf">setRodType</span><span class="p">():</span>
+    <span class="k">return</span></div>
+
+<div class="viewcode-block" id="Woodpile.setRodWidth"><a class="viewcode-back" href="../../GWL.html#GWL.woodpile.Woodpile.setRodWidth">[docs]</a>  <span class="k">def</span> <span class="nf">setRodWidth</span><span class="p">():</span>
+    <span class="sd">&#39;&#39;&#39; set rod width (WARNING: will set LineNumber and LineDistance accordingly) &#39;&#39;&#39;</span>
+    <span class="k">return</span></div>
+<div class="viewcode-block" id="Woodpile.setRodHeight"><a class="viewcode-back" href="../../GWL.html#GWL.woodpile.Woodpile.setRodHeight">[docs]</a>  <span class="k">def</span> <span class="nf">setRodHeight</span><span class="p">():</span>
+    <span class="sd">&#39;&#39;&#39; set rod height (WARNING: will set LineNumber and LineDistance accordingly) &#39;&#39;&#39;</span>
+    <span class="k">return</span></div>
+
+<div class="viewcode-block" id="Woodpile.setLineNumberAndDistance_XY"><a class="viewcode-back" href="../../GWL.html#GWL.woodpile.Woodpile.setLineNumberAndDistance_XY">[docs]</a>  <span class="k">def</span> <span class="nf">setLineNumberAndDistance_XY</span><span class="p">():</span>
+    <span class="sd">&#39;&#39;&#39; set LineNumber and LineDistance (WARNING: will set rod width accordingly) &#39;&#39;&#39;</span>
+    <span class="k">return</span></div>
+<div class="viewcode-block" id="Woodpile.setLineNumberAndDistance_Z"><a class="viewcode-back" href="../../GWL.html#GWL.woodpile.Woodpile.setLineNumberAndDistance_Z">[docs]</a>  <span class="k">def</span> <span class="nf">setLineNumberAndDistance_Z</span><span class="p">():</span>
+    <span class="sd">&#39;&#39;&#39; set LineNumber and LineDistance (WARNING: will set rod height accordingly) &#39;&#39;&#39;</span>
+    <span class="k">return</span></div>
+
+<div class="viewcode-block" id="Woodpile.setVoxelSize3"><a class="viewcode-back" href="../../GWL.html#GWL.woodpile.Woodpile.setVoxelSize3">[docs]</a>  <span class="k">def</span> <span class="nf">setVoxelSize3</span><span class="p">():</span>
+    <span class="k">return</span></div>
+
+<div class="viewcode-block" id="Woodpile.setOverlap3"><a class="viewcode-back" href="../../GWL.html#GWL.woodpile.Woodpile.setOverlap3">[docs]</a>  <span class="k">def</span> <span class="nf">setOverlap3</span><span class="p">():</span>
+    <span class="c1">#self.overlap = </span>
+    <span class="k">return</span></div>
+
+<div class="viewcode-block" id="Woodpile.adaptXYMinMax"><a class="viewcode-back" href="../../GWL.html#GWL.woodpile.Woodpile.adaptXYMinMax">[docs]</a>  <span class="k">def</span> <span class="nf">adaptXYMinMax</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    
+    <span class="c1"># TODO: should take into account the width of logs, etc</span>
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">isSymmetrical</span><span class="p">:</span>
+      <span class="c1">#LX = self.NRodsPerLayer_X*self.interRodDistance + 2*self.additionalRodLength</span>
+      <span class="c1">#LY = self.NRodsPerLayer_Y*self.interRodDistance + 2*self.additionalRodLength</span>
+      <span class="n">LX</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">NRodsPerLayer_X</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">interRodDistance</span>
+      <span class="n">LY</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">NRodsPerLayer_Y</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">interRodDistance</span>
+    <span class="k">else</span><span class="p">:</span>
+      <span class="c1">#LX = self.NRodsPerLayer_X*self.interRodDistance - 0.5*self.interRodDistance + 2*self.additionalRodLength</span>
+      <span class="c1">#LY = self.NRodsPerLayer_Y*self.interRodDistance - 0.5*self.interRodDistance + 2*self.additionalRodLength</span>
+      <span class="n">LX</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">NRodsPerLayer_X</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">interRodDistance</span> <span class="o">-</span> <span class="mf">0.5</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">interRodDistance</span>
+      <span class="n">LY</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">NRodsPerLayer_Y</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">interRodDistance</span> <span class="o">-</span> <span class="mf">0.5</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">interRodDistance</span>
+      
+    <span class="bp">self</span><span class="o">.</span><span class="n">Xmin</span> <span class="o">=</span> <span class="o">-</span><span class="mf">0.5</span><span class="o">*</span><span class="n">LX</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">Xmax</span> <span class="o">=</span> <span class="mf">0.5</span><span class="o">*</span><span class="n">LX</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">Ymin</span> <span class="o">=</span> <span class="o">-</span><span class="mf">0.5</span><span class="o">*</span><span class="n">LY</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">Ymax</span> <span class="o">=</span> <span class="mf">0.5</span><span class="o">*</span><span class="n">LY</span></div>
+
+<div class="viewcode-block" id="Woodpile.getGWLandBFDTDobjects"><a class="viewcode-back" href="../../GWL.html#GWL.woodpile.Woodpile.getGWLandBFDTDobjects">[docs]</a>  <span class="k">def</span> <span class="nf">getGWLandBFDTDobjects</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="n">GWL_obj</span> <span class="o">=</span> <span class="n">GWLobject</span><span class="p">()</span>
+    <span class="n">BFDTD_obj</span> <span class="o">=</span> <span class="n">BFDTDobject</span><span class="p">()</span>
+    
+    <span class="n">layer_type_X</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">shiftInitialLayerType_X</span>
+    <span class="n">layer_type_Y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">shiftInitialLayerType_Y</span>
+
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">BottomToTop</span><span class="p">:</span>
+      <span class="n">layer_idx_list</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Nlayers_Z</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+      <span class="n">layer_idx_list</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Nlayers_Z</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">layer_idx</span> <span class="ow">in</span> <span class="n">layer_idx_list</span><span class="p">:</span>
+      <span class="n">direction</span> <span class="o">=</span> <span class="n">layer_idx</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">bottomLayerYPeriodic</span> <span class="o">%</span> <span class="mi">2</span>
+      
+      <span class="c1"># TODO: reduce code duplication here between lines in X and lines in Y direction.</span>
+      <span class="k">if</span> <span class="n">direction</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span> <span class="c1"># lines in the Y direction</span>
+        
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">isSymmetrical</span><span class="p">:</span>
+          <span class="n">N</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">NRodsPerLayer_X</span> <span class="o">+</span> <span class="p">(</span><span class="n">layer_type_X</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">%</span><span class="mi">2</span>
+        <span class="k">else</span><span class="p">:</span>
+          <span class="n">N</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">NRodsPerLayer_X</span>
+        
+        <span class="c1"># NOTE: some leftover from fitting the nanoscribe-style woodpile? Add option for it...? :/</span>
+        <span class="c1">#for rod_idx in range(N-1,-1,-1):</span>
+        <span class="k">for</span> <span class="n">rod_idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
+          <span class="n">X</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Xmin</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">Xoffset</span> <span class="o">+</span> <span class="n">layer_type_X</span><span class="o">*</span><span class="mf">0.5</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">interRodDistance</span> <span class="o">+</span> <span class="n">rod_idx</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">interRodDistance</span>
+          <span class="n">P1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">offset</span> <span class="o">+</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">X</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">Ymax</span><span class="p">,</span> <span class="n">layer_idx</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">interLayerDistance</span><span class="p">])</span>
+          <span class="n">P2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">offset</span> <span class="o">+</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">X</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">Ymin</span><span class="p">,</span> <span class="n">layer_idx</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">interLayerDistance</span><span class="p">])</span>
+          <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">rod_type</span> <span class="o">==</span> <span class="s1">&#39;line&#39;</span><span class="p">:</span>
+            <span class="n">GWL_obj</span><span class="o">.</span><span class="n">addLine</span><span class="p">(</span><span class="n">P1</span><span class="p">,</span><span class="n">P2</span><span class="p">)</span>
+          <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">rod_type</span> <span class="o">==</span> <span class="s1">&#39;blockContinuous&#39;</span><span class="p">:</span>
+            <span class="n">obj</span> <span class="o">=</span> <span class="n">GWL</span><span class="o">.</span><span class="n">tilted_grating</span><span class="o">.</span><span class="n">Parallelepiped</span><span class="p">()</span>
+            <span class="n">obj</span><span class="o">.</span><span class="n">e1_vec3</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">obj</span><span class="o">.</span><span class="n">e2_vec3</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">BottomToTop</span><span class="p">:</span>
+              <span class="n">obj</span><span class="o">.</span><span class="n">e3_vec3</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+              <span class="n">obj</span><span class="o">.</span><span class="n">e3_vec3</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">width</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">LineNumber_X</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">LineDistance_X</span>
+            <span class="n">height</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">LineNumber_Z</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">LineDistance_Z</span>
+            <span class="n">obj</span><span class="o">.</span><span class="n">voxelsize_vec3</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">LineDistance_X</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">LineDistance_Y</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">LineDistance_Z</span><span class="p">])</span>
+            <span class="n">obj</span><span class="o">.</span><span class="n">size_vec3</span> <span class="o">=</span> <span class="p">[</span><span class="nb">abs</span><span class="p">(</span><span class="n">P2</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">P1</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span><span class="o">+</span><span class="n">obj</span><span class="o">.</span><span class="n">voxelsize_vec3</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">width</span><span class="p">,</span><span class="n">height</span><span class="p">]</span>
+            <span class="n">obj</span><span class="o">.</span><span class="n">overlap_vec3</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
+            <span class="n">obj</span><span class="o">.</span><span class="n">center_vec3</span> <span class="o">=</span> <span class="mf">0.5</span><span class="o">*</span><span class="p">(</span><span class="n">P1</span><span class="o">+</span><span class="n">P2</span><span class="p">)</span>
+            <span class="n">obj</span><span class="o">.</span><span class="n">computePoints</span><span class="p">()</span>
+            <span class="n">GWL_obj</span><span class="o">.</span><span class="n">addGWLobject</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
+          <span class="k">else</span><span class="p">:</span>
+            <span class="n">GWL_obj</span><span class="o">.</span><span class="n">addYblock</span><span class="p">(</span><span class="n">P1</span><span class="p">,</span> <span class="n">P2</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">LineNumber_X</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">LineDistance_X</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">LineNumber_Z</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">LineDistance_Z</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">BottomToTop</span><span class="p">)</span>
+          <span class="n">block</span> <span class="o">=</span> <span class="n">bfdtd</span><span class="o">.</span><span class="n">Block</span><span class="p">()</span>
+          <span class="n">block</span><span class="o">.</span><span class="n">setLowerAbsolute</span><span class="p">(</span> <span class="n">P1</span> <span class="o">-</span> <span class="mf">0.5</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">rod_width</span><span class="o">*</span><span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span> <span class="o">-</span> <span class="mf">0.5</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">rod_height</span><span class="o">*</span><span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span> <span class="p">)</span>
+          <span class="n">block</span><span class="o">.</span><span class="n">setUpperAbsolute</span><span class="p">(</span> <span class="n">P2</span> <span class="o">+</span> <span class="mf">0.5</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">rod_width</span><span class="o">*</span><span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span> <span class="o">+</span> <span class="mf">0.5</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">rod_height</span><span class="o">*</span><span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span> <span class="p">)</span>
+          <span class="n">block</span><span class="o">.</span><span class="n">setName</span><span class="p">(</span><span class="s2">&quot;woodpile&quot;</span><span class="p">)</span>
+          <span class="n">BFDTD_obj</span><span class="o">.</span><span class="n">geometry_object_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">block</span><span class="p">)</span>
+        <span class="n">layer_type_X</span> <span class="o">=</span> <span class="p">(</span><span class="n">layer_type_X</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="mi">2</span>
+        
+      <span class="k">else</span><span class="p">:</span> <span class="c1"># lines in the X direction</span>
+        
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">isSymmetrical</span><span class="p">:</span>
+          <span class="n">N</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">NRodsPerLayer_Y</span> <span class="o">+</span> <span class="p">(</span><span class="n">layer_type_Y</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">%</span><span class="mi">2</span>
+        <span class="k">else</span><span class="p">:</span>
+          <span class="n">N</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">NRodsPerLayer_Y</span>
+          
+        <span class="k">for</span> <span class="n">rod_idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
+          <span class="n">Y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Ymin</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">Yoffset</span> <span class="o">+</span> <span class="n">layer_type_Y</span><span class="o">*</span><span class="mf">0.5</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">interRodDistance</span> <span class="o">+</span> <span class="n">rod_idx</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">interRodDistance</span>
+          <span class="n">P1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">offset</span> <span class="o">+</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">Xmin</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">layer_idx</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">interLayerDistance</span><span class="p">])</span>
+          <span class="n">P2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">offset</span> <span class="o">+</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">Xmax</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">layer_idx</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">interLayerDistance</span><span class="p">])</span>
+          <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">rod_type</span> <span class="o">==</span> <span class="s1">&#39;line&#39;</span><span class="p">:</span>
+            <span class="n">GWL_obj</span><span class="o">.</span><span class="n">addLine</span><span class="p">(</span><span class="n">P1</span><span class="p">,</span><span class="n">P2</span><span class="p">)</span>
+          <span class="c1"># TODO: This is a quick hack at the moment. A lot of stuff needs to be rewritten to make things nicer.</span>
+          <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">rod_type</span> <span class="o">==</span> <span class="s1">&#39;blockContinuous&#39;</span><span class="p">:</span>
+            <span class="n">obj</span> <span class="o">=</span> <span class="n">GWL</span><span class="o">.</span><span class="n">tilted_grating</span><span class="o">.</span><span class="n">Parallelepiped</span><span class="p">()</span>
+            <span class="n">obj</span><span class="o">.</span><span class="n">e1_vec3</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">obj</span><span class="o">.</span><span class="n">e2_vec3</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">BottomToTop</span><span class="p">:</span>
+              <span class="n">obj</span><span class="o">.</span><span class="n">e3_vec3</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+              <span class="n">obj</span><span class="o">.</span><span class="n">e3_vec3</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">width</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">LineNumber_Y</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">LineDistance_Y</span>
+            <span class="n">height</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">LineNumber_Z</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">LineDistance_Z</span>
+            <span class="n">obj</span><span class="o">.</span><span class="n">voxelsize_vec3</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">LineDistance_X</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">LineDistance_Y</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">LineDistance_Z</span><span class="p">])</span>
+            <span class="n">obj</span><span class="o">.</span><span class="n">size_vec3</span> <span class="o">=</span> <span class="p">[</span><span class="nb">abs</span><span class="p">(</span><span class="n">P2</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="n">P1</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">+</span><span class="n">obj</span><span class="o">.</span><span class="n">voxelsize_vec3</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">width</span><span class="p">,</span><span class="n">height</span><span class="p">]</span>
+            <span class="n">obj</span><span class="o">.</span><span class="n">overlap_vec3</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
+            <span class="n">obj</span><span class="o">.</span><span class="n">center_vec3</span> <span class="o">=</span> <span class="mf">0.5</span><span class="o">*</span><span class="p">(</span><span class="n">P1</span><span class="o">+</span><span class="n">P2</span><span class="p">)</span>
+            <span class="n">obj</span><span class="o">.</span><span class="n">computePoints</span><span class="p">()</span>
+            <span class="n">GWL_obj</span><span class="o">.</span><span class="n">addGWLobject</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
+          <span class="k">else</span><span class="p">:</span>
+            <span class="n">GWL_obj</span><span class="o">.</span><span class="n">addXblock</span><span class="p">(</span><span class="n">P1</span><span class="p">,</span> <span class="n">P2</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">LineNumber_Y</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">LineDistance_Y</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">LineNumber_Z</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">LineDistance_Z</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">BottomToTop</span><span class="p">)</span>
+          <span class="n">block</span> <span class="o">=</span> <span class="n">bfdtd</span><span class="o">.</span><span class="n">Block</span><span class="p">()</span>
+          <span class="n">block</span><span class="o">.</span><span class="n">setLowerAbsolute</span><span class="p">(</span> <span class="n">P1</span> <span class="o">-</span> <span class="mf">0.5</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">rod_width</span><span class="o">*</span><span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span> <span class="o">-</span> <span class="mf">0.5</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">rod_height</span><span class="o">*</span><span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span> <span class="p">)</span>
+          <span class="n">block</span><span class="o">.</span><span class="n">setUpperAbsolute</span><span class="p">(</span> <span class="n">P2</span> <span class="o">+</span> <span class="mf">0.5</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">rod_width</span><span class="o">*</span><span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span> <span class="o">+</span> <span class="mf">0.5</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">rod_height</span><span class="o">*</span><span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span> <span class="p">)</span>
+          <span class="n">block</span><span class="o">.</span><span class="n">setName</span><span class="p">(</span><span class="s2">&quot;woodpile&quot;</span><span class="p">)</span>
+          <span class="n">BFDTD_obj</span><span class="o">.</span><span class="n">geometry_object_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">block</span><span class="p">)</span>
+        <span class="n">layer_type_Y</span> <span class="o">=</span> <span class="p">(</span><span class="n">layer_type_Y</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="mi">2</span>
+        
+      <span class="c1"># optional: just add another write to easily distinguish layers inside file</span>
+      <span class="c1"># TODO: Replace with comment. Requires addition of some addComment() command.</span>
+      <span class="n">GWL_obj</span><span class="o">.</span><span class="n">startNewVoxelSequence</span><span class="p">()</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">GWL_obj</span><span class="p">,</span> <span class="n">BFDTD_obj</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Woodpile.write_GWL"><a class="viewcode-back" href="../../GWL.html#GWL.woodpile.Woodpile.write_GWL">[docs]</a>  <span class="k">def</span> <span class="nf">write_GWL</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
+    <span class="k">raise</span><span class="p">(</span><span class="s1">&#39;Deprecated: Use writeGWL() instead.&#39;</span><span class="p">)</span>
+    <span class="k">return</span></div>
+
+<div class="viewcode-block" id="Woodpile.write_BFDTD"><a class="viewcode-back" href="../../GWL.html#GWL.woodpile.Woodpile.write_BFDTD">[docs]</a>  <span class="k">def</span> <span class="nf">write_BFDTD</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
+    <span class="k">raise</span><span class="p">(</span><span class="s1">&#39;Deprecated: Use writeBFDTD() instead.&#39;</span><span class="p">)</span>
+    <span class="k">return</span></div>
+
+<div class="viewcode-block" id="Woodpile.writeGWL"><a class="viewcode-back" href="../../GWL.html#GWL.woodpile.Woodpile.writeGWL">[docs]</a>  <span class="k">def</span> <span class="nf">writeGWL</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
+    <span class="p">(</span><span class="n">GWL_obj</span><span class="p">,</span> <span class="n">BFDTD_obj</span><span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getGWLandBFDTDobjects</span><span class="p">()</span>
+    <span class="p">(</span><span class="n">Pmin</span><span class="p">,</span> <span class="n">Pmax</span><span class="p">)</span> <span class="o">=</span> <span class="n">GWL_obj</span><span class="o">.</span><span class="n">getLimits</span><span class="p">()</span>
+    <span class="n">GWL_obj</span><span class="o">.</span><span class="n">writeGWL</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">writingOffset</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="n">Pmin</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span><span class="mi">0</span><span class="p">]</span> <span class="p">)</span> <span class="c1"># write object so that Zmin = 0</span></div>
+    
+<div class="viewcode-block" id="Woodpile.writeBFDTD"><a class="viewcode-back" href="../../GWL.html#GWL.woodpile.Woodpile.writeBFDTD">[docs]</a>  <span class="k">def</span> <span class="nf">writeBFDTD</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
+    <span class="c1"># TODO: finish implementing this function</span>
+    <span class="p">(</span><span class="n">GWL_obj</span><span class="p">,</span> <span class="n">BFDTD_obj</span><span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getGWLandBFDTDobjects</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Writing GWL to &#39;</span><span class="o">+</span><span class="n">filename</span><span class="p">)</span>
+    <span class="n">BFDTD_obj</span><span class="o">.</span><span class="n">writeGeoFile</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span></div></div>
+
+<div class="viewcode-block" id="main"><a class="viewcode-back" href="../../GWL.html#GWL.woodpile.main">[docs]</a><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+  <span class="n">woodpile_obj</span> <span class="o">=</span> <span class="n">Woodpile</span><span class="p">()</span>
+  <span class="n">woodpile_obj</span><span class="o">.</span><span class="n">rod_width</span> <span class="o">=</span> <span class="mf">0.2</span>
+  <span class="n">woodpile_obj</span><span class="o">.</span><span class="n">rod_height</span> <span class="o">=</span> <span class="mi">1</span>
+  <span class="n">woodpile_obj</span><span class="o">.</span><span class="n">interLayerDistance</span> <span class="o">=</span> <span class="mi">1</span>
+  <span class="n">woodpile_obj</span><span class="o">.</span><span class="n">interRodDistance</span> <span class="o">=</span> <span class="mi">2</span>
+
+  <span class="n">woodpile_obj</span><span class="o">.</span><span class="n">LineNumber_X</span> <span class="o">=</span> <span class="mi">2</span>
+  <span class="n">woodpile_obj</span><span class="o">.</span><span class="n">LineDistance_X</span> <span class="o">=</span> <span class="mf">0.050</span>
+  <span class="n">woodpile_obj</span><span class="o">.</span><span class="n">LineNumber_Y</span> <span class="o">=</span> <span class="mi">2</span>
+  <span class="n">woodpile_obj</span><span class="o">.</span><span class="n">LineDistance_Y</span> <span class="o">=</span> <span class="mf">0.050</span>
+  <span class="n">woodpile_obj</span><span class="o">.</span><span class="n">LineNumber_Z</span> <span class="o">=</span> <span class="mi">2</span>
+  <span class="n">woodpile_obj</span><span class="o">.</span><span class="n">LineDistance_Z</span> <span class="o">=</span> <span class="mf">0.100</span>
+
+  <span class="n">woodpile_obj</span><span class="o">.</span><span class="n">rod_type</span><span class="o">=</span><span class="s1">&#39;block&#39;</span>
+  <span class="n">woodpile_obj</span><span class="o">.</span><span class="n">adaptXYMinMax</span><span class="p">()</span>
+  <span class="n">woodpile_obj</span><span class="o">.</span><span class="n">writeGWL</span><span class="p">(</span><span class="s1">&#39;woodpile_test.gwl&#39;</span><span class="p">)</span>
+  <span class="n">woodpile_obj</span><span class="o">.</span><span class="n">writeBFDTD</span><span class="p">(</span><span class="s1">&#39;woodpile_test.geo&#39;</span><span class="p">)</span></div>
+  
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+  <span class="n">main</span><span class="p">()</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">script_inception_public  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2014, Mike Taverne.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.9.
+    </div>
+  </body>
+</html>
