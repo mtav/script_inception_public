@@ -12,8 +12,18 @@ echo ${REPODIR}
 cd ${REPODIR}/src/docs && make BUILDDIR=${REPODIR}/docs clean html-without-todo
 
 cd ${REPODIR}/docs
-ln --symbolic html/index.html index.html
 touch .nojekyll
+
+# ln --symbolic html/index.html index.html
+
+cat << EOF > index.html
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Refresh" content="0; url=./html/index.html" />
+  </head>
+</html>
+EOF
 
 # # DOXYGENDOCDIR="$HOME/isys_git/documentation/generated_by_doxygen"
 # DOXYGENDOCDIR="$HOME/isys_git/documentation/"
