@@ -13,6 +13,7 @@ cd ${REPODIR}/src/docs && make BUILDDIR=${REPODIR}/docs clean html-without-todo
 
 cd ${REPODIR}/docs
 touch .nojekyll
+touch html/.nojekyll
 
 # ln --symbolic html/index.html index.html
 
