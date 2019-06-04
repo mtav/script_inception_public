@@ -1,0 +1,388 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>GWL.parallelepiped &#8212; script_inception_public  documentation</title>
+    <link rel="stylesheet" href="../../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">script_inception_public  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for GWL.parallelepiped</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python3</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">numpy</span>
+<span class="kn">import</span> <span class="nn">tempfile</span>
+<span class="kn">from</span> <span class="nn">numpy.linalg</span> <span class="k">import</span> <span class="n">norm</span>
+<span class="kn">from</span> <span class="nn">numpy</span> <span class="k">import</span> <span class="n">sqrt</span><span class="p">,</span> <span class="n">cross</span><span class="p">,</span> <span class="n">array</span><span class="p">,</span> <span class="n">dot</span>
+<span class="kn">from</span> <span class="nn">GWL.GWL_parser</span> <span class="k">import</span> <span class="n">GWLobject</span><span class="p">,</span> <span class="n">calculateNvoxelsAndInterVoxelDistance</span>
+
+<div class="viewcode-block" id="Parallelepiped"><a class="viewcode-back" href="../../GWL.html#GWL.parallelepiped.Parallelepiped">[docs]</a><span class="k">class</span> <span class="nc">Parallelepiped</span><span class="p">(</span><span class="n">GWLobject</span><span class="p">):</span>
+  <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">  A parallelepiped (i.e., a brick, possibly with non-orthogonal axes).</span>
+
+<span class="sd">  The block will be filled with lines going along e1, in layers in the (e1,e2) plane, stacked along e3.</span>
+
+<span class="sd">  .. todo:: Document code.</span>
+<span class="sd">  .. todo:: center -&gt; centro...</span>
+<span class="sd">  .. todo:: think up better system for LineNumber, LineDistance, Overlap, VoxelSize, Length. Example:</span>
+<span class="sd">  </span>
+<span class="sd">            * set(Length, LineNumber)</span>
+<span class="sd">            * set(LineDistance, LineNumber)</span>
+<span class="sd">            * set(Length, VoxelSize, Overlap)</span>
+<span class="sd">  </span>
+<span class="sd">  .. todo:: Finish implementing LineDistance, Overlap in Blender addon somehow. cf design problem above.</span>
+<span class="sd">  .. todo:: Finish implementing start-end point method in Blender addon somehow.</span>
+<span class="sd">  </span>
+<span class="sd">  .. todo:: extend Parallelepiped class:</span>
+<span class="sd">  </span>
+<span class="sd">            * distorted cube, including triangular ones (interpolate cubic grid onto distorted and then write various paras accordingly) (cf blender&#39;s lattice deform algorithm with linear interpolation)</span>
+<span class="sd">            * use known/given voxelsize intelligently based on direction of lines, etc</span>
+<span class="sd">            * power compensation -&gt; period/linedistance compensation based on known/given voxelsize evolution (extend to other objects?)</span>
+<span class="sd">  &#39;&#39;&#39;</span>
+  
+  <span class="c1">### attributes:</span>
+  <span class="n">center_vec3</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span> <span class="c1"># Center point of the object. No default value.</span>
+  <span class="n">size_vec3</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span> <span class="c1"># The lengths of the block edges along each of its three axes. Not really a 3-vector (at least, not in the lattice basis), but it has three components, each of which should be nonzero. No default value.</span>
+
+  <span class="c1"># The directions of the axes of the block; the lengths of these vectors are ignored. Must be linearly independent. They default to the three lattice directions.</span>
+  <span class="c1"># The block will be filled with lines going along e1, in layers in the (e1,e2) plane, stacked along e3.</span>
+  <span class="n">e1_vec3</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
+  <span class="n">e2_vec3</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
+  <span class="n">e3_vec3</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
+
+  <span class="n">LineNumber_vec3</span> <span class="o">=</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">5</span><span class="p">]</span>
+
+  <span class="c1"># WARNING: voxelsize and overlap in this class relate to e1,e2,e3 which are chosen by the user, not the usual x,y,z!!!</span>
+  <span class="c1"># TODO: Rename those variables to reflect the dependency on e1,e2,e3 instead of x,y,z. Or create smarter system.</span>
+  <span class="n">voxelsize_vec3</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.150</span><span class="p">,</span><span class="mf">0.150</span><span class="p">,</span><span class="mf">0.450</span><span class="p">])</span>
+  
+  <span class="c1"># should the lines all be connected or not</span>
+  <span class="n">connected</span> <span class="o">=</span> <span class="kc">False</span>
+  <span class="c1"># TODO: enable/disable zigzag as well... Towards a single &quot;block/quad&quot; class...</span>
+  
+  <span class="c1">###################################</span>
+  <span class="c1"># to be discarded and replaced by internal or external parameter calculating functions</span>
+  <span class="n">overlap_vec3</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mf">0.5</span><span class="p">])</span>
+  <span class="n">voxelsize_vec3_xyz</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.150</span><span class="p">,</span><span class="mf">0.150</span><span class="p">,</span><span class="mf">0.450</span><span class="p">])</span>
+  <span class="n">overlap_vec3_xyz</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mf">0.5</span><span class="p">])</span>
+  <span class="c1">###################################</span>
+  
+  <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="n">GWLobject</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Parallelepiped.getNormalizedVectors"><a class="viewcode-back" href="../../GWL.html#GWL.parallelepiped.Parallelepiped.getNormalizedVectors">[docs]</a>  <span class="k">def</span> <span class="nf">getNormalizedVectors</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">e1_vec3</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">e1_vec3</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">e2_vec3</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">e2_vec3</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">e3_vec3</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">e3_vec3</span><span class="p">)</span>
+    <span class="n">e1_vec3_norm</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">e1_vec3</span><span class="o">/</span><span class="n">norm</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">e1_vec3</span><span class="p">)</span>
+    <span class="n">e2_vec3_norm</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">e2_vec3</span><span class="o">/</span><span class="n">norm</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">e2_vec3</span><span class="p">)</span>
+    <span class="n">e3_vec3_norm</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">e3_vec3</span><span class="o">/</span><span class="n">norm</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">e3_vec3</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="p">(</span><span class="n">e1_vec3_norm</span><span class="p">,</span> <span class="n">e2_vec3_norm</span><span class="p">,</span> <span class="n">e3_vec3_norm</span><span class="p">)</span></div>
+  
+<div class="viewcode-block" id="Parallelepiped.setSizeFromVectors"><a class="viewcode-back" href="../../GWL.html#GWL.parallelepiped.Parallelepiped.setSizeFromVectors">[docs]</a>  <span class="k">def</span> <span class="nf">setSizeFromVectors</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">e1_vec3</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">e1_vec3</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">e2_vec3</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">e2_vec3</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">e3_vec3</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">e3_vec3</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">size_vec3</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span> <span class="p">[</span><span class="n">norm</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">e1_vec3</span><span class="p">),</span> <span class="n">norm</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">e2_vec3</span><span class="p">),</span> <span class="n">norm</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">e3_vec3</span><span class="p">)]</span> <span class="p">)</span>
+    <span class="k">return</span> </div>
+
+<div class="viewcode-block" id="Parallelepiped.setFromLine"><a class="viewcode-back" href="../../GWL.html#GWL.parallelepiped.Parallelepiped.setFromLine">[docs]</a>  <span class="k">def</span> <span class="nf">setFromLine</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="n">rod_width</span><span class="p">,</span> <span class="n">rod_height</span><span class="p">,</span> <span class="n">orthogonal</span><span class="p">,</span> <span class="n">orientation</span><span class="p">):</span>
+
+    <span class="n">A</span> <span class="o">=</span> <span class="n">array</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
+    <span class="n">B</span> <span class="o">=</span> <span class="n">array</span><span class="p">(</span><span class="n">B</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">center_vec3</span> <span class="o">=</span> <span class="mf">0.5</span><span class="o">*</span><span class="p">(</span><span class="n">A</span><span class="o">+</span><span class="n">B</span><span class="p">)</span>
+    
+    <span class="n">size</span> <span class="o">=</span> <span class="p">[</span><span class="n">norm</span><span class="p">(</span><span class="n">B</span><span class="o">-</span><span class="n">A</span><span class="p">),</span> <span class="n">rod_width</span><span class="p">,</span> <span class="n">rod_height</span><span class="p">]</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">size_vec3</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">size</span><span class="p">[</span><span class="n">orientation</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span> <span class="n">size</span><span class="p">[</span><span class="n">orientation</span><span class="p">[</span><span class="mi">1</span><span class="p">]],</span> <span class="n">size</span><span class="p">[</span><span class="n">orientation</span><span class="p">[</span><span class="mi">2</span><span class="p">]]])</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">voxelsize_vec3</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">voxelsize_vec3_xyz</span><span class="p">[</span><span class="n">orientation</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span> <span class="bp">self</span><span class="o">.</span><span class="n">voxelsize_vec3_xyz</span><span class="p">[</span><span class="n">orientation</span><span class="p">[</span><span class="mi">1</span><span class="p">]],</span> <span class="bp">self</span><span class="o">.</span><span class="n">voxelsize_vec3_xyz</span><span class="p">[</span><span class="n">orientation</span><span class="p">[</span><span class="mi">2</span><span class="p">]]])</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">overlap_vec3</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">overlap_vec3_xyz</span><span class="p">[</span><span class="n">orientation</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span> <span class="bp">self</span><span class="o">.</span><span class="n">overlap_vec3_xyz</span><span class="p">[</span><span class="n">orientation</span><span class="p">[</span><span class="mi">1</span><span class="p">]],</span> <span class="bp">self</span><span class="o">.</span><span class="n">overlap_vec3_xyz</span><span class="p">[</span><span class="n">orientation</span><span class="p">[</span><span class="mi">2</span><span class="p">]]])</span>
+
+    <span class="c1">#self.size_vec3 = [norm(B-A), rod_width, rod_height]</span>
+    
+    <span class="n">x</span> <span class="o">=</span> <span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">z</span> <span class="o">=</span> <span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
+    
+    <span class="k">if</span> <span class="n">norm</span><span class="p">(</span><span class="n">B</span><span class="o">-</span><span class="n">A</span><span class="p">)</span><span class="o">==</span><span class="mi">0</span><span class="p">:</span>
+      <span class="n">e1</span> <span class="o">=</span> <span class="n">x</span>
+      <span class="n">e2</span> <span class="o">=</span> <span class="n">y</span>
+      <span class="n">e3</span> <span class="o">=</span> <span class="n">z</span>
+    <span class="k">else</span><span class="p">:</span>
+      <span class="n">e1</span> <span class="o">=</span> <span class="n">B</span><span class="o">-</span><span class="n">A</span>
+      <span class="k">if</span> <span class="n">norm</span><span class="p">(</span><span class="n">cross</span><span class="p">(</span><span class="n">z</span><span class="p">,</span><span class="n">e1</span><span class="p">))</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">e1</span> <span class="o">=</span> <span class="n">dot</span><span class="p">(</span><span class="n">e1</span><span class="p">,</span><span class="n">z</span><span class="p">)</span><span class="o">*</span><span class="n">z</span>
+        <span class="n">e3</span> <span class="o">=</span> <span class="n">y</span> <span class="c1"># choice based on nanoscribe InvertZAxis system</span>
+        <span class="n">e2</span> <span class="o">=</span> <span class="n">cross</span><span class="p">(</span><span class="n">e3</span><span class="p">,</span><span class="n">e1</span><span class="p">)</span>
+      <span class="k">else</span><span class="p">:</span>
+        <span class="n">e2</span> <span class="o">=</span> <span class="n">cross</span><span class="p">(</span><span class="n">z</span><span class="p">,</span><span class="n">e1</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">orthogonal</span><span class="p">:</span>
+          <span class="c1">#print(&#39;orthogonal&#39;)</span>
+          <span class="n">e3</span> <span class="o">=</span> <span class="n">cross</span><span class="p">(</span><span class="n">e1</span><span class="p">,</span><span class="n">e2</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+          <span class="c1">#print(&#39;non-orthogonal&#39;)</span>
+          <span class="n">e3</span> <span class="o">=</span> <span class="n">z</span>
+
+
+    <span class="n">elist</span> <span class="o">=</span> <span class="p">[</span><span class="n">e1</span><span class="p">,</span><span class="n">e2</span><span class="p">,</span><span class="n">e3</span><span class="p">]</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">e1_vec3</span> <span class="o">=</span> <span class="n">elist</span><span class="p">[</span><span class="n">orientation</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">e2_vec3</span> <span class="o">=</span> <span class="n">elist</span><span class="p">[</span><span class="n">orientation</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">e3_vec3</span> <span class="o">=</span> <span class="n">elist</span><span class="p">[</span><span class="n">orientation</span><span class="p">[</span><span class="mi">2</span><span class="p">]]</span>
+    
+    <span class="k">return</span></div>
+
+<div class="viewcode-block" id="Parallelepiped.getMinMaxPoints"><a class="viewcode-back" href="../../GWL.html#GWL.parallelepiped.Parallelepiped.getMinMaxPoints">[docs]</a>  <span class="k">def</span> <span class="nf">getMinMaxPoints</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="p">(</span><span class="n">e1_vec3_norm</span><span class="p">,</span> <span class="n">e2_vec3_norm</span><span class="p">,</span> <span class="n">e3_vec3_norm</span><span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getNormalizedVectors</span><span class="p">()</span>
+    
+    <span class="n">e1min</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">center_vec3</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">size_vec3</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">e1_vec3_norm</span>
+    <span class="n">e1max</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">center_vec3</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">size_vec3</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">e1_vec3_norm</span>
+
+    <span class="n">e2min</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">center_vec3</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">size_vec3</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">e2_vec3_norm</span>
+    <span class="n">e2max</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">center_vec3</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">size_vec3</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">e2_vec3_norm</span>
+
+    <span class="n">e3min</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">center_vec3</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">size_vec3</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">*</span><span class="n">e3_vec3_norm</span>
+    <span class="n">e3max</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">center_vec3</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">size_vec3</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">*</span><span class="n">e3_vec3_norm</span>
+    
+    <span class="k">return</span> <span class="p">(</span><span class="n">e1min</span><span class="p">,</span> <span class="n">e1max</span><span class="p">,</span> <span class="n">e2min</span><span class="p">,</span> <span class="n">e2max</span><span class="p">,</span> <span class="n">e3min</span><span class="p">,</span> <span class="n">e3max</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Parallelepiped.computeVectors"><a class="viewcode-back" href="../../GWL.html#GWL.parallelepiped.Parallelepiped.computeVectors">[docs]</a>  <span class="k">def</span> <span class="nf">computeVectors</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="c1"># TODO</span>
+    
+    <span class="p">(</span><span class="n">e1min</span><span class="p">,</span> <span class="n">e1max</span><span class="p">,</span> <span class="n">e2min</span><span class="p">,</span> <span class="n">e2max</span><span class="p">,</span> <span class="n">e3min</span><span class="p">,</span> <span class="n">e3max</span><span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getMinMaxPoints</span><span class="p">()</span>
+        
+    <span class="bp">self</span><span class="o">.</span><span class="n">addLine</span><span class="p">()</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">addLine</span><span class="p">()</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">addLine</span><span class="p">()</span>
+    <span class="k">return</span></div>
+
+<div class="viewcode-block" id="Parallelepiped.computeOutline"><a class="viewcode-back" href="../../GWL.html#GWL.parallelepiped.Parallelepiped.computeOutline">[docs]</a>  <span class="k">def</span> <span class="nf">computeOutline</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="c1"># TODO</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">addLine</span><span class="p">()</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">addLine</span><span class="p">()</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">addLine</span><span class="p">()</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">addLine</span><span class="p">()</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">addLine</span><span class="p">()</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">addLine</span><span class="p">()</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">addLine</span><span class="p">()</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">addLine</span><span class="p">()</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">addLine</span><span class="p">()</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">addLine</span><span class="p">()</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">addLine</span><span class="p">()</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">addLine</span><span class="p">()</span>
+    <span class="k">return</span></div>
+    
+<div class="viewcode-block" id="Parallelepiped.computePoints"><a class="viewcode-back" href="../../GWL.html#GWL.parallelepiped.Parallelepiped.computePoints">[docs]</a>  <span class="k">def</span> <span class="nf">computePoints</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+
+    <span class="c1">#self.e1_vec3 = numpy.array(self.e1_vec3)</span>
+    <span class="c1">#self.e2_vec3 = numpy.array(self.e2_vec3)</span>
+    <span class="c1">#self.e3_vec3 = numpy.array(self.e3_vec3)</span>
+    <span class="c1">#e1_vec3_norm = self.e1_vec3/numpy.linalg.norm(self.e1_vec3)</span>
+    <span class="c1">#e2_vec3_norm = self.e2_vec3/numpy.linalg.norm(self.e2_vec3)</span>
+    <span class="c1">#e3_vec3_norm = self.e3_vec3/numpy.linalg.norm(self.e3_vec3)</span>
+    
+    <span class="p">(</span><span class="n">e1_vec3_norm</span><span class="p">,</span> <span class="n">e2_vec3_norm</span><span class="p">,</span> <span class="n">e3_vec3_norm</span><span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getNormalizedVectors</span><span class="p">()</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">center_vec3</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">center_vec3</span><span class="p">)</span>
+
+    <span class="c1">#(LineNumber_e2, LineDistance_e2) = calculateNvoxelsAndInterVoxelDistance(Length=self.size_vec3[1], Voxelsize=self.voxelsize_vec3[1], Overlap=self.overlap_vec3[1])</span>
+    <span class="c1">#(LineNumber_e3, LineDistance_e3) = calculateNvoxelsAndInterVoxelDistance(Length=self.size_vec3[2], Voxelsize=self.voxelsize_vec3[2], Overlap=self.overlap_vec3[2])</span>
+
+    <span class="n">LineNumber_e1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">LineNumber_vec3</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">LineNumber_e2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">LineNumber_vec3</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">LineNumber_e3</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">LineNumber_vec3</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+
+    <span class="n">e2_list</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">L</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">size_vec3</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="c1">#(LineNumber_e2-1)*LineDistance_e2</span>
+    <span class="k">if</span> <span class="n">LineNumber_e2</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+      <span class="n">e2_list</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mf">0.5</span><span class="o">*</span><span class="n">L</span><span class="p">,</span> <span class="mf">0.5</span><span class="o">*</span><span class="n">L</span><span class="p">,</span> <span class="n">LineNumber_e2</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+      <span class="n">e2_list</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="n">e3_list</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">L</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">size_vec3</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="c1">#(LineNumber_e3-1)*LineDistance_e3</span>
+    <span class="k">if</span> <span class="n">LineNumber_e3</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+      <span class="n">e3_list</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mf">0.5</span><span class="o">*</span><span class="n">L</span><span class="p">,</span> <span class="mf">0.5</span><span class="o">*</span><span class="n">L</span><span class="p">,</span> <span class="n">LineNumber_e3</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+      <span class="n">e3_list</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="c1">#print(e2_list)</span>
+    <span class="c1">#print(e3_list)</span>
+
+    <span class="n">pointList</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">counter</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">counter_e2</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="k">for</span> <span class="n">e3_factor</span> <span class="ow">in</span> <span class="n">e3_list</span><span class="p">:</span>
+      <span class="k">for</span> <span class="n">e2_idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">e2_list</span><span class="p">)):</span>
+
+        <span class="k">if</span> <span class="n">counter_e2</span><span class="o">%</span><span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+          <span class="n">e2_factor</span> <span class="o">=</span> <span class="n">e2_list</span><span class="p">[</span><span class="n">e2_idx</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+          <span class="n">e2_factor</span> <span class="o">=</span> <span class="n">e2_list</span><span class="p">[</span><span class="o">-</span><span class="n">e2_idx</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+        <span class="c1">#print(self.center_vec3)</span>
+        <span class="c1">#print(self.size_vec3[0])</span>
+        <span class="c1">#print(self.voxelsize_vec3[0])</span>
+        <span class="c1">#print((-0.5*(self.size_vec3[0]-self.voxelsize_vec3[0])))</span>
+        <span class="c1">#print(e1_vec3_norm)</span>
+        <span class="c1">#print(e2_vec3_norm)</span>
+        <span class="c1">#print(e3_vec3_norm)</span>
+
+        <span class="c1">#print(e2_factor)</span>
+        <span class="c1">#print(e3_factor)</span>
+
+        <span class="c1">#A = self.center_vec3 + (-0.5*(self.size_vec3[0]-self.voxelsize_vec3[0]))*e1_vec3_norm + e2_factor*e2_vec3_norm + e3_factor*e3_vec3_norm</span>
+        <span class="c1">#B = self.center_vec3 + (0.5*(self.size_vec3[0]-self.voxelsize_vec3[0]))*e1_vec3_norm + e2_factor*e2_vec3_norm + e3_factor*e3_vec3_norm</span>
+        <span class="n">A</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">center_vec3</span> <span class="o">+</span> <span class="p">(</span><span class="o">-</span><span class="mf">0.5</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">size_vec3</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">*</span><span class="n">e1_vec3_norm</span> <span class="o">+</span> <span class="n">e2_factor</span><span class="o">*</span><span class="n">e2_vec3_norm</span> <span class="o">+</span> <span class="n">e3_factor</span><span class="o">*</span><span class="n">e3_vec3_norm</span>
+        <span class="n">B</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">center_vec3</span> <span class="o">+</span> <span class="p">(</span><span class="mf">0.5</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">size_vec3</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">*</span><span class="n">e1_vec3_norm</span> <span class="o">+</span> <span class="n">e2_factor</span><span class="o">*</span><span class="n">e2_vec3_norm</span> <span class="o">+</span> <span class="n">e3_factor</span><span class="o">*</span><span class="n">e3_vec3_norm</span>
+        <span class="c1">#print(A)</span>
+        <span class="c1">#print(B)</span>
+        <span class="k">if</span> <span class="n">counter</span><span class="o">%</span><span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+          <span class="n">pointList</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
+          <span class="n">pointList</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">B</span><span class="p">)</span>
+          <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">connected</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">GWL_voxels</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pointList</span><span class="p">)</span>
+            <span class="n">pointList</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">else</span><span class="p">:</span>
+          <span class="n">pointList</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">B</span><span class="p">)</span>
+          <span class="n">pointList</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
+          <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">connected</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">GWL_voxels</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pointList</span><span class="p">)</span>
+            <span class="n">pointList</span> <span class="o">=</span> <span class="p">[]</span>
+            
+        <span class="n">counter</span> <span class="o">+=</span> <span class="mi">1</span>
+
+      <span class="n">counter_e2</span> <span class="o">+=</span> <span class="mi">1</span>
+
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">connected</span><span class="p">:</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">GWL_voxels</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pointList</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Parallelepiped.writeGWL"><a class="viewcode-back" href="../../GWL.html#GWL.parallelepiped.Parallelepiped.writeGWL">[docs]</a>  <span class="k">def</span> <span class="nf">writeGWL</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">writingOffset</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">computePoints</span><span class="p">()</span>
+    <span class="n">GWLobject</span><span class="o">.</span><span class="n">writeGWL</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">writingOffset</span><span class="p">)</span>
+    <span class="k">return</span></div>
+    
+<div class="viewcode-block" id="Parallelepiped.getMeshData"><a class="viewcode-back" href="../../GWL.html#GWL.parallelepiped.Parallelepiped.getMeshData">[docs]</a>  <span class="k">def</span> <span class="nf">getMeshData</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">computePoints</span><span class="p">()</span>
+    <span class="k">return</span><span class="p">(</span><span class="n">GWLobject</span><span class="o">.</span><span class="n">getMeshData</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span></div></div>
+
+<div class="viewcode-block" id="test0"><a class="viewcode-back" href="../../GWL.html#GWL.parallelepiped.test0">[docs]</a><span class="k">def</span> <span class="nf">test0</span><span class="p">():</span>
+  <span class="n">foo</span> <span class="o">=</span> <span class="n">Parallelepiped</span><span class="p">()</span>
+  <span class="nb">print</span><span class="p">(</span><span class="n">foo</span><span class="o">.</span><span class="n">getMeshData</span><span class="p">())</span>
+  <span class="k">return</span></div>
+
+<div class="viewcode-block" id="test1"><a class="viewcode-back" href="../../GWL.html#GWL.parallelepiped.test1">[docs]</a><span class="k">def</span> <span class="nf">test1</span><span class="p">():</span>
+  <span class="n">A</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span>
+  <span class="n">B</span> <span class="o">=</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span>
+  <span class="n">orthogonal</span> <span class="o">=</span> <span class="kc">False</span>
+
+  <span class="n">para</span> <span class="o">=</span> <span class="n">Parallelepiped</span><span class="p">()</span>
+  <span class="n">para</span><span class="o">.</span><span class="n">LineNumber_vec3</span> <span class="o">=</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">]</span>
+  <span class="c1">#para.voxelsize_vec3 = [0.1,0.1,0.1]</span>
+  <span class="c1">#para.overlap_vec3 = [0,0,0]</span>
+
+  <span class="n">para</span><span class="o">.</span><span class="n">setFromLine</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="n">orthogonal</span><span class="p">,[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">])</span>
+  <span class="n">para</span><span class="o">.</span><span class="n">computePoints</span><span class="p">()</span>
+  <span class="n">para</span><span class="o">.</span><span class="n">writeGWL</span><span class="p">(</span><span class="n">tempfile</span><span class="o">.</span><span class="n">gettempdir</span><span class="p">()</span><span class="o">+</span><span class="n">os</span><span class="o">.</span><span class="n">sep</span><span class="o">+</span><span class="s1">&#39;Parallelepiped_012.gwl&#39;</span><span class="p">)</span>
+
+  <span class="n">para</span><span class="o">.</span><span class="n">setFromLine</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="n">orthogonal</span><span class="p">,[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
+  <span class="n">para</span><span class="o">.</span><span class="n">computePoints</span><span class="p">()</span>
+  <span class="n">para</span><span class="o">.</span><span class="n">writeGWL</span><span class="p">(</span><span class="n">tempfile</span><span class="o">.</span><span class="n">gettempdir</span><span class="p">()</span><span class="o">+</span><span class="n">os</span><span class="o">.</span><span class="n">sep</span><span class="o">+</span><span class="s1">&#39;Parallelepiped_120.gwl&#39;</span><span class="p">)</span>
+
+  <span class="n">para</span><span class="o">.</span><span class="n">setFromLine</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="n">orthogonal</span><span class="p">,[</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
+  <span class="n">para</span><span class="o">.</span><span class="n">computePoints</span><span class="p">()</span>
+  <span class="n">para</span><span class="o">.</span><span class="n">writeGWL</span><span class="p">(</span><span class="n">tempfile</span><span class="o">.</span><span class="n">gettempdir</span><span class="p">()</span><span class="o">+</span><span class="n">os</span><span class="o">.</span><span class="n">sep</span><span class="o">+</span><span class="s1">&#39;Parallelepiped_201.gwl&#39;</span><span class="p">)</span>
+
+  <span class="n">para</span><span class="o">.</span><span class="n">setFromLine</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="n">orthogonal</span><span class="p">,[</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
+  <span class="n">para</span><span class="o">.</span><span class="n">computePoints</span><span class="p">()</span>
+  <span class="n">para</span><span class="o">.</span><span class="n">writeGWL</span><span class="p">(</span><span class="n">tempfile</span><span class="o">.</span><span class="n">gettempdir</span><span class="p">()</span><span class="o">+</span><span class="n">os</span><span class="o">.</span><span class="n">sep</span><span class="o">+</span><span class="s1">&#39;Parallelepiped_021.gwl&#39;</span><span class="p">)</span>
+
+  <span class="n">para</span><span class="o">.</span><span class="n">setFromLine</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="n">orthogonal</span><span class="p">,[</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
+  <span class="n">para</span><span class="o">.</span><span class="n">computePoints</span><span class="p">()</span>
+  <span class="n">para</span><span class="o">.</span><span class="n">writeGWL</span><span class="p">(</span><span class="n">tempfile</span><span class="o">.</span><span class="n">gettempdir</span><span class="p">()</span><span class="o">+</span><span class="n">os</span><span class="o">.</span><span class="n">sep</span><span class="o">+</span><span class="s1">&#39;Parallelepiped_210.gwl&#39;</span><span class="p">)</span>
+
+  <span class="n">para</span><span class="o">.</span><span class="n">setFromLine</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="n">orthogonal</span><span class="p">,[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">])</span>
+  <span class="n">para</span><span class="o">.</span><span class="n">computePoints</span><span class="p">()</span>
+  <span class="n">para</span><span class="o">.</span><span class="n">writeGWL</span><span class="p">(</span><span class="n">tempfile</span><span class="o">.</span><span class="n">gettempdir</span><span class="p">()</span><span class="o">+</span><span class="n">os</span><span class="o">.</span><span class="n">sep</span><span class="o">+</span><span class="s1">&#39;Parallelepiped_102.gwl&#39;</span><span class="p">)</span>
+
+  <span class="k">return</span></div>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+  <span class="n">test0</span><span class="p">()</span>
+  <span class="n">test1</span><span class="p">()</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">script_inception_public  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2014, Mike Taverne.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.9.
+    </div>
+  </body>
+</html>

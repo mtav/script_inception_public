@@ -1,0 +1,575 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Geometry objects &#8212; script_inception_public  documentation</title>
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Snapshots" href="FDTD_Snapshots.html" />
+    <link rel="prev" title="FDTD" href="FDTD_module.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="FDTD_Snapshots.html" title="Snapshots"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="FDTD_module.html" title="FDTD"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">script_inception_public  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="FDTD_module.html" accesskey="U">FDTD</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="geometry-objects">
+<h1>Geometry objects<a class="headerlink" href="#geometry-objects" title="Permalink to this headline">¶</a></h1>
+<p>See also <a class="reference internal" href="bfdtd.html#bfdtd-bfdtd-parser-module"><span class="std std-ref">bfdtd.bfdtd_parser module</span></a> and <a class="reference internal" href="bfdtd.html#bfdtd-geometryobjects-module"><span class="std std-ref">bfdtd.GeometryObjects module</span></a>.</p>
+<div class="section" id="block">
+<h2>Block<a class="headerlink" href="#block" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt>
+<em class="property">class </em><code class="descclassname">bfdtd.GeometryObjects.</code><code class="descname">Block</code><a class="reference internal" href="_modules/bfdtd/GeometryObjects.html#Block"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Bases: <a class="reference internal" href="bfdtd.html#bfdtd.GeometryObjects.GeometryObject" title="bfdtd.GeometryObjects.GeometryObject"><code class="xref py py-class docutils literal notranslate"><span class="pre">bfdtd.GeometryObjects.GeometryObject</span></code></a></p>
+<p>Create a Block.</p>
+<dl class="method">
+<dt>
+<code class="descname">getAABB</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/bfdtd/GeometryObjects.html#Block.getAABB"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Returns the lower and upper corners of an Axis-Aligned Bounding Box (AABB) in absolute coordinates in the form <strong>(minBB, maxBB)</strong>, where <em>minBB = [xmin,ymin,zmin]</em> and <em>maxBB = [xmax,ymax,zmax]</em>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">getCentro</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/bfdtd/GeometryObjects.html#Block.getCentro"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Returns the centre of the block (which can be different from its location).
+At the moment, the origin of a block can be arbitrarily defined, so keeping this around is useful.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">getLowerRelative</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/bfdtd/GeometryObjects.html#Block.getLowerRelative"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">getMEEPobject</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/bfdtd/GeometryObjects.html#Block.getMEEPobject"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">getMeshingParameters</code><span class="sig-paren">(</span><em>xvec</em>, <em>yvec</em>, <em>zvec</em>, <em>epsx</em>, <em>epsy</em>, <em>epsz</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bfdtd/GeometryObjects.html#Block.getMeshingParameters"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>get meshing parameters</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">getSize</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/bfdtd/GeometryObjects.html#Block.getSize"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>get the size of the block as an array of size 3</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">getUpperRelative</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/bfdtd/GeometryObjects.html#Block.getUpperRelative"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">read_entry</code><span class="sig-paren">(</span><em>entry</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bfdtd/GeometryObjects.html#Block.read_entry"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>read an entry extracted from a .geo file</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">setLowerAbsolute</code><span class="sig-paren">(</span><em>lower_absolute</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bfdtd/GeometryObjects.html#Block.setLowerAbsolute"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">setLowerRelative</code><span class="sig-paren">(</span><em>lower_relative</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bfdtd/GeometryObjects.html#Block.setLowerRelative"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">setOriginToGeometry</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/bfdtd/GeometryObjects.html#Block.setOriginToGeometry"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Sets the origin of the block (i.e. the location) to the geometric centre of the block, without changing the absolute lower and upper coordinates.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">setSize</code><span class="sig-paren">(</span><em>size_vec3</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bfdtd/GeometryObjects.html#Block.setSize"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>size_vec3 can be a vector of size 3 or a simple int or float (vector of size 1, scalar)</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">setUpperAbsolute</code><span class="sig-paren">(</span><em>upper_absolute</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bfdtd/GeometryObjects.html#Block.setUpperAbsolute"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">setUpperRelative</code><span class="sig-paren">(</span><em>upper_relative</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bfdtd/GeometryObjects.html#Block.setUpperRelative"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">writeCTL</code><span class="sig-paren">(</span><em>FILE=&lt;_io.TextIOWrapper name='&lt;stdout&gt;' mode='w' encoding='UTF-8'&gt;</em>, <em>offset=array([0</em>, <em>0</em>, <em>0])</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bfdtd/GeometryObjects.html#Block.writeCTL"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">write_entry</code><span class="sig-paren">(</span><em>FILE=&lt;_io.TextIOWrapper name='&lt;stdout&gt;' mode='w' encoding='UTF-8'&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bfdtd/GeometryObjects.html#Block.write_entry"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>write an entry to a file object</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="sphere">
+<h2>Sphere<a class="headerlink" href="#sphere" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt>
+<em class="property">class </em><code class="descclassname">bfdtd.GeometryObjects.</code><code class="descname">Sphere</code><a class="reference internal" href="_modules/bfdtd/GeometryObjects.html#Sphere"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Bases: <a class="reference internal" href="bfdtd.html#bfdtd.GeometryObjects.GeometryObject" title="bfdtd.GeometryObjects.GeometryObject"><code class="xref py py-class docutils literal notranslate"><span class="pre">bfdtd.GeometryObjects.GeometryObject</span></code></a></p>
+<dl class="method">
+<dt>
+<code class="descname">getInnerRadius</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/bfdtd/GeometryObjects.html#Sphere.getInnerRadius"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">getLowerRelative</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/bfdtd/GeometryObjects.html#Sphere.getLowerRelative"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">getOuterRadius</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/bfdtd/GeometryObjects.html#Sphere.getOuterRadius"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">getSize</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/bfdtd/GeometryObjects.html#Sphere.getSize"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>get the size of the sphere as an array of size 3</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">getUpperRelative</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/bfdtd/GeometryObjects.html#Sphere.getUpperRelative"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">read_entry</code><span class="sig-paren">(</span><em>entry</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bfdtd/GeometryObjects.html#Sphere.read_entry"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">setInnerRadius</code><span class="sig-paren">(</span><em>inner_radius</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bfdtd/GeometryObjects.html#Sphere.setInnerRadius"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">setOuterRadius</code><span class="sig-paren">(</span><em>outer_radius</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bfdtd/GeometryObjects.html#Sphere.setOuterRadius"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">setSize</code><span class="sig-paren">(</span><em>size_vec3</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bfdtd/GeometryObjects.html#Sphere.setSize"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>setSize wrapper for use in BFDTD export scripts</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">writeCTL</code><span class="sig-paren">(</span><em>FILE=&lt;_io.TextIOWrapper name='&lt;stdout&gt;' mode='w' encoding='UTF-8'&gt;</em>, <em>offset=array([0</em>, <em>0</em>, <em>0])</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bfdtd/GeometryObjects.html#Sphere.writeCTL"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">write_entry</code><span class="sig-paren">(</span><em>FILE=&lt;_io.TextIOWrapper name='&lt;stdout&gt;' mode='w' encoding='UTF-8'&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bfdtd/GeometryObjects.html#Sphere.write_entry"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>BFDTD sphere object:</p>
+<ul class="simple">
+<li>1-5 Coordinates of the sphere ( xc yc zc r1 r2 )</li>
+<li>6 permittivity</li>
+<li>7 conductivity</li>
+</ul>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="cylinder">
+<h2>Cylinder<a class="headerlink" href="#cylinder" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt>
+<em class="property">class </em><code class="descclassname">bfdtd.GeometryObjects.</code><code class="descname">Cylinder</code><span class="sig-paren">(</span><em>inner_radius=None</em>, <em>outer_radius=None</em>, <em>height=None</em>, <em>angle_deg=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bfdtd/GeometryObjects.html#Cylinder"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Bases: <a class="reference internal" href="bfdtd.html#bfdtd.GeometryObjects.GeometryObject" title="bfdtd.GeometryObjects.GeometryObject"><code class="xref py py-class docutils literal notranslate"><span class="pre">bfdtd.GeometryObjects.GeometryObject</span></code></a></p>
+<dl class="method">
+<dt>
+<code class="descname">createBlenderObject</code><span class="sig-paren">(</span><em>blender_operator</em>, <em>context</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bfdtd/GeometryObjects.html#Cylinder.createBlenderObject"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">getAABB</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/bfdtd/GeometryObjects.html#Cylinder.getAABB"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Returns the lower and upper corners of an Axis-Aligned Bounding Box (AABB) in absolute coordinates in the form <strong>(minBB, maxBB)</strong>, where <em>minBB = [xmin,ymin,zmin]</em> and <em>maxBB = [xmax,ymax,zmax]</em>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">getAxis</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/bfdtd/GeometryObjects.html#Cylinder.getAxis"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">getCentro</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/bfdtd/GeometryObjects.html#Cylinder.getCentro"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">getHeight</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/bfdtd/GeometryObjects.html#Cylinder.getHeight"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">getInnerRadius</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/bfdtd/GeometryObjects.html#Cylinder.getInnerRadius"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">getLowerRelative</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/bfdtd/GeometryObjects.html#Cylinder.getLowerRelative"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Returns the lower corner of an Axis-Aligned Bounding Box (AABB) in coordinates relative to the location (centre of the cylinder).</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">getMEEPobject</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/bfdtd/GeometryObjects.html#Cylinder.getMEEPobject"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">getMeshingParameters</code><span class="sig-paren">(</span><em>xvec</em>, <em>yvec</em>, <em>zvec</em>, <em>epsx</em>, <em>epsy</em>, <em>epsz</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bfdtd/GeometryObjects.html#Cylinder.getMeshingParameters"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">getOuterRadius</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/bfdtd/GeometryObjects.html#Cylinder.getOuterRadius"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">getSize</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/bfdtd/GeometryObjects.html#Cylinder.getSize"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">getStartEndPoints</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/bfdtd/GeometryObjects.html#Cylinder.getStartEndPoints"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">getUpperRelative</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/bfdtd/GeometryObjects.html#Cylinder.getUpperRelative"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Returns the upper corner of an Axis-Aligned Bounding Box (AABB) in coordinates relative to the location (centre of the cylinder).</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">read_entry</code><span class="sig-paren">(</span><em>entry</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bfdtd/GeometryObjects.html#Cylinder.read_entry"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">setAxis</code><span class="sig-paren">(</span><em>axis_vec3</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bfdtd/GeometryObjects.html#Cylinder.setAxis"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">setDiametre</code><span class="sig-paren">(</span><em>diametre</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bfdtd/GeometryObjects.html#Cylinder.setDiametre"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">setHeight</code><span class="sig-paren">(</span><em>height</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bfdtd/GeometryObjects.html#Cylinder.setHeight"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">setInnerRadius</code><span class="sig-paren">(</span><em>inner_radius</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bfdtd/GeometryObjects.html#Cylinder.setInnerRadius"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">setOuterRadius</code><span class="sig-paren">(</span><em>outer_radius</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bfdtd/GeometryObjects.html#Cylinder.setOuterRadius"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">setSize</code><span class="sig-paren">(</span><em>dimensions</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bfdtd/GeometryObjects.html#Cylinder.setSize"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>sets size from a 3d vector of the form [2*outer_radius, 2*outer_radius, height] (if the first 2 values are different, it takes the maximum)</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">setStartEndPoints</code><span class="sig-paren">(</span><em>start_point_vec3</em>, <em>end_point_vec3</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bfdtd/GeometryObjects.html#Cylinder.setStartEndPoints"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">writeCTL</code><span class="sig-paren">(</span><em>FILE=&lt;_io.TextIOWrapper name='&lt;stdout&gt;' mode='w' encoding='UTF-8'&gt;</em>, <em>offset=array([0</em>, <em>0</em>, <em>0])</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bfdtd/GeometryObjects.html#Cylinder.writeCTL"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">write_entry</code><span class="sig-paren">(</span><em>FILE=&lt;_io.TextIOWrapper name='&lt;stdout&gt;' mode='w' encoding='UTF-8'&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bfdtd/GeometryObjects.html#Cylinder.write_entry"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>cylinder
+{
+1-7 Coordinates of the material volume ( xc yc zc r1 r2 h )
+7 permittivity
+8 conductivity
+9 angle_deg of inclination
+}</p>
+<ul class="simple">
+<li>xc, yc and zc are the coordinates of the centro of the cylinder. r1 and r2 are the inner and outer radius respectively</li>
+<li>h is the cylinder height</li>
+<li>angle_deg is the angle of inclination in degrees
+The cylinder is aligned with the y direction if =0 and with the x direction if =90
+i.e. angle_deg = Angle of rotation in degrees around -Z=(0,0,-1)</li>
+</ul>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="distorted">
+<h2>Distorted<a class="headerlink" href="#distorted" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt>
+<em class="property">class </em><code class="descclassname">bfdtd.GeometryObjects.</code><code class="descname">Distorted</code><a class="reference internal" href="_modules/bfdtd/GeometryObjects.html#Distorted"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Bases: <a class="reference internal" href="bfdtd.html#bfdtd.GeometryObjects.GeometryObject" title="bfdtd.GeometryObjects.GeometryObject"><code class="xref py py-class docutils literal notranslate"><span class="pre">bfdtd.GeometryObjects.GeometryObject</span></code></a></p>
+<p>A cuboid object with arbitrary vertex positioning.</p>
+<img alt="_images/distorted_vertices.png" class="align-center" src="_images/distorted_vertices.png" />
+<p>Vertex indices:</p>
+<ul class="simple">
+<li>0,1,2,3 = top face numbered clockwise viewed from outside</li>
+<li>4,5,6,7 = bottom face numbered clockwise viewed from outside</li>
+</ul>
+<p>Edges:</p>
+<ul class="simple">
+<li>3 connected to 4</li>
+<li>2 connected to 5</li>
+<li>0 connected to 7</li>
+<li>1 connected to 6</li>
+</ul>
+<p>Normal faces viewed from outside:</p>
+<ul class="simple">
+<li>[3,2,1,0]</li>
+<li>[7,6,5,4]</li>
+<li>[0,1,6,7]</li>
+<li>[1,2,5,6]</li>
+<li>[2,3,4,5]</li>
+<li>[3,0,7,4]</li>
+</ul>
+<dl class="method">
+<dt>
+<code class="descname">getCentroOfMassAbsolute</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/bfdtd/GeometryObjects.html#Distorted.getCentroOfMassAbsolute"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Returns the “centro of mass” of the object, i.e. sum(vertices)/8.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">getMeshingParameters</code><span class="sig-paren">(</span><em>xvec</em>, <em>yvec</em>, <em>zvec</em>, <em>epsx</em>, <em>epsy</em>, <em>epsz</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bfdtd/GeometryObjects.html#Distorted.getMeshingParameters"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>todo:: improve meshing system + add support for rotations</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">getVerticesAbsolute</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/bfdtd/GeometryObjects.html#Distorted.getVerticesAbsolute"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Get absolute coordinates of the object’s vertices.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">getVerticesRelative</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/bfdtd/GeometryObjects.html#Distorted.getVerticesRelative"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Get relative coordinates of the object’s vertices.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">read_entry</code><span class="sig-paren">(</span><em>entry</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bfdtd/GeometryObjects.html#Distorted.read_entry"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Read a .geo file entry.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">setOrigin</code><span class="sig-paren">(</span><em>location</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bfdtd/GeometryObjects.html#Distorted.setOrigin"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Sets the location to the specified location, but so that the vertices keep the same absolute coordinates. This has no effect on BFDTD output, but is useful for placing objects. It is similar to changing the origin of an object in blender, while keeping the mesh in the same place.
+.. todo:: Rotations will complicate things here. May need to make sure it adapts the rotation accordingly.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">setOriginToGeometry</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/bfdtd/GeometryObjects.html#Distorted.setOriginToGeometry"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Sets the origin of the object to its centro of mass.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">setVerticesAbsolute</code><span class="sig-paren">(</span><em>vertices_absolute</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bfdtd/GeometryObjects.html#Distorted.setVerticesAbsolute"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Set absolute coordinates of the object’s vertices.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">setVerticesRelative</code><span class="sig-paren">(</span><em>vertices_relative</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bfdtd/GeometryObjects.html#Distorted.setVerticesRelative"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Set relative coordinates of the object’s vertices.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">write_entry</code><span class="sig-paren">(</span><em>FILE=&lt;_io.TextIOWrapper name='&lt;stdout&gt;' mode='w' encoding='UTF-8'&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bfdtd/GeometryObjects.html#Distorted.write_entry"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Write a .geo file entry.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="parallelepiped">
+<h2>Parallelepiped<a class="headerlink" href="#parallelepiped" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt>
+<em class="property">class </em><code class="descclassname">bfdtd.GeometryObjects.</code><code class="descname">Parallelepiped</code><a class="reference internal" href="_modules/bfdtd/GeometryObjects.html#Parallelepiped"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Bases: <a class="reference internal" href="bfdtd.html#bfdtd.GeometryObjects.Distorted" title="bfdtd.GeometryObjects.Distorted"><code class="xref py py-class docutils literal notranslate"><span class="pre">bfdtd.GeometryObjects.Distorted</span></code></a></p>
+<p>A parallelepiped (i.e., a brick, possibly with non-orthogonal axes).</p>
+<p>Properties:</p>
+<ul class="simple">
+<li>location [vector3]: Center point of the object. default value: [0,0,0]</li>
+<li>size [vector3]: The lengths of the block edges along each of its three axes. Not really a 3-vector, but it has three components, each of which should be nonzero. default value: [1,1,1]</li>
+<li>e0, e1, e2 [vector3]: The directions of the axes of the block; the lengths of these vectors are ignored. Must be linearly independent. They default to the three lattice directions.</li>
+</ul>
+<dl class="method">
+<dt>
+<code class="descname">getAxes</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/bfdtd/GeometryObjects.html#Parallelepiped.getAxes"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">getSize</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/bfdtd/GeometryObjects.html#Parallelepiped.getSize"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">setAxes</code><span class="sig-paren">(</span><em>e0</em>, <em>e1</em>, <em>e2</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bfdtd/GeometryObjects.html#Parallelepiped.setAxes"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">setDirectionsAndSize</code><span class="sig-paren">(</span><em>e0</em>, <em>e1</em>, <em>e2</em>, <em>size</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bfdtd/GeometryObjects.html#Parallelepiped.setDirectionsAndSize"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">setSize</code><span class="sig-paren">(</span><em>size</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bfdtd/GeometryObjects.html#Parallelepiped.setSize"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">updateVertices</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/bfdtd/GeometryObjects.html#Parallelepiped.updateVertices"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Geometry objects</a><ul>
+<li><a class="reference internal" href="#block">Block</a></li>
+<li><a class="reference internal" href="#sphere">Sphere</a></li>
+<li><a class="reference internal" href="#cylinder">Cylinder</a></li>
+<li><a class="reference internal" href="#distorted">Distorted</a></li>
+<li><a class="reference internal" href="#parallelepiped">Parallelepiped</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="FDTD_module.html"
+                        title="previous chapter">FDTD</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="FDTD_Snapshots.html"
+                        title="next chapter">Snapshots</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/FDTD_Geometry_objects.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="FDTD_Snapshots.html" title="Snapshots"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="FDTD_module.html" title="FDTD"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">script_inception_public  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="FDTD_module.html" >FDTD</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2014, Mike Taverne.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.9.
+    </div>
+  </body>
+</html>

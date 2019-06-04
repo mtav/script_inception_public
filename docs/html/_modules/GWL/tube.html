@@ -1,0 +1,695 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>GWL.tube &#8212; script_inception_public  documentation</title>
+    <link rel="stylesheet" href="../../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">script_inception_public  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for GWL.tube</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python3</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">numpy</span>
+<span class="kn">from</span> <span class="nn">numpy</span> <span class="k">import</span> <span class="n">array</span><span class="p">,</span> <span class="n">radians</span><span class="p">,</span> <span class="n">cos</span><span class="p">,</span> <span class="n">sin</span><span class="p">,</span> <span class="n">linspace</span><span class="p">,</span> <span class="n">sqrt</span><span class="p">,</span> <span class="n">ceil</span>
+<span class="kn">from</span> <span class="nn">GWL.GWL_parser</span> <span class="k">import</span> <span class="n">GWLobject</span><span class="p">,</span> <span class="n">calculateNvoxelsAndInterVoxelDistance</span>
+<span class="c1">#import bpy</span>
+<span class="c1">#import blender_scripts.blender_utilities as blender_utilities</span>
+
+<span class="c1">## different ways of writing tubes:</span>
+<span class="c1">#-horizontal circles</span>
+<span class="c1">#-vertical lines</span>
+<span class="c1">#-spirals</span>
+<span class="c1">#-constant angular step or constant distance between points...</span>
+<span class="c1">#-other still unknown way of doing it -&gt; a function should be passed as arg</span>
+
+<span class="c1">## example suppressor function</span>
+<span class="c1">#(a,b) = suppressor(A,B)</span>
+<span class="c1">#a=b=None if not allowed</span>
+<span class="c1">#a=A,b=B if both allowed</span>
+<span class="c1">#a=intersection point or b=intersection point if it&#39;s the case</span>
+
+<span class="c1">## &quot;boolean operations&quot;:</span>
+<span class="c1">#-linear cutoffs: xmin,xmax,ymin,ymax</span>
+<span class="c1">#-angular cutoff: thetamin,thetamax</span>
+<span class="c1">#-other arbitrary supression of points -&gt; a function should be passed as arg</span>
+
+<span class="c1">## geometric vs writing parameters:</span>
+<span class="c1">#-height, radius, centro, etc -&gt; same no matter what writing method</span>
+<span class="c1">#-steps, distance between points, etc -&gt; change depending on writing method</span>
+
+<span class="c1">## fundamental formulas</span>
+<span class="c1"># Npts = Nsteps + 1</span>
+<span class="c1"># E2E_size = C2C_size + voxelsize</span>
+<span class="c1"># overlap = max(1-step/voxelsize, 0)</span>
+<span class="c1"># C2C_size = end - start = Nsteps*step</span>
+
+<span class="c1">## derived formulas</span>
+<span class="c1"># C2C_size = E2E_size - voxelsize = end - start = Nsteps*step</span>
+<span class="c1"># E2E_size = (Npts-1)*step + voxelsize</span>
+
+<span class="c1">## calculation parameters:</span>
+<span class="c1">#-voxel size</span>
+<span class="c1">#-overlap</span>
+<span class="c1">#-min/max overlap, etc</span>
+
+<span class="c1">#class tube -&gt; geometry params</span>
+  <span class="c1">#def setWriter(spiralwriter)</span>
+<span class="c1">#class spiralwriter -&gt; writing params</span>
+
+<span class="c1">## TODO: boolean operations on meshes without faces, only edges (GWL files), either as blender script/modifier or as an external function applicable to any GWLobject (and similar like FIB)</span>
+<span class="c1"># -&gt; so no point in implementing it inside tube and similar now</span>
+
+<span class="c1"># Papa class:</span>
+<div class="viewcode-block" id="TubePapa"><a class="viewcode-back" href="../../GWL.html#GWL.tube.TubePapa">[docs]</a><span class="k">class</span> <span class="nc">TubePapa</span><span class="p">(</span><span class="n">GWLobject</span><span class="p">):</span>
+  <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>    
+    <span class="n">GWLobject</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+<div class="viewcode-block" id="TubePapa.computePoints"><a class="viewcode-back" href="../../GWL.html#GWL.tube.TubePapa.computePoints">[docs]</a>  <span class="k">def</span> <span class="nf">computePoints</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+    <span class="n">write_sequence</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">write_sequence</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">write_sequence</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">write_sequence</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">GWL_voxels</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">write_sequence</span><span class="p">)</span>
+    <span class="n">write_sequence</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">write_sequence</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">write_sequence</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">write_sequence</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">GWL_voxels</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">write_sequence</span><span class="p">)</span></div>
+    
+<div class="viewcode-block" id="TubePapa.writeGWL"><a class="viewcode-back" href="../../GWL.html#GWL.tube.TubePapa.writeGWL">[docs]</a>  <span class="k">def</span> <span class="nf">writeGWL</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">writingOffset</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;TubePapa.writeGWL&#39;</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">computePoints</span><span class="p">()</span>
+    <span class="n">GWLobject</span><span class="o">.</span><span class="n">writeGWL</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">writingOffset</span><span class="p">)</span>
+    <span class="k">return</span></div>
+  
+<div class="viewcode-block" id="TubePapa.getMeshData"><a class="viewcode-back" href="../../GWL.html#GWL.tube.TubePapa.getMeshData">[docs]</a>  <span class="k">def</span> <span class="nf">getMeshData</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">position</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">computePoints</span><span class="p">()</span>
+    <span class="k">return</span><span class="p">(</span><span class="n">GWLobject</span><span class="o">.</span><span class="n">getMeshData</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">position</span><span class="p">))</span></div></div>
+
+<div class="viewcode-block" id="suppressorFunction_Xmax"><a class="viewcode-back" href="../../GWL.html#GWL.tube.suppressorFunction_Xmax">[docs]</a><span class="k">def</span> <span class="nf">suppressorFunction_Xmax</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="n">Xmin</span><span class="p">):</span>
+  <span class="n">pointList</span> <span class="o">=</span> <span class="p">[]</span>
+  
+  <span class="k">if</span> <span class="n">Xmin</span><span class="o">&lt;</span><span class="n">A</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+    <span class="k">if</span> <span class="n">Xmin</span><span class="o">&lt;</span><span class="n">B</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+      <span class="n">pointList</span> <span class="o">=</span> <span class="p">[</span><span class="n">A</span><span class="p">,</span><span class="n">B</span><span class="p">]</span>
+      <span class="n">connectLeft</span> <span class="o">=</span> <span class="kc">True</span>
+      <span class="n">connectRight</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="k">else</span><span class="p">:</span>
+      <span class="n">pointList</span> <span class="o">=</span> <span class="p">[</span><span class="n">A</span><span class="p">,</span><span class="n">B</span><span class="p">]</span>
+      <span class="n">connectLeft</span> <span class="o">=</span> <span class="kc">True</span>
+      <span class="n">connectRight</span> <span class="o">=</span> <span class="kc">False</span>
+  <span class="k">else</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">Xmin</span><span class="o">&lt;</span><span class="n">B</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+      <span class="n">pointList</span> <span class="o">=</span> <span class="p">[</span><span class="n">A</span><span class="p">,</span><span class="n">B</span><span class="p">]</span>
+      <span class="n">connectLeft</span> <span class="o">=</span> <span class="kc">True</span>
+      <span class="n">connectRight</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="k">else</span><span class="p">:</span>
+      <span class="n">pointList</span> <span class="o">=</span> <span class="p">[]</span>
+      <span class="n">connectLeft</span> <span class="o">=</span> <span class="kc">False</span>
+      <span class="n">connectRight</span> <span class="o">=</span> <span class="kc">False</span>
+  
+  <span class="k">return</span> <span class="n">pointList</span><span class="p">,</span> <span class="n">connectLeft</span><span class="p">,</span> <span class="n">connectRight</span></div>
+
+<div class="viewcode-block" id="HorizontalCircleTubeWithConstantAngularStep"><a class="viewcode-back" href="../../GWL.html#GWL.tube.HorizontalCircleTubeWithConstantAngularStep">[docs]</a><span class="k">class</span> <span class="nc">HorizontalCircleTubeWithConstantAngularStep</span><span class="p">(</span><span class="n">GWLobject</span><span class="p">):</span>
+  <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    
+    <span class="bp">self</span><span class="o">.</span><span class="n">NumberOfSteps_R</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">NumberOfSteps_Theta</span> <span class="o">=</span> <span class="mi">9</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">NumberOfSteps_Z</span> <span class="o">=</span> <span class="mi">2</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">StepSize_R</span> <span class="o">=</span> <span class="mi">50</span><span class="o">/</span><span class="n">cos</span><span class="p">(</span><span class="n">radians</span><span class="p">(</span><span class="mf">22.5</span><span class="p">))</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">StepSize_ThetaDegrees</span> <span class="o">=</span> <span class="mi">45</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">StepSize_Z</span> <span class="o">=</span> <span class="mi">40</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">Start_R</span> <span class="o">=</span> <span class="mi">100</span><span class="o">/</span><span class="n">cos</span><span class="p">(</span><span class="n">radians</span><span class="p">(</span><span class="mf">22.5</span><span class="p">))</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">Start_ThetaDegrees</span> <span class="o">=</span> <span class="mf">22.5</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">Start_Z</span> <span class="o">=</span> <span class="o">-</span><span class="mi">20</span>
+    
+    <span class="bp">self</span><span class="o">.</span><span class="n">centro</span> <span class="o">=</span> <span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">60</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span> <span class="c1"># we are always in a 4D space...</span>
+    
+    <span class="bp">self</span><span class="o">.</span><span class="n">powerFunction</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">suppressorFunction</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">:</span> <span class="p">(</span><span class="n">A</span><span class="p">,</span><span class="n">B</span><span class="p">)</span>
+    
+    <span class="c1">#self.inner_radius = 1</span>
+    <span class="c1">#self.outer_radius = 2</span>
+    <span class="c1">#self.height = 1</span>
+    <span class="c1">#self.power = -1</span>
+    <span class="c1">#self.PointDistance_r = 0.1</span>
+    <span class="c1">#self.PointDistance_theta = 0.1 </span>
+    <span class="c1">#self.PointDistance_z = 0.1</span>
+    <span class="c1">#self.downwardWriting = True</span>
+    <span class="k">return</span>
+
+<div class="viewcode-block" id="HorizontalCircleTubeWithConstantAngularStep.setCentro"><a class="viewcode-back" href="../../GWL.html#GWL.tube.HorizontalCircleTubeWithConstantAngularStep.setCentro">[docs]</a>  <span class="k">def</span> <span class="nf">setCentro</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vec3or4</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">vec3or4</span><span class="p">)</span><span class="o">&gt;=</span><span class="mi">4</span><span class="p">:</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">centro</span> <span class="o">=</span> <span class="n">array</span><span class="p">([</span><span class="n">vec3or4</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">vec3or4</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="n">vec3or4</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span><span class="n">vec3or4</span><span class="p">[</span><span class="mi">3</span><span class="p">]])</span>
+    <span class="k">else</span><span class="p">:</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">centro</span> <span class="o">=</span> <span class="n">array</span><span class="p">([</span><span class="n">vec3or4</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">vec3or4</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="n">vec3or4</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span><span class="mi">0</span><span class="p">])</span>
+    <span class="k">return</span></div>
+  
+<div class="viewcode-block" id="HorizontalCircleTubeWithConstantAngularStep.setNumberOfSteps_R"><a class="viewcode-back" href="../../GWL.html#GWL.tube.HorizontalCircleTubeWithConstantAngularStep.setNumberOfSteps_R">[docs]</a>  <span class="k">def</span> <span class="nf">setNumberOfSteps_R</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">NumberOfSteps_R</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">NumberOfSteps_R</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">NumberOfSteps_R</span><span class="p">)</span>
+    <span class="k">return</span></div>
+<div class="viewcode-block" id="HorizontalCircleTubeWithConstantAngularStep.setNumberOfSteps_Theta"><a class="viewcode-back" href="../../GWL.html#GWL.tube.HorizontalCircleTubeWithConstantAngularStep.setNumberOfSteps_Theta">[docs]</a>  <span class="k">def</span> <span class="nf">setNumberOfSteps_Theta</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">NumberOfSteps_Theta</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">NumberOfSteps_Theta</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">NumberOfSteps_Theta</span><span class="p">)</span>
+    <span class="k">return</span></div>
+<div class="viewcode-block" id="HorizontalCircleTubeWithConstantAngularStep.setNumberOfSteps_Z"><a class="viewcode-back" href="../../GWL.html#GWL.tube.HorizontalCircleTubeWithConstantAngularStep.setNumberOfSteps_Z">[docs]</a>  <span class="k">def</span> <span class="nf">setNumberOfSteps_Z</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">NumberOfSteps_Z</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">NumberOfSteps_Z</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">NumberOfSteps_Z</span><span class="p">)</span>
+    <span class="k">return</span></div>
+
+<div class="viewcode-block" id="HorizontalCircleTubeWithConstantAngularStep.setStepSize_R"><a class="viewcode-back" href="../../GWL.html#GWL.tube.HorizontalCircleTubeWithConstantAngularStep.setStepSize_R">[docs]</a>  <span class="k">def</span> <span class="nf">setStepSize_R</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">StepSize_R</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">StepSize_R</span> <span class="o">=</span> <span class="n">StepSize_R</span>
+    <span class="k">return</span></div>
+<div class="viewcode-block" id="HorizontalCircleTubeWithConstantAngularStep.setStepSize_ThetaDegrees"><a class="viewcode-back" href="../../GWL.html#GWL.tube.HorizontalCircleTubeWithConstantAngularStep.setStepSize_ThetaDegrees">[docs]</a>  <span class="k">def</span> <span class="nf">setStepSize_ThetaDegrees</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">StepSize_ThetaDegrees</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">StepSize_ThetaDegrees</span> <span class="o">=</span> <span class="n">StepSize_ThetaDegrees</span>
+    <span class="k">return</span></div>
+<div class="viewcode-block" id="HorizontalCircleTubeWithConstantAngularStep.setStepSize_Z"><a class="viewcode-back" href="../../GWL.html#GWL.tube.HorizontalCircleTubeWithConstantAngularStep.setStepSize_Z">[docs]</a>  <span class="k">def</span> <span class="nf">setStepSize_Z</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">StepSize_Z</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">StepSize_Z</span> <span class="o">=</span> <span class="n">StepSize_Z</span>
+    <span class="k">return</span></div>
+
+<div class="viewcode-block" id="HorizontalCircleTubeWithConstantAngularStep.setStart_R"><a class="viewcode-back" href="../../GWL.html#GWL.tube.HorizontalCircleTubeWithConstantAngularStep.setStart_R">[docs]</a>  <span class="k">def</span> <span class="nf">setStart_R</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">Start_R</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">Start_R</span> <span class="o">=</span> <span class="n">Start_R</span>
+    <span class="k">return</span></div>
+<div class="viewcode-block" id="HorizontalCircleTubeWithConstantAngularStep.setStart_ThetaDegrees"><a class="viewcode-back" href="../../GWL.html#GWL.tube.HorizontalCircleTubeWithConstantAngularStep.setStart_ThetaDegrees">[docs]</a>  <span class="k">def</span> <span class="nf">setStart_ThetaDegrees</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">Start_ThetaDegrees</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">Start_ThetaDegrees</span> <span class="o">=</span> <span class="n">Start_ThetaDegrees</span>
+    <span class="k">return</span></div>
+<div class="viewcode-block" id="HorizontalCircleTubeWithConstantAngularStep.setStart_Z"><a class="viewcode-back" href="../../GWL.html#GWL.tube.HorizontalCircleTubeWithConstantAngularStep.setStart_Z">[docs]</a>  <span class="k">def</span> <span class="nf">setStart_Z</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">Start_Z</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">Start_Z</span> <span class="o">=</span> <span class="n">Start_Z</span>
+    <span class="k">return</span></div>
+  
+<div class="viewcode-block" id="HorizontalCircleTubeWithConstantAngularStep.computePoints"><a class="viewcode-back" href="../../GWL.html#GWL.tube.HorizontalCircleTubeWithConstantAngularStep.computePoints">[docs]</a>  <span class="k">def</span> <span class="nf">computePoints</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    
+    <span class="c1">#print(&quot;I&#39;m in.&quot;)</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">Z_idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">NumberOfSteps_Z</span><span class="p">):</span>
+      <span class="n">Z</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Start_Z</span> <span class="o">+</span> <span class="n">Z_idx</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">StepSize_Z</span>
+      <span class="k">for</span> <span class="n">R_idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">NumberOfSteps_R</span><span class="p">):</span>
+        <span class="n">write_sequence</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">lastpoint</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">R</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Start_R</span> <span class="o">+</span> <span class="n">R_idx</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">StepSize_R</span>
+        <span class="k">for</span> <span class="n">Theta_idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">NumberOfSteps_Theta</span><span class="p">):</span>
+          <span class="n">ThetaDegrees</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Start_ThetaDegrees</span> <span class="o">+</span> <span class="n">Theta_idx</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">StepSize_ThetaDegrees</span>
+          <span class="n">ThetaRadians</span> <span class="o">=</span> <span class="n">radians</span><span class="p">(</span><span class="n">ThetaDegrees</span><span class="p">)</span>
+          <span class="n">P</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">centro</span> <span class="o">+</span> <span class="n">array</span><span class="p">([</span><span class="n">R</span><span class="o">*</span><span class="n">cos</span><span class="p">(</span><span class="n">ThetaRadians</span><span class="p">),</span> <span class="n">R</span><span class="o">*</span><span class="n">sin</span><span class="p">(</span><span class="n">ThetaRadians</span><span class="p">),</span> <span class="n">Z</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">powerFunction</span><span class="p">(</span><span class="n">R</span><span class="p">,</span> <span class="n">ThetaRadians</span><span class="p">,</span> <span class="n">Z</span><span class="p">)])</span>
+          <span class="c1">#print(P)</span>
+          <span class="c1">#pointlist = self.suppressorFunction(lastpoint, P)</span>
+          <span class="n">lastpoint</span> <span class="o">=</span> <span class="n">P</span>
+          <span class="n">write_sequence</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">P</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">GWL_voxels</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">write_sequence</span><span class="p">)</span>
+    
+    <span class="c1">#self.addTube(self.centro, self.inner_radius, self.outer_radius, self.height, -1, self.PointDistance_r, self.PointDistance_theta, self.PointDistance_z, self.downwardWriting)</span>
+  
+  <span class="c1">#def addTube(self, centro, inner_radius, outer_radius, height, power, PointDistance_r, PointDistance_theta, PointDistance_z, downwardWriting=True):</span>
+    
+    <span class="c1">##print(&#39;=== addTube ===&#39;)</span>
+    <span class="c1">##print((numpy.linspace(inner_radius, outer_radius, float((outer_radius - inner_radius)/PointDistance_r))))</span>
+    <span class="c1">#for radius in numpy.linspace(self.inner_radius, self.outer_radius, float(1+(self.outer_radius - self.inner_radius)/self.PointDistance_r)):</span>
+      <span class="c1">#zrange = numpy.linspace(self.centro[2]+0.5*self.height, self.centro[2]-0.5*self.height, float(1+self.height/self.PointDistance_z))</span>
+      <span class="c1">#if not self.downwardWriting:</span>
+        <span class="c1">#zrange = reversed(zrange)</span>
+      <span class="c1">#for z in zrange:</span>
+        <span class="c1">##print((radius,z))</span>
+      <span class="c1">##for i_theta in numpy.linspace(0, 2*numpy.pi, (outer_radius - inner_radius)/PointDistance_r):</span>
+        <span class="c1">#self.addHorizontalCircle([self.centro[0],self.centro[1],z], radius, self.power, self.PointDistance_theta, closed_loop=self.closed_loop)</span>
+    <span class="k">return</span></div>
+
+
+  
+<div class="viewcode-block" id="HorizontalCircleTubeWithConstantAngularStep.getMeshData"><a class="viewcode-back" href="../../GWL.html#GWL.tube.HorizontalCircleTubeWithConstantAngularStep.getMeshData">[docs]</a>  <span class="k">def</span> <span class="nf">getMeshData</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">position</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">computePoints</span><span class="p">()</span>
+    <span class="k">return</span><span class="p">(</span><span class="n">GWLobject</span><span class="o">.</span><span class="n">getMeshData</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">position</span><span class="p">))</span></div></div>
+
+
+<span class="c1"># tube class</span>
+<div class="viewcode-block" id="Tube"><a class="viewcode-back" href="../../GWL.html#GWL.tube.Tube">[docs]</a><span class="k">class</span> <span class="nc">Tube</span><span class="p">(</span><span class="n">GWLobject</span><span class="p">):</span>
+  <span class="sd">&#39;&#39;&#39; This class allows you to create &quot;tubes&quot;, i.e. cylinders with an optional inner radius.</span>
+<span class="sd">  </span>
+<span class="sd">  There are three writing methods available:</span>
+<span class="sd">  </span>
+<span class="sd">  * horizontal disks</span>
+<span class="sd">  * vertical lines</span>
+<span class="sd">  * spirals (with or without additional flat disks on top and bottom)</span>
+
+<span class="sd">  .. todo:: Finish documenting...</span>
+<span class="sd">  .. todo:: rotated tube... (part of the parent todo: general location+rotation system for GWL objects and BFDTD objects)</span>
+<span class="sd">  &#39;&#39;&#39;</span>
+  <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">centro</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">inner_radius</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">outer_radius</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">height</span> <span class="o">=</span> <span class="mi">3</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">method</span> <span class="o">=</span> <span class="s1">&#39;circles&#39;</span>
+    
+    <span class="bp">self</span><span class="o">.</span><span class="n">PointDistance_r</span> <span class="o">=</span> <span class="mf">0.150</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">PointDistance_theta</span> <span class="o">=</span> <span class="mf">0.150</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">PointDistance_z</span> <span class="o">=</span> <span class="mf">2.7</span><span class="o">*</span><span class="mf">0.150</span>
+    
+    <span class="bp">self</span><span class="o">.</span><span class="n">downwardWriting</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">zigzag</span> <span class="o">=</span> <span class="kc">True</span>
+    
+    <span class="bp">self</span><span class="o">.</span><span class="n">rotateSpirals</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">add_flat_ends</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">closed_loop</span> <span class="o">=</span> <span class="kc">False</span>
+    
+    <span class="bp">self</span><span class="o">.</span><span class="n">power</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+    
+    <span class="n">GWLobject</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+    <span class="k">return</span>
+
+<div class="viewcode-block" id="Tube.setCentro"><a class="viewcode-back" href="../../GWL.html#GWL.tube.Tube.setCentro">[docs]</a>  <span class="k">def</span> <span class="nf">setCentro</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vec3</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">centro</span> <span class="o">=</span> <span class="n">array</span><span class="p">(</span><span class="n">vec3</span><span class="p">)</span>
+    <span class="k">return</span></div>
+
+<div class="viewcode-block" id="Tube.setHeight"><a class="viewcode-back" href="../../GWL.html#GWL.tube.Tube.setHeight">[docs]</a>  <span class="k">def</span> <span class="nf">setHeight</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">height</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">height</span> <span class="o">=</span> <span class="n">height</span>
+    <span class="k">return</span></div>
+<div class="viewcode-block" id="Tube.setInnerRadius"><a class="viewcode-back" href="../../GWL.html#GWL.tube.Tube.setInnerRadius">[docs]</a>  <span class="k">def</span> <span class="nf">setInnerRadius</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inner_radius</span><span class="p">):</span>
+    <span class="c1"># TODO</span>
+    <span class="k">return</span></div>
+<div class="viewcode-block" id="Tube.setOuterRadius"><a class="viewcode-back" href="../../GWL.html#GWL.tube.Tube.setOuterRadius">[docs]</a>  <span class="k">def</span> <span class="nf">setOuterRadius</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">outer_radius</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">outer_radius</span> <span class="o">=</span> <span class="n">outer_radius</span>
+    <span class="k">return</span></div>
+<div class="viewcode-block" id="Tube.setAngularStepDegrees"><a class="viewcode-back" href="../../GWL.html#GWL.tube.Tube.setAngularStepDegrees">[docs]</a>  <span class="k">def</span> <span class="nf">setAngularStepDegrees</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">x</span><span class="p">):</span>
+    <span class="c1"># TODO</span>
+    <span class="k">return</span></div>
+
+<div class="viewcode-block" id="Tube.setNumberOfSteps_R"><a class="viewcode-back" href="../../GWL.html#GWL.tube.Tube.setNumberOfSteps_R">[docs]</a>  <span class="k">def</span> <span class="nf">setNumberOfSteps_R</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">x</span><span class="p">):</span>
+    <span class="c1"># TODO</span>
+    <span class="k">return</span></div>
+<div class="viewcode-block" id="Tube.setNumberOfSteps_Theta"><a class="viewcode-back" href="../../GWL.html#GWL.tube.Tube.setNumberOfSteps_Theta">[docs]</a>  <span class="k">def</span> <span class="nf">setNumberOfSteps_Theta</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">x</span><span class="p">):</span>
+    <span class="c1"># TODO</span>
+    <span class="k">return</span></div>
+<div class="viewcode-block" id="Tube.setNumberOfSteps_Z"><a class="viewcode-back" href="../../GWL.html#GWL.tube.Tube.setNumberOfSteps_Z">[docs]</a>  <span class="k">def</span> <span class="nf">setNumberOfSteps_Z</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">x</span><span class="p">):</span>
+    <span class="c1"># TODO</span>
+    <span class="k">return</span></div>
+
+<div class="viewcode-block" id="Tube.setStepSize_R"><a class="viewcode-back" href="../../GWL.html#GWL.tube.Tube.setStepSize_R">[docs]</a>  <span class="k">def</span> <span class="nf">setStepSize_R</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">x</span><span class="p">):</span>
+    <span class="c1"># TODO</span>
+    <span class="k">return</span></div>
+<div class="viewcode-block" id="Tube.setStepSize_ThetaDegrees"><a class="viewcode-back" href="../../GWL.html#GWL.tube.Tube.setStepSize_ThetaDegrees">[docs]</a>  <span class="k">def</span> <span class="nf">setStepSize_ThetaDegrees</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">x</span><span class="p">):</span>
+    <span class="c1"># TODO</span>
+    <span class="k">return</span></div>
+<div class="viewcode-block" id="Tube.setStepSize_Z"><a class="viewcode-back" href="../../GWL.html#GWL.tube.Tube.setStepSize_Z">[docs]</a>  <span class="k">def</span> <span class="nf">setStepSize_Z</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">x</span><span class="p">):</span>
+    <span class="c1"># TODO</span>
+    <span class="k">return</span></div>
+
+<div class="viewcode-block" id="Tube.setStart_R"><a class="viewcode-back" href="../../GWL.html#GWL.tube.Tube.setStart_R">[docs]</a>  <span class="k">def</span> <span class="nf">setStart_R</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">x</span><span class="p">):</span>
+    <span class="c1"># TODO</span>
+    <span class="k">return</span></div>
+<div class="viewcode-block" id="Tube.setStart_ThetaDegrees"><a class="viewcode-back" href="../../GWL.html#GWL.tube.Tube.setStart_ThetaDegrees">[docs]</a>  <span class="k">def</span> <span class="nf">setStart_ThetaDegrees</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">x</span><span class="p">):</span>
+    <span class="c1"># TODO</span>
+    <span class="k">return</span></div>
+<div class="viewcode-block" id="Tube.setStart_Z"><a class="viewcode-back" href="../../GWL.html#GWL.tube.Tube.setStart_Z">[docs]</a>  <span class="k">def</span> <span class="nf">setStart_Z</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">x</span><span class="p">):</span>
+    <span class="c1"># TODO</span>
+    <span class="k">return</span></div>
+
+  <span class="c1">#def setNlinesVertical(self):</span>
+    <span class="c1">#Zlist = </span>
+    <span class="c1">#self.NlinesVertical = float(1+self.height/self.PointDistance_z)</span>
+    <span class="c1">#return</span>
+
+<div class="viewcode-block" id="Tube.addTube"><a class="viewcode-back" href="../../GWL.html#GWL.tube.Tube.addTube">[docs]</a>  <span class="k">def</span> <span class="nf">addTube</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">radius</span> <span class="ow">in</span> <span class="n">linspace</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inner_radius</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">outer_radius</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="mi">1</span><span class="o">+</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">outer_radius</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">inner_radius</span><span class="p">)</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">PointDistance_r</span><span class="p">)):</span>
+      <span class="n">zrange</span> <span class="o">=</span> <span class="n">linspace</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">centro</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">+</span><span class="mf">0.5</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">height</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">centro</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">-</span><span class="mf">0.5</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">height</span><span class="p">,</span> <span class="n">ceil</span><span class="p">(</span><span class="mi">1</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">height</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">PointDistance_z</span><span class="p">))</span>
+      <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">downwardWriting</span><span class="p">:</span>
+        <span class="n">zrange</span> <span class="o">=</span> <span class="nb">reversed</span><span class="p">(</span><span class="n">zrange</span><span class="p">)</span>
+      <span class="k">for</span> <span class="n">z</span> <span class="ow">in</span> <span class="n">zrange</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">addHorizontalCircle</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">centro</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="bp">self</span><span class="o">.</span><span class="n">centro</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="n">z</span><span class="p">],</span> <span class="n">radius</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">power</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">PointDistance_theta</span><span class="p">,</span> <span class="n">closed_loop</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">closed_loop</span><span class="p">)</span>
+    <span class="k">return</span></div>
+
+  <span class="c1"># TODO: Improve/standardize voxelsize/overlap/step system, etc</span>
+  <span class="c1"># TODO: Fix location of non-spiral tubes (they don&#39;t seem to get correctly centered on location in Blender addon)</span>
+<div class="viewcode-block" id="Tube.computePoints"><a class="viewcode-back" href="../../GWL.html#GWL.tube.Tube.computePoints">[docs]</a>  <span class="k">def</span> <span class="nf">computePoints</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    
+    <span class="bp">self</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+    
+    <span class="c1">### spiral method</span>
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;spiral&#39;</span><span class="p">:</span>
+      
+      <span class="c1">### number of spirals/circles</span>
+      <span class="n">N_radius</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="mi">1</span><span class="o">+</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">outer_radius</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">inner_radius</span><span class="p">)</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">PointDistance_r</span><span class="p">)</span>
+      
+      <span class="c1">### Add first flat end</span>
+      <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_flat_ends</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">downwardWriting</span><span class="p">:</span>
+          <span class="n">z</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">centro</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">+</span><span class="mf">0.5</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">height</span>
+        <span class="k">else</span><span class="p">:</span>
+          <span class="n">z</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">centro</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">-</span><span class="mf">0.5</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">height</span>
+        <span class="k">for</span> <span class="n">radius</span> <span class="ow">in</span> <span class="n">linspace</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inner_radius</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">outer_radius</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="mi">1</span><span class="o">+</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">outer_radius</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">inner_radius</span><span class="p">)</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">PointDistance_r</span><span class="p">)):</span>
+          <span class="bp">self</span><span class="o">.</span><span class="n">addHorizontalCircle</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">centro</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">centro</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">z</span><span class="p">],</span> <span class="n">radius</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">power</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">PointDistance_theta</span><span class="p">,</span> <span class="n">closed_loop</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">closed_loop</span><span class="p">)</span>
+
+      <span class="c1">### Add spirals</span>
+      <span class="c1">#for radius in numpy.linspace(self.inner_radius, self.outer_radius, float(1+(self.outer_radius - self.inner_radius)/self.PointDistance_r)):</span>
+      <span class="k">for</span> <span class="n">radius_idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N_radius</span><span class="p">):</span>
+        
+        <span class="c1"># radius of current spiral</span>
+        <span class="n">radius</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inner_radius</span> <span class="o">+</span> <span class="n">radius_idx</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">PointDistance_r</span>
+        
+        <span class="c1"># set starting angle of current spiral</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">rotateSpirals</span><span class="p">:</span>
+          <span class="n">theta0</span> <span class="o">=</span> <span class="n">radius_idx</span> <span class="o">*</span> <span class="mi">2</span><span class="o">*</span><span class="n">numpy</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="n">N_radius</span>
+        <span class="k">else</span><span class="p">:</span>
+          <span class="n">theta0</span> <span class="o">=</span> <span class="mi">0</span>
+        
+        <span class="c1"># set theta step</span>
+        <span class="n">step_theta</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">PointDistance_theta</span><span class="o">/</span><span class="n">radius</span>
+        
+        <span class="c1"># total number of points for the current spiral</span>
+        <span class="n">N_theta</span> <span class="o">=</span> <span class="nb">int</span><span class="p">((</span><span class="mi">2</span><span class="o">*</span><span class="n">numpy</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">height</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">PointDistance_z</span><span class="o">*</span><span class="n">step_theta</span><span class="p">))</span>
+
+        <span class="c1"># upwards/downwards writing handling</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">downwardWriting</span><span class="p">:</span>
+          <span class="n">theta_idx_range</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="n">N_theta</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+          <span class="n">theta_idx_range</span> <span class="o">=</span> <span class="nb">reversed</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">N_theta</span><span class="p">))</span>
+        
+        <span class="n">write_sequence</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">theta_idx</span> <span class="ow">in</span> <span class="n">theta_idx_range</span><span class="p">:</span>
+          <span class="n">theta</span> <span class="o">=</span> <span class="n">theta_idx</span><span class="o">*</span><span class="n">step_theta</span>
+          <span class="n">x</span> <span class="o">=</span> <span class="n">radius</span><span class="o">*</span><span class="n">numpy</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta0</span> <span class="o">+</span> <span class="n">theta</span><span class="p">)</span>
+          <span class="n">y</span> <span class="o">=</span> <span class="n">radius</span><span class="o">*</span><span class="n">numpy</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">theta0</span> <span class="o">+</span> <span class="n">theta</span><span class="p">)</span>
+          <span class="n">z</span> <span class="o">=</span> <span class="o">-</span><span class="mf">0.5</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">height</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">PointDistance_z</span><span class="o">*</span><span class="n">theta</span><span class="o">/</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">numpy</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
+          <span class="n">write_sequence</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">z</span><span class="p">])</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">GWL_voxels</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">write_sequence</span><span class="p">)</span>
+      
+      <span class="c1">### Add second flat end</span>
+      <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_flat_ends</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">downwardWriting</span><span class="p">:</span>
+          <span class="n">z</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">centro</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">-</span><span class="mf">0.5</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">height</span>
+        <span class="k">else</span><span class="p">:</span>
+          <span class="n">z</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">centro</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">+</span><span class="mf">0.5</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">height</span>
+        <span class="k">for</span> <span class="n">radius</span> <span class="ow">in</span> <span class="n">linspace</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inner_radius</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">outer_radius</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="mi">1</span><span class="o">+</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">outer_radius</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">inner_radius</span><span class="p">)</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">PointDistance_r</span><span class="p">)):</span>
+          <span class="bp">self</span><span class="o">.</span><span class="n">addHorizontalCircle</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">centro</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">centro</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">z</span><span class="p">],</span> <span class="n">radius</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">power</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">PointDistance_theta</span><span class="p">,</span> <span class="n">closed_loop</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">closed_loop</span><span class="p">)</span>
+
+    <span class="c1">### vertical lines method</span>
+    <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;vertical lines&#39;</span><span class="p">:</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">addTubeWithVerticalLines</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">centro</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">inner_radius</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">outer_radius</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">height</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">PointDistance_r</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">PointDistance_theta</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">downwardWriting</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">zigzag</span><span class="p">)</span>
+
+    <span class="c1">### horizontal disk method</span>
+    <span class="k">else</span><span class="p">:</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">addTube</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="Tube.writeGWL"><a class="viewcode-back" href="../../GWL.html#GWL.tube.Tube.writeGWL">[docs]</a>  <span class="k">def</span> <span class="nf">writeGWL</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">writingOffset</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">computePoints</span><span class="p">()</span>
+    <span class="n">GWLobject</span><span class="o">.</span><span class="n">writeGWL</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">writingOffset</span><span class="p">)</span>
+    <span class="k">return</span></div>
+  
+<div class="viewcode-block" id="Tube.getMeshData"><a class="viewcode-back" href="../../GWL.html#GWL.tube.Tube.getMeshData">[docs]</a>  <span class="k">def</span> <span class="nf">getMeshData</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">position</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">computePoints</span><span class="p">()</span>
+    <span class="c1">#print(self.GWL_voxels[0][0])</span>
+    <span class="k">return</span><span class="p">(</span><span class="n">GWLobject</span><span class="o">.</span><span class="n">getMeshData</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">position</span><span class="p">))</span></div></div>
+
+<div class="viewcode-block" id="TubeLarge"><a class="viewcode-back" href="../../GWL.html#GWL.tube.TubeLarge">[docs]</a><span class="k">class</span> <span class="nc">TubeLarge</span><span class="p">(</span><span class="n">TubePapa</span><span class="p">):</span>
+  <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="n">TubePapa</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">centro</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">radius</span> <span class="o">=</span> <span class="mi">10</span>
+    <span class="c1">#self.fraction = 0.5</span>
+    <span class="c1">#self.fractionLeft = 0.5</span>
+    <span class="c1">#self.fractionRight = 0.5</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">NlinesHorizontal</span> <span class="o">=</span> <span class="mi">10</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">height</span> <span class="o">=</span> <span class="mi">5</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">NlinesVertical</span> <span class="o">=</span> <span class="mi">5</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">Xmin</span> <span class="o">=</span> <span class="o">-</span><span class="mf">7.5</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">Xmax</span> <span class="o">=</span> <span class="mi">5</span>
+
+<div class="viewcode-block" id="TubeLarge.computePoints"><a class="viewcode-back" href="../../GWL.html#GWL.tube.TubeLarge.computePoints">[docs]</a>  <span class="k">def</span> <span class="nf">computePoints</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+    
+    <span class="c1">#Xlist = linspace(self.radius, self.fraction*self.radius, self.NlinesHorizontal)</span>
+    <span class="n">Xlist</span> <span class="o">=</span> <span class="n">linspace</span><span class="p">(</span> <span class="nb">max</span><span class="p">(</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">radius</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">Xmin</span><span class="p">),</span> <span class="nb">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Xmax</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">radius</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">NlinesHorizontal</span><span class="p">)</span>
+    <span class="n">Zlist</span> <span class="o">=</span> <span class="n">linspace</span><span class="p">(</span><span class="mf">0.5</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">height</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.5</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">height</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">NlinesVertical</span><span class="p">)</span>
+    
+    <span class="n">write_sequence</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">Xdir</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">Ydir</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">Z</span> <span class="ow">in</span> <span class="n">Zlist</span><span class="p">:</span>
+      <span class="k">if</span> <span class="n">Xdir</span><span class="o">%</span><span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">XlistLocal</span> <span class="o">=</span> <span class="n">Xlist</span>
+      <span class="k">else</span><span class="p">:</span>
+        <span class="n">XlistLocal</span> <span class="o">=</span> <span class="nb">reversed</span><span class="p">(</span><span class="n">Xlist</span><span class="p">)</span>
+      <span class="k">for</span> <span class="n">X</span> <span class="ow">in</span> <span class="n">XlistLocal</span><span class="p">:</span>
+        <span class="n">Mpos</span> <span class="o">=</span> <span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">centro</span><span class="p">)</span> <span class="o">+</span> <span class="n">array</span><span class="p">([</span><span class="n">X</span><span class="p">,</span><span class="n">sqrt</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">radius</span><span class="o">**</span><span class="mi">2</span><span class="o">-</span><span class="n">X</span><span class="o">**</span><span class="mi">2</span><span class="p">),</span><span class="n">Z</span><span class="p">])</span>
+        <span class="n">Mneg</span> <span class="o">=</span> <span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">centro</span><span class="p">)</span> <span class="o">+</span> <span class="n">array</span><span class="p">([</span><span class="n">X</span><span class="p">,</span><span class="o">-</span><span class="n">sqrt</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">radius</span><span class="o">**</span><span class="mi">2</span><span class="o">-</span><span class="n">X</span><span class="o">**</span><span class="mi">2</span><span class="p">),</span><span class="n">Z</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">Ydir</span><span class="o">%</span><span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+          <span class="n">write_sequence</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="n">Mpos</span><span class="p">,</span><span class="n">Mneg</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+          <span class="n">write_sequence</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="n">Mneg</span><span class="p">,</span><span class="n">Mpos</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">GWL_voxels</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">write_sequence</span><span class="p">);</span> <span class="n">write_sequence</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">Ydir</span> <span class="o">+=</span> <span class="mi">1</span>
+      <span class="n">Xdir</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">GWL_voxels</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">write_sequence</span><span class="p">)</span></div></div>
+
+<div class="viewcode-block" id="HalfTubeLargeWithInnerAndOuter"><a class="viewcode-back" href="../../GWL.html#GWL.tube.HalfTubeLargeWithInnerAndOuter">[docs]</a><span class="k">class</span> <span class="nc">HalfTubeLargeWithInnerAndOuter</span><span class="p">(</span><span class="n">TubePapa</span><span class="p">):</span>
+  <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="n">TubePapa</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">centro</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">inner_radius</span> <span class="o">=</span> <span class="mi">5</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">outer_radius</span> <span class="o">=</span> <span class="mi">10</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">NlinesHorizontal</span> <span class="o">=</span> <span class="mi">10</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">height</span> <span class="o">=</span> <span class="mi">5</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">NlinesVertical</span> <span class="o">=</span> <span class="mi">5</span>
+    <span class="c1">#self.fraction = 0</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">Xmin</span> <span class="o">=</span> <span class="o">-</span><span class="mf">7.5</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">Xmax</span> <span class="o">=</span> <span class="mi">5</span>
+
+<div class="viewcode-block" id="HalfTubeLargeWithInnerAndOuter.computePoints"><a class="viewcode-back" href="../../GWL.html#GWL.tube.HalfTubeLargeWithInnerAndOuter.computePoints">[docs]</a>  <span class="k">def</span> <span class="nf">computePoints</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+    
+    <span class="c1">#Xlist = linspace(self.outer_radius, self.fraction*self.outer_radius, self.NlinesHorizontal)</span>
+    <span class="n">Xlist</span> <span class="o">=</span> <span class="n">linspace</span><span class="p">(</span> <span class="nb">max</span><span class="p">(</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">outer_radius</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">Xmin</span><span class="p">),</span> <span class="nb">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Xmax</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">outer_radius</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">NlinesHorizontal</span><span class="p">)</span>
+    <span class="n">Zlist</span> <span class="o">=</span> <span class="n">linspace</span><span class="p">(</span><span class="mf">0.5</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">height</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.5</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">height</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">NlinesVertical</span><span class="p">)</span>
+    
+    <span class="n">write_sequence</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">Xdir</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">Ydir</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">Z</span> <span class="ow">in</span> <span class="n">Zlist</span><span class="p">:</span>
+      <span class="k">if</span> <span class="n">Xdir</span><span class="o">%</span><span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">XlistLocal</span> <span class="o">=</span> <span class="n">Xlist</span>
+      <span class="k">else</span><span class="p">:</span>
+        <span class="n">XlistLocal</span> <span class="o">=</span> <span class="nb">reversed</span><span class="p">(</span><span class="n">Xlist</span><span class="p">)</span>
+      <span class="k">for</span> <span class="n">X</span> <span class="ow">in</span> <span class="n">XlistLocal</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">X</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inner_radius</span><span class="p">:</span>
+          <span class="n">Mpos</span> <span class="o">=</span> <span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">centro</span><span class="p">)</span> <span class="o">+</span> <span class="n">array</span><span class="p">([</span><span class="n">X</span><span class="p">,</span><span class="n">sqrt</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">outer_radius</span><span class="o">**</span><span class="mi">2</span><span class="o">-</span><span class="n">X</span><span class="o">**</span><span class="mi">2</span><span class="p">),</span><span class="n">Z</span><span class="p">])</span>
+          <span class="n">Mneg</span> <span class="o">=</span> <span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">centro</span><span class="p">)</span> <span class="o">+</span> <span class="n">array</span><span class="p">([</span><span class="n">X</span><span class="p">,</span><span class="o">-</span><span class="n">sqrt</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">outer_radius</span><span class="o">**</span><span class="mi">2</span><span class="o">-</span><span class="n">X</span><span class="o">**</span><span class="mi">2</span><span class="p">),</span><span class="n">Z</span><span class="p">])</span>
+          <span class="k">if</span> <span class="n">Ydir</span><span class="o">%</span><span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">write_sequence</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="n">Mpos</span><span class="p">,</span><span class="n">Mneg</span><span class="p">])</span>
+          <span class="k">else</span><span class="p">:</span>
+            <span class="n">write_sequence</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="n">Mneg</span><span class="p">,</span><span class="n">Mpos</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+          <span class="n">Mpos_outer</span> <span class="o">=</span> <span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">centro</span><span class="p">)</span> <span class="o">+</span> <span class="n">array</span><span class="p">([</span><span class="n">X</span><span class="p">,</span><span class="n">sqrt</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">outer_radius</span><span class="o">**</span><span class="mi">2</span><span class="o">-</span><span class="n">X</span><span class="o">**</span><span class="mi">2</span><span class="p">),</span><span class="n">Z</span><span class="p">])</span>
+          <span class="n">Mpos_inner</span> <span class="o">=</span> <span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">centro</span><span class="p">)</span> <span class="o">+</span> <span class="n">array</span><span class="p">([</span><span class="n">X</span><span class="p">,</span><span class="n">sqrt</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inner_radius</span><span class="o">**</span><span class="mi">2</span><span class="o">-</span><span class="n">X</span><span class="o">**</span><span class="mi">2</span><span class="p">),</span><span class="n">Z</span><span class="p">])</span>
+          <span class="n">Mneg_inner</span> <span class="o">=</span> <span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">centro</span><span class="p">)</span> <span class="o">+</span> <span class="n">array</span><span class="p">([</span><span class="n">X</span><span class="p">,</span><span class="o">-</span><span class="n">sqrt</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inner_radius</span><span class="o">**</span><span class="mi">2</span><span class="o">-</span><span class="n">X</span><span class="o">**</span><span class="mi">2</span><span class="p">),</span><span class="n">Z</span><span class="p">])</span>
+          <span class="n">Mneg_outer</span> <span class="o">=</span> <span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">centro</span><span class="p">)</span> <span class="o">+</span> <span class="n">array</span><span class="p">([</span><span class="n">X</span><span class="p">,</span><span class="o">-</span><span class="n">sqrt</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">outer_radius</span><span class="o">**</span><span class="mi">2</span><span class="o">-</span><span class="n">X</span><span class="o">**</span><span class="mi">2</span><span class="p">),</span><span class="n">Z</span><span class="p">])</span>
+          <span class="k">if</span> <span class="n">Ydir</span><span class="o">%</span><span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">write_sequence</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="n">Mpos_outer</span><span class="p">,</span><span class="n">Mpos_inner</span><span class="p">])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">GWL_voxels</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">write_sequence</span><span class="p">);</span> <span class="n">write_sequence</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">write_sequence</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="n">Mneg_inner</span><span class="p">,</span><span class="n">Mneg_outer</span><span class="p">])</span>
+          <span class="k">else</span><span class="p">:</span>
+            <span class="n">write_sequence</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="n">Mneg_outer</span><span class="p">,</span><span class="n">Mneg_inner</span><span class="p">])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">GWL_voxels</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">write_sequence</span><span class="p">);</span> <span class="n">write_sequence</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">write_sequence</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="n">Mpos_inner</span><span class="p">,</span><span class="n">Mpos_outer</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">GWL_voxels</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">write_sequence</span><span class="p">);</span> <span class="n">write_sequence</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">Ydir</span> <span class="o">+=</span> <span class="mi">1</span>
+      <span class="n">Xdir</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">GWL_voxels</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">write_sequence</span><span class="p">)</span></div></div>
+
+<div class="viewcode-block" id="TruncatedTube"><a class="viewcode-back" href="../../GWL.html#GWL.tube.TruncatedTube">[docs]</a><span class="k">class</span> <span class="nc">TruncatedTube</span><span class="p">(</span><span class="n">GWLobject</span><span class="p">):</span>
+  <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="n">GWLobject</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+    
+    <span class="bp">self</span><span class="o">.</span><span class="n">centro</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">inner_radius</span> <span class="o">=</span> <span class="mf">0.5</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">outer_radius</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">height</span> <span class="o">=</span> <span class="mi">1</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">z_step</span> <span class="o">=</span> <span class="mf">0.1</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">theta_step_deg</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">r_step</span> <span class="o">=</span> <span class="mi">1</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">truncationDistanceFromCentro</span> <span class="o">=</span> <span class="mf">0.7</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">startAngle_deg</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">endAngle_deg</span> <span class="o">=</span> <span class="mi">360</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">voxel_width</span> <span class="o">=</span> <span class="mf">0.100</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">voxel_height</span> <span class="o">=</span> <span class="mf">0.200</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">closed_loop</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="k">return</span>
+
+<div class="viewcode-block" id="TruncatedTube.writeGWL"><a class="viewcode-back" href="../../GWL.html#GWL.tube.TruncatedTube.writeGWL">[docs]</a>  <span class="k">def</span> <span class="nf">writeGWL</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">writingOffset</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">computePoints</span><span class="p">()</span>
+    <span class="n">GWLobject</span><span class="o">.</span><span class="n">writeGWL</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">writingOffset</span><span class="p">)</span>
+    <span class="k">return</span></div>
+
+<div class="viewcode-block" id="TruncatedTube.getMeshData"><a class="viewcode-back" href="../../GWL.html#GWL.tube.TruncatedTube.getMeshData">[docs]</a>  <span class="k">def</span> <span class="nf">getMeshData</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">position</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">computePoints</span><span class="p">()</span>
+    <span class="c1">#print(self.GWL_voxels[0][0])</span>
+    <span class="k">return</span><span class="p">(</span><span class="n">GWLobject</span><span class="o">.</span><span class="n">getMeshData</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">position</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="TruncatedTube.computePoints"><a class="viewcode-back" href="../../GWL.html#GWL.tube.TruncatedTube.computePoints">[docs]</a>  <span class="k">def</span> <span class="nf">computePoints</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+
+    <span class="n">log_width</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">outer_radius</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">inner_radius</span>
+    
+    <span class="p">(</span><span class="n">LineNumber_R</span><span class="p">,</span> <span class="n">LineDistance_R</span><span class="p">)</span> <span class="o">=</span> <span class="n">calculateNvoxelsAndInterVoxelDistance</span><span class="p">(</span><span class="n">Length</span><span class="o">=</span><span class="n">log_width</span><span class="p">,</span> <span class="n">Voxelsize</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">voxel_width</span><span class="p">,</span> <span class="n">Overlap</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="p">(</span><span class="n">LineNumber_theta</span><span class="p">,</span> <span class="n">LineDistance_theta</span><span class="p">)</span> <span class="o">=</span> <span class="n">calculateNvoxelsAndInterVoxelDistance</span><span class="p">(</span><span class="n">Length</span><span class="o">=</span><span class="mi">2</span><span class="o">*</span><span class="n">numpy</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">outer_radius</span><span class="p">,</span> <span class="n">Voxelsize</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">voxel_width</span><span class="p">,</span> <span class="n">Overlap</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="p">(</span><span class="n">LineNumber_Z</span><span class="p">,</span> <span class="n">LineDistance_Z</span><span class="p">)</span> <span class="o">=</span> <span class="n">calculateNvoxelsAndInterVoxelDistance</span><span class="p">(</span><span class="n">Length</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">height</span><span class="p">,</span> <span class="n">Voxelsize</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">voxel_height</span><span class="p">,</span> <span class="n">Overlap</span><span class="o">=</span><span class="mf">6.</span><span class="o">/</span><span class="mf">7.</span><span class="p">)</span>
+    <span class="c1">#print(&#39;LineNumber_Z=&#39;+str(LineNumber_Z))</span>
+    <span class="c1">#print(&#39;LineDistance_Z=&#39;+str(LineDistance_Z))</span>
+
+    <span class="n">power</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+    <span class="n">PointDistance_R</span> <span class="o">=</span> <span class="n">LineDistance_R</span>
+    <span class="n">PointDistance_theta</span> <span class="o">=</span> <span class="n">LineDistance_theta</span>
+    <span class="n">PointDistance_Z</span> <span class="o">=</span> <span class="n">LineDistance_Z</span>
+
+    <span class="k">for</span> <span class="n">index_R</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">LineNumber_R</span><span class="p">):</span>
+      <span class="c1"># calculate radius of current circle</span>
+      <span class="n">radius</span> <span class="o">=</span> <span class="mf">0.5</span><span class="o">*</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inner_radius</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">outer_radius</span><span class="p">)</span> <span class="o">-</span> <span class="mf">0.5</span><span class="o">*</span><span class="p">((</span><span class="n">LineNumber_R</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="n">PointDistance_R</span><span class="p">)</span> <span class="o">+</span> <span class="n">index_R</span><span class="o">*</span><span class="n">PointDistance_R</span>
+      <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">truncationDistanceFromCentro</span> <span class="o">&lt;</span> <span class="n">radius</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">radius</span><span class="p">)</span> <span class="o">&gt;</span> <span class="nb">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">truncationDistanceFromCentro</span><span class="p">):</span>
+          <span class="c1">#startAngle = numpy.arccos(self.truncationDistanceFromCentro/radius)</span>
+          <span class="c1">#endAngle = 2*numpy.pi-numpy.arccos(self.truncationDistanceFromCentro/radius)</span>
+          <span class="n">startAngle</span> <span class="o">=</span> <span class="o">-</span><span class="n">numpy</span><span class="o">.</span><span class="n">arccos</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">truncationDistanceFromCentro</span><span class="o">/</span><span class="n">radius</span><span class="p">)</span>
+          <span class="n">endAngle</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">arccos</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">truncationDistanceFromCentro</span><span class="o">/</span><span class="n">radius</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+          <span class="n">startAngle</span> <span class="o">=</span> <span class="mi">0</span>
+          <span class="n">endAngle</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="n">numpy</span><span class="o">.</span><span class="n">pi</span>
+        <span class="k">for</span> <span class="n">index_Z</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">LineNumber_Z</span><span class="p">):</span>
+          <span class="n">zloc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">centro</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">+</span><span class="mf">0.5</span><span class="o">*</span><span class="p">((</span><span class="n">LineNumber_Z</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="n">PointDistance_Z</span><span class="p">)</span> <span class="o">-</span> <span class="n">index_Z</span><span class="o">*</span><span class="n">PointDistance_Z</span>
+          <span class="bp">self</span><span class="o">.</span><span class="n">addHorizontalCircle</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">centro</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="bp">self</span><span class="o">.</span><span class="n">centro</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="n">zloc</span><span class="p">],</span> <span class="n">radius</span><span class="p">,</span> <span class="n">power</span><span class="p">,</span> <span class="n">PointDistance_theta</span><span class="p">,</span> <span class="n">startAngle</span><span class="p">,</span> <span class="n">endAngle</span><span class="p">,</span> <span class="n">closed_loop</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">closed_loop</span><span class="p">)</span></div></div>
+
+<div class="viewcode-block" id="testTruncatedTube"><a class="viewcode-back" href="../../GWL.html#GWL.tube.testTruncatedTube">[docs]</a><span class="k">def</span> <span class="nf">testTruncatedTube</span><span class="p">():</span>
+  <span class="n">foo</span> <span class="o">=</span> <span class="n">TruncatedTube</span><span class="p">()</span>
+  <span class="n">foo</span><span class="o">.</span><span class="n">inner_radius</span> <span class="o">=</span> <span class="mf">0.5</span>
+  <span class="n">foo</span><span class="o">.</span><span class="n">outer_radius</span> <span class="o">=</span> <span class="mf">1.5</span>
+  <span class="n">foo</span><span class="o">.</span><span class="n">height</span> <span class="o">=</span> <span class="mi">2</span>
+  <span class="n">foo</span><span class="o">.</span><span class="n">truncationDistanceFromCentro</span> <span class="o">=</span> <span class="mi">1</span>
+  
+  <span class="n">foo</span><span class="o">.</span><span class="n">centro</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span>
+  <span class="n">v</span><span class="p">,</span><span class="n">e</span><span class="p">,</span><span class="n">f</span> <span class="o">=</span> <span class="n">foo</span><span class="o">.</span><span class="n">getMeshData</span><span class="p">()</span>
+  <span class="nb">print</span><span class="p">(</span><span class="n">v</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+  
+  <span class="n">foo</span><span class="o">.</span><span class="n">centro</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span>
+  <span class="n">v</span><span class="p">,</span><span class="n">e</span><span class="p">,</span><span class="n">f</span> <span class="o">=</span> <span class="n">foo</span><span class="o">.</span><span class="n">getMeshData</span><span class="p">()</span>
+  <span class="nb">print</span><span class="p">(</span><span class="n">v</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+  <span class="n">foo</span><span class="o">.</span><span class="n">writeGWL</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span></div>
+
+<div class="viewcode-block" id="testTube"><a class="viewcode-back" href="../../GWL.html#GWL.tube.testTube">[docs]</a><span class="k">def</span> <span class="nf">testTube</span><span class="p">():</span>
+  <span class="n">foo</span> <span class="o">=</span> <span class="n">Tube</span><span class="p">()</span>
+  <span class="n">foo</span><span class="o">.</span><span class="n">inner_radius</span> <span class="o">=</span> <span class="mf">0.5</span>
+  <span class="n">foo</span><span class="o">.</span><span class="n">outer_radius</span> <span class="o">=</span> <span class="mf">0.5</span>
+  <span class="n">foo</span><span class="o">.</span><span class="n">height</span> <span class="o">=</span> <span class="mi">0</span>
+  
+  <span class="n">foo</span><span class="o">.</span><span class="n">centro</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span>
+  <span class="n">v</span><span class="p">,</span><span class="n">e</span><span class="p">,</span><span class="n">f</span> <span class="o">=</span> <span class="n">foo</span><span class="o">.</span><span class="n">getMeshData</span><span class="p">()</span>
+  <span class="nb">print</span><span class="p">(</span><span class="n">v</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+  
+  <span class="n">foo</span><span class="o">.</span><span class="n">centro</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span>
+  <span class="n">v</span><span class="p">,</span><span class="n">e</span><span class="p">,</span><span class="n">f</span> <span class="o">=</span> <span class="n">foo</span><span class="o">.</span><span class="n">getMeshData</span><span class="p">()</span>
+  <span class="nb">print</span><span class="p">(</span><span class="n">v</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+  <span class="n">foo</span><span class="o">.</span><span class="n">writeGWL</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span></div>
+
+<div class="viewcode-block" id="usage_example"><a class="viewcode-back" href="../../GWL.html#GWL.tube.usage_example">[docs]</a><span class="k">def</span> <span class="nf">usage_example</span><span class="p">():</span>
+  <span class="c1">#obj = Tube()</span>
+  <span class="c1">#blender_utilities.addSimpleObject(obj.getMeshData, object_name=&#39;object&#39;, mesh_name=&#39;mesh&#39;, context=bpy.context)</span>
+
+  <span class="n">obj</span> <span class="o">=</span> <span class="n">Tube</span><span class="p">()</span>
+  <span class="c1">#obj.centro = self.location # not passed, since blender already takes care of the relative mesh location</span>
+  <span class="n">obj</span><span class="o">.</span><span class="n">inner_radius</span> <span class="o">=</span> <span class="mf">0.5</span>
+  <span class="n">obj</span><span class="o">.</span><span class="n">outer_radius</span> <span class="o">=</span> <span class="mi">1</span>
+  <span class="n">obj</span><span class="o">.</span><span class="n">height</span> <span class="o">=</span> <span class="mi">1</span>
+  <span class="n">obj</span><span class="o">.</span><span class="n">method</span> <span class="o">=</span> <span class="s1">&#39;spiral&#39;</span>
+  <span class="n">obj</span><span class="o">.</span><span class="n">PointDistance_r</span> <span class="o">=</span> <span class="mf">0.1</span>
+  <span class="n">obj</span><span class="o">.</span><span class="n">PointDistance_theta</span> <span class="o">=</span> <span class="mf">0.1</span>
+  <span class="n">obj</span><span class="o">.</span><span class="n">PointDistance_z</span> <span class="o">=</span> <span class="mf">0.1</span>
+  <span class="n">obj</span><span class="o">.</span><span class="n">downwardWriting</span> <span class="o">=</span> <span class="kc">True</span>
+  <span class="n">obj</span><span class="o">.</span><span class="n">zigzag</span> <span class="o">=</span> <span class="kc">True</span>
+  <span class="n">obj</span><span class="o">.</span><span class="n">rotateSpirals</span> <span class="o">=</span> <span class="kc">False</span>
+  <span class="n">obj</span><span class="o">.</span><span class="n">add_flat_ends</span> <span class="o">=</span> <span class="kc">True</span>
+  <span class="n">obj</span><span class="o">.</span><span class="n">closed_loop</span> <span class="o">=</span> <span class="kc">True</span>
+
+  <span class="n">obj</span><span class="o">.</span><span class="n">writeGWL</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">+</span><span class="n">os</span><span class="o">.</span><span class="n">sep</span><span class="o">+</span><span class="s1">&#39;tmp.gwl&#39;</span><span class="p">)</span>
+  <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;DONE&#39;</span><span class="p">)</span></div>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+  <span class="n">usage_example</span><span class="p">()</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">script_inception_public  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2014, Mike Taverne.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.9.
+    </div>
+  </body>
+</html>

@@ -132,26 +132,17 @@ Documentation
 -------------
 
 This HTML documentation was automatically generated using *Sphinx*.
-It is regularly updated in the following location:
-
- * ``\\is-engf.isys.bris.ac.uk\eleceng\optics\git\documentation\html\index.html``
 
 Git repository location
 -----------------------
 
-The git repositories:
-
-  * ``\\is-engf.isys.bris.ac.uk\eleceng\optics\git\script_inception_public.git``
-  * ``\\is-engf.isys.bris.ac.uk\eleceng\optics\git\script_inception_private.git``
-
-If you are not familiar with git and want a folder you can simply copy (or you just want to look at the code directly), there are also "checked out" ("non-bare cloned" in git terminology) versions of these repositories available in:
-
-  * ``\\is-engf.isys.bris.ac.uk\eleceng\optics\git\checked_out``
-
-Deprecated not up-to-date git repositories:
+Public repository:
 
   * https://github.com/mtav/script_inception_public
-  * git@git.assembla.com:script_inception_private.git
+
+Private repository:
+
+  * git@git.assembla.com:script_inception_private.git (currently not up to date)
 
 Notes
 ~~~~~

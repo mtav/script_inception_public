@@ -1,0 +1,970 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>utilities package &#8212; script_inception_public  documentation</title>
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="calculateModeVolume" href="calculateModeVolume.html" />
+    <link rel="prev" title="third_party package" href="third_party.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="calculateModeVolume.html" title="calculateModeVolume"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="third_party.html" title="third_party package"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">script_inception_public  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="script_inception_public.html" accesskey="U">package</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="utilities-package">
+<h1>utilities package<a class="headerlink" href="#utilities-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-utilities.createGUI">
+<span id="utilities-creategui-module"></span><h2>utilities.createGUI module<a class="headerlink" href="#module-utilities.createGUI" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="utilities.createGUI.createGUI">
+<code class="descclassname">utilities.createGUI.</code><code class="descname">createGUI</code><span class="sig-paren">(</span><em>obj</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utilities/createGUI.html#createGUI"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utilities.createGUI.createGUI" title="Permalink to this definition">¶</a></dt>
+<dd><p>A function to simplify creating GUIs from classes with appropriate argparse-related functions.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-utilities.TransformationMatrix">
+<span id="utilities-transformationmatrix-module"></span><h2>utilities.TransformationMatrix module<a class="headerlink" href="#module-utilities.TransformationMatrix" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="utilities.TransformationMatrix.Identity">
+<code class="descclassname">utilities.TransformationMatrix.</code><code class="descname">Identity</code><span class="sig-paren">(</span><em>size</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utilities/TransformationMatrix.html#Identity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utilities.TransformationMatrix.Identity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create an identity matrix.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>size</strong> (<em>int</em>) – The size of the identity matrix to construct [2, 4].</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A new identity matrix.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">Matrix</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="utilities.TransformationMatrix.Mag">
+<code class="descclassname">utilities.TransformationMatrix.</code><code class="descname">Mag</code><span class="sig-paren">(</span><em>vec</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utilities/TransformationMatrix.html#Mag"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utilities.TransformationMatrix.Mag" title="Permalink to this definition">¶</a></dt>
+<dd><p>return the magnitude (rho in spherical coordinate system)</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="utilities.TransformationMatrix.Mag2">
+<code class="descclassname">utilities.TransformationMatrix.</code><code class="descname">Mag2</code><span class="sig-paren">(</span><em>vec</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utilities/TransformationMatrix.html#Mag2"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utilities.TransformationMatrix.Mag2" title="Permalink to this definition">¶</a></dt>
+<dd><p>return the magnitude squared (faster than Mag for comparisons)</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="utilities.TransformationMatrix.Rotation">
+<code class="descclassname">utilities.TransformationMatrix.</code><code class="descname">Rotation</code><span class="sig-paren">(</span><em>angle_rad</em>, <em>size</em>, <em>axis=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utilities/TransformationMatrix.html#Rotation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utilities.TransformationMatrix.Rotation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a matrix representing a rotation.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>angle_rad</strong> (<em>float</em>) – The angle of rotation desired, in radians.</li>
+<li><strong>size</strong> (<em>int</em>) – The size of the rotation matrix to construct [2, 4].</li>
+<li><strong>axis</strong> (<em>string</em><em> or </em><em>Vector</em>) – a string in [‘X’, ‘Y’, ‘Z’] or a 3D Vector Object (optional when size is 2).</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return:</th><td class="field-body"><p class="first">A new rotation matrix.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">Matrix</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="utilities.TransformationMatrix.Scale">
+<code class="descclassname">utilities.TransformationMatrix.</code><code class="descname">Scale</code><span class="sig-paren">(</span><em>factor</em>, <em>size</em>, <em>axis=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utilities/TransformationMatrix.html#Scale"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utilities.TransformationMatrix.Scale" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a matrix representing a scaling.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>factor</strong> (<em>float</em>) – The factor of scaling to apply.</li>
+<li><strong>size</strong> (<em>int</em>) – The size of the scale matrix to construct [2, 4].</li>
+<li><strong>axis</strong> (<em>Vector</em>) – Direction to influence scale. (optional).</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A new scale matrix.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">Matrix</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="utilities.TransformationMatrix.Translation">
+<code class="descclassname">utilities.TransformationMatrix.</code><code class="descname">Translation</code><span class="sig-paren">(</span><em>vector</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utilities/TransformationMatrix.html#Translation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utilities.TransformationMatrix.Translation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a matrix representing a translation.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>vector</strong> (<em>Vector</em>) – The translation vector.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">An identity matrix with a translation.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">Matrix</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="utilities.TransformationMatrix.Unit">
+<code class="descclassname">utilities.TransformationMatrix.</code><code class="descname">Unit</code><span class="sig-paren">(</span><em>vec</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utilities/TransformationMatrix.html#Unit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utilities.TransformationMatrix.Unit" title="Permalink to this definition">¶</a></dt>
+<dd><p>return unit vector parallel to vec.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="utilities.TransformationMatrix.applyTransformation">
+<code class="descclassname">utilities.TransformationMatrix.</code><code class="descname">applyTransformation</code><span class="sig-paren">(</span><em>M</em>, <em>voxel</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utilities/TransformationMatrix.html#applyTransformation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utilities.TransformationMatrix.applyTransformation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Applies 4x4 transformation matrix M to list, array or matrix voxel of size 3 or 4.</p>
+<ul class="simple">
+<li>If voxel is of size 4, the 4th element will not be affected (Useful for power)!</li>
+<li>If voxel is of size 3, a 4th element of value -1 is added.</li>
+</ul>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">a voxel with the transformed location and same power (or -1 if no previous power given)</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="utilities.TransformationMatrix.rotationMatrix">
+<code class="descclassname">utilities.TransformationMatrix.</code><code class="descname">rotationMatrix</code><span class="sig-paren">(</span><em>axis_point</em>, <em>axis_direction</em>, <em>angle_degrees</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utilities/TransformationMatrix.html#rotationMatrix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utilities.TransformationMatrix.rotationMatrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>return a rotation matrix for a rotation around an arbitrary axis</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-utilities.brisFDTD_ID_info">
+<span id="utilities-brisfdtd-id-info-module"></span><h2>utilities.brisFDTD_ID_info module<a class="headerlink" href="#module-utilities.brisFDTD_ID_info" title="Permalink to this headline">¶</a></h2>
+<p>Converts between the numeric IDs <strong>numID</strong> (01, 02, 67, etc) and alphabetic IDs <strong>alphaID</strong> (01, A1, df, jk, {l, etc) used by Bristol FDTD for its data files.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>Since BFDTD 2008, “ba” comes after “az” instead of “a{“.</p>
+<p>Make sure you specify “pre_2008_BFDTD_version = True” if you are working with data generated by BFDTD versions &lt; 2008!!!</p>
+<p class="last">Please stop using the old BFDTD 2003 for any new simulations.</p>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>If there is a mix of time snapshots, epsilon snapshots and/or mode filtered probes, they will be numbered together!!!</p>
+<p class="last">i.e. 1 esnap + 1 tsnap will lead to x1…+x2… according to their respective order of appearance in the .inp file.</p>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">snap_time_number starts at 0 for ModeFilteredProbes and at 1 for time and epsilon snapshots.</p>
+</div>
+<p>Maximum amount of output files BFDTD can generate: 2549 time/epsilon snapshots for BFDTD 2014, but this might lead to bad filenames. (This might actually be a system-specific limit on the maximum number of simultaneously open files.)</p>
+<dl class="class">
+<dt id="utilities.brisFDTD_ID_info.Test_brisFDTD_ID_info_Functions">
+<em class="property">class </em><code class="descclassname">utilities.brisFDTD_ID_info.</code><code class="descname">Test_brisFDTD_ID_info_Functions</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utilities/brisFDTD_ID_info.html#Test_brisFDTD_ID_info_Functions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utilities.brisFDTD_ID_info.Test_brisFDTD_ID_info_Functions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">unittest.case.TestCase</span></code></p>
+<dl class="method">
+<dt id="utilities.brisFDTD_ID_info.Test_brisFDTD_ID_info_Functions.FrequencySnapshotID_List">
+<code class="descname">FrequencySnapshotID_List</code><span class="sig-paren">(</span><em>pre_2008_BFDTD_version</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utilities/brisFDTD_ID_info.html#Test_brisFDTD_ID_info_Functions.FrequencySnapshotID_List"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utilities.brisFDTD_ID_info.Test_brisFDTD_ID_info_Functions.FrequencySnapshotID_List" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="utilities.brisFDTD_ID_info.Test_brisFDTD_ID_info_Functions.FrequencySnapshotID_ViceVersa">
+<code class="descname">FrequencySnapshotID_ViceVersa</code><span class="sig-paren">(</span><em>pre_2008_BFDTD_version</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utilities/brisFDTD_ID_info.html#Test_brisFDTD_ID_info_Functions.FrequencySnapshotID_ViceVersa"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utilities.brisFDTD_ID_info.Test_brisFDTD_ID_info_Functions.FrequencySnapshotID_ViceVersa" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="utilities.brisFDTD_ID_info.Test_brisFDTD_ID_info_Functions.test_FrequencySnapshotID_List_post_2008_BFDTD_version">
+<code class="descname">test_FrequencySnapshotID_List_post_2008_BFDTD_version</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/utilities/brisFDTD_ID_info.html#Test_brisFDTD_ID_info_Functions.test_FrequencySnapshotID_List_post_2008_BFDTD_version"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utilities.brisFDTD_ID_info.Test_brisFDTD_ID_info_Functions.test_FrequencySnapshotID_List_post_2008_BFDTD_version" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="utilities.brisFDTD_ID_info.Test_brisFDTD_ID_info_Functions.test_FrequencySnapshotID_List_pre_2008_BFDTD_version">
+<code class="descname">test_FrequencySnapshotID_List_pre_2008_BFDTD_version</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/utilities/brisFDTD_ID_info.html#Test_brisFDTD_ID_info_Functions.test_FrequencySnapshotID_List_pre_2008_BFDTD_version"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utilities.brisFDTD_ID_info.Test_brisFDTD_ID_info_Functions.test_FrequencySnapshotID_List_pre_2008_BFDTD_version" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="utilities.brisFDTD_ID_info.Test_brisFDTD_ID_info_Functions.test_FrequencySnapshotID_ViceVersa_post_2008_BFDTD_version">
+<code class="descname">test_FrequencySnapshotID_ViceVersa_post_2008_BFDTD_version</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/utilities/brisFDTD_ID_info.html#Test_brisFDTD_ID_info_Functions.test_FrequencySnapshotID_ViceVersa_post_2008_BFDTD_version"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utilities.brisFDTD_ID_info.Test_brisFDTD_ID_info_Functions.test_FrequencySnapshotID_ViceVersa_post_2008_BFDTD_version" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="utilities.brisFDTD_ID_info.Test_brisFDTD_ID_info_Functions.test_FrequencySnapshotID_ViceVersa_pre_2008_BFDTD_version">
+<code class="descname">test_FrequencySnapshotID_ViceVersa_pre_2008_BFDTD_version</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/utilities/brisFDTD_ID_info.html#Test_brisFDTD_ID_info_Functions.test_FrequencySnapshotID_ViceVersa_pre_2008_BFDTD_version"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utilities.brisFDTD_ID_info.Test_brisFDTD_ID_info_Functions.test_FrequencySnapshotID_ViceVersa_pre_2008_BFDTD_version" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="utilities.brisFDTD_ID_info.Test_brisFDTD_ID_info_Functions.test_ModeFilteredProbeID_List">
+<code class="descname">test_ModeFilteredProbeID_List</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/utilities/brisFDTD_ID_info.html#Test_brisFDTD_ID_info_Functions.test_ModeFilteredProbeID_List"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utilities.brisFDTD_ID_info.Test_brisFDTD_ID_info_Functions.test_ModeFilteredProbeID_List" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="utilities.brisFDTD_ID_info.Test_brisFDTD_ID_info_Functions.test_ModeFilteredProbeID_ViceVersa">
+<code class="descname">test_ModeFilteredProbeID_ViceVersa</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/utilities/brisFDTD_ID_info.html#Test_brisFDTD_ID_info_Functions.test_ModeFilteredProbeID_ViceVersa"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utilities.brisFDTD_ID_info.Test_brisFDTD_ID_info_Functions.test_ModeFilteredProbeID_ViceVersa" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="utilities.brisFDTD_ID_info.Test_brisFDTD_ID_info_Functions.test_ProbeID_List">
+<code class="descname">test_ProbeID_List</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/utilities/brisFDTD_ID_info.html#Test_brisFDTD_ID_info_Functions.test_ProbeID_List"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utilities.brisFDTD_ID_info.Test_brisFDTD_ID_info_Functions.test_ProbeID_List" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="utilities.brisFDTD_ID_info.Test_brisFDTD_ID_info_Functions.test_ProbeID_ViceVersa">
+<code class="descname">test_ProbeID_ViceVersa</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/utilities/brisFDTD_ID_info.html#Test_brisFDTD_ID_info_Functions.test_ProbeID_ViceVersa"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utilities.brisFDTD_ID_info.Test_brisFDTD_ID_info_Functions.test_ProbeID_ViceVersa" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="utilities.brisFDTD_ID_info.Test_brisFDTD_ID_info_Functions.test_TimeSnapshotID_List">
+<code class="descname">test_TimeSnapshotID_List</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/utilities/brisFDTD_ID_info.html#Test_brisFDTD_ID_info_Functions.test_TimeSnapshotID_List"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utilities.brisFDTD_ID_info.Test_brisFDTD_ID_info_Functions.test_TimeSnapshotID_List" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="utilities.brisFDTD_ID_info.Test_brisFDTD_ID_info_Functions.test_TimeSnapshotID_ViceVersa">
+<code class="descname">test_TimeSnapshotID_ViceVersa</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/utilities/brisFDTD_ID_info.html#Test_brisFDTD_ID_info_Functions.test_TimeSnapshotID_ViceVersa"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utilities.brisFDTD_ID_info.Test_brisFDTD_ID_info_Functions.test_TimeSnapshotID_ViceVersa" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="utilities.brisFDTD_ID_info.alphaID_to_numID">
+<code class="descclassname">utilities.brisFDTD_ID_info.</code><code class="descname">alphaID_to_numID</code><span class="sig-paren">(</span><em>alphaID_or_filename</em>, <em>expected_object_type=None</em>, <em>probe_ident=None</em>, <em>pre_2008_BFDTD_version=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utilities/brisFDTD_ID_info.html#alphaID_to_numID"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utilities.brisFDTD_ID_info.alphaID_to_numID" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts alpha IDs used by Bristol FDTD to numeric IDs.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">(numID, snap_plane, probe_ident, snap_time_number, fixed_filename, object_type)</td>
+</tr>
+</tbody>
+</table>
+<p>Examples:</p>
+<ul class="simple">
+<li>z -&gt; 26</li>
+<li>a{ -&gt; 26+27</li>
+<li>99 -&gt; 99</li>
+<li>:0 -&gt; 100</li>
+</ul>
+</dd></dl>
+
+<dl class="function">
+<dt id="utilities.brisFDTD_ID_info.numID_to_alphaID_FrequencySnapshot">
+<code class="descclassname">utilities.brisFDTD_ID_info.</code><code class="descname">numID_to_alphaID_FrequencySnapshot</code><span class="sig-paren">(</span><em>numID</em>, <em>snap_plane='x'</em>, <em>probe_ident='_id_'</em>, <em>snap_time_number=0</em>, <em>pre_2008_BFDTD_version=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utilities/brisFDTD_ID_info.html#numID_to_alphaID_FrequencySnapshot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utilities.brisFDTD_ID_info.numID_to_alphaID_FrequencySnapshot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts numeric IDs to alpha IDs used by Bristol FDTD for frequency snapshots.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>update_limits</strong> (<em>bool</em>) – If true, updateLimits() will be called.</li>
+<li><strong>numID</strong> (<em>int</em>) – numeric ID</li>
+<li><strong>snap_plane</strong> (<em>str</em>) – snapshot plane letter, i.e. ‘x’, ‘y’ or ‘z’. Default: ‘x’</li>
+<li><strong>probe_ident</strong> (<em>str</em>) – ID string used in data output. Default: ‘_id_’</li>
+<li><strong>snap_time_number</strong> (<em>int</em>) – “snapshot time number”, i.e. the index at the end of data filenames. Default: 0</li>
+<li><strong>pre_2008_BFDTD_version</strong> (<em>bool</em>) – If True, the pre-2008 BFDTD indexing will be used. Default: False</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">(filename, alphaID, pair)</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Examples:</p>
+<ul class="simple">
+<li>26 -&gt; z</li>
+<li>26 + 26 -&gt; az</li>
+<li>26 + 27 -&gt; ba for BFDTD version &gt;= 2008</li>
+<li>26 + 27 -&gt; a{ for BFDTD version &lt; 2008</li>
+</ul>
+<p>Maximum values:</p>
+<ul class="simple">
+<li>MAXIMUM NUMBER OF SNAPSHOTS: 32767 (=(2^8)*(2^8)/2 -1)</li>
+<li>MAXIMUM NUMBER OF SNAPSHOTS BEFORE RETURN to aa: 6938 = 26+256*27</li>
+<li>MAXIMUM NUMBER OF SNAPSHOTS BEFORE DUPLICATE IDs: 4508 = 26+(6-(ord(‘a’)-1)+256)*27+1 (6=character before non-printable bell character)</li>
+<li>MAXIMUM NUMBER OF SNAPSHOTS BEFORE ENTERING DANGER AREA (non-printable characters):<ul>
+<li>806 = 26 + (126-(ord(‘a’)-1))*26 (first digit: a-~, second digit: a-z) for BFDTD version &gt;= 2008</li>
+<li>836 = 26 + (126-(ord(‘a’)-1))*27 (first digit: a-~, second digit: a-{) for BFDTD version &lt; 2008</li>
+</ul>
+</li>
+</ul>
+</dd></dl>
+
+<dl class="function">
+<dt id="utilities.brisFDTD_ID_info.numID_to_alphaID_ModeFilteredProbe">
+<code class="descclassname">utilities.brisFDTD_ID_info.</code><code class="descname">numID_to_alphaID_ModeFilteredProbe</code><span class="sig-paren">(</span><em>numID</em>, <em>probe_ident='_id_'</em>, <em>snap_time_number=1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utilities/brisFDTD_ID_info.html#numID_to_alphaID_ModeFilteredProbe"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utilities.brisFDTD_ID_info.numID_to_alphaID_ModeFilteredProbe" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts numeric IDs to alpha IDs used by Bristol FDTD for mode filtered probes.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">(filename, alphaID, pair)</td>
+</tr>
+</tbody>
+</table>
+<p>Examples:</p>
+<ul class="simple">
+<li>9 -&gt; 9</li>
+<li>10 -&gt; :</li>
+</ul>
+</dd></dl>
+
+<dl class="function">
+<dt id="utilities.brisFDTD_ID_info.numID_to_alphaID_Probe">
+<code class="descclassname">utilities.brisFDTD_ID_info.</code><code class="descname">numID_to_alphaID_Probe</code><span class="sig-paren">(</span><em>numID</em>, <em>probe_ident='_id_'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utilities/brisFDTD_ID_info.html#numID_to_alphaID_Probe"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utilities.brisFDTD_ID_info.numID_to_alphaID_Probe" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts numeric IDs to alpha IDs used by Bristol FDTD for probes.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">(filename, alphaID, pair)</td>
+</tr>
+</tbody>
+</table>
+<p>Examples:
+* 99 -&gt; 99
+* 100 -&gt; :0</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="utilities.brisFDTD_ID_info.numID_to_alphaID_TimeSnapshot">
+<code class="descclassname">utilities.brisFDTD_ID_info.</code><code class="descname">numID_to_alphaID_TimeSnapshot</code><span class="sig-paren">(</span><em>numID</em>, <em>snap_plane='x'</em>, <em>probe_ident='_id_'</em>, <em>snap_time_number=1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utilities/brisFDTD_ID_info.html#numID_to_alphaID_TimeSnapshot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utilities.brisFDTD_ID_info.numID_to_alphaID_TimeSnapshot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts numeric IDs to alpha IDs used by Bristol FDTD for time snapshots.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This function can also be used for epsilon snapshots, since they are just a subclass of time snapshots.</p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">(filename, alphaID, pair)</td>
+</tr>
+</tbody>
+</table>
+<p>Examples:</p>
+<ul class="simple">
+<li>99 -&gt; 99</li>
+<li>100 -&gt; :0</li>
+</ul>
+</dd></dl>
+
+</div>
+<div class="section" id="module-utilities.common">
+<span id="utilities-common-module"></span><h2>utilities.common module<a class="headerlink" href="#module-utilities.common" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="utilities.common.Angle">
+<code class="descclassname">utilities.common.</code><code class="descname">Angle</code><span class="sig-paren">(</span><em>p</em>, <em>q</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utilities/common.html#Angle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utilities.common.Angle" title="Permalink to this definition">¶</a></dt>
+<dd><p>return the angle w.r.t. another 3-vector</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="utilities.common.LimitsToThickness">
+<code class="descclassname">utilities.common.</code><code class="descname">LimitsToThickness</code><span class="sig-paren">(</span><em>limits</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utilities/common.html#LimitsToThickness"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utilities.common.LimitsToThickness" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="utilities.common.Orthogonal">
+<code class="descclassname">utilities.common.</code><code class="descname">Orthogonal</code><span class="sig-paren">(</span><em>u</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utilities/common.html#Orthogonal"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utilities.common.Orthogonal" title="Permalink to this definition">¶</a></dt>
+<dd><p>get vector v orthogonal to u
+ex: v = Orthogonal(u)</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="utilities.common.addDoubleQuotesIfMissing">
+<code class="descclassname">utilities.common.</code><code class="descname">addDoubleQuotesIfMissing</code><span class="sig-paren">(</span><em>orig</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utilities/common.html#addDoubleQuotesIfMissing"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utilities.common.addDoubleQuotesIfMissing" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="utilities.common.addExtension">
+<code class="descclassname">utilities.common.</code><code class="descname">addExtension</code><span class="sig-paren">(</span><em>filename</em>, <em>default_extension</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utilities/common.html#addExtension"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utilities.common.addExtension" title="Permalink to this definition">¶</a></dt>
+<dd><p>add default_extension if the file does not end in .geo or .inp</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="utilities.common.checkSnapshotNumber">
+<code class="descclassname">utilities.common.</code><code class="descname">checkSnapshotNumber</code><span class="sig-paren">(</span><em>filename</em>, <em>verbose=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utilities/common.html#checkSnapshotNumber"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utilities.common.checkSnapshotNumber" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the number of snapshots and frequency snapshots in the file <em>filename</em>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">(N_time_snaps, N_freq_snaps)</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="utilities.common.check_call_and_log">
+<code class="descclassname">utilities.common.</code><code class="descname">check_call_and_log</code><span class="sig-paren">(</span><em>cmd</em>, <em>log_file_object</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utilities/common.html#check_call_and_log"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utilities.common.check_call_and_log" title="Permalink to this definition">¶</a></dt>
+<dd><p>Custom extension of the <em>check_call</em> function from the python <em>subprocess</em> module.
+It redirects <em>stderr</em> to <em>stdout</em> and prints both out to the screen, while also writing them to the file object <em>log_file_object</em>.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="utilities.common.difft">
+<code class="descclassname">utilities.common.</code><code class="descname">difft</code><span class="sig-paren">(</span><em>start</em>, <em>end</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utilities/common.html#difft"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utilities.common.difft" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns the difference in seconds between two datetime.time objects</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="utilities.common.difft_string">
+<code class="descclassname">utilities.common.</code><code class="descname">difft_string</code><span class="sig-paren">(</span><em>start</em>, <em>end</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utilities/common.html#difft_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utilities.common.difft_string" title="Permalink to this definition">¶</a></dt>
+<dd><p>prints the difference between two datetime.time objects in a nice format</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="utilities.common.eng_string">
+<code class="descclassname">utilities.common.</code><code class="descname">eng_string</code><span class="sig-paren">(</span><em>x</em>, <em>format='%s'</em>, <em>si=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utilities/common.html#eng_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utilities.common.eng_string" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns float/int value &lt;x&gt; formatted in a simplified engineering format -
+using an exponent that is a multiple of 3.</p>
+<p>format: printf-style string used to format the value before the exponent.</p>
+<p>si: if true, use SI suffix for exponent, e.g. k instead of e3, n instead of
+e-9 etc.</p>
+<p>E.g. with format=’%.2f’:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>  <span class="mf">1.23e-08</span> <span class="o">=&gt;</span> <span class="mf">12.30e-9</span>
+       <span class="mi">123</span> <span class="o">=&gt;</span> <span class="mf">123.00</span>
+    <span class="mf">1230.0</span> <span class="o">=&gt;</span> <span class="mf">1.23e3</span>
+<span class="o">-</span><span class="mf">1230000.0</span> <span class="o">=&gt;</span> <span class="o">-</span><span class="mf">1.23e6</span>
+</pre></div>
+</div>
+<p>and with si=True:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>    <span class="mf">1230.0</span> <span class="o">=&gt;</span> <span class="mf">1.23</span><span class="n">k</span>
+<span class="o">-</span><span class="mf">1230000.0</span> <span class="o">=&gt;</span> <span class="o">-</span><span class="mf">1.23</span><span class="n">M</span>
+</pre></div>
+</div>
+<p>References/sources:</p>
+<blockquote>
+<div><ul class="simple">
+<li><a class="reference external" href="http://stackoverflow.com/questions/12311148/print-number-in-engineering-format">http://stackoverflow.com/questions/12311148/print-number-in-engineering-format</a></li>
+<li><a class="reference external" href="http://stackoverflow.com/questions/17973278/python-decimal-engineering-notation-for-mili-10e-3-and-micro-10e-6">http://stackoverflow.com/questions/17973278/python-decimal-engineering-notation-for-mili-10e-3-and-micro-10e-6</a></li>
+<li><a class="reference external" href="http://stackoverflow.com/questions/12985438/print-numbers-in-terms-of-engineering-units-in-python">http://stackoverflow.com/questions/12985438/print-numbers-in-terms-of-engineering-units-in-python</a></li>
+</ul>
+</div></blockquote>
+</dd></dl>
+
+<dl class="function">
+<dt id="utilities.common.findNearest">
+<code class="descclassname">utilities.common.</code><code class="descname">findNearest</code><span class="sig-paren">(</span><em>a</em>, <em>a0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utilities/common.html#findNearest"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utilities.common.findNearest" title="Permalink to this definition">¶</a></dt>
+<dd><p>Element in nd array <cite>a</cite> closest to the scalar value <cite>a0</cite> 
+returns (idx, a.flat[idx]) = (index of closest value, closest value)</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="utilities.common.findNearestInSortedArray">
+<code class="descclassname">utilities.common.</code><code class="descname">findNearestInSortedArray</code><span class="sig-paren">(</span><em>a</em>, <em>a0</em>, <em>direction</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utilities/common.html#findNearestInSortedArray"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utilities.common.findNearestInSortedArray" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find value in a closest to a0. Returns its index and the value.</p>
+<ul class="simple">
+<li>direction = -1: if a0 is not in a, choose closest, but smaller value</li>
+<li>direction = 0: just choose closest</li>
+<li>direction = +1: if a0 is not in a, choose closest, but larger value</li>
+</ul>
+<dl class="docutils">
+<dt><strong>NOTES</strong>:</dt>
+<dd><ul class="first last simple">
+<li>Only for ordered/sorted arrays.</li>
+<li>Supports arrays with duplicate values.</li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="utilities.common.fixLowerUpper">
+<code class="descclassname">utilities.common.</code><code class="descname">fixLowerUpper</code><span class="sig-paren">(</span><em>L</em>, <em>U</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utilities/common.html#fixLowerUpper"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utilities.common.fixLowerUpper" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="utilities.common.float_array">
+<code class="descclassname">utilities.common.</code><code class="descname">float_array</code><span class="sig-paren">(</span><em>A</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utilities/common.html#float_array"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utilities.common.float_array" title="Permalink to this definition">¶</a></dt>
+<dd><p>convert string array to float array</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="utilities.common.getExtension">
+<code class="descclassname">utilities.common.</code><code class="descname">getExtension</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utilities/common.html#getExtension"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utilities.common.getExtension" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns extension of filename
+.. todo:: get rid of this and replace it with os.path.splitext wherever used</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="utilities.common.getProbeColumnFromExcitation">
+<code class="descclassname">utilities.common.</code><code class="descname">getProbeColumnFromExcitation</code><span class="sig-paren">(</span><em>excitation</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utilities/common.html#getProbeColumnFromExcitation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utilities.common.getProbeColumnFromExcitation" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="utilities.common.getVecAlphaDirectionFromVar">
+<code class="descclassname">utilities.common.</code><code class="descname">getVecAlphaDirectionFromVar</code><span class="sig-paren">(</span><em>var</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utilities/common.html#getVecAlphaDirectionFromVar"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utilities.common.getVecAlphaDirectionFromVar" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns ([1,0,0],’x’),etc corresponding to var(alpha or vector)</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="utilities.common.int_array">
+<code class="descclassname">utilities.common.</code><code class="descname">int_array</code><span class="sig-paren">(</span><em>A</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utilities/common.html#int_array"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utilities.common.int_array" title="Permalink to this definition">¶</a></dt>
+<dd><p>convert string array to int array</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="utilities.common.is_number">
+<code class="descclassname">utilities.common.</code><code class="descname">is_number</code><span class="sig-paren">(</span><em>s</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utilities/common.html#is_number"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utilities.common.is_number" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns true if s can be converted to a float, otherwise false</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="utilities.common.matlab_range">
+<code class="descclassname">utilities.common.</code><code class="descname">matlab_range</code><span class="sig-paren">(</span><em>start</em>, <em>step</em>, <em>stop</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utilities/common.html#matlab_range"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utilities.common.matlab_range" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list of values going from <em>start</em> to <em>stop</em> with a step <em>step</em>, but so that all values are less than OR EQUAL TO <em>stop</em>.
+i.e. it works like the matlab slice notation start:step:stop
+or like numpy.arange(start, stop, step) but with values on the closed interval [start, stop].</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="utilities.common.planeNumberName">
+<code class="descclassname">utilities.common.</code><code class="descname">planeNumberName</code><span class="sig-paren">(</span><em>var</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utilities/common.html#planeNumberName"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utilities.common.planeNumberName" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns numindex(1,2,3) and char(‘X’,’Y’,’Z’) corresponding  to var(num or alpha index)</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="utilities.common.rotation_matrix3">
+<code class="descclassname">utilities.common.</code><code class="descname">rotation_matrix3</code><span class="sig-paren">(</span><em>axis</em>, <em>theta</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utilities/common.html#rotation_matrix3"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utilities.common.rotation_matrix3" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a rotation matrix of size 3 to rotate something around vector v by angle theta.</p>
+<p>Usage:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">v</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">axis</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">4</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">theta</span> <span class="o">=</span> <span class="mf">1.2</span> 
+<span class="nb">print</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">rotation_matrix3</span><span class="p">(</span><span class="n">axis</span><span class="p">,</span><span class="n">theta</span><span class="p">),</span><span class="n">v</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>source: <a class="reference external" href="http://stackoverflow.com/questions/6802577/python-rotation-of-3d-vector">http://stackoverflow.com/questions/6802577/python-rotation-of-3d-vector</a></p>
+<p>TODO: Replace with some existing complete geometry module???</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="utilities.common.rotation_matrix4">
+<code class="descclassname">utilities.common.</code><code class="descname">rotation_matrix4</code><span class="sig-paren">(</span><em>axis</em>, <em>theta</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utilities/common.html#rotation_matrix4"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utilities.common.rotation_matrix4" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a rotation matrix of size 4 to rotate something around vector v by angle theta.</p>
+<p>Usage:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">v</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">axis</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">4</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">theta</span> <span class="o">=</span> <span class="mf">1.2</span> 
+<span class="nb">print</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">rotation_matrix</span><span class="p">(</span><span class="n">axis</span><span class="p">,</span><span class="n">theta</span><span class="p">),</span><span class="n">v</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>source: <a class="reference external" href="http://stackoverflow.com/questions/6802577/python-rotation-of-3d-vector">http://stackoverflow.com/questions/6802577/python-rotation-of-3d-vector</a></p>
+</dd></dl>
+
+<dl class="function">
+<dt id="utilities.common.runCommandAndStoreOutput">
+<code class="descclassname">utilities.common.</code><code class="descname">runCommandAndStoreOutput</code><span class="sig-paren">(</span><em>cmd</em>, <em>outfilename</em>, <em>verbosity=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utilities/common.html#runCommandAndStoreOutput"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utilities.common.runCommandAndStoreOutput" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="utilities.common.runSimulation">
+<code class="descclassname">utilities.common.</code><code class="descname">runSimulation</code><span class="sig-paren">(</span><em>exe</em>, <em>inFileName</em>, <em>outfilename=None</em>, <em>verbosity=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utilities/common.html#runSimulation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utilities.common.runSimulation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Just a simple convenience function to run a simulation in the directory of the input file and then going back to the original working directory.
+The output is saved in a file of the form <code class="docutils literal notranslate"><span class="pre">basename(inFileName)+'.out'</span></code> by default.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>exe</strong> (<em>str</em>) – The executable to use.</li>
+<li><strong>inFileName</strong> (<em>str</em>) – The input file to use.</li>
+<li><strong>outfilename</strong> (<em>str</em>) – The output file to use (i.e. logfile). If <em>None</em>, a filename will be built by replacing the extension of <em>inFileName</em> with “.out”. Default: None</li>
+<li><strong>verbosity</strong> (<em>int</em>) – If <em>verbosity</em>&gt;=1, the final command used will be printed out. If <em>verbosity</em>&gt;=2, the commands output will also be printed to screen. Default: 0</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="utilities.common.str2list">
+<code class="descclassname">utilities.common.</code><code class="descname">str2list</code><span class="sig-paren">(</span><em>instr</em>, <em>numeric=True</em>, <em>array=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utilities/common.html#str2list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utilities.common.str2list" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts strings of the form ‘[1,2,3],[4,5,6],[7,8,9]’ into a list of lists of the form [[‘1’, ‘2’, ‘3’], [‘4’, ‘5’, ‘6’], [‘7’, ‘8’, ‘9’]]</p>
+<ul class="simple">
+<li>If numeric is set to True, converts all elements to float, otherwise leaves them as strings.</li>
+<li>If array is set to True, converts the lists to numpy arrays.</li>
+<li>If instr is not of type string, it raises a TypeError.</li>
+</ul>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Seems to only be used in the <em>weijeiWoodpile.py</em> script at the moment to deal with input from ConfigParser.</p>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This could be done with an eval-like function… I guess this is safer in the end?</p>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="utilities.common.substituteExtension">
+<code class="descclassname">utilities.common.</code><code class="descname">substituteExtension</code><span class="sig-paren">(</span><em>s</em>, <em>oldext</em>, <em>newext</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utilities/common.html#substituteExtension"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utilities.common.substituteExtension" title="Permalink to this definition">¶</a></dt>
+<dd><p>For easier to read code?</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="utilities.common.symmetrifyAndSubtractOdd">
+<code class="descclassname">utilities.common.</code><code class="descname">symmetrifyAndSubtractOdd</code><span class="sig-paren">(</span><em>vec</em>, <em>max</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utilities/common.html#symmetrifyAndSubtractOdd"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utilities.common.symmetrifyAndSubtractOdd" title="Permalink to this definition">¶</a></dt>
+<dd><p>[1, 2, 3]-&gt;[1, 2, 3, 8, 9] for max = 10
+[0, 1, 2, 3]-&gt;[0, 1, 2, 3, 4, 5, 6] for max = 6</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="utilities.common.symmetrifyEven">
+<code class="descclassname">utilities.common.</code><code class="descname">symmetrifyEven</code><span class="sig-paren">(</span><em>vec</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utilities/common.html#symmetrifyEven"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utilities.common.symmetrifyEven" title="Permalink to this definition">¶</a></dt>
+<dd><p>[1, 2, 3]-&gt;[1, 2, 3, 3, 2, 1]</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="utilities.common.symmetrifyOdd">
+<code class="descclassname">utilities.common.</code><code class="descname">symmetrifyOdd</code><span class="sig-paren">(</span><em>vec</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utilities/common.html#symmetrifyOdd"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utilities.common.symmetrifyOdd" title="Permalink to this definition">¶</a></dt>
+<dd><p>[1, 2, 3]-&gt;[1, 2, 3, 2, 1]</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="utilities.common.timestodelta">
+<code class="descclassname">utilities.common.</code><code class="descname">timestodelta</code><span class="sig-paren">(</span><em>starttime</em>, <em>endtime</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utilities/common.html#timestodelta"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utilities.common.timestodelta" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns the difference in seconds between two datetime.time objects</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="utilities.common.todatetime">
+<code class="descclassname">utilities.common.</code><code class="descname">todatetime</code><span class="sig-paren">(</span><em>time</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utilities/common.html#todatetime"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utilities.common.todatetime" title="Permalink to this definition">¶</a></dt>
+<dd><p>converts a datetime.time object to a datetime.datetime object using the current date</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="utilities.common.unitVector">
+<code class="descclassname">utilities.common.</code><code class="descname">unitVector</code><span class="sig-paren">(</span><em>vec</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utilities/common.html#unitVector"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utilities.common.unitVector" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-utilities.dumpObj">
+<span id="utilities-dumpobj-module"></span><h2>utilities.dumpObj module<a class="headerlink" href="#module-utilities.dumpObj" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="utilities.dumpObj.delchars">
+<code class="descclassname">utilities.dumpObj.</code><code class="descname">delchars</code><span class="sig-paren">(</span><em>str</em>, <em>chars</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utilities/dumpObj.html#delchars"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utilities.dumpObj.delchars" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a string for which all occurrences of characters in
+chars have been removed.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="utilities.dumpObj.dumpObj">
+<code class="descclassname">utilities.dumpObj.</code><code class="descname">dumpObj</code><span class="sig-paren">(</span><em>obj</em>, <em>maxlen=77</em>, <em>lindent=24</em>, <em>maxspew=600</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utilities/dumpObj.html#dumpObj"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utilities.dumpObj.dumpObj" title="Permalink to this definition">¶</a></dt>
+<dd><p>Print a nicely formatted overview of an object.</p>
+<p>The output lines will be wrapped at maxlen, with lindent of space
+for names of attributes.  A maximum of maxspew characters will be
+printed for each attribute value.</p>
+<p>You can hand dumpObj any data type – a module, class, instance,
+new class.</p>
+<p>Note that in reformatting for compactness the routine trashes any
+formatting in the docstrings it prints.</p>
+<dl class="docutils">
+<dt>Example:</dt>
+<dd><div class="first last highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">Foo</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<span class="go">        a = 30</span>
+<span class="go">        def bar(self, b):</span>
+<span class="go">            &quot;A silly method&quot;</span>
+<span class="go">            return a*b</span>
+<span class="gp">... </span><span class="o">...</span> <span class="o">...</span> <span class="o">...</span> 
+<span class="gp">&gt;&gt;&gt; </span><span class="n">foo</span> <span class="o">=</span> <span class="n">Foo</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dumpObj</span><span class="p">(</span><span class="n">foo</span><span class="p">)</span>
+<span class="go">Instance of class &#39;Foo&#39; as defined in module __main__ with id 136863308</span>
+<span class="go">Documentation string:   None</span>
+<span class="go">Built-in Methods:       __delattr__, __getattribute__, __hash__, __init__</span>
+<span class="go">                        __new__, __reduce__, __repr__, __setattr__,       </span>
+<span class="go">                        __str__</span>
+<span class="go">Methods:</span>
+<span class="go">  bar                   &quot;A silly method&quot;</span>
+<span class="go">Attributes:</span>
+<span class="go">  __dict__              {}</span>
+<span class="go">  __weakref__           None</span>
+<span class="go">  a                     30</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="utilities.dumpObj.nukenewlines">
+<code class="descclassname">utilities.dumpObj.</code><code class="descname">nukenewlines</code><span class="sig-paren">(</span><em>string</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utilities/dumpObj.html#nukenewlines"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utilities.dumpObj.nukenewlines" title="Permalink to this definition">¶</a></dt>
+<dd><p>Strip newlines and any trailing/following whitespace; rejoin
+with a single space where the newlines were.</p>
+<p>Bug: This routine will completely butcher any whitespace-formatted
+text.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="utilities.dumpObj.prettyPrint">
+<code class="descclassname">utilities.dumpObj.</code><code class="descname">prettyPrint</code><span class="sig-paren">(</span><em>string</em>, <em>maxlen=75</em>, <em>split=' '</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utilities/dumpObj.html#prettyPrint"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utilities.dumpObj.prettyPrint" title="Permalink to this definition">¶</a></dt>
+<dd><p>Pretty prints the given string to break at an occurrence of
+split where necessary to avoid lines longer than maxlen.</p>
+<p>This will overflow the line if no convenient occurrence of split
+is found</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="utilities.dumpObj.prettyPrintCols">
+<code class="descclassname">utilities.dumpObj.</code><code class="descname">prettyPrintCols</code><span class="sig-paren">(</span><em>strings</em>, <em>widths</em>, <em>split=' '</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utilities/dumpObj.html#prettyPrintCols"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utilities.dumpObj.prettyPrintCols" title="Permalink to this definition">¶</a></dt>
+<dd><p>Pretty prints text in colums, with each string breaking at
+split according to prettyPrint.  margins gives the corresponding
+right breaking point.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="utilities.dumpObj.printDict">
+<code class="descclassname">utilities.dumpObj.</code><code class="descname">printDict</code><span class="sig-paren">(</span><em>di</em>, <em>format='%-25s %s'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utilities/dumpObj.html#printDict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utilities.dumpObj.printDict" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-utilities.getuserdir">
+<span id="utilities-getuserdir-module"></span><h2>utilities.getuserdir module<a class="headerlink" href="#module-utilities.getuserdir" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="utilities.getuserdir.getuserdir">
+<code class="descclassname">utilities.getuserdir.</code><code class="descname">getuserdir</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/utilities/getuserdir.html#getuserdir"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utilities.getuserdir.getuserdir" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the platform’s “user directory”.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="utilities-plotdatfile-module">
+<h2>utilities.plotDatFile module<a class="headerlink" href="#utilities-plotdatfile-module" title="Permalink to this headline">¶</a></h2>
+<p>Currently broken.
+automodule:: utilities.plotDatFile
+:members:
+:undoc-members:
+:show-inheritance:</p>
+</div>
+<div class="section" id="module-utilities.prnutils">
+<span id="utilities-prnutils-module"></span><h2>utilities.prnutils module<a class="headerlink" href="#module-utilities.prnutils" title="Permalink to this headline">¶</a></h2>
+<p>for future ref: functions of interest in python/matlab/octave are eval, exec and genvarname</p>
+<dl class="docutils">
+<dt>csv options to consider for general reader/writer/printing functions:</dt>
+<dd><ul class="first last simple">
+<li>delimiter</li>
+<li>field names</li>
+<li>printing format</li>
+</ul>
+</dd>
+<dt>current main csv files:</dt>
+<dd><ul class="first last simple">
+<li>probe output</li>
+<li>epsilon snapshots</li>
+<li>time snapshots</li>
+<li>frequency snapshots</li>
+<li>harminv output</li>
+<li>harminv selection output (from plotProbe)</li>
+</ul>
+</dd>
+</dl>
+<p>Links:</p>
+<ul class="simple">
+<li><a class="reference external" href="http://docs.scipy.org/doc/numpy/user/basics.creation.html">http://docs.scipy.org/doc/numpy/user/basics.creation.html</a></li>
+<li><a class="reference external" href="http://docs.scipy.org/doc/numpy/user/basics.rec.html#structured-arrays-and-record-arrays">http://docs.scipy.org/doc/numpy/user/basics.rec.html#structured-arrays-and-record-arrays</a></li>
+</ul>
+<dl class="function">
+<dt id="utilities.prnutils.genvarname">
+<code class="descclassname">utilities.prnutils.</code><code class="descname">genvarname</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/utilities/prnutils.html#genvarname"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utilities.prnutils.genvarname" title="Permalink to this definition">¶</a></dt>
+<dd><p>should act like genvarname from Matlab/Octave</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="utilities.prnutils.getDimensions">
+<code class="descclassname">utilities.prnutils.</code><code class="descname">getDimensions</code><span class="sig-paren">(</span><em>data</em>, <em>header=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utilities/prnutils.html#getDimensions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utilities.prnutils.getDimensions" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="utilities.prnutils.printHarminvOutput">
+<code class="descclassname">utilities.prnutils.</code><code class="descname">printHarminvOutput</code><span class="sig-paren">(</span><em>harminv_output</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utilities/prnutils.html#printHarminvOutput"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utilities.prnutils.printHarminvOutput" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="utilities.prnutils.printHarminvOutputDirect">
+<code class="descclassname">utilities.prnutils.</code><code class="descname">printHarminvOutputDirect</code><span class="sig-paren">(</span><em>harminv_output</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utilities/prnutils.html#printHarminvOutputDirect"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utilities.prnutils.printHarminvOutputDirect" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="utilities.prnutils.printHarminvOutputSelection">
+<code class="descclassname">utilities.prnutils.</code><code class="descname">printHarminvOutputSelection</code><span class="sig-paren">(</span><em>harminv_output</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utilities/prnutils.html#printHarminvOutputSelection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utilities.prnutils.printHarminvOutputSelection" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="utilities.prnutils.prnToVariables">
+<code class="descclassname">utilities.prnutils.</code><code class="descname">prnToVariables</code><span class="sig-paren">(</span><em>prn_file</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utilities/prnutils.html#prnToVariables"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utilities.prnutils.prnToVariables" title="Permalink to this definition">¶</a></dt>
+<dd><p>A function reading in a .prn file and putting the data directly into usable variables named after the column headers. It then drops you into an interactive python session.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="utilities.prnutils.readHarminvOutput">
+<code class="descclassname">utilities.prnutils.</code><code class="descname">readHarminvOutput</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utilities/prnutils.html#readHarminvOutput"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utilities.prnutils.readHarminvOutput" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="utilities.prnutils.readHarminvOutputDirect">
+<code class="descclassname">utilities.prnutils.</code><code class="descname">readHarminvOutputDirect</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utilities/prnutils.html#readHarminvOutputDirect"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utilities.prnutils.readHarminvOutputDirect" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="utilities.prnutils.readHarminvOutputSelection">
+<code class="descclassname">utilities.prnutils.</code><code class="descname">readHarminvOutputSelection</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utilities/prnutils.html#readHarminvOutputSelection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utilities.prnutils.readHarminvOutputSelection" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="utilities.prnutils.readPrnFile">
+<code class="descclassname">utilities.prnutils.</code><code class="descname">readPrnFile</code><span class="sig-paren">(</span><em>fname</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utilities/prnutils.html#readPrnFile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utilities.prnutils.readPrnFile" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="utilities.prnutils.readPrnFile_old">
+<code class="descclassname">utilities.prnutils.</code><code class="descname">readPrnFile_old</code><span class="sig-paren">(</span><em>filename</em>, <em>max_lines=None</em>, <em>max_cols=None</em>, <em>delimiter='\t'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utilities/prnutils.html#readPrnFile_old"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utilities.prnutils.readPrnFile_old" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="utilities.prnutils.readProbeFile">
+<code class="descclassname">utilities.prnutils.</code><code class="descname">readProbeFile</code><span class="sig-paren">(</span><em>fname</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utilities/prnutils.html#readProbeFile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utilities.prnutils.readProbeFile" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="utilities.prnutils.reshapeData">
+<code class="descclassname">utilities.prnutils.</code><code class="descname">reshapeData</code><span class="sig-paren">(</span><em>data</em>, <em>Nrows=None</em>, <em>Ncols=None</em>, <em>header=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utilities/prnutils.html#reshapeData"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utilities.prnutils.reshapeData" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="utilities.prnutils.writePrnFile">
+<code class="descclassname">utilities.prnutils.</code><code class="descname">writePrnFile</code><span class="sig-paren">(</span><em>fname</em>, <em>X</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utilities/prnutils.html#writePrnFile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utilities.prnutils.writePrnFile" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-utilities">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-utilities" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">utilities package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-utilities.createGUI">utilities.createGUI module</a></li>
+<li><a class="reference internal" href="#module-utilities.TransformationMatrix">utilities.TransformationMatrix module</a></li>
+<li><a class="reference internal" href="#module-utilities.brisFDTD_ID_info">utilities.brisFDTD_ID_info module</a></li>
+<li><a class="reference internal" href="#module-utilities.common">utilities.common module</a></li>
+<li><a class="reference internal" href="#module-utilities.dumpObj">utilities.dumpObj module</a></li>
+<li><a class="reference internal" href="#module-utilities.getuserdir">utilities.getuserdir module</a></li>
+<li><a class="reference internal" href="#utilities-plotdatfile-module">utilities.plotDatFile module</a></li>
+<li><a class="reference internal" href="#module-utilities.prnutils">utilities.prnutils module</a></li>
+<li><a class="reference internal" href="#module-utilities">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="third_party.html"
+                        title="previous chapter">third_party package</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="calculateModeVolume.html"
+                        title="next chapter">calculateModeVolume</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/utilities.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="calculateModeVolume.html" title="calculateModeVolume"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="third_party.html" title="third_party package"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">script_inception_public  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="script_inception_public.html" >package</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2014, Mike Taverne.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.9.
+    </div>
+  </body>
+</html>

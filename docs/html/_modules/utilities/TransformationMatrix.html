@@ -1,0 +1,319 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>utilities.TransformationMatrix &#8212; script_inception_public  documentation</title>
+    <link rel="stylesheet" href="../../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">script_inception_public  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for utilities.TransformationMatrix</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span>
+<span class="kn">import</span> <span class="nn">numpy.matlib</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">math</span>
+
+<div class="viewcode-block" id="applyTransformation"><a class="viewcode-back" href="../../utilities.html#utilities.TransformationMatrix.applyTransformation">[docs]</a><span class="k">def</span> <span class="nf">applyTransformation</span><span class="p">(</span><span class="n">M</span><span class="p">,</span> <span class="n">voxel</span><span class="p">):</span>
+  <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">  Applies 4x4 transformation matrix M to list, array or matrix voxel of size 3 or 4.</span>
+<span class="sd">  </span>
+<span class="sd">  * If voxel is of size 4, the 4th element will not be affected (Useful for power)!</span>
+<span class="sd">  * If voxel is of size 3, a 4th element of value -1 is added.</span>
+
+<span class="sd">  :return: a voxel with the transformed location and same power (or -1 if no previous power given)</span>
+<span class="sd">  &#39;&#39;&#39;</span>
+  
+  <span class="c1"># make sure voxel is an array</span>
+  <span class="n">voxel</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">voxel</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+  
+  <span class="c1"># create location and power variables</span>
+  <span class="n">location</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">matrix</span><span class="p">([[</span><span class="n">voxel</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span> <span class="p">[</span><span class="n">voxel</span><span class="p">[</span><span class="mi">1</span><span class="p">]],</span> <span class="p">[</span><span class="n">voxel</span><span class="p">[</span><span class="mi">2</span><span class="p">]],</span> <span class="p">[</span><span class="mi">1</span><span class="p">]])</span>
+  <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">voxel</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">3</span><span class="p">:</span>
+    <span class="n">power</span> <span class="o">=</span> <span class="n">voxel</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+  <span class="k">else</span><span class="p">:</span>
+    <span class="n">power</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+    
+  <span class="c1"># apply transformation to location</span>
+  <span class="n">location</span> <span class="o">=</span> <span class="n">M</span><span class="o">*</span><span class="n">location</span>
+  <span class="c1">#location = P*numpy.transpose(numpy.matrix(location))</span>
+  <span class="c1">#location = numpy.asarray(location).reshape(-1) #numpy.array(numpy.transpose(M))[0]</span>
+
+  <span class="k">return</span> <span class="p">[</span><span class="n">location</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span><span class="n">location</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span><span class="n">location</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span><span class="n">power</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="Identity"><a class="viewcode-back" href="../../utilities.html#utilities.TransformationMatrix.Identity">[docs]</a><span class="k">def</span> <span class="nf">Identity</span><span class="p">(</span><span class="n">size</span><span class="p">):</span>
+  <span class="sd">&#39;&#39;&#39;Create an identity matrix.</span>
+<span class="sd">  </span>
+<span class="sd">  :param int size: The size of the identity matrix to construct [2, 4].</span>
+<span class="sd">  </span>
+<span class="sd">  :return: A new identity matrix.</span>
+<span class="sd">  :rtype: Matrix</span>
+<span class="sd">  &#39;&#39;&#39;</span>
+  <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">matlib</span><span class="o">.</span><span class="n">identity</span><span class="p">(</span><span class="n">size</span><span class="p">)</span></div>
+    
+<div class="viewcode-block" id="rotationMatrix"><a class="viewcode-back" href="../../utilities.html#utilities.TransformationMatrix.rotationMatrix">[docs]</a><span class="k">def</span> <span class="nf">rotationMatrix</span><span class="p">(</span><span class="n">axis_point</span><span class="p">,</span> <span class="n">axis_direction</span><span class="p">,</span> <span class="n">angle_degrees</span><span class="p">):</span>
+  <span class="sd">&#39;&#39;&#39; return a rotation matrix for a rotation around an arbitrary axis &#39;&#39;&#39;</span>
+  <span class="n">axis_direction</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">axis_direction</span><span class="p">)</span>
+  <span class="n">axis_point</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">axis_point</span><span class="p">)</span>
+  <span class="n">T</span> <span class="o">=</span> <span class="n">Translation</span><span class="p">(</span><span class="n">axis_point</span><span class="p">)</span>
+  <span class="n">Tinv</span> <span class="o">=</span> <span class="n">Translation</span><span class="p">(</span><span class="o">-</span><span class="n">axis_point</span><span class="p">)</span>
+  <span class="n">R</span> <span class="o">=</span> <span class="n">Rotation</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="n">angle_degrees</span><span class="p">),</span> <span class="mi">4</span><span class="p">,</span> <span class="n">axis_direction</span><span class="p">)</span>
+  <span class="k">return</span> <span class="n">T</span><span class="o">*</span><span class="n">R</span><span class="o">*</span><span class="n">Tinv</span></div>
+    
+<div class="viewcode-block" id="Rotation"><a class="viewcode-back" href="../../utilities.html#utilities.TransformationMatrix.Rotation">[docs]</a><span class="k">def</span> <span class="nf">Rotation</span><span class="p">(</span><span class="n">angle_rad</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">axis</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+  <span class="sd">&#39;&#39;&#39;Create a matrix representing a rotation.</span>
+<span class="sd">  </span>
+<span class="sd">  :param float angle_rad: The angle of rotation desired, in radians.</span>
+<span class="sd">  :param int size: The size of the rotation matrix to construct [2, 4].</span>
+<span class="sd">  :param axis: a string in [&#39;X&#39;, &#39;Y&#39;, &#39;Z&#39;] or a 3D Vector Object (optional when size is 2).</span>
+<span class="sd">  :type axis: string or Vector</span>
+<span class="sd">  </span>
+<span class="sd">  :Return: A new rotation matrix.</span>
+<span class="sd">  :rtype: Matrix</span>
+<span class="sd">  &#39;&#39;&#39;</span>
+  
+  <span class="n">S</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;X&#39;</span><span class="p">,</span><span class="s1">&#39;Y&#39;</span><span class="p">,</span><span class="s1">&#39;Z&#39;</span><span class="p">]</span>
+  <span class="n">V</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]]</span>
+
+  <span class="n">axis_letter</span> <span class="o">=</span> <span class="kc">None</span>
+  
+  <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">axis</span><span class="p">,</span><span class="nb">str</span><span class="p">):</span>
+    <span class="n">axis_letter</span> <span class="o">=</span> <span class="n">axis</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">axis_letter</span> <span class="ow">in</span> <span class="n">S</span><span class="p">:</span>
+      <span class="n">axis</span> <span class="o">=</span> <span class="n">V</span><span class="p">[</span><span class="n">S</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">axis_letter</span><span class="p">)]</span>
+  <span class="k">else</span><span class="p">:</span>
+    <span class="c1"># list(axis) converts axis to list if it is a numpy.array</span>
+    <span class="k">if</span> <span class="nb">list</span><span class="p">(</span><span class="n">axis</span><span class="p">)</span> <span class="ow">in</span> <span class="n">V</span><span class="p">:</span>
+      <span class="n">axis_letter</span> <span class="o">=</span> <span class="n">S</span><span class="p">[</span><span class="n">V</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">axis</span><span class="p">))]</span>
+
+  <span class="k">if</span> <span class="n">axis</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">axis</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">3</span><span class="p">:</span>
+    <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;ERROR: Matrix.Rotation(angle_rad, size, axis), invalid &#39;axis&#39; arg&quot;</span><span class="p">)</span>
+
+  <span class="k">if</span> <span class="n">size</span><span class="o">&lt;</span><span class="mi">2</span> <span class="ow">or</span> <span class="n">size</span><span class="o">&gt;</span><span class="mi">4</span><span class="p">:</span>
+    <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;ERROR: Invalid size = &#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">size</span><span class="p">))</span>
+
+  <span class="k">if</span> <span class="p">(</span><span class="n">size</span> <span class="o">==</span> <span class="mi">2</span> <span class="ow">and</span> <span class="n">axis</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">):</span>
+    <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;ERROR: Matrix.Rotation(): cannot create a 2x2 rotation matrix around arbitrary axis&quot;</span><span class="p">)</span>
+
+  <span class="k">if</span> <span class="p">((</span><span class="n">size</span> <span class="o">==</span> <span class="mi">3</span> <span class="ow">or</span> <span class="n">size</span> <span class="o">==</span> <span class="mi">4</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">axis</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="p">):</span>
+    <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;ERROR: Matrix.Rotation(): axis of rotation for 3d and 4d matrices is required&quot;</span><span class="p">)</span>
+
+  <span class="n">mat</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">matlib</span><span class="o">.</span><span class="n">identity</span><span class="p">(</span><span class="n">size</span><span class="p">)</span>
+
+  <span class="n">angle_cos</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">angle_rad</span><span class="p">)</span>
+  <span class="n">angle_sin</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">angle_rad</span><span class="p">)</span>
+
+  <span class="k">if</span> <span class="p">(</span><span class="n">size</span> <span class="o">==</span> <span class="mi">2</span><span class="p">):</span>
+    <span class="c1"># 2D rotation matrix</span>
+    <span class="n">mat</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span>  <span class="n">angle_cos</span>
+    <span class="n">mat</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">angle_sin</span>
+    <span class="n">mat</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span>  <span class="n">angle_sin</span>
+    <span class="n">mat</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span>  <span class="n">angle_cos</span>
+    
+  <span class="k">elif</span> <span class="n">axis_letter</span><span class="p">:</span>
+    <span class="c1"># X, Y or Z axis</span>
+    <span class="k">if</span> <span class="n">axis_letter</span> <span class="o">==</span> <span class="s1">&#39;X&#39;</span><span class="p">:</span> <span class="c1"># rotation around X</span>
+      <span class="n">mat</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+      <span class="n">mat</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+      <span class="n">mat</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+      <span class="n">mat</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+      <span class="n">mat</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">angle_cos</span>
+      <span class="n">mat</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">angle_sin</span>
+      <span class="n">mat</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+      <span class="n">mat</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">angle_sin</span>
+      <span class="n">mat</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">angle_cos</span>
+    <span class="k">elif</span> <span class="n">axis_letter</span> <span class="o">==</span> <span class="s1">&#39;Y&#39;</span><span class="p">:</span> <span class="c1"># rotation around Y</span>
+      <span class="n">mat</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">angle_cos</span>
+      <span class="n">mat</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+      <span class="n">mat</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">angle_sin</span>
+      <span class="n">mat</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+      <span class="n">mat</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+      <span class="n">mat</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+      <span class="n">mat</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">angle_sin</span>
+      <span class="n">mat</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+      <span class="n">mat</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">angle_cos</span>
+    <span class="k">elif</span> <span class="n">axis_letter</span> <span class="o">==</span> <span class="s1">&#39;Z&#39;</span><span class="p">:</span> <span class="c1"># rotation around Z</span>
+      <span class="n">mat</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">angle_cos</span>
+      <span class="n">mat</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">angle_sin</span>
+      <span class="n">mat</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+      <span class="n">mat</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">angle_sin</span>
+      <span class="n">mat</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">angle_cos</span>
+      <span class="n">mat</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+      <span class="n">mat</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+      <span class="n">mat</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+      <span class="n">mat</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+      
+  <span class="k">else</span><span class="p">:</span>
+    <span class="c1"># other axis</span>
+
+    <span class="n">axis_norm</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">axis</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">axis_norm</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+      <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">matlib</span><span class="o">.</span><span class="n">identity</span><span class="p">(</span><span class="n">size</span><span class="p">)</span>
+    
+    <span class="c1"># normalize the axis first (to remove unwanted scaling)</span>
+    <span class="n">nor</span> <span class="o">=</span> <span class="n">axis</span><span class="o">/</span><span class="n">axis_norm</span>
+
+    <span class="n">ico</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">angle_cos</span><span class="p">)</span>
+    
+    <span class="n">nsi</span> <span class="o">=</span> <span class="n">nor</span><span class="o">*</span><span class="n">angle_sin</span>
+
+    <span class="n">mat</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="p">((</span><span class="n">nor</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">nor</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">*</span> <span class="n">ico</span><span class="p">)</span> <span class="o">+</span> <span class="n">angle_cos</span>
+    <span class="n">mat</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="p">((</span><span class="n">nor</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">nor</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">*</span> <span class="n">ico</span><span class="p">)</span> <span class="o">-</span> <span class="n">nsi</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+    <span class="n">mat</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="p">((</span><span class="n">nor</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">nor</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="o">*</span> <span class="n">ico</span><span class="p">)</span> <span class="o">+</span> <span class="n">nsi</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">mat</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="p">((</span><span class="n">nor</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">nor</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">*</span> <span class="n">ico</span><span class="p">)</span> <span class="o">+</span> <span class="n">nsi</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+    <span class="n">mat</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="p">((</span><span class="n">nor</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">nor</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">*</span> <span class="n">ico</span><span class="p">)</span> <span class="o">+</span> <span class="n">angle_cos</span>
+    <span class="n">mat</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="p">((</span><span class="n">nor</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">nor</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="o">*</span> <span class="n">ico</span><span class="p">)</span> <span class="o">-</span> <span class="n">nsi</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">mat</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="p">((</span><span class="n">nor</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">nor</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="o">*</span> <span class="n">ico</span><span class="p">)</span> <span class="o">-</span> <span class="n">nsi</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">mat</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="p">((</span><span class="n">nor</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">nor</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="o">*</span> <span class="n">ico</span><span class="p">)</span> <span class="o">+</span> <span class="n">nsi</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">mat</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="p">((</span><span class="n">nor</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">*</span> <span class="n">nor</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="o">*</span> <span class="n">ico</span><span class="p">)</span> <span class="o">+</span> <span class="n">angle_cos</span>
+  
+  <span class="k">return</span> <span class="n">mat</span></div>
+
+<div class="viewcode-block" id="Scale"><a class="viewcode-back" href="../../utilities.html#utilities.TransformationMatrix.Scale">[docs]</a><span class="k">def</span> <span class="nf">Scale</span><span class="p">(</span><span class="n">factor</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+  <span class="sd">&#39;&#39;&#39;Create a matrix representing a scaling.</span>
+<span class="sd">  </span>
+<span class="sd">  :param float factor: The factor of scaling to apply.</span>
+<span class="sd">  :param int size: The size of the scale matrix to construct [2, 4].</span>
+<span class="sd">  :param Vector axis: Direction to influence scale. (optional).</span>
+<span class="sd">  </span>
+<span class="sd">  :return: A new scale matrix.</span>
+<span class="sd">  :rtype: Matrix</span>
+<span class="sd">  &#39;&#39;&#39;</span>
+  <span class="k">if</span> <span class="n">size</span><span class="o">&lt;</span><span class="mi">2</span> <span class="ow">or</span> <span class="n">size</span><span class="o">&gt;</span><span class="mi">4</span><span class="p">:</span>
+    <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;ERROR: Invalid size = &#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">size</span><span class="p">))</span>
+  
+  <span class="n">mat</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">matlib</span><span class="o">.</span><span class="n">identity</span><span class="p">(</span><span class="n">size</span><span class="p">)</span>
+  <span class="k">if</span> <span class="n">axis</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">mat</span> <span class="o">*=</span> <span class="n">factor</span>
+    <span class="k">if</span> <span class="n">size</span><span class="o">&gt;</span><span class="mi">3</span><span class="p">:</span>
+      <span class="n">mat</span><span class="p">[</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="k">return</span> <span class="n">mat</span>
+  <span class="k">else</span><span class="p">:</span>
+    <span class="n">tvec</span> <span class="o">=</span> <span class="n">Unit</span><span class="p">(</span><span class="n">axis</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">size</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+      <span class="n">mat</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">+</span> <span class="p">((</span><span class="n">factor</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">tvec</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">tvec</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+      <span class="n">mat</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span>     <span class="p">((</span><span class="n">factor</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">tvec</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">tvec</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+      <span class="n">mat</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span>     <span class="p">((</span><span class="n">factor</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">tvec</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">tvec</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+      <span class="n">mat</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">+</span> <span class="p">((</span><span class="n">factor</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">tvec</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">tvec</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+    <span class="k">else</span><span class="p">:</span>
+      <span class="n">mat</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">+</span> <span class="p">((</span><span class="n">factor</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">tvec</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">tvec</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+      <span class="n">mat</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span>     <span class="p">((</span><span class="n">factor</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">tvec</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">tvec</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+      <span class="n">mat</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span>     <span class="p">((</span><span class="n">factor</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">tvec</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">tvec</span><span class="p">[</span><span class="mi">2</span><span class="p">]))</span>
+      <span class="n">mat</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span>     <span class="p">((</span><span class="n">factor</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">tvec</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">tvec</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+      <span class="n">mat</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">+</span> <span class="p">((</span><span class="n">factor</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">tvec</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">tvec</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+      <span class="n">mat</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span>     <span class="p">((</span><span class="n">factor</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">tvec</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">tvec</span><span class="p">[</span><span class="mi">2</span><span class="p">]))</span>
+      <span class="n">mat</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span>     <span class="p">((</span><span class="n">factor</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">tvec</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">tvec</span><span class="p">[</span><span class="mi">2</span><span class="p">]))</span>
+      <span class="n">mat</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span>     <span class="p">((</span><span class="n">factor</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">tvec</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">tvec</span><span class="p">[</span><span class="mi">2</span><span class="p">]))</span>
+      <span class="n">mat</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">+</span> <span class="p">((</span><span class="n">factor</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">tvec</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">*</span> <span class="n">tvec</span><span class="p">[</span><span class="mi">2</span><span class="p">]))</span>
+    <span class="k">return</span> <span class="n">mat</span></div>
+
+<div class="viewcode-block" id="Translation"><a class="viewcode-back" href="../../utilities.html#utilities.TransformationMatrix.Translation">[docs]</a><span class="k">def</span> <span class="nf">Translation</span><span class="p">(</span><span class="n">vector</span><span class="p">):</span>
+  <span class="sd">&#39;&#39;&#39;Create a matrix representing a translation.</span>
+<span class="sd">  </span>
+<span class="sd">  :param Vector vector: The translation vector.</span>
+<span class="sd">  :return: An identity matrix with a translation.</span>
+<span class="sd">  :rtype: Matrix</span>
+<span class="sd">  &#39;&#39;&#39;</span>
+  <span class="n">mat</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">matlib</span><span class="o">.</span><span class="n">identity</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+  <span class="n">mat</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="n">vector</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+  <span class="n">mat</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="n">vector</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+  <span class="n">mat</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="n">vector</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+  <span class="k">return</span> <span class="n">mat</span></div>
+
+<div class="viewcode-block" id="Unit"><a class="viewcode-back" href="../../utilities.html#utilities.TransformationMatrix.Unit">[docs]</a><span class="k">def</span> <span class="nf">Unit</span><span class="p">(</span><span class="n">vec</span><span class="p">):</span>
+  <span class="sd">&#39;&#39;&#39; return unit vector parallel to vec. &#39;&#39;&#39;</span>
+  <span class="n">vec</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">vec</span><span class="p">)</span>
+  <span class="n">tot</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">vec</span><span class="p">)</span>
+  <span class="k">if</span> <span class="n">tot</span> <span class="o">&gt;</span> <span class="mf">0.0</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">vec</span><span class="o">/</span><span class="n">tot</span>
+  <span class="k">else</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">vec</span></div>
+
+  <span class="c1"># potentially faster version (also does not require numpy)</span>
+  <span class="c1">#tot = Mag2(vec)</span>
+  <span class="c1">#if tot &gt; 0.0:</span>
+    <span class="c1">#return vec*(1.0/math.sqrt(tot))</span>
+  <span class="c1">#else:</span>
+    <span class="c1">#return vec</span>
+
+<div class="viewcode-block" id="Mag2"><a class="viewcode-back" href="../../utilities.html#utilities.TransformationMatrix.Mag2">[docs]</a><span class="k">def</span> <span class="nf">Mag2</span><span class="p">(</span><span class="n">vec</span><span class="p">):</span>
+  <span class="sd">&#39;&#39;&#39; return the magnitude squared (faster than Mag for comparisons) &#39;&#39;&#39;</span>
+  <span class="k">return</span> <span class="n">vec</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">vec</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">vec</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">vec</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">vec</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">*</span><span class="n">vec</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="Mag"><a class="viewcode-back" href="../../utilities.html#utilities.TransformationMatrix.Mag">[docs]</a><span class="k">def</span> <span class="nf">Mag</span><span class="p">(</span><span class="n">vec</span><span class="p">):</span>
+  <span class="sd">&#39;&#39;&#39; return the magnitude (rho in spherical coordinate system) &#39;&#39;&#39;</span>
+  <span class="k">return</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">Mag2</span><span class="p">(</span><span class="n">vec</span><span class="p">))</span></div>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+  <span class="k">pass</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">script_inception_public  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2014, Mike Taverne.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.9.
+    </div>
+  </body>
+</html>

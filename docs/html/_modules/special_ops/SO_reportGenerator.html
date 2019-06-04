@@ -1,0 +1,200 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>special_ops.SO_reportGenerator &#8212; script_inception_public  documentation</title>
+    <link rel="stylesheet" href="../../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">script_inception_public  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for special_ops.SO_reportGenerator</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
+
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">getopt</span>
+<span class="kn">import</span> <span class="nn">fnmatch</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">string</span>
+<span class="kn">from</span> <span class="nn">optparse</span> <span class="k">import</span> <span class="n">OptionParser</span>
+<span class="kn">import</span> <span class="nn">glob</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">from</span> <span class="nn">subprocess</span> <span class="k">import</span> <span class="n">call</span>
+<span class="kn">import</span> <span class="nn">textwrap</span>
+<span class="kn">import</span> <span class="nn">shutil</span>
+<span class="kn">import</span> <span class="nn">tempfile</span>
+
+<div class="viewcode-block" id="reportGenerator"><a class="viewcode-back" href="../../special_ops.html#special_ops.SO_reportGenerator.reportGenerator">[docs]</a><span class="k">def</span> <span class="nf">reportGenerator</span><span class="p">(</span><span class="n">texfile</span><span class="p">,</span> <span class="n">title_list</span><span class="p">,</span> <span class="n">picture_list</span><span class="p">):</span>
+  <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">texfile</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;\documentclass</span><span class="si">{beamer}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\\</span><span class="s1">usetheme</span><span class="si">{Copenhagen}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\\</span><span class="s1">usepackage</span><span class="si">{grffile}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\\</span><span class="s1">begin</span><span class="si">{document}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">picture_list</span><span class="p">)):</span>
+      <span class="c1">#width=&#39;+str(width_list[i])+&#39; \\textwidth</span>
+      <span class="n">title</span> <span class="o">=</span> <span class="n">title_list</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+      <span class="n">title</span> <span class="o">=</span> <span class="n">textwrap</span><span class="o">.</span><span class="n">fill</span><span class="p">(</span><span class="n">title</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">51</span><span class="p">)</span>
+      <span class="n">title</span> <span class="o">=</span> <span class="n">title</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span><span class="s1">&#39;</span><span class="se">\\\\</span><span class="s1">&#39;</span><span class="p">)</span>
+      <span class="n">title</span> <span class="o">=</span> <span class="n">title</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">,</span><span class="s1">&#39;\_&#39;</span><span class="p">)</span>
+      
+      <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\\</span><span class="s1">begin</span><span class="si">{frame}</span><span class="s1">{&#39;</span><span class="o">+</span><span class="n">title</span><span class="o">+</span><span class="s1">&#39;}</span><span class="se">\\</span><span class="s1">begin</span><span class="si">{center}</span><span class="s1">\includegraphics[height=70mm,width=110mm,keepaspectratio]{&#39;</span><span class="o">+</span><span class="n">picture_list</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">+</span><span class="s1">&#39;}\end</span><span class="si">{center}</span><span class="s1">\end</span><span class="si">{frame}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+      <span class="c1">#f.write(&#39;\\begin{frame}{&#39;+title+&#39;}\\begin{center}\includegraphics[totalwidth=\linewidth,height=\\textheight,keepaspectratio]{&#39;+picture_list[i]+&#39;}\end{center}\end{frame}\n&#39;)</span>
+      <span class="c1">#f.write(&#39;\\begin{frame}{&#39;+title+&#39;}\\begin{center}Hello\end{center}\end{frame}\n&#39;)</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;\end</span><span class="si">{document}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+  
+  <span class="n">cmd</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;cat&#39;</span><span class="p">,</span> <span class="n">texfile</span><span class="p">]</span>
+  <span class="nb">print</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span>
+  <span class="n">call</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span>
+  
+  <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">texfile</span><span class="p">):</span>
+    <span class="n">cmd</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;pdflatex&#39;</span><span class="p">,</span><span class="s1">&#39;-output-directory&#39;</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">texfile</span><span class="p">),</span> <span class="n">texfile</span><span class="p">]</span>
+  <span class="k">else</span><span class="p">:</span>
+    <span class="n">cmd</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;pdflatex&#39;</span><span class="p">,</span> <span class="n">texfile</span><span class="p">]</span>
+  <span class="c1">#tmpdir = tempfile.mkdtemp(); print &#39;tmpdir = &#39;,tmpdir</span>
+  <span class="c1">#texfileCopy = tmpdir+os.sep+os.path.basename(texfile); print &#39;texfileCopy = &#39;,texfileCopy</span>
+  <span class="c1">#shutil.copy(texfile, texfileCopy)</span>
+
+  <span class="c1">#cmd=[&#39;pdflatex&#39;,&#39;-output-directory&#39;, tmpdir, texfileCopy]</span>
+  <span class="nb">print</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span>
+  <span class="n">call</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span></div>
+
+  <span class="c1">#shutil.move(os.path.splitext(texfile)[0]+&#39;.pdf&#39;, pdfFile)</span>
+
+<div class="viewcode-block" id="main"><a class="viewcode-back" href="../../special_ops.html#special_ops.SO_reportGenerator.main">[docs]</a><span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="n">argv</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+  <span class="c1">#usagestr = &quot;usage: %prog [-o texfile] [ -t title ] [ -w \&quot;widthA;widthB;...\&quot; ] [ --picture_list=\&quot;picA1,picA2,...;picB1,picB2...;...\&quot; ]&quot;</span>
+  <span class="n">usagestr</span> <span class="o">=</span> <span class="s1">&#39;usage: %prog [-o texfile] [ -t title ]</span><span class="se">\n</span><span class="s1"> ex:</span><span class="se">\n</span><span class="s1"> &#39;</span><span class="o">+</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">+</span><span class="s1">&#39; -t&quot;Title&quot; -o tmp.tex probeimage.png !(probeimage).png&#39;</span>
+  <span class="n">parser</span> <span class="o">=</span> <span class="n">OptionParser</span><span class="p">(</span><span class="n">usage</span><span class="o">=</span><span class="n">usagestr</span><span class="p">)</span>
+
+  <span class="n">parser</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span><span class="s2">&quot;-o&quot;</span><span class="p">,</span> <span class="s2">&quot;--outfile&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;string&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;texfile&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;output texfile. ex: tmp.tex, which will lead to tmp.pdf being created&#39;</span><span class="p">)</span>
+  <span class="n">parser</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span><span class="s2">&quot;-t&quot;</span><span class="p">,</span> <span class="s2">&quot;--title&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;string&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;title&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;title of each frame&#39;</span><span class="p">)</span>
+  <span class="c1">#parser.add_option(&quot;-w&quot;, &quot;--width_list&quot;, action=&quot;store&quot;, type=&quot;string&quot;, dest=&quot;width_list&quot;, default=&#39;0.9;1&#39;, help=&#39;width of the different picture sections (ex: &quot;0.9;1&quot;)&#39;)</span>
+  <span class="c1">#parser.add_option(&quot;-p&quot;, &quot;--picture_list&quot;, action=&quot;store&quot;, type=&quot;string&quot;, dest=&quot;picture_list&quot;, default=&#39;&#39;, help=&#39;list of pictures. &quot;,&quot; separates pictures in same section and &quot;;&quot; separates picture sections&#39;)</span>
+  
+  <span class="p">(</span><span class="n">options</span><span class="p">,</span> <span class="n">args</span><span class="p">)</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span>
+  
+  <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;options = &#39;</span><span class="p">,</span> <span class="n">options</span><span class="p">)</span>
+  <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;args = &#39;</span><span class="p">,</span> <span class="n">args</span><span class="p">)</span>
+  
+  <span class="c1">#width_sections = [float(x) for x in options.width_list.split(&#39;;&#39;)]</span>
+
+  <span class="c1">#picture_sections = options.picture_list.split(&#39;;&#39;)</span>
+  <span class="c1">#print &#39;picture_sections = &#39;,picture_sections</span>
+  
+  <span class="c1">#Nsections = len(picture_sections)</span>
+  
+  <span class="c1">#picture_list = []</span>
+  <span class="c1">#width_list = []</span>
+  <span class="c1">#for section_idx in range(Nsections):</span>
+    <span class="c1">#s = picture_sections[section_idx].split(&#39;,&#39;)</span>
+    <span class="c1">#width_list.extend([width_sections[section_idx]]*len(s))</span>
+    <span class="c1">#for p in s:</span>
+      <span class="c1">#picture_list.append(p)</span>
+
+  <span class="n">infiles</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s1">&#39;*.in&#39;</span><span class="p">)</span>
+  <span class="k">if</span> <span class="ow">not</span> <span class="n">infiles</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;no infile found&#39;</span><span class="p">)</span>
+  <span class="k">else</span><span class="p">:</span>
+    <span class="n">base</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">infiles</span><span class="p">[</span><span class="mi">0</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
+
+  <span class="k">if</span> <span class="ow">not</span> <span class="n">options</span><span class="o">.</span><span class="n">title</span><span class="p">:</span>
+    <span class="n">options</span><span class="o">.</span><span class="n">title</span> <span class="o">=</span> <span class="n">base</span>
+  <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;options.title = &#39;</span><span class="p">,</span> <span class="n">options</span><span class="o">.</span><span class="n">title</span><span class="p">)</span>
+
+  <span class="k">if</span> <span class="ow">not</span> <span class="n">options</span><span class="o">.</span><span class="n">texfile</span><span class="p">:</span>
+    <span class="c1">#options.texfile = base+&#39;.tex&#39;</span>
+    <span class="n">options</span><span class="o">.</span><span class="n">texfile</span> <span class="o">=</span> <span class="n">base</span><span class="o">+</span><span class="s1">&#39;.report.tex&#39;</span>
+  <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;options.texfile = &#39;</span><span class="p">,</span> <span class="n">options</span><span class="o">.</span><span class="n">texfile</span><span class="p">)</span>
+
+  <span class="c1">#if not args:</span>
+    <span class="c1">#args = glob.glob(&#39;probeimage.png !(probeimage).png&#39;)</span>
+  <span class="c1">#print &#39;args = &#39;, args</span>
+
+  <span class="n">picture_list</span> <span class="o">=</span> <span class="n">args</span>
+  <span class="n">Ntotal</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">picture_list</span><span class="p">)</span>
+  
+  <span class="n">title_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">options</span><span class="o">.</span><span class="n">title</span><span class="p">]</span><span class="o">*</span><span class="n">Ntotal</span>
+  
+  <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;title_list = &#39;</span><span class="p">,</span> <span class="n">title_list</span><span class="p">)</span>
+  <span class="c1">#print &#39;width_list = &#39;, width_list</span>
+  <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;picture_list = &#39;</span><span class="p">,</span> <span class="n">picture_list</span><span class="p">)</span>
+  <span class="c1">#sys.exit(1)</span>
+  <span class="n">reportGenerator</span><span class="p">(</span><span class="n">options</span><span class="o">.</span><span class="n">texfile</span><span class="p">,</span> <span class="n">title_list</span><span class="p">,</span> <span class="n">picture_list</span><span class="p">)</span></div>
+  
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+  <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">script_inception_public  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2014, Mike Taverne.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.9.
+    </div>
+  </body>
+</html>

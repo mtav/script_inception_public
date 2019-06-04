@@ -1,0 +1,226 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>GWL.SpiralSphere &#8212; script_inception_public  documentation</title>
+    <link rel="stylesheet" href="../../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">script_inception_public  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for GWL.SpiralSphere</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python3</span>
+<span class="kn">from</span> <span class="nn">numpy</span> <span class="k">import</span> <span class="n">pi</span><span class="p">,</span> <span class="n">arcsin</span><span class="p">,</span> <span class="n">sin</span><span class="p">,</span> <span class="n">cos</span><span class="p">,</span> <span class="n">zeros</span><span class="p">,</span> <span class="n">isnan</span>
+<span class="kn">from</span> <span class="nn">GWL.GWL_parser</span> <span class="k">import</span> <span class="n">GWLobject</span>
+
+<span class="c1">#class SpiralSphereHull(GWLobject):</span>
+  <span class="c1">#def __init__(self):</span>
+    
+<div class="viewcode-block" id="test"><a class="viewcode-back" href="../../GWL.html#GWL.SpiralSphere.test">[docs]</a><span class="k">def</span> <span class="nf">test</span><span class="p">():</span>
+  <span class="n">r</span> <span class="o">=</span> <span class="mi">1</span>
+  <span class="c1"># write one hull of radius r</span>
+  <span class="n">write_sequence</span> <span class="o">=</span> <span class="p">[]</span>
+  <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Nmax</span><span class="p">):</span>
+    <span class="n">phi_rad</span> <span class="o">=</span> <span class="n">phi0</span> <span class="o">+</span> <span class="n">i</span><span class="o">*</span><span class="n">deltaP</span>
+    <span class="n">theta_rad</span> <span class="o">=</span> <span class="n">theta0</span> <span class="o">+</span> <span class="n">i</span><span class="o">*</span><span class="n">deltaT</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">r</span><span class="o">*</span><span class="n">sin</span><span class="p">(</span><span class="n">theta_rad</span><span class="p">)</span><span class="o">*</span><span class="n">cos</span><span class="p">(</span><span class="n">phi_rad</span><span class="p">)</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">r</span><span class="o">*</span><span class="n">sin</span><span class="p">(</span><span class="n">theta_rad</span><span class="p">)</span><span class="o">*</span><span class="n">sin</span><span class="p">(</span><span class="n">phi_rad</span><span class="p">)</span>
+    <span class="n">z</span> <span class="o">=</span> <span class="n">r</span><span class="o">*</span><span class="n">cos</span><span class="p">(</span><span class="n">theta_rad</span><span class="p">)</span>
+    <span class="n">write_sequence</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">])</span>
+  <span class="k">return</span><span class="p">(</span><span class="n">write_sequence</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="SpiralSphere"><a class="viewcode-back" href="../../GWL.html#GWL.SpiralSphere.SpiralSphere">[docs]</a><span class="k">class</span> <span class="nc">SpiralSphere</span><span class="p">(</span><span class="n">GWLobject</span><span class="p">):</span>
+  <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="n">GWLobject</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">radius</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">rstart</span> <span class="o">=</span> <span class="mi">1</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">thickness</span> <span class="o">=</span> <span class="mi">3</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">hole_radius</span> <span class="o">=</span> <span class="mf">2.5</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">ZtoX_radius_ratio</span> <span class="o">=</span> <span class="mf">0.6</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">deltaR</span> <span class="o">=</span> <span class="mf">0.2</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">deltaP</span> <span class="o">=</span> <span class="mi">6</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">phi_start</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">voxelX</span> <span class="o">=</span> <span class="mf">0.3</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">overlap</span> <span class="o">=</span> <span class="mf">0.5</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">deltaR_direction</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">theta_direction</span> <span class="o">=</span> <span class="mi">1</span>
+    
+    <span class="bp">self</span><span class="o">.</span><span class="n">TopHemisphere</span> <span class="o">=</span> <span class="kc">True</span>
+    
+<div class="viewcode-block" id="SpiralSphere.setDiametre"><a class="viewcode-back" href="../../GWL.html#GWL.SpiralSphere.SpiralSphere.setDiametre">[docs]</a>  <span class="k">def</span> <span class="nf">setDiametre</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">diametre</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">radius</span> <span class="o">=</span> <span class="mf">0.5</span><span class="o">*</span><span class="n">diametre</span>
+    <span class="k">return</span></div>
+  
+<div class="viewcode-block" id="SpiralSphere.setRadius"><a class="viewcode-back" href="../../GWL.html#GWL.SpiralSphere.SpiralSphere.setRadius">[docs]</a>  <span class="k">def</span> <span class="nf">setRadius</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">radius</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">radius</span> <span class="o">=</span> <span class="n">radius</span>
+    <span class="k">return</span></div>
+
+<div class="viewcode-block" id="SpiralSphere.getDiametre"><a class="viewcode-back" href="../../GWL.html#GWL.SpiralSphere.SpiralSphere.getDiametre">[docs]</a>  <span class="k">def</span> <span class="nf">getDiametre</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">return</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">radius</span><span class="p">)</span></div>
+  
+<div class="viewcode-block" id="SpiralSphere.getRadius"><a class="viewcode-back" href="../../GWL.html#GWL.SpiralSphere.SpiralSphere.getRadius">[docs]</a>  <span class="k">def</span> <span class="nf">getRadius</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">return</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">radius</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="SpiralSphere.computePoints"><a class="viewcode-back" href="../../GWL.html#GWL.SpiralSphere.SpiralSphere.computePoints">[docs]</a>  <span class="k">def</span> <span class="nf">computePoints</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;thickness = </span><span class="si">{}</span><span class="s1">, deltaR = </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">thickness</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">deltaR</span><span class="p">))</span>
+    <span class="n">Nhulls</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">thickness</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">deltaR</span><span class="p">)</span>
+    <span class="c1">#Nhulls = int(self.thickness/self.deltaR) + 1 + 1 # Quick hack. This script needs a lot of improvements.</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Nhulls = </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">Nhulls</span><span class="p">))</span>
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">TopHemisphere</span><span class="p">:</span>
+      <span class="n">theta_start</span> <span class="o">=</span> <span class="mi">0</span> <span class="o">+</span> <span class="n">arcsin</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">hole_radius</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">getRadius</span><span class="p">())</span>
+    <span class="k">else</span><span class="p">:</span>
+      <span class="n">theta_start</span> <span class="o">=</span> <span class="n">pi</span> <span class="o">-</span> <span class="n">arcsin</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">hole_radius</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">getRadius</span><span class="p">())</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;theta_start = </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">theta_start</span><span class="p">))</span>
+    <span class="n">deltaX</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">voxelX</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">overlap</span><span class="p">)</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rstart</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Nhulls</span><span class="p">):</span>
+      <span class="n">phi</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">phi_start</span>
+      <span class="n">theta</span> <span class="o">=</span> <span class="n">theta_start</span>
+      
+      <span class="c1"># This formula keeps the distance between &quot;rings&quot; constant and equal to deltaX:</span>
+      <span class="n">deltaT</span> <span class="o">=</span> <span class="n">deltaX</span><span class="o">/</span><span class="n">r</span><span class="o">/</span><span class="p">(</span><span class="mi">360</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">deltaP</span><span class="p">)</span>
+      
+      <span class="n">Nmax_float</span> <span class="o">=</span> <span class="p">(</span><span class="n">pi</span><span class="o">-</span><span class="n">arcsin</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">hole_radius</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">rstart</span><span class="p">))</span><span class="o">/</span><span class="n">deltaT</span><span class="o">+</span><span class="mi">1</span>
+      <span class="k">if</span> <span class="ow">not</span> <span class="n">isnan</span><span class="p">(</span><span class="n">Nmax_float</span><span class="p">):</span>
+        <span class="n">Nmax</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">Nmax_float</span><span class="p">)</span>
+
+        <span class="c1">###############</span>
+        <span class="c1"># write one hull of radius r</span>
+        <span class="n">write_sequence</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Nmax</span><span class="p">):</span>
+          <span class="n">x</span> <span class="o">=</span> <span class="n">r</span><span class="o">*</span><span class="n">sin</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span><span class="o">*</span><span class="n">cos</span><span class="p">(</span><span class="n">phi</span><span class="o">*</span><span class="mi">2</span><span class="o">*</span><span class="n">pi</span><span class="o">/</span><span class="mi">360</span><span class="p">)</span>
+          <span class="n">y</span> <span class="o">=</span> <span class="n">r</span><span class="o">*</span><span class="n">sin</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span><span class="o">*</span><span class="n">sin</span><span class="p">(</span><span class="n">phi</span><span class="o">*</span><span class="mi">2</span><span class="o">*</span><span class="n">pi</span><span class="o">/</span><span class="mi">360</span><span class="p">)</span>
+          <span class="n">z</span> <span class="o">=</span> <span class="n">r</span><span class="o">*</span><span class="n">cos</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span>
+          <span class="n">new_z</span> <span class="o">=</span> <span class="p">(</span><span class="n">z</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">radius</span><span class="p">)</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">ZtoX_radius_ratio</span>
+          <span class="n">write_sequence</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">new_z</span><span class="p">])</span>
+          <span class="n">phi</span> <span class="o">=</span> <span class="n">phi</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">deltaP</span>
+          <span class="n">theta</span> <span class="o">=</span> <span class="n">theta</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">theta_direction</span><span class="o">*</span><span class="n">deltaT</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">GWL_voxels</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">write_sequence</span><span class="p">)</span>
+        <span class="c1">###############</span>
+
+      <span class="n">r</span> <span class="o">=</span> <span class="n">r</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">deltaR_direction</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">deltaR</span></div>
+    
+<div class="viewcode-block" id="SpiralSphere.writeGWL"><a class="viewcode-back" href="../../GWL.html#GWL.SpiralSphere.SpiralSphere.writeGWL">[docs]</a>  <span class="k">def</span> <span class="nf">writeGWL</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">writingOffset</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;SpiralSphere.writeGWL&#39;</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">computePoints</span><span class="p">()</span>
+    <span class="n">GWLobject</span><span class="o">.</span><span class="n">writeGWL</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">writingOffset</span><span class="p">)</span>
+    <span class="k">return</span></div>
+  
+<div class="viewcode-block" id="SpiralSphere.getMeshData"><a class="viewcode-back" href="../../GWL.html#GWL.SpiralSphere.SpiralSphere.getMeshData">[docs]</a>  <span class="k">def</span> <span class="nf">getMeshData</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">position</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">computePoints</span><span class="p">()</span>
+    <span class="k">return</span><span class="p">(</span><span class="n">GWLobject</span><span class="o">.</span><span class="n">getMeshData</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">position</span><span class="p">))</span></div></div>
+
+<div class="viewcode-block" id="main"><a class="viewcode-back" href="../../GWL.html#GWL.SpiralSphere.main">[docs]</a><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+  <span class="n">DESTDIR</span><span class="o">=</span><span class="s1">&#39;/tmp/huhu/&#39;</span>
+  <span class="n">outfile1</span> <span class="o">=</span> <span class="n">DESTDIR</span> <span class="o">+</span> <span class="s1">&#39;outfile1.python3.gwl&#39;</span>
+  <span class="n">outfile2</span> <span class="o">=</span> <span class="n">DESTDIR</span> <span class="o">+</span> <span class="s1">&#39;outfile2.python3.gwl&#39;</span>
+  <span class="n">outfile3</span> <span class="o">=</span> <span class="n">DESTDIR</span> <span class="o">+</span> <span class="s1">&#39;outfile3.python3.gwl&#39;</span>
+  <span class="n">outfile4</span> <span class="o">=</span> <span class="n">DESTDIR</span> <span class="o">+</span> <span class="s1">&#39;outfile4.python3.gwl&#39;</span>
+
+  <span class="n">lol</span> <span class="o">=</span> <span class="n">SpiralSphere</span><span class="p">()</span>
+  <span class="n">lol</span><span class="o">.</span><span class="n">writeGWL</span><span class="p">(</span><span class="n">outfile1</span><span class="p">)</span>
+  <span class="k">return</span>
+  <span class="n">lol</span><span class="o">.</span><span class="n">setDiametre</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+  <span class="n">lol</span><span class="o">.</span><span class="n">thickness</span> <span class="o">=</span> <span class="mi">3</span>
+  <span class="n">lol</span><span class="o">.</span><span class="n">ZtoX_radius_ratio</span> <span class="o">=</span> <span class="mf">0.6</span>
+  <span class="n">lol</span><span class="o">.</span><span class="n">deltaR</span> <span class="o">=</span> <span class="mf">0.2</span>
+  <span class="n">lol</span><span class="o">.</span><span class="n">deltaP</span> <span class="o">=</span> <span class="mi">6</span>
+  <span class="n">lol</span><span class="o">.</span><span class="n">phi_start</span> <span class="o">=</span> <span class="mi">0</span>
+  <span class="n">lol</span><span class="o">.</span><span class="n">voxelX</span> <span class="o">=</span> <span class="mf">0.3</span>
+  <span class="n">lol</span><span class="o">.</span><span class="n">overlap</span> <span class="o">=</span> <span class="mf">0.5</span>
+
+  <span class="k">for</span> <span class="n">IPX</span> <span class="ow">in</span> <span class="p">[</span><span class="kc">True</span><span class="p">,</span> <span class="kc">False</span><span class="p">]:</span>
+    <span class="k">if</span> <span class="n">IPX</span><span class="p">:</span>
+      <span class="n">lol</span><span class="o">.</span><span class="n">rstart</span> <span class="o">=</span> <span class="n">lol</span><span class="o">.</span><span class="n">getRadius</span><span class="p">()</span>
+      <span class="n">lol</span><span class="o">.</span><span class="n">hole_radius</span> <span class="o">=</span> <span class="mf">2.5</span>
+      <span class="n">lol</span><span class="o">.</span><span class="n">deltaR_direction</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+      <span class="n">lol</span><span class="o">.</span><span class="n">theta_direction</span> <span class="o">=</span> <span class="mi">1</span>
+      <span class="n">lol</span><span class="o">.</span><span class="n">writeGWL</span><span class="p">(</span><span class="n">outfile1</span><span class="p">)</span>
+      
+      <span class="c1">#writeIt2(r0,       int(t/deltaR),    0+arcsin(hole/r0), -1, hole,  1)</span>
+      <span class="c1">#writeIt2(r0 - t,   int(t/deltaR+1),  pi/2,               1, 0,     1)</span>
+    <span class="k">else</span><span class="p">:</span>
+      <span class="c1">#writeIt2(r0,       int(t/deltaR),    pi,                -1, 0,    -1)</span>
+      <span class="c1">#writeIt2(r0,       int(t/deltaR),    pi/2,              -1, hole, -1)</span>
+      <span class="k">pass</span></div>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+  <span class="n">test</span><span class="p">()</span>
+  <span class="c1">#main()</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">script_inception_public  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2014, Mike Taverne.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.9.
+    </div>
+  </body>
+</html>

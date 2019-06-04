@@ -1,0 +1,523 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Excitation objects &#8212; script_inception_public  documentation</title>
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="DLW" href="DLW_module.html" />
+    <link rel="prev" title="Meshing" href="FDTD_Meshing.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="DLW_module.html" title="DLW"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="FDTD_Meshing.html" title="Meshing"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">script_inception_public  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="FDTD_module.html" accesskey="U">FDTD</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="excitation-objects">
+<h1>Excitation objects<a class="headerlink" href="#excitation-objects" title="Permalink to this headline">¶</a></h1>
+<p>See also <a class="reference internal" href="bfdtd.html#bfdtd-excitation-module"><span class="std std-ref">bfdtd.excitation module</span></a>.</p>
+<div class="section" id="excitation">
+<h2>Excitation<a class="headerlink" href="#excitation" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt>
+<em class="property">class </em><code class="descclassname">bfdtd.excitation.</code><code class="descname">Excitation</code><span class="sig-paren">(</span><em>name=None</em>, <em>current_source=None</em>, <em>P1=None</em>, <em>P2=None</em>, <em>E=None</em>, <em>H=None</em>, <em>Type=None</em>, <em>time_constant=None</em>, <em>amplitude=None</em>, <em>time_offset=None</em>, <em>frequency=None</em>, <em>param1=None</em>, <em>param2=None</em>, <em>template_filename=None</em>, <em>template_source_plane=None</em>, <em>template_target_plane=None</em>, <em>template_direction=None</em>, <em>template_rotation=None</em>, <em>layer=None</em>, <em>group=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bfdtd/excitation.html#Excitation"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>The base class for BFDTD excitations.</p>
+<p>When using a gaussian sinewave, undesired effects (part of the signal cut off) might happen, if the time offset is too small compared to the time constant.</p>
+<p>To prevent this, the writing procedure automatically checks if:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">MIN_TIME_OFFSET_TIME_CONSTANT_RATIO</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">time_constant</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">time_offset</span><span class="o">.</span>
+</pre></div>
+</div>
+<p>If this is the case, there are 3 possible outcomes, depending on the value of <strong>self.TimeOffsetSafetyBehaviour</strong>:</p>
+<ul class="simple">
+<li>self.TimeOffsetSafetyBehaviour=0 (the default): adapt the time offset by setting <code class="docutils literal notranslate"><span class="pre">self.time_offset</span> <span class="pre">=</span> <span class="pre">MIN_TIME_OFFSET_TIME_CONSTANT_RATIO*self.time_constant</span></code></li>
+<li>self.TimeOffsetSafetyBehaviour=1: raise an Exception</li>
+<li>self.TimeOffsetSafetyBehaviour=2: ignore and continue writing</li>
+</ul>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">You can change MIN_TIME_OFFSET_TIME_CONSTANT_RATIO in interactive mode as follows: <code class="docutils literal notranslate"><span class="pre">bfdtd.excitation.MIN_TIME_OFFSET_TIME_CONSTANT_RATIO=42</span></code></p>
+</div>
+<p>From MEEP documentation. Not fully implemented yet, but the plan is to clearly and accurately document the sources and make it easier to get exactly what we want.
+It is possible that BFDTD gaussian sources behave differently than MEEP sources.
+BFDTD sources do not seem to have a proper cutoff for instance, or at least not properly return to zero and stay there.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Units: Usually DISTANCE=1μm, so that frequencies are in MHz and times in μs.</p>
+</div>
+<p>Gaussian source:</p>
+<blockquote>
+<div>A Gaussian-pulse source roughly proportional to exp( − iωt − (t − t0)^2 / (2*w^2)). cf MEEP documentation.</div></blockquote>
+<p>Attributes:</p>
+<ul>
+<li><p class="first">frequency [number]:</p>
+<blockquote>
+<div><p>The center frequency f in units of (m/s)/DISTANCE (or ω in units of 2π*(m/s)/DISTANCE).</p>
+<p>No default value.</p>
+<p>You can instead specify:</p>
+<blockquote>
+<div><ul class="simple">
+<li>wavelength = c0/f in units of DISTANCE</li>
+<li>period = 1/f in units of DISTANCE/(m/s)</li>
+</ul>
+</div></blockquote>
+</div></blockquote>
+</li>
+<li><p class="first">width [number]:</p>
+<blockquote>
+<div><p>The width w used in the Gaussian.
+No default value.
+You can instead specify:</p>
+<ul class="simple">
+<li>fwidth x, which is a synonym for (width (/ 1 x)) (i.e. the frequency width is proportional to the inverse of the temporal width)</li>
+<li>FWHM_time</li>
+<li>FWHM_frequency</li>
+<li>FWHM_angular_frequency</li>
+</ul>
+</div></blockquote>
+</li>
+<li><p class="first">start-time [number]:</p>
+<blockquote>
+<div><p>The starting time for the source; default is 0 (turn on at t = 0). (Not the time of the peak! See below.)
+You can instead specify:</p>
+<ul class="simple">
+<li>end-time</li>
+<li>peak-time</li>
+</ul>
+</div></blockquote>
+</li>
+<li><p class="first">cutoff [number]:</p>
+<blockquote>
+<div><p>How many widths the current decays for before we cut it off and set it to zero—this applies for both turn-on and turn-off of the pulse.
+The default is 5.0.
+A larger value of cutoff will reduce the amount of high-frequency components that are introduced by the start/stop of the source,
+but will of course lead to longer simulation times.
+The peak of the gaussian is reached at the time t0= start-time + cutoff*width.</p>
+</div></blockquote>
+</li>
+</ul>
+<dl class="method">
+<dt>
+<code class="descname">check</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/bfdtd/excitation.html#Excitation.check"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Checks the excitation for common mistakes.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">checkPeriodvsTimeConstant</code><span class="sig-paren">(</span><em>raise_exception=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bfdtd/excitation.html#Excitation.checkPeriodvsTimeConstant"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">disableAutoFix</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/bfdtd/excitation.html#Excitation.disableAutoFix"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">disableSafetyChecks</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/bfdtd/excitation.html#Excitation.disableSafetyChecks"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">enableAutoFix</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/bfdtd/excitation.html#Excitation.enableAutoFix"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">enableSafetyChecks</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/bfdtd/excitation.html#Excitation.enableSafetyChecks"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">fix</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/bfdtd/excitation.html#Excitation.fix"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Automatically fix common mistakes.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">getAdaptedTimeOffset</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/bfdtd/excitation.html#Excitation.getAdaptedTimeOffset"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Returns <code class="docutils literal notranslate"><span class="pre">MIN_TIME_OFFSET_TIME_CONSTANT_RATIO*self.time_constant</span></code></p>
+<p>cf <a class="reference internal" href="bfdtd.html#bfdtd.excitation.Excitation.setTimeOffset" title="bfdtd.excitation.Excitation.setTimeOffset"><code class="xref py py-func docutils literal notranslate"><span class="pre">setTimeOffset()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">getAmplitude</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/bfdtd/excitation.html#Excitation.getAmplitude"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">getCentro</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/bfdtd/excitation.html#Excitation.getCentro"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">getEndTime</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/bfdtd/excitation.html#Excitation.getEndTime"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>cf <a class="reference internal" href="bfdtd.html#bfdtd.excitation.Excitation.setTimeOffset" title="bfdtd.excitation.Excitation.setTimeOffset"><code class="xref py py-func docutils literal notranslate"><span class="pre">setTimeOffset()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">getExcitedComponentNames</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/bfdtd/excitation.html#Excitation.getExcitedComponentNames"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">getExtension</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/bfdtd/excitation.html#Excitation.getExtension"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">getFrequency</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/bfdtd/excitation.html#Excitation.getFrequency"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">getFrequencyMax</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/bfdtd/excitation.html#Excitation.getFrequencyMax"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">getFrequencyMin</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/bfdtd/excitation.html#Excitation.getFrequencyMin"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">getFrequencyRange</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/bfdtd/excitation.html#Excitation.getFrequencyRange"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">getLambda</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/bfdtd/excitation.html#Excitation.getLambda"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">getLocation</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/bfdtd/excitation.html#Excitation.getLocation"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">getMeshingParameters</code><span class="sig-paren">(</span><em>xvec</em>, <em>yvec</em>, <em>zvec</em>, <em>epsx</em>, <em>epsy</em>, <em>epsz</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bfdtd/excitation.html#Excitation.getMeshingParameters"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">getName</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/bfdtd/excitation.html#Excitation.getName"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">getPeakTime</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/bfdtd/excitation.html#Excitation.getPeakTime"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>cf <a class="reference internal" href="bfdtd.html#bfdtd.excitation.Excitation.setTimeOffset" title="bfdtd.excitation.Excitation.setTimeOffset"><code class="xref py py-func docutils literal notranslate"><span class="pre">setTimeOffset()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">getPeriod</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/bfdtd/excitation.html#Excitation.getPeriod"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">getSize</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/bfdtd/excitation.html#Excitation.getSize"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">getStartTime</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/bfdtd/excitation.html#Excitation.getStartTime"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>cf <a class="reference internal" href="bfdtd.html#bfdtd.excitation.Excitation.setTimeOffset" title="bfdtd.excitation.Excitation.setTimeOffset"><code class="xref py py-func docutils literal notranslate"><span class="pre">setTimeOffset()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">getTimeConstant</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/bfdtd/excitation.html#Excitation.getTimeConstant"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">getTimeOffset</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/bfdtd/excitation.html#Excitation.getTimeOffset"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>cf <a class="reference internal" href="bfdtd.html#bfdtd.excitation.Excitation.setTimeOffset" title="bfdtd.excitation.Excitation.setTimeOffset"><code class="xref py py-func docutils literal notranslate"><span class="pre">setTimeOffset()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">getWavelength</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/bfdtd/excitation.html#Excitation.getWavelength"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">getWavelengthMax</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/bfdtd/excitation.html#Excitation.getWavelengthMax"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">getWavelengthMin</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/bfdtd/excitation.html#Excitation.getWavelengthMin"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">getWavelengthRange</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/bfdtd/excitation.html#Excitation.getWavelengthRange"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">printInfo</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/bfdtd/excitation.html#Excitation.printInfo"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">read_entry</code><span class="sig-paren">(</span><em>entry</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bfdtd/excitation.html#Excitation.read_entry"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">setAmplitude</code><span class="sig-paren">(</span><em>amplitude</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bfdtd/excitation.html#Excitation.setAmplitude"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">setCentro</code><span class="sig-paren">(</span><em>nova_centro</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bfdtd/excitation.html#Excitation.setCentro"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">setEndTime</code><span class="sig-paren">(</span><em>end_time</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bfdtd/excitation.html#Excitation.setEndTime"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>cf <a class="reference internal" href="bfdtd.html#bfdtd.excitation.Excitation.setTimeOffset" title="bfdtd.excitation.Excitation.setTimeOffset"><code class="xref py py-func docutils literal notranslate"><span class="pre">setTimeOffset()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">setEx</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/bfdtd/excitation.html#Excitation.setEx"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">setExtension</code><span class="sig-paren">(</span><em>P1</em>, <em>P2</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bfdtd/excitation.html#Excitation.setExtension"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">setEy</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/bfdtd/excitation.html#Excitation.setEy"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">setEz</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/bfdtd/excitation.html#Excitation.setEz"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">setFrequency</code><span class="sig-paren">(</span><em>freq_MHz</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bfdtd/excitation.html#Excitation.setFrequency"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">setFrequencyRange</code><span class="sig-paren">(</span><em>fmin</em>, <em>fmax</em>, <em>autofix=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bfdtd/excitation.html#Excitation.setFrequencyRange"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Sets central frequency and frequency width so that the FFT of the pulse covers from fmin to fmax.</p>
+<p>Formulas used:</p>
+<blockquote>
+<div><ul class="simple">
+<li>frequency = 0.5*(fmin+fmax)</li>
+<li>time_constant = 1/(4*(fmax-fmin))</li>
+</ul>
+</div></blockquote>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">setLambda</code><span class="sig-paren">(</span><em>lambda_mum</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bfdtd/excitation.html#Excitation.setLambda"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">setLocation</code><span class="sig-paren">(</span><em>loc</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bfdtd/excitation.html#Excitation.setLocation"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">setName</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bfdtd/excitation.html#Excitation.setName"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">setPeakTime</code><span class="sig-paren">(</span><em>peak_time</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bfdtd/excitation.html#Excitation.setPeakTime"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>cf <a class="reference internal" href="bfdtd.html#bfdtd.excitation.Excitation.setTimeOffset" title="bfdtd.excitation.Excitation.setTimeOffset"><code class="xref py py-func docutils literal notranslate"><span class="pre">setTimeOffset()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">setPeriod</code><span class="sig-paren">(</span><em>period</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bfdtd/excitation.html#Excitation.setPeriod"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">setSize</code><span class="sig-paren">(</span><em>size_vec3</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bfdtd/excitation.html#Excitation.setSize"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">setStartTime</code><span class="sig-paren">(</span><em>start_time</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bfdtd/excitation.html#Excitation.setStartTime"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>cf <a class="reference internal" href="bfdtd.html#bfdtd.excitation.Excitation.setTimeOffset" title="bfdtd.excitation.Excitation.setTimeOffset"><code class="xref py py-func docutils literal notranslate"><span class="pre">setTimeOffset()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">setTimeConstant</code><span class="sig-paren">(</span><em>time_constant</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bfdtd/excitation.html#Excitation.setTimeConstant"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">setTimeOffset</code><span class="sig-paren">(</span><em>time_offset=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bfdtd/excitation.html#Excitation.setTimeOffset"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Set the time offset.
+If <em>time_offset</em> is <em>None</em>, it adapts the time offset by setting <code class="docutils literal notranslate"><span class="pre">self.time_offset</span> <span class="pre">=</span> <span class="pre">MIN_TIME_OFFSET_TIME_CONSTANT_RATIO*self.time_constant</span></code></p>
+<p>The time offset can be get/set using the following three alternatives:</p>
+<ul class="simple">
+<li>StartTime = self.time_offset - MIN_TIME_OFFSET_TIME_CONSTANT_RATIO*self.time_constant :<ul>
+<li><a class="reference internal" href="bfdtd.html#bfdtd.excitation.Excitation.setStartTime" title="bfdtd.excitation.Excitation.setStartTime"><code class="xref py py-func docutils literal notranslate"><span class="pre">setStartTime()</span></code></a></li>
+<li><a class="reference internal" href="bfdtd.html#bfdtd.excitation.Excitation.getStartTime" title="bfdtd.excitation.Excitation.getStartTime"><code class="xref py py-func docutils literal notranslate"><span class="pre">getStartTime()</span></code></a></li>
+</ul>
+</li>
+<li>PeakTime = self.time_offset :<ul>
+<li><a class="reference internal" href="bfdtd.html#bfdtd.excitation.Excitation.getPeakTime" title="bfdtd.excitation.Excitation.getPeakTime"><code class="xref py py-func docutils literal notranslate"><span class="pre">getPeakTime()</span></code></a></li>
+<li><a class="reference internal" href="bfdtd.html#bfdtd.excitation.Excitation.setPeakTime" title="bfdtd.excitation.Excitation.setPeakTime"><code class="xref py py-func docutils literal notranslate"><span class="pre">setPeakTime()</span></code></a></li>
+</ul>
+</li>
+<li>EndTime = self.time_offset + MIN_TIME_OFFSET_TIME_CONSTANT_RATIO*self.time_constant :<ul>
+<li><a class="reference internal" href="bfdtd.html#bfdtd.excitation.Excitation.getEndTime" title="bfdtd.excitation.Excitation.getEndTime"><code class="xref py py-func docutils literal notranslate"><span class="pre">getEndTime()</span></code></a></li>
+<li><a class="reference internal" href="bfdtd.html#bfdtd.excitation.Excitation.setEndTime" title="bfdtd.excitation.Excitation.setEndTime"><code class="xref py py-func docutils literal notranslate"><span class="pre">setEndTime()</span></code></a></li>
+</ul>
+</li>
+</ul>
+<img alt="_images/excitation_doc_annotated.png" class="align-center" src="_images/excitation_doc_annotated.png" />
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">setWavelength</code><span class="sig-paren">(</span><em>lambda_mum</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bfdtd/excitation.html#Excitation.setWavelength"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">setWavelengthRange</code><span class="sig-paren">(</span><em>lambda_min</em>, <em>lambda_max</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bfdtd/excitation.html#Excitation.setWavelengthRange"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">translate</code><span class="sig-paren">(</span><em>vec3</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bfdtd/excitation.html#Excitation.translate"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">write_entry</code><span class="sig-paren">(</span><em>FILE=&lt;_io.TextIOWrapper name='&lt;stdout&gt;' mode='w' encoding='UTF-8'&gt;</em>, <em>AutoFix=True</em>, <em>SafetyChecks=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bfdtd/excitation.html#Excitation.write_entry"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>write entry into FILE
+.. todo:: reduce code duplication here
+.. todo:: Should fix+check functions be called from BFDTDobject? Or should fix+check args be passed to write_entry? or should object’s AutoFix/SafetyChecks be modified from BFDTDobject?</p>
+<p>Every function should do one thing and do it well -&gt; no fix+check in here
+Having fix+check in here reduces risk of accidental bad output writing -&gt; fix+check should be in here</p>
+<p>Writing bad output should be made difficult, but not too difficult for testing purposes.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Excitation objects</a><ul>
+<li><a class="reference internal" href="#excitation">Excitation</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="FDTD_Meshing.html"
+                        title="previous chapter">Meshing</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="DLW_module.html"
+                        title="next chapter">DLW</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/FDTD_Excitation.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="DLW_module.html" title="DLW"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="FDTD_Meshing.html" title="Meshing"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">script_inception_public  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="FDTD_module.html" >FDTD</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2014, Mike Taverne.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.9.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,660 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Meshing &#8212; script_inception_public  documentation</title>
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Excitation objects" href="FDTD_Excitation.html" />
+    <link rel="prev" title="Snapshots" href="FDTD_Snapshots.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="FDTD_Excitation.html" title="Excitation objects"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="FDTD_Snapshots.html" title="Snapshots"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">script_inception_public  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="FDTD_module.html" accesskey="U">FDTD</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="meshing">
+<h1>Meshing<a class="headerlink" href="#meshing" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="module-meshing.meshing">
+<span id="meshing-meshing-module"></span><h2>meshing.meshing module<a class="headerlink" href="#module-meshing.meshing" title="Permalink to this headline">¶</a></h2>
+<p>This module handles the new meshing system.</p>
+<p>Currently only designed for BFDTD simulations, i.e. for a final heterogeneous rectilinear grid.
+But it is completely independent of BFDTDobject or any other FDTD related code.
+VTK-related code will be added to it later eventually.</p>
+<p>The class design is as follows:</p>
+<ul class="simple">
+<li><strong>Mesh3D</strong>: Consists of 3 <em>MultiMesh1D</em>, for the X, Y and Z directions.<ul>
+<li><strong>MultiMesh1D</strong>: Contains a list of <em>Mesh1D</em> or <em>MultiMesh1D</em> objects.<ul>
+<li><strong>Mesh1D</strong>: A generic parent class for 1D meshes.<ul>
+<li><strong>HeterogeneousMesh1D</strong>: A heterogeneous mesh defined by its attribute <em>coordinates</em>.</li>
+<li><strong>HomogeneousMesh1D</strong>: A homogeneous mesh defined by its attributes <em>pos_min</em>, <em>pos_max</em>, <em>spacing_max</em>. <em>spacing_max</em> is used to determine the number of points/cells.<ul>
+<li><strong>HomogeneousMeshParameters1D</strong>: A subclass of <em>HomogeneousMesh1D</em>, but for which the <em>MultiMesh1D::getLocalCoordinates()</em> function will take <em>spacing_max</em> into account to merge multiple <em>HomogeneousMeshParameters1D</em> in a smart way.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<img src="_images/graphviz-9b8e9303e84a8b5adbe04fad4d89b29504cd1dda.png" alt="digraph meshing_system_diagram {
+edge [style=dashed,color=red, dir=back];
+&quot;Mesh3D&quot; -&gt; &quot;MultiMesh1D&quot; -&gt; &quot;Mesh1D&quot;;
+edge [style=solid,color=black, dir=back];
+&quot;Mesh1D&quot; -&gt; {&quot;HomogeneousMesh1D&quot;,&quot;HeterogeneousMesh1D&quot;};
+&quot;HomogeneousMesh1D&quot; -&gt; &quot;HomogeneousMeshParameters1D&quot;
+}" />
+<p>idea: Make various meshing algorithms available and allow user-created ones (ex: structure-specific meshing algorithms, tests of meshing on simulation results).</p>
+</div>
+<div class="section" id="mesh-objects">
+<h2>Mesh objects<a class="headerlink" href="#mesh-objects" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="mesh3d">
+<h3>Mesh3D<a class="headerlink" href="#mesh3d" title="Permalink to this headline">¶</a></h3>
+<dl class="class">
+<dt>
+<em class="property">class </em><code class="descclassname">meshing.meshing.</code><code class="descname">Mesh3D</code><a class="reference internal" href="_modules/meshing/meshing.html#Mesh3D"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A rectilinear structured 3D mesh/grid.</p>
+<dl class="method">
+<dt>
+<code class="descname">PrintSelf</code><span class="sig-paren">(</span><em>indent=''</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#Mesh3D.PrintSelf"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>printing function with indent</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">getGlobalLocation</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#Mesh3D.getGlobalLocation"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">getGlobalXCoordinates</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#Mesh3D.getGlobalXCoordinates"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>get the grid coordinates in the x-direction.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">getGlobalYCoordinates</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#Mesh3D.getGlobalYCoordinates"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>get the grid coordinates in the y-direction.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">getGlobalZCoordinates</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#Mesh3D.getGlobalZCoordinates"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>get the grid coordinates in the z-direction.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">name</code><em class="property"> = None</em></dt>
+<dd><p>a name for easier debugging</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">setAllowResolutionScaling</code><span class="sig-paren">(</span><em>bool_value</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#Mesh3D.setAllowResolutionScaling"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Set the <em>allowResolutionScaling</em> attribute to <em>bool_value</em> for xmesh, ymesh and zmesh.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">setResolutionScalingFactor</code><span class="sig-paren">(</span><em>float_value</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#Mesh3D.setResolutionScalingFactor"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Set the <em>resolutionScalingFactor</em> attribute to <em>bool_value</em> for xmesh, ymesh and zmesh.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">setUseForMeshing</code><span class="sig-paren">(</span><em>bool_value</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#Mesh3D.setUseForMeshing"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Set the <em>useForMeshing</em> attribute to <em>bool_value</em> for xmesh, ymesh and zmesh.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">xmesh</code><em class="property"> = None</em></dt>
+<dd><p>the 1D mesh in the X direction</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">ymesh</code><em class="property"> = None</em></dt>
+<dd><p>the 1D mesh in the Y direction</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">zmesh</code><em class="property"> = None</em></dt>
+<dd><p>the 1D mesh in the Z direction</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="multimesh1d">
+<h3>MultiMesh1D<a class="headerlink" href="#multimesh1d" title="Permalink to this headline">¶</a></h3>
+<dl class="class">
+<dt>
+<em class="property">class </em><code class="descclassname">meshing.meshing.</code><code class="descname">MultiMesh1D</code><a class="reference internal" href="_modules/meshing/meshing.html#MultiMesh1D"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>An object consisting of multiple <strong>Mesh1D</strong> or <strong>MultiMesh1D</strong> objects.</p>
+<p>The idea is to for example create one main mesh for the FDTD simulation consisiting of multiple submeshes for each FDTD object in the simulation.
+Each of these object submeshes can then also consist of multiple submeshes, again being either <strong>Mesh1D</strong> or <strong>MultiMesh1D</strong>.</p>
+<p><em>getLocalCoordinates()</em> will go through all those meshes recursively and return a single merged one.</p>
+<p>The extension of that system to 3 or more or less dimensions is then straightforward and done via the <strong>Mesh3D</strong> class.</p>
+<dl class="method">
+<dt>
+<code class="descname">PrintSelf</code><span class="sig-paren">(</span><em>indent=''</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#MultiMesh1D.PrintSelf"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>printing function with indent</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">addChild</code><span class="sig-paren">(</span><em>m</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#MultiMesh1D.addChild"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">getGlobalCoordinates</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#MultiMesh1D.getGlobalCoordinates"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">getGlobalLocation</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#MultiMesh1D.getGlobalLocation"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">getLocalCoordinates</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#MultiMesh1D.getLocalCoordinates"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Returns the list of merged and sorted coordinates from all submeshes.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Meshes of type <em>HomogeneousMesh1D</em> are handled in a special way, in the sense that their <em>spacing_max</em> values are compared to choose the smallest one in case of overlap.</p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">getMesh1DList</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#MultiMesh1D.getMesh1DList"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Converts the submesh list into one containing only Mesh1D objects by iterating through the submeshes recursively.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">makeAllSubMeshesChildren</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#MultiMesh1D.makeAllSubMeshesChildren"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">maximum_mesh_delta_ratio</code><em class="property"> = None</em></dt>
+<dd><p>For creating a smooth mesh. Neighboring cell sizes should not exceed a factor of <em>maximum_mesh_delta_ratio</em>. Default: 2. Set to <code class="docutils literal notranslate"><span class="pre">None</span></code> to disable.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">maximum_mesh_delta_vacuum</code><em class="property"> = None</em></dt>
+<dd><p>If set, the mesh will be checked for any cells larger than <code class="docutils literal notranslate"><span class="pre">maximum_mesh_delta_vacuum</span> <span class="pre">*</span> <span class="pre">spacing_max</span></code> (<em>spacing_max</em> set to 1 if the <em>Mesh1D</em> object does not provide it). Default: None. Set to <code class="docutils literal notranslate"><span class="pre">None</span></code> to disable.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">mesh_list</code><em class="property"> = None</em></dt>
+<dd><p>The list of <strong>Mesh1D</strong> or <strong>MultiMesh1D</strong> objects.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">minimum_mesh_delta</code><em class="property"> = None</em></dt>
+<dd><p>The minimum cell size allowed. This is used when merging the various submeshes. Default: 1e-3. Set to <code class="docutils literal notranslate"><span class="pre">None</span></code> to disable.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">name</code><em class="property"> = None</em></dt>
+<dd><p>a name for easier debugging</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">renderInBlender</code><span class="sig-paren">(</span><em>location=None</em>, <em>group='meshes'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#MultiMesh1D.renderInBlender"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">renderXMesh1D</code><span class="sig-paren">(</span><em>location=None</em>, <em>group='meshes'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#MultiMesh1D.renderXMesh1D"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">renderYMesh1D</code><span class="sig-paren">(</span><em>location=None</em>, <em>group='meshes'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#MultiMesh1D.renderYMesh1D"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">renderZMesh1D</code><span class="sig-paren">(</span><em>location=None</em>, <em>group='meshes'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#MultiMesh1D.renderZMesh1D"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">setAllowResolutionScaling</code><span class="sig-paren">(</span><em>bool_value</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#MultiMesh1D.setAllowResolutionScaling"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Set the <em>allowResolutionScaling</em> attribute to <em>bool_value</em> for all submeshes.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">setResolutionScalingFactor</code><span class="sig-paren">(</span><em>float_value</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#MultiMesh1D.setResolutionScalingFactor"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Set the <em>resolutionScalingFactor</em> attribute to <em>float_value</em> for all submeshes.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">setUseForMeshing</code><span class="sig-paren">(</span><em>bool_value</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#MultiMesh1D.setUseForMeshing"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Set the <em>useForMeshing</em> attribute to <em>bool_value</em> for all submeshes.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="mesh1d">
+<h3>Mesh1D<a class="headerlink" href="#mesh1d" title="Permalink to this headline">¶</a></h3>
+<dl class="class">
+<dt>
+<em class="property">class </em><code class="descclassname">meshing.meshing.</code><code class="descname">Mesh1D</code><a class="reference internal" href="_modules/meshing/meshing.html#Mesh1D"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Generic parent class for 1D meshes.
+It is used for <em>HeterogeneousMesh1D</em> and <em>HomogeneousMesh1D</em>.
+Other mesh types like a logarithmic mesh for example, could be added later.</p>
+<p>Subclasses must all re-implement the following functions:</p>
+<ul class="simple">
+<li><em>getLocalCoordinates()</em></li>
+</ul>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Variables:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference internal" href="meshing.html#meshing.meshing.Mesh1D.useForMeshing" title="meshing.meshing.Mesh1D.useForMeshing"><strong>useForMeshing</strong></a> (<em>bool</em>) – If true, it will be used to create the final mesh. Default: True.</li>
+<li><a class="reference internal" href="meshing.html#meshing.meshing.Mesh1D.allowResolutionScaling" title="meshing.meshing.Mesh1D.allowResolutionScaling"><strong>allowResolutionScaling</strong></a> (<em>bool</em>) – If true, changing the resolution settings to increase or decrease the number of cells will be allowed. Default: True.</li>
+<li><a class="reference internal" href="meshing.html#meshing.meshing.Mesh1D.resolutionScalingFactor" title="meshing.meshing.Mesh1D.resolutionScalingFactor"><strong>resolutionScalingFactor</strong></a> (<em>float</em>) – Allows increasing or decreasing the number of total cells in the mesh (if the mesh class supports it). Default: 1.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt>
+<code class="descname">PrintSelf</code><span class="sig-paren">(</span><em>indent=''</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#Mesh1D.PrintSelf"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>printing function with indent</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">allowResolutionScaling</code><em class="property"> = None</em></dt>
+<dd><p>If true, changing the resolution settings to increase or decrease the number of cells will be allowed. Default: True.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">getBounds</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#Mesh1D.getBounds"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Returns the minimum and maximum values of the coordinates in the form (pos_min, pos_max).</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">getGlobalCoordinates</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#Mesh1D.getGlobalCoordinates"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">getGlobalLocation</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#Mesh1D.getGlobalLocation"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">getLocalCoordinates</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#Mesh1D.getLocalCoordinates"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Returns the list of coordinates. <strong>Must be re-implemented.</strong></p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Do not forget to take into account the Mesh1D attributes when implementing <em>getLocalCoordinates()</em>.</p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">getThicknessList</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#Mesh1D.getThicknessList"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Returns a list of the thicknesses of each section.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">name</code><em class="property"> = None</em></dt>
+<dd><p>a name for easier debugging</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">resolutionScalingFactor</code><em class="property"> = None</em></dt>
+<dd><p>Allows increasing or decreasing the number of total cells in the mesh (if the mesh class supports it). Default: 1.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">setAllowResolutionScaling</code><span class="sig-paren">(</span><em>bool_value</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#Mesh1D.setAllowResolutionScaling"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Set the <em>allowResolutionScaling</em> attribute to <em>bool_value</em>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">setResolutionScalingFactor</code><span class="sig-paren">(</span><em>float_value</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#Mesh1D.setResolutionScalingFactor"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Set the <em>resolutionScalingFactor</em> attribute to <em>float_value</em>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">setUseForMeshing</code><span class="sig-paren">(</span><em>bool_value</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#Mesh1D.setUseForMeshing"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Set the <em>useForMeshing</em> attribute to <em>bool_value</em>.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">useForMeshing</code><em class="property"> = None</em></dt>
+<dd><p>If true, it will be used to create the final mesh. Default: True.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="heterogeneousmesh1d">
+<h3>HeterogeneousMesh1D<a class="headerlink" href="#heterogeneousmesh1d" title="Permalink to this headline">¶</a></h3>
+<dl class="class">
+<dt>
+<em class="property">class </em><code class="descclassname">meshing.meshing.</code><code class="descname">HeterogeneousMesh1D</code><span class="sig-paren">(</span><em>coordinates=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#HeterogeneousMesh1D"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Bases: <a class="reference internal" href="meshing.html#meshing.meshing.Mesh1D" title="meshing.meshing.Mesh1D"><code class="xref py py-class docutils literal notranslate"><span class="pre">meshing.meshing.Mesh1D</span></code></a></p>
+<p>Very basic class storing parameters for a heterogeneous 1D mesh.</p>
+<dl class="method">
+<dt>
+<code class="descname">PrintSelf</code><span class="sig-paren">(</span><em>indent=''</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#HeterogeneousMesh1D.PrintSelf"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>printing function with indent</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">coordinates</code><em class="property"> = None</em></dt>
+<dd><p>list of the position of mesh lines. Type: List of floats. Default: [0, 1]</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">createFromThicknessList</code><span class="sig-paren">(</span><em>pos_min</em>, <em>ThicknessList</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#HeterogeneousMesh1D.createFromThicknessList"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Creates a list of coordinates of the form:</p>
+<ul class="simple">
+<li>pos_min</li>
+<li>pos_min + ThicknessList[0]</li>
+<li>pos_min + ThicknessList[0] + ThicknessList[1]</li>
+<li>…</li>
+</ul>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">getLocalCoordinates</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#HeterogeneousMesh1D.getLocalCoordinates"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Returns the list of coordinates.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="homogeneousmesh1d">
+<h3>HomogeneousMesh1D<a class="headerlink" href="#homogeneousmesh1d" title="Permalink to this headline">¶</a></h3>
+<dl class="class">
+<dt>
+<em class="property">class </em><code class="descclassname">meshing.meshing.</code><code class="descname">HomogeneousMesh1D</code><span class="sig-paren">(</span><em>pos_min=None</em>, <em>pos_max=None</em>, <em>spacing_max=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#HomogeneousMesh1D"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Bases: <a class="reference internal" href="meshing.html#meshing.meshing.Mesh1D" title="meshing.meshing.Mesh1D"><code class="xref py py-class docutils literal notranslate"><span class="pre">meshing.meshing.Mesh1D</span></code></a></p>
+<p>Class storing parameters for a homogeneous 1D mesh.</p>
+<p>This class uses <em>spacing_max</em> as main attribute instead of a given number of cells for more flexibility.
+This is useful when merging meshes (cf: <a class="reference internal" href="meshing.html#meshing.meshing.HomogeneousMeshParameters1D" title="meshing.meshing.HomogeneousMeshParameters1D"><code class="xref py py-class docutils literal notranslate"><span class="pre">HomogeneousMeshParameters1D</span></code></a>).
+But when a thickness or position list is requested, we simply switch to “N” as main, i.e. we create a homogeneous mesh.</p>
+<p>In general, for FDTD, we want: <code class="docutils literal notranslate"><span class="pre">spacing_max</span> <span class="pre">&lt;</span> <span class="pre">F*lambda*1/n</span></code>, with <code class="docutils literal notranslate"><span class="pre">n=sqrt(epsilon_r)</span></code>.</p>
+<p>Since the factor <em>F</em> (usually around 1/15) and <em>lambda</em> are the only “geometry independent” settings, we bind them together into the <em>resolutionScalingFactor</em>.</p>
+<p>So we use the remaining “geometry dependent” terms <em>n</em> (refractive index) and <em>epsilon_r</em> (relative permittivity) to define <em>spacing_max</em>.</p>
+<p>Thus we define the following “terms” for use in this class and the meshing system:</p>
+<ul class="simple">
+<li><strong>refractive index</strong> <em>n</em>: <code class="docutils literal notranslate"><span class="pre">1/spacing_max</span></code></li>
+<li><strong>relative permittivity</strong> <em>epsilon_r</em>: <code class="docutils literal notranslate"><span class="pre">(1/spacing_max)^2</span></code></li>
+<li><strong>resolutionScalingFactor</strong>: <code class="docutils literal notranslate"><span class="pre">1/(F*lambda)</span></code> (so that increasing it, decreases <em>spacing_max</em> and therefore increases <em>NcellsMin</em>)</li>
+<li><strong>Minimum number of cells</strong> <em>NcellsMin</em> : <code class="docutils literal notranslate"><span class="pre">ceil(</span> <span class="pre">abs(pos_max-pos_min)/spacing_max</span> <span class="pre">)</span></code></li>
+</ul>
+<p><em>spacing_max</em> can then be set via:</p>
+<ul class="simple">
+<li>setSpacingMax(spacing_max)</li>
+<li>setRefractiveIndexMin(n)</li>
+<li>setRelativePermittivityMin(epsilon_r)</li>
+<li>setNcellsMin(NcellsMin)</li>
+</ul>
+<p>Corresponding <em>get</em> functions are also available.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last"><strong>resolutionScalingFactor</strong> is only used when getLocalCoordinates() is called!</p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>pos_min</strong> (<em>float</em>) – minimum position</li>
+<li><strong>pos_max</strong> (<em>float</em>) – maximum position</li>
+<li><strong>spacing_max</strong> (<em>float</em>) – maximum <em>delta</em>, i.e. cell thickness.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt>
+<code class="descname">PrintSelf</code><span class="sig-paren">(</span><em>indent=''</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#HomogeneousMesh1D.PrintSelf"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>printing function with indent</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">getLocalCoordinates</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#HomogeneousMesh1D.getLocalCoordinates"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Returns the list of coordinates. It takes into account <strong>Mesh1D::resolutionScalingFactor</strong>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">getNcellsMin</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#HomogeneousMesh1D.getNcellsMin"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>get the minimum number of “cells” in the mesh (NOT the number of “positions”, which is <code class="docutils literal notranslate"><span class="pre">NcellsMin</span> <span class="pre">+</span> <span class="pre">1</span></code>)</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">getRefractiveIndexMin</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#HomogeneousMesh1D.getRefractiveIndexMin"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>get the minimum “refractive index” defined as <code class="docutils literal notranslate"><span class="pre">1/spacing_max</span></code></p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">getRelativePermittivityMin</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#HomogeneousMesh1D.getRelativePermittivityMin"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>get the minimum “relative permittivity” defined as <code class="docutils literal notranslate"><span class="pre">(1/spacing_max)^2</span></code></p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">getSpacingMax</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#HomogeneousMesh1D.getSpacingMax"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>get the maximum spacing</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">renderInBlender</code><span class="sig-paren">(</span><em>location=None</em>, <em>group='meshes'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#HomogeneousMesh1D.renderInBlender"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">renderXMesh1D</code><span class="sig-paren">(</span><em>location=None</em>, <em>group='meshes'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#HomogeneousMesh1D.renderXMesh1D"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">renderYMesh1D</code><span class="sig-paren">(</span><em>location=None</em>, <em>group='meshes'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#HomogeneousMesh1D.renderYMesh1D"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">renderZMesh1D</code><span class="sig-paren">(</span><em>location=None</em>, <em>group='meshes'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#HomogeneousMesh1D.renderZMesh1D"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">setExtension</code><span class="sig-paren">(</span><em>pos_min</em>, <em>pos_max</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#HomogeneousMesh1D.setExtension"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>set the extension</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">setNcellsMin</code><span class="sig-paren">(</span><em>NcellsMin</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#HomogeneousMesh1D.setNcellsMin"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>set the minimum number of “cells” in the mesh (NOT the number of “positions”, which is <code class="docutils literal notranslate"><span class="pre">NcellsMin</span> <span class="pre">+</span> <span class="pre">1</span></code>)</p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">setRefractiveIndexMin</code><span class="sig-paren">(</span><em>RefractiveIndexMin</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#HomogeneousMesh1D.setRefractiveIndexMin"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>set the minimum “refractive index” defined as <code class="docutils literal notranslate"><span class="pre">1/spacing_max</span></code></p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">setRelativePermittivityMin</code><span class="sig-paren">(</span><em>epsilon_r</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#HomogeneousMesh1D.setRelativePermittivityMin"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>set the minimum “relative permittivity” defined as <code class="docutils literal notranslate"><span class="pre">(1/spacing_max)^2</span></code></p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">setSpacingMax</code><span class="sig-paren">(</span><em>spacing_max</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#HomogeneousMesh1D.setSpacingMax"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>set the maximum spacing</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="homogeneousmeshparameters1d">
+<h3>HomogeneousMeshParameters1D<a class="headerlink" href="#homogeneousmeshparameters1d" title="Permalink to this headline">¶</a></h3>
+<dl class="class">
+<dt>
+<em class="property">class </em><code class="descclassname">meshing.meshing.</code><code class="descname">HomogeneousMeshParameters1D</code><span class="sig-paren">(</span><em>pos_min=None</em>, <em>pos_max=None</em>, <em>spacing_max=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#HomogeneousMeshParameters1D"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Bases: <a class="reference internal" href="meshing.html#meshing.meshing.HomogeneousMesh1D" title="meshing.meshing.HomogeneousMesh1D"><code class="xref py py-class docutils literal notranslate"><span class="pre">meshing.meshing.HomogeneousMesh1D</span></code></a></p>
+<p>A subclass of <em>HomogeneousMesh1D</em>, but for which the <em>MultiMesh1D::getLocalCoordinates()</em> function will take <em>spacing_max</em> into account to merge multiple <em>HomogeneousMeshParameters1D</em> in a smart way.</p>
+</dd></dl>
+
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Meshing</a><ul>
+<li><a class="reference internal" href="#module-meshing.meshing">meshing.meshing module</a></li>
+<li><a class="reference internal" href="#mesh-objects">Mesh objects</a><ul>
+<li><a class="reference internal" href="#mesh3d">Mesh3D</a></li>
+<li><a class="reference internal" href="#multimesh1d">MultiMesh1D</a></li>
+<li><a class="reference internal" href="#mesh1d">Mesh1D</a></li>
+<li><a class="reference internal" href="#heterogeneousmesh1d">HeterogeneousMesh1D</a></li>
+<li><a class="reference internal" href="#homogeneousmesh1d">HomogeneousMesh1D</a></li>
+<li><a class="reference internal" href="#homogeneousmeshparameters1d">HomogeneousMeshParameters1D</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="FDTD_Snapshots.html"
+                        title="previous chapter">Snapshots</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="FDTD_Excitation.html"
+                        title="next chapter">Excitation objects</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/FDTD_Meshing.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="FDTD_Excitation.html" title="Excitation objects"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="FDTD_Snapshots.html" title="Snapshots"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">script_inception_public  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="FDTD_module.html" >FDTD</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2014, Mike Taverne.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.9.
+    </div>
+  </body>
+</html>

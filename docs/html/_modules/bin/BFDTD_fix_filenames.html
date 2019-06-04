@@ -1,0 +1,237 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>bin.BFDTD_fix_filenames &#8212; script_inception_public  documentation</title>
+    <link rel="stylesheet" href="../../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">script_inception_public  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for bin.BFDTD_fix_filenames</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python3</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
+
+<span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">.. todo:: Add option to fix only NTFS/FAT32 incompatible filenames or create/look for script to make filenames NTFS/FAT32 compatible</span>
+
+<span class="sd">          ex: recode, convmv, detox</span>
+<span class="sd">          </span>
+<span class="sd">          cf: http://ubuntuforums.org/showthread.php?t=1479470</span>
+
+<span class="sd">          cf: http://techtots.blogspot.co.uk/2010/01/removing-invalidencoded-characters-from.html</span>
+
+<span class="sd">          convmv -r --notest -f windows-1255 -t UTF-8 FILE</span>
+
+<span class="sd">Note: On bluecrystal, you can use (old rename binary)::</span>
+
+<span class="sd">  find . -name &quot;*.prn&quot; -exec rename &quot;:&quot; &quot;10&quot; {} \;</span>
+<span class="sd">  find . -name &quot;p??id.prn&quot; -exec rename &quot;p&quot; &quot;p0&quot; {} \;</span>
+<span class="sd">  rename : 10 *.prn</span>
+<span class="sd">  rename p p0 p??id.prn</span>
+
+<span class="sd">Example usage::</span>
+
+<span class="sd">  BFDTD_fix_filenames.py -v --action=symlink --output-directory=. --offset 26 --output-format=dummy --id=&quot;_id_&quot; -d ../part_2/ </span>
+
+<span class="sd">.. todo:: Add conversion to .h5 format (Note: check out h5totxt and h5fromtxt and possibly lots of other existing csv&lt;-&gt;.h5 tools)</span>
+<span class="sd">.. todo:: Add more type specifiers for arguments</span>
+<span class="sd">.. todo:: better error handling using try/with/etc instead of lots of if tests.</span>
+<span class="sd">.. todo:: Make it work for more than 836 files or whatever I have at the moment on BC2. (weird unicode characters)</span>
+<span class="sd">.. todo:: BFDTD 2003 vs 2008/2013 formats</span>
+<span class="sd">.. todo:: i:a.prn, etc do not seem supported.</span>
+<span class="sd">&#39;&#39;&#39;</span>
+
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">getopt</span>
+<span class="kn">import</span> <span class="nn">fnmatch</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">string</span>
+<span class="kn">import</span> <span class="nn">argparse</span>
+<span class="kn">import</span> <span class="nn">shutil</span>
+<span class="kn">import</span> <span class="nn">textwrap</span>
+<span class="kn">import</span> <span class="nn">utilities.brisFDTD_ID_info</span> <span class="k">as</span> <span class="nn">brisFDTD_ID_info</span>
+
+<div class="viewcode-block" id="processFiles"><a class="viewcode-back" href="../../bin.html#bin.BFDTD_fix_filenames.processFiles">[docs]</a><span class="k">def</span> <span class="nf">processFiles</span><span class="p">(</span><span class="n">arguments</span><span class="p">):</span>
+
+  <span class="n">src</span> <span class="o">=</span> <span class="n">arguments</span><span class="o">.</span><span class="n">files</span>
+
+  <span class="c1"># add .prn files in specified directories recursively</span>
+  <span class="k">if</span> <span class="n">arguments</span><span class="o">.</span><span class="n">directory</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">directory</span> <span class="ow">in</span> <span class="n">arguments</span><span class="o">.</span><span class="n">directory</span><span class="p">:</span>
+      <span class="n">matches</span> <span class="o">=</span> <span class="p">[]</span>
+      <span class="k">for</span> <span class="n">root</span><span class="p">,</span> <span class="n">dirnames</span><span class="p">,</span> <span class="n">filenames</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">walk</span><span class="p">(</span><span class="n">directory</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">filename</span> <span class="ow">in</span> <span class="n">fnmatch</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">filenames</span><span class="p">,</span> <span class="s1">&#39;*.prn&#39;</span><span class="p">):</span>
+          <span class="n">matches</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">filename</span><span class="p">))</span>
+      
+      <span class="n">src</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">matches</span><span class="p">)</span>
+  
+  <span class="n">dst</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">src</span><span class="p">)</span><span class="o">*</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+  
+  <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">src</span><span class="p">)):</span>
+    <span class="c1">#print(src[i])</span>
+    <span class="n">numID</span><span class="p">,</span> <span class="n">snap_plane</span><span class="p">,</span> <span class="n">probe_ident</span><span class="p">,</span> <span class="n">snap_time_number</span><span class="p">,</span> <span class="n">fixed_filename</span><span class="p">,</span> <span class="n">object_type</span> <span class="o">=</span> <span class="n">brisFDTD_ID_info</span><span class="o">.</span><span class="n">alphaID_to_numID</span><span class="p">(</span><span class="n">src</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">arguments</span><span class="o">.</span><span class="n">expected_object_type</span><span class="p">,</span> <span class="n">arguments</span><span class="o">.</span><span class="n">probe_ident</span><span class="p">)</span>
+    <span class="c1">#print(numID, snap_plane, probe_ident, snap_time_number, fixed_filename, object_type)</span>
+    <span class="k">if</span> <span class="n">fixed_filename</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+      <span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">basename</span><span class="p">)</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">fixed_filename</span><span class="p">)</span>
+
+      <span class="c1"># temporary quick hack (TODO: generalize use of offset and implement actual format specifier)</span>
+      <span class="k">if</span> <span class="n">arguments</span><span class="o">.</span><span class="n">output_format</span> <span class="ow">and</span> <span class="n">object_type</span><span class="o">==</span><span class="s1">&#39;fsnap&#39;</span><span class="p">:</span>
+        <span class="c1">#print(snap_time_number)</span>
+        <span class="n">basename</span><span class="p">,</span> <span class="n">alphaID</span><span class="p">,</span> <span class="n">pair</span> <span class="o">=</span> <span class="n">brisFDTD_ID_info</span><span class="o">.</span><span class="n">numID_to_alphaID_FrequencySnapshot</span><span class="p">(</span><span class="n">numID</span> <span class="o">+</span> <span class="n">arguments</span><span class="o">.</span><span class="n">offset</span><span class="p">,</span> <span class="n">snap_plane</span><span class="p">,</span> <span class="n">probe_ident</span><span class="p">,</span> <span class="n">snap_time_number</span><span class="p">)</span>
+
+      <span class="k">if</span> <span class="n">arguments</span><span class="o">.</span><span class="n">output_directory</span><span class="p">:</span>
+        <span class="n">directory</span> <span class="o">=</span> <span class="n">arguments</span><span class="o">.</span><span class="n">output_directory</span>
+      
+      <span class="k">if</span> <span class="n">basename</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">continue</span>
+        
+      <span class="n">fixed_filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">basename</span><span class="p">)</span>
+
+      <span class="n">dst</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">fixed_filename</span>
+      <span class="k">if</span> <span class="n">dst</span><span class="p">[</span><span class="n">i</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="n">arguments</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
+          <span class="nb">print</span><span class="p">(</span> <span class="n">arguments</span><span class="o">.</span><span class="n">action</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="n">src</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39; -&gt; &#39;</span> <span class="o">+</span> <span class="n">dst</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="p">)</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">src</span><span class="p">[</span><span class="n">i</span><span class="p">]):</span>
+          <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">dst</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span> <span class="ow">or</span> <span class="n">arguments</span><span class="o">.</span><span class="n">force</span><span class="p">:</span>
+            <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">arguments</span><span class="o">.</span><span class="n">no_act</span><span class="p">):</span>
+              <span class="k">if</span> <span class="n">arguments</span><span class="o">.</span><span class="n">action</span> <span class="o">==</span> <span class="s1">&#39;move&#39;</span><span class="p">:</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">src</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">dst</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+              <span class="k">elif</span> <span class="n">arguments</span><span class="o">.</span><span class="n">action</span> <span class="o">==</span> <span class="s1">&#39;copy&#39;</span><span class="p">:</span>
+                <span class="n">shutil</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">src</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">dst</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+              <span class="k">elif</span> <span class="n">arguments</span><span class="o">.</span><span class="n">action</span> <span class="o">==</span> <span class="s1">&#39;copyfile&#39;</span><span class="p">:</span>
+                <span class="n">shutil</span><span class="o">.</span><span class="n">copyfile</span><span class="p">(</span><span class="n">src</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">dst</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="c1"># when the filesystem does not support chmod permissions (i.e. Windows)</span>
+              <span class="k">elif</span> <span class="n">arguments</span><span class="o">.</span><span class="n">action</span> <span class="o">==</span> <span class="s1">&#39;hardlink&#39;</span><span class="p">:</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">link</span><span class="p">(</span><span class="n">src</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">dst</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+              <span class="k">elif</span> <span class="n">arguments</span><span class="o">.</span><span class="n">action</span> <span class="o">==</span> <span class="s1">&#39;symlink&#39;</span><span class="p">:</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">symlink</span><span class="p">(</span><span class="n">src</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">dst</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+              <span class="k">else</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;action not recognized : action = &#39;</span> <span class="o">+</span> <span class="n">arguments</span><span class="o">.</span><span class="n">action</span><span class="p">,</span><span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
+                <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+          <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;WARNING: Skipping &#39;</span><span class="o">+</span><span class="n">src</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">+</span><span class="s1">&#39; -&gt; &#39;</span><span class="o">+</span><span class="n">dst</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">+</span><span class="s1">&#39; : destination file exists&#39;</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+          <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;WARNING: Skipping &#39;</span><span class="o">+</span><span class="n">src</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">+</span><span class="s1">&#39; -&gt; &#39;</span><span class="o">+</span><span class="n">dst</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">+</span><span class="s1">&#39; : source file does not exist&#39;</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
+      <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;WARNING: &#39;</span> <span class="o">+</span> <span class="n">src</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39; could not be converted&#39;</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
+
+  <span class="c1"># left in for reference</span>
+  <span class="c1">#for filename in fnmatch.filter(filenames, &#39;*:*.prn&#39;):</span>
+    <span class="c1">#dst.append(os.path.join(root, string.replace(filename,&#39;:&#39;,&#39;10&#39;)))</span>
+  <span class="c1">#for filename in fnmatch.filter(filenames, &#39;p??id.prn&#39;):</span>
+    <span class="c1">#dst.append(os.path.join(root, string.replace(filename,&#39;p&#39;,&#39;p0&#39;,1)))</span>
+  <span class="k">return</span></div>
+
+<div class="viewcode-block" id="get_argument_parser"><a class="viewcode-back" href="../../bin.html#bin.BFDTD_fix_filenames.get_argument_parser">[docs]</a><span class="k">def</span> <span class="nf">get_argument_parser</span><span class="p">():</span>
+  <span class="c1"># command-line option handling  </span>
+  <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span><span class="n">formatter_class</span><span class="o">=</span><span class="n">argparse</span><span class="o">.</span><span class="n">RawDescriptionHelpFormatter</span><span class="p">,</span> <span class="n">fromfile_prefix_chars</span><span class="o">=</span><span class="s1">&#39;@&#39;</span><span class="p">,</span>
+          <span class="n">description</span><span class="o">=</span><span class="n">textwrap</span><span class="o">.</span><span class="n">dedent</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;</span><span class="se">\</span>
+<span class="s1">                 Rename .prn files produced by BFDTD to NTFS compatible names (as well as human readable).</span>
+<span class="s1">                 </span>
+<span class="s1">                 Example usage:</span>
+<span class="s1">                   BFDTD_fix_filenames.py -v --action=symlink --output-directory=. --offset 26 --output-format=dummy --id=&quot;_id_&quot; -d ../part_2/</span>
+<span class="s1">                 &#39;&#39;&#39;</span><span class="p">))</span>
+  
+  <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-v&quot;</span><span class="p">,</span> <span class="s2">&quot;--verbose&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;verbose&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Verbose: print names of files successfully renamed.&quot;</span><span class="p">)</span>
+  <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-n&quot;</span><span class="p">,</span> <span class="s2">&quot;--no-act&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;no_act&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;No Action: show what files would have been renamed.&quot;</span><span class="p">)</span>
+  <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-f&quot;</span><span class="p">,</span> <span class="s2">&quot;--force&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;force&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Force: overwrite existing files.&quot;</span><span class="p">)</span>
+  <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-d&quot;</span><span class="p">,</span> <span class="s2">&quot;--directory&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;append&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;directory&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;rename all .prn files in this directory recursively. Multiple directories can be specified with -d DIR1 -d DIR2&quot;</span><span class="p">)</span>
+  <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;files&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store&quot;</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="s1">&#39;*&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;input files (.prn)&#39;</span><span class="p">)</span>
+  <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--id&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;probe_ident&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;specify a probe identifier&quot;</span><span class="p">)</span>
+  <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--type&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;expected_object_type&quot;</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;fsnap&#39;</span><span class="p">,</span><span class="s1">&#39;tsnap&#39;</span><span class="p">,</span><span class="s1">&#39;mfprobe&#39;</span><span class="p">,</span><span class="s1">&#39;probe&#39;</span><span class="p">],</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;specify the type of .prn file&quot;</span><span class="p">)</span>
+  <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--offset&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;numID offset&#39;</span><span class="p">)</span>
+  <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--output-format&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;specify format of the output files&quot;</span><span class="p">)</span>
+  <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--output-directory&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Optional output directory (should exist). If not specified, output will go into the same directory as original file.&quot;</span><span class="p">)</span>
+  <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--action&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store&quot;</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;move&#39;</span><span class="p">,</span><span class="s1">&#39;copy&#39;</span><span class="p">,</span><span class="s1">&#39;copyfile&#39;</span><span class="p">,</span><span class="s1">&#39;hardlink&#39;</span><span class="p">,</span><span class="s1">&#39;symlink&#39;</span><span class="p">],</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;move&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;move (rename), copy, hardlink or symlink to the new destination/filename?&quot;</span><span class="p">)</span>
+
+  <span class="k">return</span> <span class="n">parser</span></div>
+
+<div class="viewcode-block" id="main"><a class="viewcode-back" href="../../bin.html#bin.BFDTD_fix_filenames.main">[docs]</a><span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+  <span class="n">parser</span> <span class="o">=</span> <span class="n">get_argument_parser</span><span class="p">()</span>
+  <span class="n">arguments</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span> <span class="k">if</span> <span class="n">args</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+  
+  <span class="c1"># Only works if func has been defined (for example with subcommand and set_defaults())</span>
+  <span class="c1">#arguments.func(arguments)  # call the appropriate subcommand function</span>
+
+  <span class="k">if</span> <span class="ow">not</span> <span class="nb">len</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">print_help</span><span class="p">()</span>
+  <span class="k">else</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;---------&#39;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">arguments</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;---------&#39;</span><span class="p">)</span>
+
+    <span class="n">processFiles</span><span class="p">(</span><span class="n">arguments</span><span class="p">)</span>
+  <span class="k">return</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span></div>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">script_inception_public  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2014, Mike Taverne.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.9.
+    </div>
+  </body>
+</html>

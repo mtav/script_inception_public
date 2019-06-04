@@ -1,0 +1,218 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>bfdtd.excitation_utilities &#8212; script_inception_public  documentation</title>
+    <link rel="stylesheet" href="../../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">script_inception_public  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for bfdtd.excitation_utilities</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python3</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
+
+<span class="kn">from</span> <span class="nn">utilities.common</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">.excitation</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">.excitationTemplate</span> <span class="k">import</span> <span class="o">*</span>
+
+<span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">Wrapper functions to create specific types of excitation.</span>
+<span class="sd">&#39;&#39;&#39;</span>
+
+<div class="viewcode-block" id="ExcitationWrapper"><a class="viewcode-back" href="../../bfdtd.html#bfdtd.excitation_utilities.ExcitationWrapper">[docs]</a><span class="k">def</span> <span class="nf">ExcitationWrapper</span><span class="p">(</span><span class="n">Ysym</span><span class="p">,</span> <span class="n">centre</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">plane_direction</span><span class="p">,</span> <span class="nb">type</span><span class="p">,</span> <span class="n">excitation_direction</span><span class="p">,</span> <span class="n">frequency</span><span class="p">,</span> <span class="n">template_filename</span><span class="o">=</span><span class="s1">&#39;template.dat&#39;</span><span class="p">):</span>
+  <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">  Returns an Excitation and Template object: (excitation, template)</span>
+
+<span class="sd">  * Ysym: adapt source extension for &quot;Y symetric simulation&quot;? (boolean value)</span>
+<span class="sd">  * centre: centre of the source for 2D source or P1 for 1D source</span>
+<span class="sd">  * size: the sigma value for the gaussian 2D source or the distance between P1 and P2 for a 1D source</span>
+<span class="sd">  * plane_direction: emission direction of the source (i.e. orthogonal direction to the source plane or excitation direction)</span>
+<span class="sd">  * type: &#39;1D&#39; or &#39;2D&#39;:</span>
+<span class="sd">  * excitation_direction: direction of the E field</span>
+<span class="sd">  * frequency: frequency of the excitation</span>
+<span class="sd">  * template_filename: name of the template file</span>
+<span class="sd">  &#39;&#39;&#39;</span>
+  
+  <span class="n">plane_direction_vector</span><span class="p">,</span> <span class="n">plane_direction_alpha</span> <span class="o">=</span> <span class="n">getVecAlphaDirectionFromVar</span><span class="p">(</span><span class="n">plane_direction</span><span class="p">)</span>
+  
+  <span class="n">excitation</span> <span class="o">=</span> <span class="n">Excitation</span><span class="p">()</span>
+  <span class="n">excitation</span><span class="o">.</span><span class="n">frequency</span> <span class="o">=</span> <span class="n">frequency</span>
+  <span class="n">excitation</span><span class="o">.</span><span class="n">E</span> <span class="o">=</span> <span class="n">excitation_direction</span>
+  <span class="n">excitation</span><span class="o">.</span><span class="n">template_filename</span> <span class="o">=</span> <span class="n">template_filename</span>
+  <span class="n">excitation</span><span class="o">.</span><span class="n">template_source_plane</span> <span class="o">=</span> <span class="n">plane_direction_alpha</span>
+  <span class="n">excitation</span><span class="o">.</span><span class="n">template_target_plane</span> <span class="o">=</span> <span class="n">plane_direction_alpha</span>
+  <span class="n">excitation</span><span class="o">.</span><span class="n">template_direction</span> <span class="o">=</span> <span class="mi">1</span>
+  <span class="n">excitation</span><span class="o">.</span><span class="n">template_rotation</span> <span class="o">=</span> <span class="mi">1</span>
+  
+  <span class="k">if</span> <span class="nb">type</span><span class="o">==</span><span class="s1">&#39;1D&#39;</span><span class="p">:</span>
+    <span class="n">excitation</span><span class="o">.</span><span class="n">current_source</span> <span class="o">=</span> <span class="mi">7</span>
+    <span class="k">if</span> <span class="ow">not</span><span class="p">(</span><span class="n">Ysym</span><span class="p">):</span>
+      <span class="n">excitation</span><span class="o">.</span><span class="n">setExtension</span><span class="p">(</span><span class="n">centre</span><span class="p">,</span> <span class="n">centre</span> <span class="o">+</span> <span class="n">size</span><span class="o">*</span><span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">excitation_direction</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+      <span class="n">excitation</span><span class="o">.</span><span class="n">setExtension</span><span class="p">(</span><span class="n">centre</span><span class="p">,</span> <span class="n">centre</span> <span class="o">-</span> <span class="n">size</span><span class="o">*</span><span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">excitation_direction</span><span class="p">))</span>
+  <span class="k">else</span><span class="p">:</span>
+    <span class="n">excitation</span><span class="o">.</span><span class="n">current_source</span> <span class="o">=</span> <span class="mi">11</span>
+    <span class="n">diagonal</span> <span class="o">=</span> <span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">plane_direction_vector</span><span class="p">)</span><span class="o">^</span><span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]))</span>
+    <span class="k">if</span> <span class="ow">not</span><span class="p">(</span><span class="n">Ysym</span><span class="p">):</span>
+      <span class="n">excitation</span><span class="o">.</span><span class="n">setExtension</span><span class="p">(</span><span class="n">centre</span> <span class="o">-</span> <span class="n">size</span><span class="o">*</span><span class="n">diagonal</span><span class="p">,</span> <span class="n">centre</span> <span class="o">+</span> <span class="n">size</span><span class="o">*</span><span class="n">diagonal</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+      <span class="n">excitation</span><span class="o">.</span><span class="n">setExtension</span><span class="p">(</span><span class="n">centre</span> <span class="o">-</span> <span class="n">size</span><span class="o">*</span><span class="n">diagonal</span><span class="p">,</span> <span class="n">centre</span><span class="p">)</span>
+
+  <span class="k">if</span> <span class="n">excitation_direction</span><span class="o">==</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]:</span>
+    <span class="n">out_col_name</span> <span class="o">=</span> <span class="s1">&#39;Exre&#39;</span>
+  <span class="k">if</span> <span class="n">excitation_direction</span><span class="o">==</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">]:</span>
+    <span class="n">out_col_name</span> <span class="o">=</span> <span class="s1">&#39;Eyre&#39;</span>
+  <span class="k">if</span> <span class="n">excitation_direction</span><span class="o">==</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]:</span>
+    <span class="n">out_col_name</span> <span class="o">=</span> <span class="s1">&#39;Ezre&#39;</span>
+
+  <span class="k">if</span> <span class="n">plane_direction_alpha</span><span class="o">==</span><span class="s1">&#39;x&#39;</span><span class="p">:</span>
+    <span class="n">column_titles</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">,</span><span class="s1">&#39;z&#39;</span><span class="p">,</span><span class="s1">&#39;Exre&#39;</span><span class="p">,</span><span class="s1">&#39;Exim&#39;</span><span class="p">,</span><span class="s1">&#39;Eyre&#39;</span><span class="p">,</span><span class="s1">&#39;Eyim&#39;</span><span class="p">,</span><span class="s1">&#39;Ezre&#39;</span><span class="p">,</span><span class="s1">&#39;Ezim&#39;</span><span class="p">,</span><span class="s1">&#39;Hxre&#39;</span><span class="p">,</span><span class="s1">&#39;Hxim&#39;</span><span class="p">,</span><span class="s1">&#39;Hyre&#39;</span><span class="p">,</span><span class="s1">&#39;Hyim&#39;</span><span class="p">,</span><span class="s1">&#39;Hzre&#39;</span><span class="p">,</span><span class="s1">&#39;Hzim&#39;</span><span class="p">]</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">centre</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">centre</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+  <span class="k">if</span> <span class="n">plane_direction_alpha</span><span class="o">==</span><span class="s1">&#39;y&#39;</span><span class="p">:</span>
+    <span class="n">column_titles</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">,</span><span class="s1">&#39;z&#39;</span><span class="p">,</span><span class="s1">&#39;Exre&#39;</span><span class="p">,</span><span class="s1">&#39;Exim&#39;</span><span class="p">,</span><span class="s1">&#39;Eyre&#39;</span><span class="p">,</span><span class="s1">&#39;Eyim&#39;</span><span class="p">,</span><span class="s1">&#39;Ezre&#39;</span><span class="p">,</span><span class="s1">&#39;Ezim&#39;</span><span class="p">,</span><span class="s1">&#39;Hxre&#39;</span><span class="p">,</span><span class="s1">&#39;Hxim&#39;</span><span class="p">,</span><span class="s1">&#39;Hyre&#39;</span><span class="p">,</span><span class="s1">&#39;Hyim&#39;</span><span class="p">,</span><span class="s1">&#39;Hzre&#39;</span><span class="p">,</span><span class="s1">&#39;Hzim&#39;</span><span class="p">]</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">centre</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">centre</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+  <span class="k">if</span> <span class="n">plane_direction_alpha</span><span class="o">==</span><span class="s1">&#39;z&#39;</span><span class="p">:</span>
+    <span class="n">column_titles</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">,</span><span class="s1">&#39;y&#39;</span><span class="p">,</span><span class="s1">&#39;Exre&#39;</span><span class="p">,</span><span class="s1">&#39;Exim&#39;</span><span class="p">,</span><span class="s1">&#39;Eyre&#39;</span><span class="p">,</span><span class="s1">&#39;Eyim&#39;</span><span class="p">,</span><span class="s1">&#39;Ezre&#39;</span><span class="p">,</span><span class="s1">&#39;Ezim&#39;</span><span class="p">,</span><span class="s1">&#39;Hxre&#39;</span><span class="p">,</span><span class="s1">&#39;Hxim&#39;</span><span class="p">,</span><span class="s1">&#39;Hyre&#39;</span><span class="p">,</span><span class="s1">&#39;Hyim&#39;</span><span class="p">,</span><span class="s1">&#39;Hzre&#39;</span><span class="p">,</span><span class="s1">&#39;Hzim&#39;</span><span class="p">]</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">centre</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">centre</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    
+    <span class="c1">#template1 = ExcitationGaussian1(amplitude = 1, beam_centre_x = centre, beam_centre_y = 2.00, sigma_x = 0.1, sigma_y = 0.9, fileName=&#39;template.dat&#39;)</span>
+    <span class="c1">#bfdtd_object.excitation_template_list.append(template1)</span>
+    <span class="c1">#template1.writeDatFile(&#39;template1.dat&#39;, x_list, y_list, out_col_name, column_titles)</span>
+  <span class="n">template</span> <span class="o">=</span> <span class="n">ExcitationGaussian2</span><span class="p">(</span><span class="n">amplitude</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">beam_centre_x</span> <span class="o">=</span> <span class="n">x</span><span class="p">,</span> <span class="n">beam_centre_y</span> <span class="o">=</span> <span class="n">y</span><span class="p">,</span> <span class="n">c</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">sigma</span> <span class="o">=</span> <span class="n">size</span><span class="p">,</span> <span class="n">fileName</span><span class="o">=</span><span class="s1">&#39;template.dat&#39;</span><span class="p">)</span>
+  <span class="n">template</span><span class="o">.</span><span class="n">out_col_name</span> <span class="o">=</span> <span class="n">out_col_name</span>
+  <span class="n">template</span><span class="o">.</span><span class="n">column_titles</span> <span class="o">=</span> <span class="n">column_titles</span>
+  
+    <span class="c1">#bfdtd_object.excitation_template_list.append(template2)</span>
+    <span class="c1">#template2.writeDatFile(&#39;template2.dat&#39;, x_list, y_list, out_col_name, column_titles)</span>
+
+  <span class="k">return</span><span class="p">(</span><span class="n">excitation</span><span class="p">,</span> <span class="n">template</span><span class="p">)</span></div>
+  <span class="c1">#return excitation</span>
+
+<div class="viewcode-block" id="QuadrupleExcitation"><a class="viewcode-back" href="../../bfdtd.html#bfdtd.excitation_utilities.QuadrupleExcitation">[docs]</a><span class="k">def</span> <span class="nf">QuadrupleExcitation</span><span class="p">(</span><span class="n">Ysym</span><span class="p">,</span> <span class="n">bfdtd_object</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">propagation_direction</span><span class="p">,</span> <span class="n">delta</span><span class="p">,</span> <span class="n">template_radius</span><span class="p">,</span> <span class="n">freq</span><span class="p">,</span> <span class="n">exc</span><span class="p">):</span>
+  <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">  Adds an Excitation object and, if necessary, a corresponding Template object to the BFDTDobject &quot;bfdtd_object&quot;.</span>
+
+<span class="sd">  * Ysym: adapt source extension for &quot;Y symetric simulation&quot;?</span>
+<span class="sd">  * bfdtd_object: BFDTDobject to which to add the Excitation+Template</span>
+<span class="sd">  * P: centre of the source for 2D source or P1 for 1D source</span>
+<span class="sd">  * propagation_direction: emission direction of the source (i.e. orthogonal direction to the source plane or excitation direction)</span>
+<span class="sd">  * delta: the distance between P1 and P2 for a 1D source (ONLY VALID FOR 1D SOURCE)</span>
+<span class="sd">  * template_radius: the sigma value for the gaussian 2D source (ONLY VALID FOR 2D SOURCE)</span>
+<span class="sd">  * freq: frequency of the excitation</span>
+<span class="sd">  * exc: type of excitation desired:</span>
+<span class="sd">  </span>
+<span class="sd">    * exc=0: 1D, excitation_direction = &#39;propagation_direction + 1 in the (x,y,z) cycle&#39;</span>
+<span class="sd">    * exc=1: 1D, excitation_direction = &#39;propagation_direction + 2 in the (x,y,z) cycle&#39;</span>
+<span class="sd">    * exc=2: 2D, excitation_direction = &#39;propagation_direction + 1 in the (x,y,z) cycle&#39;</span>
+<span class="sd">    * exc=3: 2D, excitation_direction = &#39;propagation_direction + 2 in the (x,y,z) cycle&#39;</span>
+<span class="sd">  &#39;&#39;&#39;</span>
+
+  <span class="k">if</span> <span class="n">propagation_direction</span> <span class="o">==</span> <span class="s1">&#39;x&#39;</span><span class="p">:</span>
+    <span class="n">E1</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">E2</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span>
+  <span class="k">elif</span> <span class="n">propagation_direction</span> <span class="o">==</span> <span class="s1">&#39;y&#39;</span><span class="p">:</span>
+    <span class="n">E1</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">E2</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span>
+  <span class="k">elif</span> <span class="n">propagation_direction</span> <span class="o">==</span> <span class="s1">&#39;z&#39;</span><span class="p">:</span>
+    <span class="n">E1</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">E2</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span>
+  <span class="k">else</span><span class="p">:</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+
+  <span class="k">if</span> <span class="n">exc</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+    <span class="c1"># E1 1D</span>
+    <span class="n">excitation</span><span class="p">,</span> <span class="n">template</span> <span class="o">=</span> <span class="n">ExcitationWrapper</span><span class="p">(</span><span class="n">Ysym</span><span class="p">,</span> <span class="n">centre</span><span class="o">=</span><span class="n">P</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">delta</span><span class="p">,</span> <span class="n">plane_direction</span><span class="o">=</span><span class="n">propagation_direction</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;1D&#39;</span><span class="p">,</span> <span class="n">excitation_direction</span><span class="o">=</span><span class="n">E1</span><span class="p">,</span> <span class="n">frequency</span><span class="o">=</span><span class="n">freq</span><span class="p">)</span>
+    <span class="n">bfdtd_object</span><span class="o">.</span><span class="n">excitation_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">excitation</span><span class="p">)</span>
+  <span class="k">elif</span> <span class="n">exc</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+    <span class="c1"># E2 1D</span>
+    <span class="n">excitation</span><span class="p">,</span> <span class="n">template</span> <span class="o">=</span> <span class="n">ExcitationWrapper</span><span class="p">(</span><span class="n">Ysym</span><span class="p">,</span> <span class="n">centre</span><span class="o">=</span><span class="n">P</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">delta</span><span class="p">,</span> <span class="n">plane_direction</span><span class="o">=</span><span class="n">propagation_direction</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;1D&#39;</span><span class="p">,</span> <span class="n">excitation_direction</span><span class="o">=</span><span class="n">E2</span><span class="p">,</span> <span class="n">frequency</span><span class="o">=</span><span class="n">freq</span><span class="p">)</span>
+    <span class="n">bfdtd_object</span><span class="o">.</span><span class="n">excitation_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">excitation</span><span class="p">)</span>
+  <span class="k">elif</span> <span class="n">exc</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+    <span class="c1"># E1 2D</span>
+    <span class="n">excitation</span><span class="p">,</span> <span class="n">template</span> <span class="o">=</span> <span class="n">ExcitationWrapper</span><span class="p">(</span><span class="n">Ysym</span><span class="p">,</span> <span class="n">centre</span><span class="o">=</span><span class="n">P</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">template_radius</span><span class="p">,</span> <span class="n">plane_direction</span><span class="o">=</span><span class="n">propagation_direction</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;2D&#39;</span><span class="p">,</span> <span class="n">excitation_direction</span><span class="o">=</span><span class="n">E1</span><span class="p">,</span> <span class="n">frequency</span><span class="o">=</span><span class="n">freq</span><span class="p">)</span>
+    <span class="n">bfdtd_object</span><span class="o">.</span><span class="n">excitation_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">excitation</span><span class="p">)</span>
+    <span class="n">bfdtd_object</span><span class="o">.</span><span class="n">excitation_template_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">template</span><span class="p">)</span>
+  <span class="k">elif</span> <span class="n">exc</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+    <span class="c1"># E2 2D</span>
+    <span class="n">excitation</span><span class="p">,</span> <span class="n">template</span> <span class="o">=</span> <span class="n">ExcitationWrapper</span><span class="p">(</span><span class="n">Ysym</span><span class="p">,</span> <span class="n">centre</span><span class="o">=</span><span class="n">P</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">template_radius</span><span class="p">,</span> <span class="n">plane_direction</span><span class="o">=</span><span class="n">propagation_direction</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;2D&#39;</span><span class="p">,</span> <span class="n">excitation_direction</span><span class="o">=</span><span class="n">E2</span><span class="p">,</span> <span class="n">frequency</span><span class="o">=</span><span class="n">freq</span><span class="p">)</span>
+    <span class="n">bfdtd_object</span><span class="o">.</span><span class="n">excitation_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">excitation</span><span class="p">)</span>
+    <span class="n">bfdtd_object</span><span class="o">.</span><span class="n">excitation_template_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">template</span><span class="p">)</span>
+  <span class="k">else</span><span class="p">:</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span></div>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+  <span class="k">pass</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">script_inception_public  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2014, Mike Taverne.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.9.
+    </div>
+  </body>
+</html>

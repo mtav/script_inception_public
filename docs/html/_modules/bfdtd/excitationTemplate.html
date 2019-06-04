@@ -1,0 +1,326 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>bfdtd.excitationTemplate &#8212; script_inception_public  documentation</title>
+    <link rel="stylesheet" href="../../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">script_inception_public  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for bfdtd.excitationTemplate</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python3</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
+
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">division</span>
+
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">numpy</span>
+
+<span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">Excitation template objects, used to generate the template files.</span>
+
+<span class="sd">.. todo:: Rewrite into single class accepting python functions as argument to fill the template</span>
+<span class="sd">.. todo:: Write general .prn file read/write functions with options to support the changing .prn file formats (ex: 2013 with empty lines and earlier versions without)</span>
+<span class="sd">.. todo:: Create template parent class, improve class names of excitations and templates, review the whole excitation+template system</span>
+<span class="sd">.. todo:: Add .dat file reading</span>
+<span class="sd">&#39;&#39;&#39;</span>
+
+<div class="viewcode-block" id="ExcitationGaussian1"><a class="viewcode-back" href="../../bfdtd.html#bfdtd.excitationTemplate.ExcitationGaussian1">[docs]</a><span class="k">class</span> <span class="nc">ExcitationGaussian1</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+  <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">  gaussian excitation template object which creates a 2D gaussian surface with a central maximum point</span>
+<span class="sd">  &#39;&#39;&#39;</span>
+  <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">amplitude</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">beam_centre_x</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">beam_centre_y</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">sigma_x</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">sigma_y</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">out_col_name</span><span class="o">=</span><span class="s1">&#39;z&#39;</span><span class="p">,</span> <span class="n">column_titles</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">,</span><span class="s1">&#39;y&#39;</span><span class="p">,</span><span class="s1">&#39;z&#39;</span><span class="p">],</span> <span class="n">fileName</span><span class="o">=</span><span class="s1">&#39;template.dat&#39;</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">amplitude</span> <span class="o">=</span> <span class="n">amplitude</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">beam_centre_x</span> <span class="o">=</span> <span class="n">beam_centre_x</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">beam_centre_y</span> <span class="o">=</span> <span class="n">beam_centre_y</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">sigma_x</span> <span class="o">=</span> <span class="n">sigma_x</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">sigma_y</span> <span class="o">=</span> <span class="n">sigma_y</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">out_col_name</span> <span class="o">=</span> <span class="n">out_col_name</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">column_titles</span> <span class="o">=</span> <span class="n">column_titles</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">fileName</span> <span class="o">=</span> <span class="n">fileName</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">x_list</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">y_list</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span>
+      
+<div class="viewcode-block" id="ExcitationGaussian1.writeDatFile"><a class="viewcode-back" href="../../bfdtd.html#bfdtd.excitationTemplate.ExcitationGaussian1.writeDatFile">[docs]</a>  <span class="k">def</span> <span class="nf">writeDatFile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fileName</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Generate template .dat file for a plane excitation&#39;&#39;&#39;</span>
+    <span class="c1">#self.x_list = mesh.getXmesh()</span>
+    <span class="c1">#self.y_list = mesh.getYmesh()</span>
+    <span class="c1">#self.z_list = mesh.getZmesh()</span>
+    
+    <span class="n">x_col</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">y_col</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">out_col</span> <span class="o">=</span> <span class="p">[]</span>
+    
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Generating template N=&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x_list</span><span class="p">)</span><span class="o">*</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">y_list</span><span class="p">)))</span>
+    <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">x_list</span><span class="p">:</span>
+      <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">y_list</span><span class="p">:</span>
+        <span class="n">x_col</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">y_col</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+        <span class="n">X</span> <span class="o">=</span> <span class="n">x</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">beam_centre_x</span>
+        <span class="n">Y</span> <span class="o">=</span> <span class="n">y</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">beam_centre_y</span>
+        <span class="n">R</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span> <span class="nb">pow</span><span class="p">((</span><span class="n">X</span><span class="p">),</span><span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="nb">pow</span><span class="p">((</span><span class="n">Y</span><span class="p">),</span><span class="mi">2</span><span class="p">)</span> <span class="p">))</span>
+        <span class="c1">#out = self.amplitude * numpy.exp( -pow((R-self.c),2) / (2*pow(self.sigma,2)) )</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">amplitude</span> <span class="o">*</span> <span class="n">numpy</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span> <span class="o">-</span><span class="p">(</span> <span class="nb">pow</span><span class="p">(</span><span class="n">X</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="nb">pow</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sigma_x</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span> <span class="o">+</span> <span class="nb">pow</span><span class="p">(</span><span class="n">Y</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="nb">pow</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sigma_y</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span> <span class="p">)</span> <span class="p">)</span>
+        <span class="n">out_col</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
+
+    <span class="c1"># check if file already exists</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">overwrite</span> <span class="ow">and</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">fileName</span><span class="p">):</span>
+      <span class="k">raise</span> <span class="ne">UserWarning</span><span class="p">(</span><span class="s1">&#39;File already exists: &#39;</span> <span class="o">+</span> <span class="n">fileName</span><span class="p">)</span>
+    
+    <span class="c1"># write file</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">fileName</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">FILE</span><span class="p">:</span>
+      <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Writing excitation template to &#39;</span><span class="o">+</span><span class="n">fileName</span><span class="p">)</span>
+      <span class="k">for</span> <span class="n">idx_col</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">column_titles</span><span class="p">)):</span>
+        <span class="k">if</span> <span class="n">idx_col</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">:</span>
+          <span class="n">FILE</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">FILE</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">column_titles</span><span class="p">[</span><span class="n">idx_col</span><span class="p">])</span>
+      <span class="n">FILE</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+      <span class="k">for</span> <span class="n">idx_row</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">out_col</span><span class="p">)):</span>
+        <span class="c1">#print(x_col[idx_row])</span>
+        <span class="n">FILE</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%15.6E</span><span class="se">\t</span><span class="si">%15.6E</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">x_col</span><span class="p">[</span><span class="n">idx_row</span><span class="p">],</span> <span class="n">y_col</span><span class="p">[</span><span class="n">idx_row</span><span class="p">]))</span>
+        <span class="k">for</span> <span class="n">idx_col</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">column_titles</span><span class="p">)</span><span class="o">-</span><span class="mi">2</span><span class="p">):</span>
+          <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">column_titles</span><span class="p">[</span><span class="n">idx_col</span><span class="o">+</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="p">[</span> <span class="n">x</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">out_col_name</span> <span class="p">]:</span>
+            <span class="n">FILE</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\t</span><span class="si">%15.6E</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">out_col</span><span class="p">[</span><span class="n">idx_row</span><span class="p">])</span>
+          <span class="k">else</span><span class="p">:</span>
+            <span class="n">FILE</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\t</span><span class="si">%15.6E</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">FILE</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+
+    <span class="k">return</span></div></div>
+
+<div class="viewcode-block" id="ExcitationGaussian2"><a class="viewcode-back" href="../../bfdtd.html#bfdtd.excitationTemplate.ExcitationGaussian2">[docs]</a><span class="k">class</span> <span class="nc">ExcitationGaussian2</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+  <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">  gaussian excitation template object which creates a 2D gaussian surface with a circular maximum of radius c</span>
+<span class="sd">  &#39;&#39;&#39;</span>
+  <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">amplitude</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">beam_centre_x</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">beam_centre_y</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">c</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">sigma</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span> <span class="n">out_col_name</span><span class="o">=</span><span class="s1">&#39;z&#39;</span><span class="p">,</span> <span class="n">column_titles</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">,</span><span class="s1">&#39;y&#39;</span><span class="p">,</span><span class="s1">&#39;z&#39;</span><span class="p">],</span> <span class="n">fileName</span><span class="o">=</span><span class="s1">&#39;template.dat&#39;</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">amplitude</span> <span class="o">=</span> <span class="n">amplitude</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">beam_centre_x</span> <span class="o">=</span> <span class="n">beam_centre_x</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">beam_centre_y</span> <span class="o">=</span> <span class="n">beam_centre_y</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">c</span> <span class="o">=</span> <span class="n">c</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">sigma</span> <span class="o">=</span> <span class="n">sigma</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">out_col_name</span> <span class="o">=</span> <span class="n">out_col_name</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">column_titles</span> <span class="o">=</span> <span class="n">column_titles</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">fileName</span> <span class="o">=</span> <span class="n">fileName</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">x_list</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">y_list</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span>
+
+<div class="viewcode-block" id="ExcitationGaussian2.writeDatFile"><a class="viewcode-back" href="../../bfdtd.html#bfdtd.excitationTemplate.ExcitationGaussian2.writeDatFile">[docs]</a>  <span class="k">def</span> <span class="nf">writeDatFile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fileName</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Generate template .dat file for a plane excitation&#39;&#39;&#39;</span>
+    <span class="c1">#self.x_list = mesh.getXmesh()</span>
+    <span class="c1">#self.y_list = mesh.getYmesh()</span>
+    <span class="c1">#self.z_list = mesh.getZmesh()</span>
+    
+    <span class="n">x_col</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">y_col</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">out_col</span> <span class="o">=</span> <span class="p">[]</span>
+    
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Generating template N=&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x_list</span><span class="p">)</span><span class="o">*</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">y_list</span><span class="p">)))</span>
+    <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">x_list</span><span class="p">:</span>
+      <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">y_list</span><span class="p">:</span>
+        <span class="n">x_col</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">y_col</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+        <span class="n">X</span> <span class="o">=</span> <span class="n">x</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">beam_centre_x</span>
+        <span class="n">Y</span> <span class="o">=</span> <span class="n">y</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">beam_centre_y</span>
+        <span class="n">R</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span> <span class="nb">pow</span><span class="p">((</span><span class="n">X</span><span class="p">),</span><span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="nb">pow</span><span class="p">((</span><span class="n">Y</span><span class="p">),</span><span class="mi">2</span><span class="p">)</span> <span class="p">))</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">amplitude</span> <span class="o">*</span> <span class="n">numpy</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span> <span class="o">-</span><span class="nb">pow</span><span class="p">((</span><span class="n">R</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">c</span><span class="p">),</span><span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="nb">pow</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sigma</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span> <span class="p">)</span>
+        <span class="c1">#out = self.amplitude * numpy.exp( -( pow(X,2)/(2*pow(self.sigma_x,2)) + pow(Y,2)/(2*pow(self.sigma_y,2)) ) )</span>
+        <span class="n">out_col</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
+
+    <span class="c1"># check if file already exists</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">overwrite</span> <span class="ow">and</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">fileName</span><span class="p">):</span>
+      <span class="k">raise</span> <span class="ne">UserWarning</span><span class="p">(</span><span class="s1">&#39;File already exists: &#39;</span> <span class="o">+</span> <span class="n">fileName</span><span class="p">)</span>
+
+    <span class="c1"># write file</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">fileName</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">FILE</span><span class="p">:</span>
+      <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Writing excitation template to &#39;</span><span class="o">+</span><span class="n">fileName</span><span class="p">)</span>
+      <span class="k">for</span> <span class="n">idx_col</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">column_titles</span><span class="p">)):</span>
+        <span class="k">if</span> <span class="n">idx_col</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">:</span>
+          <span class="n">FILE</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">FILE</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">column_titles</span><span class="p">[</span><span class="n">idx_col</span><span class="p">])</span>
+      <span class="n">FILE</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+      <span class="k">for</span> <span class="n">idx_row</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">out_col</span><span class="p">)):</span>
+        <span class="c1">#print(x_col[idx_row])</span>
+        <span class="n">FILE</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%15.6E</span><span class="se">\t</span><span class="si">%15.6E</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">x_col</span><span class="p">[</span><span class="n">idx_row</span><span class="p">],</span> <span class="n">y_col</span><span class="p">[</span><span class="n">idx_row</span><span class="p">]))</span>
+        <span class="k">for</span> <span class="n">idx_col</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">column_titles</span><span class="p">)</span><span class="o">-</span><span class="mi">2</span><span class="p">):</span>
+          <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">column_titles</span><span class="p">[</span><span class="n">idx_col</span><span class="o">+</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="p">[</span> <span class="n">x</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">out_col_name</span> <span class="p">]:</span>
+            <span class="n">FILE</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\t</span><span class="si">%15.6E</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">out_col</span><span class="p">[</span><span class="n">idx_row</span><span class="p">])</span>
+          <span class="k">else</span><span class="p">:</span>
+            <span class="n">FILE</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\t</span><span class="si">%15.6E</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">FILE</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+
+    <span class="k">return</span></div></div>
+
+<div class="viewcode-block" id="ExcitationUniform"><a class="viewcode-back" href="../../bfdtd.html#bfdtd.excitationTemplate.ExcitationUniform">[docs]</a><span class="k">class</span> <span class="nc">ExcitationUniform</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+  <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">  gaussian excitation template object which creates a 2D gaussian surface with a circular maximum of radius c</span>
+<span class="sd">  &#39;&#39;&#39;</span>
+  <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+   <span class="n">amplitude</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+   <span class="n">out_col_name</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+   <span class="n">column_titles</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+   <span class="n">fileName</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+   <span class="n">x_list</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+   <span class="n">y_list</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+    
+    <span class="k">if</span> <span class="n">amplitude</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span> <span class="n">amplitude</span> <span class="o">=</span> <span class="mi">10</span>
+    <span class="k">if</span> <span class="n">out_col_name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span> <span class="n">out_col_name</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Z1&#39;</span><span class="p">,</span><span class="s1">&#39;Z3&#39;</span><span class="p">,</span><span class="s1">&#39;Z5&#39;</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">column_titles</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span> <span class="n">column_titles</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">,</span><span class="s1">&#39;y&#39;</span><span class="p">,</span><span class="s1">&#39;z1&#39;</span><span class="p">,</span><span class="s1">&#39;z2&#39;</span><span class="p">,</span><span class="s1">&#39;z3&#39;</span><span class="p">,</span><span class="s1">&#39;z4&#39;</span><span class="p">,</span><span class="s1">&#39;z5&#39;</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">fileName</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span> <span class="n">fileName</span> <span class="o">=</span> <span class="s1">&#39;template.dat&#39;</span>
+    <span class="k">if</span> <span class="n">x_list</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span> <span class="n">x_list</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">y_list</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span> <span class="n">y_list</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span>
+    
+    <span class="bp">self</span><span class="o">.</span><span class="n">amplitude</span> <span class="o">=</span> <span class="n">amplitude</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">out_col_name</span> <span class="o">=</span> <span class="n">out_col_name</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">column_titles</span> <span class="o">=</span> <span class="n">column_titles</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">fileName</span> <span class="o">=</span> <span class="n">fileName</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">x_list</span> <span class="o">=</span> <span class="n">x_list</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">y_list</span> <span class="o">=</span> <span class="n">y_list</span>
+
+<div class="viewcode-block" id="ExcitationUniform.writeDatFile"><a class="viewcode-back" href="../../bfdtd.html#bfdtd.excitationTemplate.ExcitationUniform.writeDatFile">[docs]</a>  <span class="k">def</span> <span class="nf">writeDatFile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fileName</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Generate template .dat file for a plane excitation&#39;&#39;&#39;</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Generating template N=&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x_list</span><span class="p">)</span><span class="o">*</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">y_list</span><span class="p">)))</span>
+
+    <span class="c1"># check if file already exists</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">overwrite</span> <span class="ow">and</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">fileName</span><span class="p">):</span>
+      <span class="k">raise</span> <span class="ne">UserWarning</span><span class="p">(</span><span class="s1">&#39;File already exists: &#39;</span> <span class="o">+</span> <span class="n">fileName</span><span class="p">)</span>
+
+    <span class="c1"># write file</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">fileName</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">FILE</span><span class="p">:</span>
+      <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Writing excitation template to &#39;</span><span class="o">+</span><span class="n">fileName</span><span class="p">)</span>
+      
+      <span class="c1"># writing column title line</span>
+      <span class="k">for</span> <span class="n">idx_col</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">column_titles</span><span class="p">)):</span>
+        <span class="k">if</span> <span class="n">idx_col</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">:</span>
+          <span class="n">FILE</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">FILE</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">column_titles</span><span class="p">[</span><span class="n">idx_col</span><span class="p">])</span>
+      <span class="n">FILE</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+      
+      <span class="c1"># fill in all columns whose name is in self.out_col_name</span>
+      <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">x_list</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">y_list</span><span class="p">:</span>
+          <span class="n">FILE</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%15.6E</span><span class="se">\t</span><span class="si">%15.6E</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">))</span>
+          <span class="k">for</span> <span class="n">idx_col</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">column_titles</span><span class="p">)</span><span class="o">-</span><span class="mi">2</span><span class="p">):</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">column_titles</span><span class="p">[</span><span class="n">idx_col</span><span class="o">+</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="p">[</span> <span class="n">x</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">out_col_name</span> <span class="p">]:</span>
+              <span class="n">FILE</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\t</span><span class="si">%15.6E</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">amplitude</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+              <span class="n">FILE</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\t</span><span class="si">%15.6E</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="mi">0</span><span class="p">)</span>
+          <span class="n">FILE</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="c1">#FILE.write(&#39;\n&#39;)</span>
+      
+    <span class="k">return</span>
+    <span class="c1">#self.x_list = mesh.getXmesh()</span>
+    <span class="c1">#self.y_list = mesh.getYmesh()</span>
+    <span class="c1">#self.z_list = mesh.getZmesh()</span>
+
+    <span class="n">x_col</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">y_col</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">out_col</span> <span class="o">=</span> <span class="p">[]</span>
+    
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Generating template N=&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x_list</span><span class="p">)</span><span class="o">*</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">y_list</span><span class="p">)))</span>
+    <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">x_list</span><span class="p">:</span>
+      <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">y_list</span><span class="p">:</span>
+        <span class="n">x_col</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">y_col</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+        <span class="n">out_col</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">amplitude</span><span class="p">)</span>
+    
+    <span class="c1"># TODO: Why is there a second writing to the same file, overwriting it here? Looks like unfinished code...</span>
+    
+    <span class="c1"># write file</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">fileName</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">FILE</span><span class="p">:</span>
+      <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Writing excitation template to &#39;</span><span class="o">+</span><span class="n">fileName</span><span class="p">)</span>
+      
+      <span class="c1"># writing column title line</span>
+      <span class="k">for</span> <span class="n">idx_col</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">column_titles</span><span class="p">)):</span>
+        <span class="k">if</span> <span class="n">idx_col</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">:</span>
+          <span class="n">FILE</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">FILE</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">column_titles</span><span class="p">[</span><span class="n">idx_col</span><span class="p">])</span>
+      <span class="n">FILE</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+      
+      <span class="c1"># fill in all columns whose name is in self.out_col_name</span>
+      <span class="k">for</span> <span class="n">idx_row</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">out_col</span><span class="p">)):</span>
+        <span class="c1">#print(x_col[idx_row])</span>
+        <span class="n">FILE</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%15.6E</span><span class="se">\t</span><span class="si">%15.6E</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">x_col</span><span class="p">[</span><span class="n">idx_row</span><span class="p">],</span> <span class="n">y_col</span><span class="p">[</span><span class="n">idx_row</span><span class="p">]))</span>
+        <span class="k">for</span> <span class="n">idx_col</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">column_titles</span><span class="p">)</span><span class="o">-</span><span class="mi">2</span><span class="p">):</span>
+          <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">column_titles</span><span class="p">[</span><span class="n">idx_col</span><span class="o">+</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="p">[</span> <span class="n">x</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">out_col_name</span> <span class="p">]:</span>
+            <span class="n">FILE</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\t</span><span class="si">%15.6E</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">out_col</span><span class="p">[</span><span class="n">idx_row</span><span class="p">])</span>
+          <span class="k">else</span><span class="p">:</span>
+            <span class="n">FILE</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\t</span><span class="si">%15.6E</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">FILE</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+
+    <span class="k">return</span></div></div>
+
+<span class="c1"># for testing</span>
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+  <span class="n">obj</span> <span class="o">=</span> <span class="n">ExcitationUniform</span><span class="p">()</span>
+  <span class="n">obj</span><span class="o">.</span><span class="n">writeDatFile</span><span class="p">(</span><span class="s1">&#39;tmp.dat&#39;</span><span class="p">)</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">script_inception_public  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2014, Mike Taverne.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.9.
+    </div>
+  </body>
+</html>
