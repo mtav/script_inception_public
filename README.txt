@@ -1,11 +1,3 @@
-IMPORTANT NOTE:
-Due to some concerns about what to release and what not to release publically, this repository is no longer always updated. :(
-The most up to date version is now on the shared internal "K: drive".
-
-I will try to "cherry-pick" some commits to push if possible (or once enough has been published or the PhD is done, just push everything (provided the big boss is happy with it as well)).
-In the meanwhile, if you are interested, just contact me directly.
-We now have some more Blender import/export/add mesh scripts for the Nanoscribe GWL language among other things.
-
 script_inception_public documentation
 =====================================
 :backend: html5
@@ -18,7 +10,7 @@ script_inception_public documentation
 
 What this is
 ------------
-Useful scripts for MEEP and Bristol FDTD and maybe other stuff. :)
+Useful scripts for MEEP, MPB, Bristol FDTD, Nanoscribe, FIB and other stuff.
 
 The idea is to centralize scripts used by almost everyone to reduce code duplication and therefore errors and time wasting, as well as improve the overall quality of code over time.
 
