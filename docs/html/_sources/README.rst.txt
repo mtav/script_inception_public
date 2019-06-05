@@ -3,7 +3,7 @@ README
 
 What this is
 ------------
-Useful scripts for MEEP and Bristol FDTD and maybe other stuff. :)
+Useful scripts for MEEP, MPB, Bristol FDTD, Nanoscribe, FIB and other stuff.
 
 The idea is to centralize scripts used by almost everyone to reduce code duplication and therefore errors and time wasting, as well as improve the overall quality of code over time.
 
@@ -144,15 +144,6 @@ Private repository:
 
   * git@git.assembla.com:script_inception_private.git (currently not up to date)
 
-Notes
-~~~~~
-The public repository is really the main one. It used to be on github, but I've
-stopped updating it there, so I don't have to worry about what to
-publish and what not.
-
-The private one contains a lot of scripts written by others, some of
-which I modified and some structure-specific scripts.
-
 Windows directories
 -------------------
 
@@ -253,3 +244,12 @@ They are:
 
 I haven't had time to document everything yet, but hopefully it's
 understandable enough at the moment.
+
+Density of states plotting
+---------------------------
+
+For density of states plotting, check out:
+
+* examples/MPB-examples/dos.scm
+* third_party/MPB_utilities/
+

@@ -47,7 +47,7 @@
 <h1>README<a class="headerlink" href="#readme" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="what-this-is">
 <h2>What this is<a class="headerlink" href="#what-this-is" title="Permalink to this headline">¶</a></h2>
-<p>Useful scripts for MEEP and Bristol FDTD and maybe other stuff. :)</p>
+<p>Useful scripts for MEEP, MPB, Bristol FDTD, Nanoscribe, FIB and other stuff.</p>
 <p>The idea is to centralize scripts used by almost everyone to reduce code duplication and therefore errors and time wasting, as well as improve the overall quality of code over time.</p>
 </div>
 <div class="section" id="license">
@@ -197,14 +197,6 @@ ex: <code class="docutils literal notranslate"><span class="pre">C:\Python32</sp
 <li><a class="reference external" href="mailto:git&#37;&#52;&#48;git&#46;assembla&#46;com">git<span>&#64;</span>git<span>&#46;</span>assembla<span>&#46;</span>com</a>:script_inception_private.git (currently not up to date)</li>
 </ul>
 </div></blockquote>
-<div class="section" id="id2">
-<h3>Notes<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
-<p>The public repository is really the main one. It used to be on github, but I’ve
-stopped updating it there, so I don’t have to worry about what to
-publish and what not.</p>
-<p>The private one contains a lot of scripts written by others, some of
-which I modified and some structure-specific scripts.</p>
-</div>
 </div>
 <div class="section" id="windows-directories">
 <h2>Windows directories<a class="headerlink" href="#windows-directories" title="Permalink to this headline">¶</a></h2>
@@ -317,6 +309,14 @@ which I modified and some structure-specific scripts.</p>
 <p>I haven’t had time to document everything yet, but hopefully it’s
 understandable enough at the moment.</p>
 </div>
+<div class="section" id="density-of-states-plotting">
+<h2>Density of states plotting<a class="headerlink" href="#density-of-states-plotting" title="Permalink to this headline">¶</a></h2>
+<p>For density of states plotting, check out:</p>
+<ul class="simple">
+<li>examples/MPB-examples/dos.scm</li>
+<li>third_party/MPB_utilities/</li>
+</ul>
+</div>
 </div>
 
 
@@ -348,15 +348,13 @@ understandable enough at the moment.</p>
 </ul>
 </li>
 <li><a class="reference internal" href="#documentation">Documentation</a></li>
-<li><a class="reference internal" href="#git-repository-location">Git repository location</a><ul>
-<li><a class="reference internal" href="#id2">Notes</a></li>
-</ul>
-</li>
+<li><a class="reference internal" href="#git-repository-location">Git repository location</a></li>
 <li><a class="reference internal" href="#windows-directories">Windows directories</a></li>
 <li><a class="reference internal" href="#requirements">Requirements</a></li>
 <li><a class="reference internal" href="#example-python-paths">Example python paths</a></li>
 <li><a class="reference internal" href="#creating-vtk-files-from-bfdtd-prn-files-for-3d-visualization">Creating VTK files from BFDTD .prn files for 3D visualization</a></li>
 <li><a class="reference internal" href="#conversion-between-the-hdf-vtk-and-prn-formats">Conversion between the HDF, VTK and PRN formats</a></li>
+<li><a class="reference internal" href="#density-of-states-plotting">Density of states plotting</a></li>
 </ul>
 </li>
 </ul>
