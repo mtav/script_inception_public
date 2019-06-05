@@ -119,7 +119,7 @@ Windows install with Blender 2.6+
 
 #. Download and extract the latest version of the repository to *SCRIPT_DIR*: https://github.com/mtav/script_inception_public/archives/master
 
-   .. note::   
+   .. note::
      You can also checkout/clone the repository using git, which is a much better option, and will allow you to easily update it. Try https://code.google.com/p/tortoisegit/[TortoiseGit] for an easy way to do this for example. It will also allow you to push changes back to the repository, should you wish to contribute code. ;)
 
 #. Create the directory *BLENDER_DIR\\scripts\\addons* if it does not exist.
