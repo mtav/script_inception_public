@@ -80,6 +80,14 @@ def parse_MEEP(infile, verbosity=0):
     
     #print(idx, line)
 
+    computational_cell_match = re.match(r'Computational cell is ([\d.]+) x ([\d.]+) x ([\d.]+) with resolution (\d+)', line)
+    if computational_cell_match:
+      print(computational_cell_match.group(0))
+      print(computational_cell_match.groups())
+      lattice[0,0] = float(computational_cell_match.group(1))
+      lattice[1,1] = float(computational_cell_match.group(2))
+      lattice[2,2] = float(computational_cell_match.group(3))
+
     lattice_match = re.match(r'Lattice vectors:', line)
     if lattice_match:
       if data:
@@ -217,7 +225,10 @@ def subcommand_writeCSV(args):
 
 def subcommand_printInfo(args):
   for i in args.infile:
-    (MEEP_data_list, geo_list) = getInfoFromOutFile(i, verbosity=args.verbosity)
+    if args.ctl:
+      (MEEP_data_list, geo_list) = getInfoFromCTL(i.name, verbosity=args.verbosity)
+    else:
+      (MEEP_data_list, geo_list) = getInfoFromOutFile(i, verbosity=args.verbosity)
     printInfo(MEEP_data_list, geo_list, verbosity=args.verbosity)
   return
 
@@ -382,9 +393,13 @@ def createWrapperFile(infile, verbosity=0):
     print('fname = {}'.format(fname))
   return(fname)
 
-def getInfoFromCTL(infile):
+def getInfoFromCTL(infile, verbosity=0):
   # .. todo:: use this in the blender import (support .ctl files instead of just .out files)
   # .. todo:: find way to output source info + probes, snapshots, etc (input/output objects)
+  
+  # with open('/tmp/caca.ctl', 'w') as f:
+    # s = getWrapperCode(infile)
+    # f.write(s)
   
   p = subprocess.run(['meep'], input=getWrapperCode(infile), universal_newlines=True, stdout=subprocess.PIPE, check=True)
   outfile = io.StringIO(p.stdout)
@@ -434,12 +449,13 @@ def parseGeometry(infile, verbosity=0):
 def main():
   parser = argparse.ArgumentParser()
   parser.add_argument('-v', '--verbose', action='count', dest='verbosity', default=0)
+  parser.add_argument('--ctl', action='store_true')
   parser.add_argument('infile', type=argparse.FileType('r'), nargs='+')
 
   subparsers = parser.add_subparsers(help='Available subcommands', dest='chosen_subcommand')
 
-  parser_writeCSV = subparsers.add_parser('printInfo', help='Print info based on infile.')
-  parser_writeCSV.set_defaults(func=subcommand_printInfo)
+  parser_printInfo = subparsers.add_parser('printInfo', help='Print info based on infile.')
+  parser_printInfo.set_defaults(func=subcommand_printInfo)
 
   # TODO: Add formatting options? presets like .prn reader compatible format?
   parser_writeCSV = subparsers.add_parser('writeCSV', help='Write data from outfile to one CSV file per dataset.')

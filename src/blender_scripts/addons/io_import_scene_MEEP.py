@@ -154,10 +154,12 @@ class Importer():
       (a0,a1,a2) = MEEP_data_object.getLatticeVectors()
       (b0,b1,b2) = MEEP_data_object.getReciprocalLatticeVectors()
       
-      add_lattice_objects(self, a0, a1, a2, b0, b1, b2, name = name+'-lattice_objects',
-                          cone_length=self.cone_length,
-                          cone_radius=self.cone_radius,
-                          cylinder_radius=self.cylinder_radius)
+      # add_lattice_objects(self, a0, a1, a2, b0, b1, b2, name = name+'-lattice_objects',
+                          # cone_length=self.cone_length,
+                          # cone_radius=self.cone_radius,
+                          # cylinder_radius=self.cylinder_radius)
+      obj_lat_shifted_cell = add_lattice_cell(self, a0, a1, a2, name='lattice_cell-shifted', shift_origin=True, wiremode=True)
+
       
       # add k-point path and sphere following it
       L = MEEP_data_object.get_kpoints_in_cartesian_coordinates()
