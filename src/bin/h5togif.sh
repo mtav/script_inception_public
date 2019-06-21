@@ -1,6 +1,25 @@
 #!/bin/bash
 
+# example usage:
+#   h5togif.sh straight_line_defect-tot-pwr.h5 straight_line_defect-epsilon.h5
+# example batch processing:
+#  find . -name "straight_line_defect-tot-pwr.h5" -printf "== %p ==\n" -execdir h5togif.sh straight_line_defect-tot-pwr.h5 straight_line_defect-epsilon.h5 \;
+#
+# TODO: python version for CLI options + GUI (in the meanwhile, h5topng flags could be passed via $@?)
+
 set -eu
+
+backup_images()
+{
+  if ls *.png *.gif &>/dev/null
+  then
+    echo "Backing up .png and .gif to ${1}"
+    mkdir -p "${1}"
+    set +e
+    mv *.gif *.png "${1}"
+    set -e
+  fi
+}
 
 # Check if all parameters are present
 # If no, exit
@@ -10,6 +29,8 @@ then
         echo "`basename $0` FIELD_FILE.h5 EPS_FILE.h5"
         exit 0
 fi
+
+backup_images "png.old.$(date +%Y%m%d_%H%M%S)"
 
 # EPS_FILE=$(readlink --canonicalize ${1})
 # FIELD_FILE=$(readlink --canonicalize ${2})
@@ -25,20 +46,32 @@ GIF_FILE=${FIELD_BASE_PATTERN}.gif
 N=$(h5ls ${FIELD_FILE} | awk '{print $5}' | awk -F'/' '{print $1}')
 N=$((${N} - 1))
 
+MIN=0
+MAX=1e-3
+
 # echo "-t 0:${N}"
 
 # TMP=$(mktemp -d )
 # echo "TMP=${TMP}"
 # cd ${TMP}
 
+COLORMAP="hot"
+#COLORMAP="dkbluered"
+
+#FLAGS="-R -Zc ${COLORMAP}"
+FLAGS="-R -c ${COLORMAP} -m ${MIN}, -M ${MAX}"
+
+#STEP=1
+STEP=17
+
 # pwd
 if test -z "${EPS_FILE}"
 then
   echo "no epsilon contour added"
-  h5topng -t 0:${N} -R -Zc dkbluered ${FIELD_FILE}
+  h5topng -t 0:${STEP}:${N} ${FLAGS} ${FIELD_FILE}
 else
   echo "epsilon contour added"
-  h5topng -t 0:${N} -R -Zc dkbluered -a yarg -A ${EPS_FILE} ${FIELD_FILE}
+  h5topng -t 0:${STEP}:${N} ${FLAGS} -a yarg -A ${EPS_FILE} ${FIELD_FILE}
 fi
 
 # h5topng -t 0:${N} -R -Zc dkbluered -a gray -A ${EPS_FILE} ${FIELD_FILE}
@@ -58,7 +91,10 @@ convert "${FIELD_BASE_PATTERN}*.png" ${GIF_FILE}
 
 # pwd
 # ls -- "${FIELD_BASE_PATTERN}"*.png
-rm -- "${FIELD_BASE_PATTERN}"*.png
+
+backup_images "h5togif.$(date +%Y%m%d_%H%M%S)"
+
+# rm -- "${FIELD_BASE_PATTERN}"*.png
 
 # cd -
 # echo "TMP=${TMP}"
