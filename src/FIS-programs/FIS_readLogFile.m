@@ -25,14 +25,31 @@ function FIS_info = FIS_readLogFile(logfile)
 end
 
 function [name, value, valid_field_name] = getNameValuePair(L)
-  % get name and value from a string of the form 'name : value'.
+  % Get name and value from a string of the form 'name : value'.
   % "valid_field_name" can be used as a structure fieldname.
-  a = split(L, ':');
-  name = strip(a{1});
-  [value, tf] = str2num(strip(a{2}));
+  
+  % split, strip and replace only exist in Matlab 2016 and later.
+  
+  %a = split(L, ':');
+  a = strsplit(L, ':');
+  %name = strip(a{1});
+  name = strtrim(a{1});
+  %[value, tf] = str2num(strip(a{2}));
+  [value, tf] = str2num(strtrim(a{2}));
   if tf == 0
-    value = strip(a{2});
+    %value = strip(a{2});
+    value = strtrim(a{2});
   end
-  valid_field_name = replace(name, {' ', '-','(',')', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'}, '_');
-  valid_field_name = strip(valid_field_name, '_');
+  C = {' ', '-','(',')', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'};
+  % valid_field_name = replace(name, C, '_');
+  valid_field_name = name;
+  for idx=1:length(C)
+    valid_field_name = strrep(valid_field_name, C{idx}, '_');
+  end
+
+  % valid_field_name = strip(valid_field_name, '_');
+  % valid_field_name = strtrim(valid_field_name, '_');
+   valid_field_name = regexprep(valid_field_name, '^_+', '');
+   valid_field_name = regexprep(valid_field_name, '_+$', '');
+
 end
