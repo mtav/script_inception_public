@@ -36,7 +36,11 @@ function FIS_data_files = FIS_getFiles(folder_name)
       for pos_idx = 1:length(position)
         f = fullfile(FOLDER, sprintf('%s%d.txt', PREFIX, round(1000*position(pos_idx))));
         if ~exist(f, 'file')
-          error('File not found!: %s', f);
+            warning('File not found!: %s', f);
+            if ~java.io.File(f).exists()
+                % cf: https://stackoverflow.com/questions/3938687/matlab-exist-returns-0-for-a-file-that-definitely-exists
+                error('File not found!: %s', f);
+            end
         end
         FIS_data_files.(measurement_type{:}).files{end+1} = f;
       end
