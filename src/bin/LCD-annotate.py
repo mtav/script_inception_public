@@ -103,8 +103,8 @@ def main():
   if not os.path.isdir(args.dstdir):
     os.mkdir(args.dstdir)
   
-  # pat = re.compile('(.*)(\d\d)(\d\d)(\.jpg)')
-  pat = re.compile('(\d\d\d\d)(\d\d)(\d\d)_(\d\d)(\d\d)(\d\d)(\.jpg)')
+  pat = re.compile('(.*)(\d\d)(\d\d)(\.jpg)')
+  # pat = re.compile('(\d\d\d\d)(\d\d)(\d\d)_(\d\d)(\d\d)(\d\d)(\.jpg)') # SUNFLOWER HACK
   
   outfile_list = []
   resized_outfile_list = []
@@ -113,17 +113,20 @@ def main():
     m = pat.match(s)
   
     if not m:
-      print(s)
+      print('ERROR: Failed to match pattern.')
+      print('s = {}'.format(s))
+      print('pat = {}'.format(pat))
+      print('m = {}'.format(m))
       raise
     
-    # base, temperature_integer, temperature_fractional, extension = m.groups()
-    YEAR, MONTH, DAY, HOUR, MINUTE, SECOND, extension = m.groups()
-    # outfile = os.path.join(args.dstdir, '{}{}{}.annotated{}'.format(base, temperature_integer, temperature_fractional, extension))
-    outfile = os.path.join(args.dstdir, '{}-{}-{}_{}-{}-{}.annotated{}'.format(YEAR, MONTH, DAY, HOUR, MINUTE, SECOND, extension))
+    base, temperature_integer, temperature_fractional, extension = m.groups()
+    # YEAR, MONTH, DAY, HOUR, MINUTE, SECOND, extension = m.groups() # SUNFLOWER HACK
+    outfile = os.path.join(args.dstdir, '{}{}{}.annotated{}'.format(base, temperature_integer, temperature_fractional, extension))
+    # outfile = os.path.join(args.dstdir, '{}-{}-{}_{}-{}-{}.annotated{}'.format(YEAR, MONTH, DAY, HOUR, MINUTE, SECOND, extension)) # SUNFLOWER HACK
     outfile_list.append(outfile)
     
-    # caption = '{}.{}°C'.format(temperature_integer, temperature_fractional)
-    caption = '{}-{}-{} {}:{}:{}'.format(YEAR, MONTH, DAY, HOUR, MINUTE, SECOND)
+    caption = '{}.{}°C'.format(temperature_integer, temperature_fractional)
+    # caption = '{}-{}-{} {}:{}:{}'.format(YEAR, MONTH, DAY, HOUR, MINUTE, SECOND) # SUNFLOWER HACK
 
     cmd = identify_exe + ['-format', '%w', os.path.join(os.getcwd(), infile)]
     try:
@@ -155,8 +158,8 @@ def main():
     if args.gif:
       if not os.path.isdir(args.tmpdir):
         os.mkdir(args.tmpdir)
-      # resized_outfile = os.path.join(args.tmpdir, '{}{}{}.annotated{}'.format(base, temperature_integer, temperature_fractional, extension))
-      resized_outfile = os.path.join(args.tmpdir, '{}{}{}.annotated{}'.format(YEAR, MONTH, DAY, HOUR, MINUTE, SECOND, extension))
+      resized_outfile = os.path.join(args.tmpdir, '{}{}{}.annotated{}'.format(base, temperature_integer, temperature_fractional, extension))
+      # resized_outfile = os.path.join(args.tmpdir, '{}{}{}.annotated{}'.format(YEAR, MONTH, DAY, HOUR, MINUTE, SECOND, extension)) # SUNFLOWER HACK
       
       resized_outfile_list.append(resized_outfile)
       cmd = convert_exe + ['-resize', '{}%'.format(args.resize)] + convert_args + [resized_outfile]

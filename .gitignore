@@ -12,3 +12,6 @@ docs/doctrees
 
 # applied patches
 *.patch.applied
+
+# windows shortcuts
+*.lnk
