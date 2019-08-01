@@ -1,0 +1,69 @@
+#) Find out if you have Windows 32bit or 64bit: Settings -> System -> About -> System type
+#) Recommended: View "File name extensions" and "Hidden items": Open "File explorer" -> View tab -> Check "File name extensions" and "Hidden items"
+
+#) Install notepad++: https://notepad-plus-plus.org/ (available in Windows 10 Software centre)
+#) Install blender: https://www.blender.org/ (NOT available in Windows 10 Software centre)
+#) Install FreeCAD: https://www.freecadweb.org/ (NOT available in Windows 10 Software centre)
+#) Install git: https://git-scm.com/ (available in Windows 10 Software centre)
+#) Install Octave: https://www.gnu.org/software/octave (NOT available in Windows 10 Software centre)
+#) Install Matlab: Matlab: https://www.mathworks.com/products/matlab.html (available in Windows 10 Software centre)
+#) Install imagemagick: https://imagemagick.org/script/download.php#windows (available in Windows 10 Software centre)
+#) Install Anaconda: https://www.anaconda.com/ (available in Windows 10 Software centre)
+#) Install python 3: https://www.python.org/ (NOT available in Windows 10 Software centre)
+#) Install PyCharm: https://www.jetbrains.com/pycharm/ (NOT available in Windows 10 Software centre)
+#) Install pathman, included in the "Windows Server 2003 Resource Kit Tools": https://www.microsoft.com/en-us/download/details.aspx?id=17657 (NOT available in Windows 10 Software centre)
+#) Install ImageJ: https://imagej.nih.gov/ij/ (available in Windows 10 Software centre)
+#) Install the Java Runtime Environment (JRE, make sure you choose the 32bit or 64bit version, based on your octave install): https://www.java.com/en/download/ (NOT available in Windows 10 Software centre)
+#) Install Mendeley: https://www.mendeley.com/ (available in Windows 10 Software centre)
+#) Install Jabref: http://www.jabref.org/ (available in Windows 10 Software centre)
+#) Install Texmaker: https://www.xm1math.net/texmaker/ (available in Windows 10 Software centre)
+#) Install TeXnicCenter: http://www.texniccenter.org/ (available in Windows 10 Software centre)
+#) Install Origin: https://www.originlab.com/ (available in Windows 10 Software centre)
+#) Install SciTE Text Editor: https://www.scintilla.org/SciTE.html (available in Windows 10 Software centre)
+#) Install SPSS Statistics: https://www.ibm.com/uk-en/analytics/spss-statistics-software (available in Windows 10 Software centre)
+#) Install Xming: https://sourceforge.net/projects/xming/ (available in Windows 10 Software centre)
+#) Install Google Chrome: https://www.google.com/chrome/ (available in Windows 10 Software centre)
+#) Install KiCad: http://www.kicad-pcb.org/ (available in Windows 10 Software centre)
+#) Install AutoCad: https://www.autodesk.co.uk/products/autocad/overview (available in Windows 10 Software centre)
+#) Install MLwiN: http://www.bristol.ac.uk/cmm/software/mlwin/ (available in Windows 10 Software centre)
+#) Install Maple: https://www.maplesoft.com/products/Maple/ (available in Windows 10 Software centre)
+#) Install Berkeley Madonna: https://berkeley-madonna.myshopify.com/ (available in Windows 10 Software centre)
+#) Install SigmaPlot: https://systatsoftware.com/products/sigmaplot/ (available in Windows 10 Software centre)
+#) Install Fiji: https://imagej.net/Fiji/Downloads (available in Windows 10 Software centre)
+#) Install Klayout: https://www.klayout.de/ (NOT available in Windows 10 Software centre)
+#) Install Paraview: https://www.paraview.org/ (NOT available in Windows 10 Software centre)
+#) Install MayaVi: https://docs.enthought.com/mayavi/mayavi/ (NOT available in Windows 10 Software centre)
+
+#) Clone the git repository:
+##) Create a "C:\Development" directory
+##) Start "Git GUI"
+##) Select "Clone Existing Repository"
+  Enter the following:
+    Source location: https://github.com/mtav/script_inception_public.git
+    Target Directory: C:\Development\script_inception_public
+##) Click "Clone"
+
+#) Configure upstream branch:
+##) Open "C:\Development\script_inception_public" in the File explorer.
+##) Right-click -> "Git Bash Here"
+##) Run the following command:
+      git branch --set-upstream-to=origin/master master
+
+#) Define the SIP_PATH variable:
+Control Panel -> System and Security -> System -> Advanced system settings -> Advanced -> Environment Variables...
+
+Click "New..."
+Variable name: SIP_PATH
+Variable value: C:\Development\script_inception_public\src
+Click "OK"
+
+Click "New..."
+Variable name: PYTHONPATH
+Variable value: C:\Development\script_inception_public\src
+Click "OK"
+
+Click "OK"
+Click "OK"
+
+#) numpy, blender setup, matlab/octave setup, etc...
+#) imagemagick: windows 10 install does not create magick.exe... Does convert.exe work? -> test/fix script
