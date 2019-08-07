@@ -19,12 +19,49 @@ The following (written by Ian Buss) are under the LGPL:
 
 * Geo2Str
 
-Mini-howto:
------------
+Windows setup:
+--------------
 
-#. Install Git for Windows (distributed version control system)
+#. Find out if you have Windows 32bit or 64bit: Settings -> System -> About -> System type
+
+   .. note::
+     You can also just press the "Windows" key and type in "about" to access it faster.
+  
+#. Recommended: View "File name extensions" and "Hidden items":
+   Open "File explorer" -> View tab -> Check "File name extensions" and "Hidden items"
+
+#. Install Git for Windows (distributed version control system):
 
    http://git-scm.com/downloads
+
+   .. note::
+     It is available in the Windows 10 Software centre.
+
+#. Install pathman, included in the "Windows Server 2003 Resource Kit Tools":
+
+   https://www.microsoft.com/en-us/download/details.aspx?id=17657 (NOT available in the Windows 10 Software centre)
+
+#.
+https://github.com/mtav/script_inception_public/raw/master/SIP-install/clone-SIP.bat
+
+https://raw.githubusercontent.com/mtav/script_inception_public/master/SIP-install/clone-SIP.bat
+
+https://raw.githubusercontent.com/mtav/script_inception_public/master/SIP-install/list_path.bat
+
+#. Optional:
+
+  #. Install notepad++: https://notepad-plus-plus.org/ (available in Windows 10 Software centre)
+  
+  #. Install blender: https://www.blender.org/ (NOT available in Windows 10 Software centre)
+  
+  #. Install FreeCAD: https://www.freecadweb.org/ (NOT available in Windows 10 Software centre)
+  
+  #. Install python 3: https://www.python.org/ (NOT available in Windows 10 Software centre)
+  
+  #. Install imagemagick: https://imagemagick.org/script/download.php#windows (available in Windows 10 Software centre)
+  
+  #. Install Octave: https://www.gnu.org/software/octave (NOT available in Windows 10 Software centre)
+  #. Install Matlab: Matlab: https://www.mathworks.com/products/matlab.html (available in Windows 10 Software centre)
 
 #. Install Tortoise git (for integration of git in windows explorer)
 
