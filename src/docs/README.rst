@@ -41,19 +41,12 @@ Windows setup:
 
    https://www.microsoft.com/en-us/download/details.aspx?id=17657 (NOT available in the Windows 10 Software centre)
 
-#.
-https://github.com/mtav/script_inception_public/raw/master/SIP-install/clone-SIP.bat
-
-https://raw.githubusercontent.com/mtav/script_inception_public/master/SIP-install/clone-SIP.bat
-
-https://raw.githubusercontent.com/mtav/script_inception_public/master/SIP-install/list_path.bat
+#. Download and run the following script: `SIP-install/SIP-install.bat <https://github.com/mtav/script_inception_public/raw/master/SIP-install/SIP-install.bat>`_.
 
 #. Optional:
 
   #. Install notepad++: https://notepad-plus-plus.org/ (available in Windows 10 Software centre)
-  
-  #. Install blender: https://www.blender.org/ (NOT available in Windows 10 Software centre)
-  
+    
   #. Install FreeCAD: https://www.freecadweb.org/ (NOT available in Windows 10 Software centre)
   
   #. Install python 3: https://www.python.org/ (NOT available in Windows 10 Software centre)
@@ -61,22 +54,22 @@ https://raw.githubusercontent.com/mtav/script_inception_public/master/SIP-instal
   #. Install imagemagick: https://imagemagick.org/script/download.php#windows (available in Windows 10 Software centre)
   
   #. Install Octave: https://www.gnu.org/software/octave (NOT available in Windows 10 Software centre)
+  
   #. Install Matlab: Matlab: https://www.mathworks.com/products/matlab.html (available in Windows 10 Software centre)
 
-#. Install Tortoise git (for integration of git in windows explorer)
+  #. Install Tortoise git (for integration of git in windows explorer): https://code.google.com/p/tortoisegit/wiki/Download
 
-   https://code.google.com/p/tortoisegit/wiki/Download
-
-#. Clone repositories (you'll need a USB stick from me)
-
-#. Install Blender
+Blender setup:
+--------------
+#. Install Blender: https://www.blender.org/ (NOT available in Windows 10 Software centre)
 
 #. In Blender:
 
-   * File -> User preferences -> Addons ->Install from file...
-   * Select the script to install
-   * Check box next to script
-   * Save user settings
+  * File -> User preferences -> Addons ->Install from file...
+  * Navigate to ``C:\Development\script_inception_public\src\blender_scripts\addons``
+  * Select the script to install
+  * Check box next to script
+  * Save user settings
 
 Notes
 ~~~~~
