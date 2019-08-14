@@ -29,7 +29,7 @@ function varargout = FIS_data_viewer(varargin)
   
   % Edit the above text to modify the response to help FIS_data_viewer
   
-  % Last Modified by GUIDE v2.5 08-Apr-2019 14:47:46
+  % Last Modified by GUIDE v2.5 14-Aug-2019 19:20:09
   
   % Begin initialization code - DO NOT EDIT
   gui_Singleton = 1;
@@ -308,4 +308,32 @@ function data = FIS_getData_Default(value)
   position = linspace(0, 12, 121);
   [data.Position, data.Lambda] = meshgrid(position, lambda);
   data.Intensity = value.*ones(size(data.Position));
+end
+
+
+% --- Executes on button press in axes1D_separate_figure.
+function axes1D_separate_figure_Callback(hObject, eventdata, handles)
+  % hObject    handle to axes1D_separate_figure (see GCBO)
+  % eventdata  reserved - to be defined in a future version of MATLAB
+  % handles    structure with handles and user data (see GUIDATA)
+  %handles.axes1D
+
+    %Some figure you know nothing about
+    %plot(rand(10,2)); %click it to make it the active figure
+    %Find its handle
+    %aH = gca;
+    fH = ancestor(handles.axes1D, 'fig');
+    fH(2) = figure(); %Figure you want to copy the stuff to
+    %Copy axes or see my previous code to copy lines, store its handle
+    handles.axes1D(2) = copyobj(handles.axes1D, fH(2));
+    %create new axes
+    handles.axes1D(3) = axes('Position',get(handles.axes1D(2),'Position'));
+    linkaxes(handles.axes1D(2:3),'x');
+    %Plot your new stuff
+    %plot(1:10);
+    %Making them look nice
+    set(handles.axes1D(3),'YAxisLocation','right','Color','none');
+    set(handles.axes1D(2:3),'box','off');
+    xlim(handles.axes1D(1).XLim);
+
 end
