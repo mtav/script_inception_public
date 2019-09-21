@@ -1,0 +1,14 @@
+Dome file infos:
+================
+Surface style streamfile viewers:
+---------------------------------
+./10_DW3200_test/dome_annular_ring/surfMask.m
+./10_DW3200_test/dome_annular_ring/MinDW20/surfMask.m
+
+Other:
+------
+./7/annularProfiler.m
+./10_DW3200_test/dome_annular_ring/annularProfiler_ho.m
+./10_DW3200_test/dome_annular_ring/MinDW20/annularProfiler_ho.m
+./10_DW3200/dome_ring/annularProfiler_ho.m
+./10_DW3200/dome_annular_ring/annularProfiler_ho.m

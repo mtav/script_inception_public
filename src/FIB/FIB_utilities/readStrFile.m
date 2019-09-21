@@ -15,6 +15,8 @@ function [x_all, y_all, dwell_all, rep, numPoints] = readStrFile(filename_cellar
   % magnitude is optional. If given a second plot in mum will be created.
   % TODO: Add support for filelists.
   % TODO: Use in readStrFile().
+  %
+  % This script makes the old "surfMask()" obsolete.
   
   if (nargin==0)
     [FileName,PathName,FilterIndex] = uigetfile('*.str','',pwd());

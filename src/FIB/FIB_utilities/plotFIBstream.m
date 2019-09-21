@@ -2,15 +2,17 @@ function plotFIBstream(x, y, dwell, magnitude)
   % visualize expected results of a FIB stream
   % TODO: Incorporate dwell time, spot size, magnification, etc
   %plot(x, y, '-r.', 'MarkerEdgeColor', 'b', 'MarkerFaceColor', 'b');
+  %
+  % This script makes the old "surfMask()" obsolete.
   
   if exist('magnitude','var') == 1
     [res, HFW] = getResolution(magnitude);
     subplot(1,2,1);
-    plotFIBstream_single(x, y, dwell, 'pixels', 'pixels', 1);
+    plotFIBstream_single(x, y, dwell, 'X (pixels)', 'Y (pixels)', 1);
     subplot(1,2,2);
-    plotFIBstream_single(x, y, dwell, 'mum', 'mum', res);
+    plotFIBstream_single(x, y, dwell, 'X (mum)', 'Y (mum)', res);
   else
-    plotFIBstream_single(x, y, dwell, 'pixels', 'pixels', 1);
+    plotFIBstream_single(x, y, dwell, 'X (pixels)', 'Y (pixels)', 1);
   end
   
 
