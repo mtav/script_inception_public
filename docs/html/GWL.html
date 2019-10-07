@@ -1342,8 +1342,116 @@ This function is old and does not use the new power compensation attributes.</p>
 <dd></dd></dl>
 
 </div>
-<div class="section" id="gwl-spiralphaseplate-module">
-<h2>GWL.SpiralPhasePlate module<a class="headerlink" href="#gwl-spiralphaseplate-module" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-GWL.SpiralPhasePlate">
+<span id="gwl-spiralphaseplate-module"></span><h2>GWL.SpiralPhasePlate module<a class="headerlink" href="#module-GWL.SpiralPhasePlate" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="GWL.SpiralPhasePlate.SpiralPhasePlate">
+<em class="property">class </em><code class="descclassname">GWL.SpiralPhasePlate.</code><code class="descname">SpiralPhasePlate</code><a class="reference internal" href="_modules/GWL/SpiralPhasePlate.html#SpiralPhasePlate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.SpiralPhasePlate.SpiralPhasePlate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#GWL.GWL_parser.GWLobject" title="GWL.GWL_parser.GWLobject"><code class="xref py py-class docutils literal notranslate"><span class="pre">GWL.GWL_parser.GWLobject</span></code></a></p>
+<p>Spiral phase plate</p>
+<p>Original algorithm and documentation by Dave Philips.
+Code ported to python3 by Mike Taverne, with added PyQt GUI and Blender addon.</p>
+<p>This program generates coordinates to draw a spiral phase plate in the nanoscribe.
+The coordinates are ordered from top to bottom.
+Each layer is a series of concentric circels, with the z values changed to draw the appropriate tilted surface with a step.
+Each layer is drawn from the inside out (I’m not sure if inside out or outside in is best).
+I had some earlier problems with the disk spliting apart when developed at the discontinuity, so I have made sure that each ring is properly joined to itself.</p>
+<p>There is a commented out if stataement in the middle of the coordinate for loop (lines 57 and 60), if you uncomment this then it will truncate the coordinates when their z values go negative.</p>
+<p>The coordinates are produced in a big list with Nan in place of where nanoscribe needs a ‘write’ command.
+At the end, the coordinates are written to a file called ‘spiralphaseplate.gwl’, and the lines containing Nans are converted to ‘write’.</p>
+<p>If the coordinate list is less than 5000 rows long then it is also plotted within Matlab.</p>
+<p>Check that the created file is the same as the one created by the Matlab script:
+octave Phase_plate.m &amp;&amp; ./rewriteGWL.py spiralphaseplate.gwl spiralphaseplate.PP.gwl &amp;&amp; python3 Phase_plate.py &amp;&amp; ./rewriteGWL.py spiralphaseplate2.gwl spiralphaseplate2.PP.gwl &amp;&amp; diff spiralphaseplate.PP.gwl spiralphaseplate2.PP.gwl &amp;&amp; checkcmd</p>
+<p>octave Phase_plate.m
+./rewriteGWL.py spiralphaseplate.gwl spiralphaseplate.PP.gwl
+python3 Phase_plate.py
+diff spiralphaseplate.PP.gwl /tmp/spiralphaseplate.gwl
+grep -c Write spiralphaseplate.PP.gwl /tmp/spiralphaseplate.gwl</p>
+<p>for i in 1 2 3 4; do diff -q “$HOME/Desktop/spiralphaseplate_${i}.gwl” “/tmp/spiralphaseplate_${i}.PP.gwl”; done</p>
+<p>Structural Parameter Inputs:</p>
+<dl class="attribute">
+<dt id="GWL.SpiralPhasePlate.SpiralPhasePlate.N_Discontinuities">
+<code class="descname">N_Discontinuities</code><em class="property"> = None</em><a class="headerlink" href="#GWL.SpiralPhasePlate.SpiralPhasePlate.N_Discontinuities" title="Permalink to this definition">¶</a></dt>
+<dd><p>number of steps around 360 degrees - this parameter is redundant as when you’re fabricating it, you only ever need 1 step, the height of which you can change to be any multiple of 2pi</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="GWL.SpiralPhasePlate.SpiralPhasePlate.N_HeightSteps">
+<code class="descname">N_HeightSteps</code><em class="property"> = None</em><a class="headerlink" href="#GWL.SpiralPhasePlate.SpiralPhasePlate.N_HeightSteps" title="Permalink to this definition">¶</a></dt>
+<dd><p>number of additional layers to draw beyond the top layer, i.e. if N_HeightSteps = 2, then total number of layers in the structure = 3)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="GWL.SpiralPhasePlate.SpiralPhasePlate.add_arguments">
+<code class="descname">add_arguments</code><span class="sig-paren">(</span><em>parser</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/SpiralPhasePlate.html#SpiralPhasePlate.add_arguments"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.SpiralPhasePlate.SpiralPhasePlate.add_arguments" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds GWLobject related arguments to the given <em>parser</em> (an argparse.ArgumentParser instance).</p>
+<p>See also: <a class="reference internal" href="#GWL.SpiralPhasePlate.SpiralPhasePlate.setAttributesFromParsedOptions" title="GWL.SpiralPhasePlate.SpiralPhasePlate.setAttributesFromParsedOptions"><code class="xref py py-func docutils literal notranslate"><span class="pre">setAttributesFromParsedOptions()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="GWL.SpiralPhasePlate.SpiralPhasePlate.computePoints">
+<code class="descname">computePoints</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/SpiralPhasePlate.html#SpiralPhasePlate.computePoints"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.SpiralPhasePlate.SpiralPhasePlate.computePoints" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="GWL.SpiralPhasePlate.SpiralPhasePlate.get_argument_parser">
+<code class="descname">get_argument_parser</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/SpiralPhasePlate.html#SpiralPhasePlate.get_argument_parser"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.SpiralPhasePlate.SpiralPhasePlate.get_argument_parser" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="GWL.SpiralPhasePlate.SpiralPhasePlate.heightStep">
+<code class="descname">heightStep</code><em class="property"> = None</em><a class="headerlink" href="#GWL.SpiralPhasePlate.SpiralPhasePlate.heightStep" title="Permalink to this definition">¶</a></dt>
+<dd><p>distance appart of each layer, in microns</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="GWL.SpiralPhasePlate.SpiralPhasePlate.maxHeight">
+<code class="descname">maxHeight</code><em class="property"> = None</em><a class="headerlink" href="#GWL.SpiralPhasePlate.SpiralPhasePlate.maxHeight" title="Permalink to this definition">¶</a></dt>
+<dd><p>height of phase step in microns</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="GWL.SpiralPhasePlate.SpiralPhasePlate.phiStep">
+<code class="descname">phiStep</code><em class="property"> = None</em><a class="headerlink" href="#GWL.SpiralPhasePlate.SpiralPhasePlate.phiStep" title="Permalink to this definition">¶</a></dt>
+<dd><p>angular separation of each writing anchor point around a circle, in degrees</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="GWL.SpiralPhasePlate.SpiralPhasePlate.radialStep">
+<code class="descname">radialStep</code><em class="property"> = None</em><a class="headerlink" href="#GWL.SpiralPhasePlate.SpiralPhasePlate.radialStep" title="Permalink to this definition">¶</a></dt>
+<dd><p>distance apart of each ring, in microns</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="GWL.SpiralPhasePlate.SpiralPhasePlate.radius">
+<code class="descname">radius</code><em class="property"> = None</em><a class="headerlink" href="#GWL.SpiralPhasePlate.SpiralPhasePlate.radius" title="Permalink to this definition">¶</a></dt>
+<dd><p>radius of phase plate in microns</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="GWL.SpiralPhasePlate.SpiralPhasePlate.setAttributesFromParsedOptions">
+<code class="descname">setAttributesFromParsedOptions</code><span class="sig-paren">(</span><em>options</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/SpiralPhasePlate.html#SpiralPhasePlate.setAttributesFromParsedOptions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.SpiralPhasePlate.SpiralPhasePlate.setAttributesFromParsedOptions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the object’s attributes based on the ones from the <em>options</em> object (usually an argparse.ArgumentParser instance).</p>
+<p>See also: <a class="reference internal" href="#GWL.SpiralPhasePlate.SpiralPhasePlate.add_arguments" title="GWL.SpiralPhasePlate.SpiralPhasePlate.add_arguments"><code class="xref py py-func docutils literal notranslate"><span class="pre">add_arguments()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="GWL.SpiralPhasePlate.SpiralPhasePlate.writeFromParsedOptions">
+<code class="descname">writeFromParsedOptions</code><span class="sig-paren">(</span><em>options</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/SpiralPhasePlate.html#SpiralPhasePlate.writeFromParsedOptions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.SpiralPhasePlate.SpiralPhasePlate.writeFromParsedOptions" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="GWL.SpiralPhasePlate.testGWLobject">
+<code class="descclassname">GWL.SpiralPhasePlate.</code><code class="descname">testGWLobject</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/SpiralPhasePlate.html#testGWLobject"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.SpiralPhasePlate.testGWLobject" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="GWL.SpiralPhasePlate.testSpirals">
+<code class="descclassname">GWL.SpiralPhasePlate.</code><code class="descname">testSpirals</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/GWL/SpiralPhasePlate.html#testSpirals"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GWL.SpiralPhasePlate.testSpirals" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </div>
 <div class="section" id="module-GWL">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-GWL" title="Permalink to this headline">¶</a></h2>
@@ -1372,7 +1480,7 @@ This function is old and does not use the new power compensation attributes.</p>
 <li><a class="reference internal" href="#module-GWL.tube">GWL.tube module</a></li>
 <li><a class="reference internal" href="#module-GWL.woodpile">GWL.woodpile module</a></li>
 <li><a class="reference internal" href="#module-GWL.woodpile_grid">GWL.woodpile_grid module</a></li>
-<li><a class="reference internal" href="#gwl-spiralphaseplate-module">GWL.SpiralPhasePlate module</a></li>
+<li><a class="reference internal" href="#module-GWL.SpiralPhasePlate">GWL.SpiralPhasePlate module</a></li>
 <li><a class="reference internal" href="#module-GWL">Module contents</a></li>
 </ul>
 </li>
