@@ -31,16 +31,20 @@ Ylambda = Data_Wavelength;
 figure(); hold on;
 subplot(2,2,1);
 imagesc(Data_Dark_Processed);
+colorbar();
 title('Data Dark Processed');
 
 subplot(2,2,2);
 imagesc(Data_Mirror);
+colorbar();
 title('Data Mirror');
 
 subplot(2,2,3);
 imagesc(Data_Sample);
+colorbar();
 title('Data Sample');
 
 subplot(2,2,4);
 imagesc(Xposition, Ylambda, Data_Ref, [0,1]);
+colorbar();
 title('Normalized');
