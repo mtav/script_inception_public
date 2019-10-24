@@ -1,8 +1,13 @@
 For setting up the SIP environment on bluecrystal:
 --------------------------------------------------
-- create .bash_env_private: why does it contain module paths? TODO: e-mail could be chosen by username or "getent passwd $USER":
+-create .bash_env_private: why does it contain module paths? TODO: e-mail could be chosen by username or "getent passwd $USER":
 
 cp --verbose ~/../ANONYMIZED/.bash_env_private ~
+
+mkdir ~/Development
+cd ~/Development/
+module load tools/git-2.22.0
+git clone https://github.com/mtav/script_inception_public.git
 
 ln --symbolic ~/Development/script_inception_public/config/.bash_local.BC3 ~/.bash_local
 ln --symbolic ~/Development/script_inception_public/config/.bash_profile_local ~/.bash_profile_local
@@ -16,7 +21,6 @@ TODO: share repos instead of always syncing? (but prevents local editing+testing
 For setting up the SIP environment on a personal computer:
 ----------------------------------------------------------
 # Note: Matlab will create ~/Documents/MATLAB on startup if it is missing, so we might as well turn it into a symlink to avoid having an empty directory...
-
 
 ln --symbolic ~/Development/script_inception_public/config/.octaverc ~/.octaverc
 ln --symbolic ~/Development/script_inception_public/config/privatemodules/ ~/privatemodules
