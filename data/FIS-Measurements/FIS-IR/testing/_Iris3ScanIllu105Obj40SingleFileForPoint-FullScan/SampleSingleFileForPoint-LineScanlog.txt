@@ -1,0 +1,8 @@
+SampleSingleFileForPoint-LineScan
+Totoal-spatial-points: 9
+Spatial-Resolution(mm): 1
+Initial-Position(mm): 5, 5
+Final-position(mm): 7, 7
+Integration-time(ms): 200
+Boxcart: 3
+Sample Reference Number: 
