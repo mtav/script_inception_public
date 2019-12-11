@@ -44,7 +44,7 @@ class Import_MPB_data(Operator, ImportHelper, AddObjectHelper):
     filename_ext = ".out"
 
     filter_glob = StringProperty(
-            default="*.out",
+            default="*.out;*.dat",
             options={'HIDDEN'},
             )
 
@@ -135,6 +135,13 @@ class Importer():
   def execute(self):
     print("running read_mpb...")
     filepath_basename = os.path.basename(self.filepath)
+    
+    (root, ext) = os.path.splitext(self.filepath)
+    if ext == '.dat':
+      print('==> .dat file detected')
+      # hack
+      return {'FINISHED'}
+    
     with open(self.filepath) as infile:
       MPB_data_list = parse_MPB(infile)
       
