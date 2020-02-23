@@ -368,16 +368,35 @@ def writeCSV(infile, verbosity=0, merge_datasets=False):
 
   return
 
-def printInfo(infile, verbosity=0, merge_datasets=False):
+def printInfo(infile, verbosity=0, merge_datasets=False, angles=False):
   MPB_data_list = parse_MPB(infile, verbosity, merge_datasets=merge_datasets)
   
   for idx, obj in enumerate(MPB_data_list):
     print('=== dataset {} ==='.format(idx))
     print(obj)
-    print('k points in cartesian coordinates:')
+    if not angles:
+      print('k points in cartesian coordinates:')
+    else:
+      print('k points in cartesian coordinates; angle between k and Z in degrees:')
     L = obj.get_kpoints_in_cartesian_coordinates()
     for i in L:
-      print(i)
+      if not angles:
+        print(i)
+      else:
+        if numpy.linalg.norm(i) > 0:
+          theta_deg = numpy.rad2deg( numpy.arccos(i[2]/numpy.linalg.norm(i)) )
+        else:
+          theta_deg = numpy.nan
+        print('{}; {}'.format(i, theta_deg))
+    if angles:
+      print('angle between k and Z in degrees:')
+      for i in L:
+        if numpy.linalg.norm(i) > 0:
+          theta_deg = numpy.rad2deg( numpy.arccos(i[2]/numpy.linalg.norm(i)) )
+        else:
+          theta_deg = numpy.nan
+        print(theta_deg)
+    
   return
 
 def subcommand_writeCSV(args):
@@ -385,7 +404,7 @@ def subcommand_writeCSV(args):
   return
 
 def subcommand_printInfo(args):
-  printInfo(args.infile, args.verbosity, args.merge_datasets)
+  printInfo(args.infile, args.verbosity, args.merge_datasets, args.angles)
   return
 
 def main():
@@ -393,12 +412,13 @@ def main():
   parser.add_argument('-n', '--dry-run', action='store_true')
   parser.add_argument('-v', '--verbose', action='count', dest='verbosity', default=0)
   parser.add_argument('-m', '--merge-datasets', action='store_true')
+  parser.add_argument('-a', '--angles', action='store_true', help='print the angles in degrees of k relative to the Z axis')
   parser.add_argument('infile', type=argparse.FileType('r'))
 
   subparsers = parser.add_subparsers(help='Available subcommands', dest='chosen_subcommand')
 
-  parser_writeCSV = subparsers.add_parser('printInfo', help='Print info based on infile.')
-  parser_writeCSV.set_defaults(func=subcommand_printInfo)
+  parser_printInfo = subparsers.add_parser('printInfo', help='Print info based on infile.')
+  parser_printInfo.set_defaults(func=subcommand_printInfo)
 
   # TODO: Add formatting options? presets like .prn reader compatible format?
   parser_writeCSV = subparsers.add_parser('writeCSV', help='Write data from outfile to one CSV file per dataset.')
