@@ -53,13 +53,15 @@ do
     
     if [ -z ${PPN+x} ]
     then
-      echo "PPN is unset"
+      #echo "PPN is unset"
+      echo "TORQUE_QUEUE=${TORQUE_QUEUE} PPN not set"
       echo "TORQUE_QUEUE=${TORQUE_QUEUE} PPN not set" >> $LOGFILE
-      qsub -q $TORQUE_QUEUE -M $QSUBMAIL -v JOBDIR="$(readlink -f "$(dirname "$SCRIPT")")" "$SCRIPT" 2>&1 | tee -a $LOGFILE
+      qsub -q ${TORQUE_QUEUE} -M ${QSUBMAIL} -v JOBDIR="$(readlink -f "$(dirname "$SCRIPT")")" "$SCRIPT" 2>&1 | tee -a $LOGFILE
     else
-      echo "PPN is set to '$PPN'"
+      #echo "PPN is set to '$PPN'"
+      echo "TORQUE_QUEUE=${TORQUE_QUEUE} PPN=${PPN}"
       echo "TORQUE_QUEUE=${TORQUE_QUEUE} PPN=${PPN}" >> $LOGFILE
-      qsub -q $TORQUE_QUEUE -l nodes=1:ppn=$PPN -M $QSUBMAIL -v JOBDIR="$(readlink -f "$(dirname "$SCRIPT")")" "$SCRIPT" 2>&1 | tee -a $LOGFILE
+      qsub -q ${TORQUE_QUEUE} -l nodes=1:ppn=${PPN} -M ${QSUBMAIL} -v JOBDIR="$(readlink -f "$(dirname "$SCRIPT")")" "$SCRIPT" 2>&1 | tee -a $LOGFILE
     fi
     
     echo "==================" >> $LOGFILE
