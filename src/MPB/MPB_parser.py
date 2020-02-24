@@ -73,9 +73,47 @@ class MPB_data():
 
   def getData(self):
     if not self.header:
-      self.header = ['k index', 'k1', 'k2', 'k3', 'kmag/2pi']    
+      self.header = ['k index', 'k1', 'k2', 'k3', 'kmag/2pi']
     data = numpy.array(self.data, dtype={'names':self.header, 'formats':[int] + (len(self.header)-1)*[float]})
     return(data)
+    
+  def getKpointData(self):
+    # print('===================')
+    header = ['k index', 'k1', 'k2', 'k3', 'kmag/2pi', 'kx', 'ky', 'kz', 'norm(k_cartesian)', 'angle(degrees)']
+    
+    k_point_data = []
+    
+    # print('=== self.k_points ===')
+    # print(self.k_points)
+    # print('-'*10)
+    
+    # for k_reciprocal in self.k_points:
+    for idx, k_reciprocal in enumerate(self.k_points):
+      #k_reciprocal_array = numpy.array(k_reciprocal).transpose() # no need because "1-dim array"
+      k_cartesian = self.reciprocal_lattice.dot(k_reciprocal)
+
+      L = numpy.linalg.norm(k_cartesian)
+      if L > 0:
+        theta_deg = numpy.rad2deg( numpy.arccos(k_cartesian[2]/L) )
+      else:
+        theta_deg = numpy.nan
+      
+      # print('{} or {} -> {}'.format(k_reciprocal, self.data[idx][0:5], k_cartesian))
+      # t = (int(self.data[idx][0]), *self.data[idx][1:5], *k_cartesian, L, theta_deg)
+      t = (*self.data[idx][0:5], *k_cartesian, L, theta_deg)
+      # print(t)
+      k_point_data.append(t)
+      
+    # print('-'*10)
+
+    # print(len(k_point_data))
+    # k_point_data = numpy.zeros(len(self.data), dtype={'names':header, 'formats':[int] + (len(header)-1)*[float]})
+    k_point_data = numpy.array(k_point_data, dtype={'names':header, 'formats':[int] + (len(header)-1)*[float]})
+    # k_point_data = numpy.zeros(numpy.zeros([3, len(header)], dtype={'names':header, 'formats':[int] + (len(header)-1)*[float]})
+
+
+    # print('===================')
+    return(k_point_data)
 
   def writeCSV(self, fname):
     
@@ -118,6 +156,7 @@ class MPB_data():
     return(self.k_points)
 
   def get_kpoints_in_cartesian_coordinates(self):
+    '''returns the cartesian coordinates of the k-points'''
     k_path = []
     for k_reciprocal in self.k_points:
       #k_reciprocal_array = numpy.array(k_reciprocal).transpose() # no need because "1-dim array"
@@ -151,6 +190,10 @@ class MPB_Gap():
     return 'Gap from band {} ({}) to band {} ({}), {}%'.format(self.lower_band, self.gap_min, self.upper_band, self.gap_max, self.gap_size)
 
 def parse_MPB(infile, verbosity=0, merge_datasets=False):
+  '''
+  Parses an MPB output ".out" file (command-line output from MPB).
+  Returns a list of **MPB_data** instances.
+  '''
 
   MPB_data_list = []
   gap_list = []
@@ -407,6 +450,98 @@ def subcommand_printInfo(args):
   printInfo(args.infile, args.verbosity, args.merge_datasets, args.angles)
   return
 
+def subcommand_plotMPB(args):
+  import pandas
+  
+  # parse input file
+  MPB_data_list = parse_MPB(args.infile, args.verbosity, merge_datasets=args.merge_datasets)
+  
+  # merge multiple datasets into one if requested
+  if args.merge_datasets and len(MPB_data_list) > 0:
+    merged_data = MPB_data_list[0]
+    for idx, obj in enumerate(MPB_data_list[1:]):
+      merged_data.data.extend(obj.data)
+  
+    MPB_data_list = [merged_data]
+  
+  # get path components
+  (outfile_base, ext) = os.path.splitext(args.infile.name)
+  
+  # loop through the list of **MPB_data** instances
+  for idx, obj in enumerate(MPB_data_list):
+    print('=== dataset {} ==='.format(idx))
+    if len(MPB_data_list) > 1:
+      outfilename = '{}.{}.csv'.format(outfile_base, idx)
+      pngfilename = '{}.{}.png'.format(outfile_base, idx)
+    else:
+      outfilename = '{}.csv'.format(outfile_base)
+      pngfilename = '{}.png'.format(outfile_base)
+    if obj.data:
+      # print(obj.data)
+      # print(numpy.shape(obj.data))
+      # print(obj.getData())
+      
+      data = obj.getData()
+      kpoints = obj.getKpointData()
+      # print(a)
+      # print(pandas.DataFrame(a, index=range(len(a)), columns=a.dtype.names))
+      plotMPB(kpoints, data, title=args.infile.name, a=1, saveas=pngfilename, show=not args.no_show)
+    else:
+      print('no data found')
+  return
+
+def plotMPB(kpoints, data, a = 1, title='', saveas='', show=True):
+  import matplotlib
+  import matplotlib.pyplot as plt
+  
+  fig = plt.figure()
+  # print(len(kpoints), len(data))
+  # x = numpy.linspace(0, 2, 100)
+  x = kpoints['angle(degrees)']
+
+  # print(numpy.array(data))
+  # print(data['band 1'])
+  # data = numpy.array(data)
+  # print(data[:][:][2])
+  band_names = data.dtype.names[5:]
+  
+  for idx in range(len(band_names)):
+    # print(band_names[idx])
+    fn = data[band_names[idx]]
+    Lambda = a / fn
+    # print(y)
+    plt.plot(x, Lambda, 'k--', label=band_names[idx])
+  
+  # for idx in range(len(data)):
+    
+  # plt.plot(x, x, label='linear')
+  # plt.plot(x, x**2, label='quadratic')
+  # plt.plot(x, x**3, label='cubic')
+  
+  plt.ylim(0.9, 1.7)
+  plt.xlim(0, 45)
+  ax = plt.gca()
+  ax.invert_yaxis()
+  ax.xaxis.set_minor_locator(matplotlib.ticker.MultipleLocator(7.5))
+  ax.xaxis.set_major_locator(matplotlib.ticker.MultipleLocator(15))
+  
+  ax.yaxis.set_minor_locator(matplotlib.ticker.MultipleLocator(0.05))
+  ax.yaxis.set_major_locator(matplotlib.ticker.MultipleLocator(0.1))
+  
+  plt.xlabel('Angle (degrees)')
+  plt.ylabel('Wavelength (µm)')
+  
+  if title:
+    plt.title(title)
+  
+  if saveas:
+    plt.savefig(saveas)
+  
+  if show:
+    plt.show()
+  
+  return
+
 def main():
   parser = argparse.ArgumentParser()
   parser.add_argument('-n', '--dry-run', action='store_true')
@@ -423,7 +558,11 @@ def main():
   # TODO: Add formatting options? presets like .prn reader compatible format?
   parser_writeCSV = subparsers.add_parser('writeCSV', help='Write data from outfile to one CSV file per dataset.')
   parser_writeCSV.set_defaults(func=subcommand_writeCSV)
-
+  
+  parser_plot = subparsers.add_parser('plot', help='plot data')
+  parser_plot.add_argument('--no-show', action='store_true')
+  parser_plot.set_defaults(func=subcommand_plotMPB)
+  
   args = parser.parse_args()
   
   if args.dry_run:
