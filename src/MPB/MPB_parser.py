@@ -10,6 +10,8 @@ import sys
 import code
 import numpy
 import argparse
+import matplotlib
+import matplotlib.pyplot as plt
 from utilities.common import float_array
 
 # ..todo:: nicer print format
@@ -76,7 +78,16 @@ class MPB_data():
       self.header = ['k index', 'k1', 'k2', 'k3', 'kmag/2pi']
     data = numpy.array(self.data, dtype={'names':self.header, 'formats':[int] + (len(self.header)-1)*[float]})
     return(data)
-    
+  
+  def getBandData(self):
+    header = ['k index', 'k1', 'k2', 'k3', 'kmag/2pi', 'kx', 'ky', 'kz', 'norm(k_cartesian)', 'angle(degrees)']
+    data = []
+    # print(self.data[5:])
+    data = self.data
+    print(self.data)
+    print(list(zip(*self.data)))
+    return(data)
+  
   def getKpointData(self):
     # print('===================')
     header = ['k index', 'k1', 'k2', 'k3', 'kmag/2pi', 'kx', 'ky', 'kz', 'norm(k_cartesian)', 'angle(degrees)']
@@ -481,6 +492,8 @@ def subcommand_plotMPB(args):
       # print(numpy.shape(obj.data))
       # print(obj.getData())
       
+      # print(obj.getBandData())
+      # raise
       data = obj.getData()
       kpoints = obj.getKpointData()
       # print(a)
@@ -488,11 +501,23 @@ def subcommand_plotMPB(args):
       plotMPB(kpoints, data, title=args.infile.name, a=1, saveas=pngfilename, show=not args.no_show)
     else:
       print('no data found')
+
+  # https://stackoverflow.com/questions/48129222/matplotlib-make-plots-in-functions-and-then-add-each-to-a-single-subplot-figure
+  # fig, (ax1, ax2) = plt.subplots(1,2)
+  # plot_something([1,2,3], [2,4,6], ax1, color='blue')
+  # plot_something([1,2,3], [1,4,9], ax2, color='red')
+  # plt.figure()
+  # plot_something([1,2,3], [1,4,9], ax=None, color='red')
+  # plt.show()
+
   return
 
+def plot_something(x, y, ax=None, **kwargs):
+    ax = ax or plt.gca()
+    # Do some cool data transformations...
+    return ax.plot(x, y, **kwargs)
+
 def plotMPB(kpoints, data, a = 1, title='', saveas='', show=True):
-  import matplotlib
-  import matplotlib.pyplot as plt
   
   fig = plt.figure()
   # print(len(kpoints), len(data))
@@ -504,6 +529,8 @@ def plotMPB(kpoints, data, a = 1, title='', saveas='', show=True):
   # data = numpy.array(data)
   # print(data[:][:][2])
   band_names = data.dtype.names[5:]
+  
+  dataout = []
   
   for idx in range(len(band_names)):
     # print(band_names[idx])
