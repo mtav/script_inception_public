@@ -10,12 +10,13 @@
 (set-param! num-bands 6)
 (define-param output_epsilon_only? false) ; if true, exit after outputting epsilon
 
-(load-from-path "utilities.ctl")
+(load-from-path "utilities_mpb.ctl")
 
 (define a (+ d1 d2))
-(define c1 (- (/ d1 2) (/ a 2)) )
-(define c2 (- (/ a 2) (/ d2 2)) )
+(define c1 (- (/ d1 2) (/ a 2)) ) ; centre of layer 1
+(define c2 (- (/ a 2) (/ d2 2)) ) ; centre of layer 2
 
+; values normalized by a
 (define d1n (/ d1 a) )
 (define d2n (/ d2 a) )
 
