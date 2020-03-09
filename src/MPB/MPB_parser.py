@@ -11,7 +11,7 @@ import code
 import numpy
 import argparse
 import matplotlib
-import matplotlib.pyplot as plt
+# import matplotlib.pyplot as plt # This causes problems when called from Matlab's system() function.
 from utilities.common import float_array
 
 # ..todo:: nicer print format
@@ -513,11 +513,13 @@ def subcommand_plotMPB(args):
   return
 
 def plot_something(x, y, ax=None, **kwargs):
+    import matplotlib.pyplot as plt
     ax = ax or plt.gca()
     # Do some cool data transformations...
     return ax.plot(x, y, **kwargs)
 
 def plotMPB(kpoints, data, a = 1, title='', saveas='', show=True):
+  import matplotlib.pyplot as plt
   
   fig = plt.figure()
   # print(len(kpoints), len(data))
