@@ -83,7 +83,8 @@ loadgit() {
   #module unload apps/matlab-r2015a
   #module load tools/git-1.8.4.2
   #module load tools/git-1.7.9
-  module load tools/git-2.18.0
+  #module load tools/git-2.18.0
+  module load tools/git-2.22.0
 }
 
 loadmatlab() {
