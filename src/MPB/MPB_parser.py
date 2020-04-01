@@ -498,7 +498,19 @@ def subcommand_plotMPB(args):
       kpoints = obj.getKpointData()
       # print(a)
       # print(pandas.DataFrame(a, index=range(len(a)), columns=a.dtype.names))
-      plotMPB(kpoints, data, title=args.infile.name, a=1, saveas=pngfilename, show=not args.no_show)
+      if args.x_range_auto:
+        x_range = []
+      else:
+        x_range = args.x_range
+      if args.y_range_auto:
+        y_range = []
+      else:
+        y_range = args.y_range
+      if args.title:
+        title=args.title
+      else:
+        title=args.infile.name
+      plotMPB(kpoints, data, title=title, a=args.a, saveas=pngfilename, show=not args.no_show, x_range=x_range, y_range=y_range, y_lambda=args.y_lambda, x_as_index=args.x_as_index)
     else:
       print('no data found')
 
@@ -518,13 +530,20 @@ def plot_something(x, y, ax=None, **kwargs):
     # Do some cool data transformations...
     return ax.plot(x, y, **kwargs)
 
-def plotMPB(kpoints, data, a = 1, title='', saveas='', show=True):
+def plotMPB(kpoints, data, a = 1, title='', saveas='', show=True, x_range=[], y_range=[], y_lambda=False, x_as_index=False):
   import matplotlib.pyplot as plt
   
   fig = plt.figure()
   # print(len(kpoints), len(data))
   # x = numpy.linspace(0, 2, 100)
-  x = kpoints['angle(degrees)']
+  # print(type(kpoints))
+  # print(kpoints.dtype.names)
+  if x_as_index:
+    x = kpoints['k index']
+  else:
+    x = kpoints['angle(degrees)']
+  x_no_nan = x[numpy.isfinite(x)]
+  print('angle range:{} - {} degrees'.format(min(x_no_nan), max(x_no_nan)))
 
   # print(numpy.array(data))
   # print(data['band 1'])
@@ -533,32 +552,78 @@ def plotMPB(kpoints, data, a = 1, title='', saveas='', show=True):
   band_names = data.dtype.names[5:]
   
   dataout = []
-  
+
+  fn_all = []
+  Lambda_all = []
+  y_all = []
   for idx in range(len(band_names)):
     # print(band_names[idx])
     fn = data[band_names[idx]]
     Lambda = a / fn
-    # print(y)
-    plt.plot(x, Lambda, 'k--', label=band_names[idx])
+    fn_all.extend(fn)
+    Lambda_all.extend(Lambda)
+    if y_lambda:
+      y = Lambda
+    else:
+      y = fn
+    y_all.extend(y)
+    plt.plot(x, y, 'k--', label=band_names[idx])
+
+  y_all = numpy.array(y_all)
+  fn_all = numpy.array(fn_all)
+  Lambda_all = numpy.array(Lambda_all)
   
-  # for idx in range(len(data)):
-    
-  # plt.plot(x, x, label='linear')
-  # plt.plot(x, x**2, label='quadratic')
-  # plt.plot(x, x**3, label='cubic')
+  y_all_no_nan = y_all[numpy.isfinite(y_all)]
+  fn_all_no_nan = fn_all[numpy.isfinite(fn_all)]
+  Lambda_all_no_nan = Lambda_all[numpy.isfinite(Lambda_all)]
+  print('fn range:{} - {}'.format(min(fn_all_no_nan), max(fn_all_no_nan)))
+  print('Lambda range:{} - {} um'.format(min(Lambda_all_no_nan), max(Lambda_all_no_nan)))
+  print('y range:{} - {}'.format(min(y_all_no_nan), max(y_all_no_nan)))
   
-  plt.ylim(0.9, 1.7)
-  plt.xlim(0, 45)
+  if x_range:
+    xmin = x_range[0]
+    xmax = x_range[1]
+    # plt.xlim(0, 45)
+  else:
+    xmin = min(x_no_nan)
+    xmax = max(x_no_nan)
+
+  if y_range:
+    ymin = y_range[0]
+    ymax = y_range[1]
+    # plt.ylim(0.9, 1.7)
+  else:
+    ymin = min(y_all_no_nan)
+    ymax = max(y_all_no_nan)
+  
+  plt.xlim(xmin, xmax)
+  plt.ylim(ymin, ymax)
+  
   ax = plt.gca()
-  ax.invert_yaxis()
-  ax.xaxis.set_minor_locator(matplotlib.ticker.MultipleLocator(7.5))
-  ax.xaxis.set_major_locator(matplotlib.ticker.MultipleLocator(15))
+  if y_lambda:
+    ax.invert_yaxis()
   
-  ax.yaxis.set_minor_locator(matplotlib.ticker.MultipleLocator(0.05))
-  ax.yaxis.set_major_locator(matplotlib.ticker.MultipleLocator(0.1))
+  # ax.xaxis.set_minor_locator(matplotlib.ticker.MultipleLocator(7.5))
+  # ax.xaxis.set_major_locator(matplotlib.ticker.MultipleLocator(15))
+  ax.xaxis.set_major_locator(matplotlib.ticker.MultipleLocator( abs(xmax-xmin)/3 ))
+  ax.xaxis.set_minor_locator(matplotlib.ticker.MultipleLocator( abs(xmax-xmin)/3/2 ))
   
-  plt.xlabel('Angle (degrees)')
-  plt.ylabel('Wavelength (µm)')
+  # ax.yaxis.set_minor_locator(matplotlib.ticker.MultipleLocator(0.05))
+  # ax.yaxis.set_major_locator(matplotlib.ticker.MultipleLocator(0.1))
+
+  ax.yaxis.set_minor_locator(matplotlib.ticker.MultipleLocator(abs(ymax-ymin)/8/2))
+  ax.yaxis.set_major_locator(matplotlib.ticker.MultipleLocator(abs(ymax-ymin)/8))
+  if y_lambda:
+    # ax.yaxis.set_minor_locator(matplotlib.ticker.MultipleLocator(0.05))
+    # ax.yaxis.set_major_locator(matplotlib.ticker.MultipleLocator(0.1))
+    plt.ylabel('Wavelength (µm)')
+  else:
+    plt.ylabel('Normalized frequency (a/λ)')
+
+  if x_as_index:
+    plt.xlabel('k index')
+  else:
+    plt.xlabel('Angle (degrees)')
   
   if title:
     plt.title(title)
@@ -587,9 +652,19 @@ def main():
   # TODO: Add formatting options? presets like .prn reader compatible format?
   parser_writeCSV = subparsers.add_parser('writeCSV', help='Write data from outfile to one CSV file per dataset.')
   parser_writeCSV.set_defaults(func=subcommand_writeCSV)
-  
+
+  # – VIS: 340 - 800 nm
+  # – IR: 899.343 - 1712.280 nm 
   parser_plot = subparsers.add_parser('plot', help='plot data')
   parser_plot.add_argument('--no-show', action='store_true')
+  parser_plot.add_argument('--x-as-index', action='store_true', help='Use k index on the X axis instead of angle.')
+  parser_plot.add_argument('--y-lambda', action='store_true', help='Use lambda on the Y axis instead of normalized frequency.')
+  parser_plot.add_argument('--x-range-auto', action='store_true')
+  parser_plot.add_argument('--y-range-auto', action='store_true')
+  parser_plot.add_argument('-a', default=1, type=float)
+  parser_plot.add_argument('--title', default='')
+  parser_plot.add_argument('--x-range', nargs=2, default=[0, 45], metavar=('MIN', 'MAX'), type=float)
+  parser_plot.add_argument('--y-range', nargs=2, default=[0.9, 1.7], metavar=('MIN', 'MAX'), type=float)
   parser_plot.set_defaults(func=subcommand_plotMPB)
   
   args = parser.parse_args()
@@ -598,7 +673,7 @@ def main():
     if args.verbosity > 0:
       print(args)
     return
-  
+
   if not args.chosen_subcommand:
     args.chosen_subcommand='printInfo'
     args.func=subcommand_printInfo

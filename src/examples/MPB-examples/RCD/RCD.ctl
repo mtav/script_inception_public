@@ -28,14 +28,25 @@
 (set! mesh-size 3)
 
 ;Number of k-points to interpolate between specified k-points
-(define num-k-points 10)
+;; (define num-k-points 10)
+(define k-interp 10)
 
 ;----------------------------------------------------------------------------------;
 ;MPB required definitions and calculations
 ;Defines substrate material
 (define rod-material (make dielectric (index rod-index-RCD)))
 
-(set! k-points (interpolate num-k-points RCD_kpoints ))
+(define mykpoints (list Gamma
+X+z
+W+z+x
+K+x+z
+))
+
+;; (set! k-points (interpolate num-k-points RCD_kpoints ))
+;; (set_kpoints RCD_kpoints)
+;; (set_kpoints FCC_standard_kpoints)
+;; (set_kpoints RotAround_y_quarter)
+(set_kpoints mykpoints)
 
 ; point definitions
 (define p000 (vector3 0 0 0))
