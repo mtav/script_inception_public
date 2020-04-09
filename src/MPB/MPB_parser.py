@@ -510,7 +510,7 @@ def subcommand_plotMPB(args):
         title=args.title
       else:
         title=args.infile.name
-      plotMPB(kpoints, data, title=title, a=args.a, saveas=pngfilename, show=not args.no_show, x_range=x_range, y_range=y_range, y_lambda=args.y_lambda, x_as_index=args.x_as_index)
+      plotMPB(kpoints, data, title=title, a=args.a, saveas=pngfilename, show=not args.no_show, x_range=x_range, y_range=y_range, y_lambda=args.y_lambda, x_as_index=args.x_as_index, invert_yaxis=args.invert_yaxis)
     else:
       print('no data found')
 
@@ -530,7 +530,7 @@ def plot_something(x, y, ax=None, **kwargs):
     # Do some cool data transformations...
     return ax.plot(x, y, **kwargs)
 
-def plotMPB(kpoints, data, a = 1, title='', saveas='', show=True, x_range=[], y_range=[], y_lambda=False, x_as_index=False):
+def plotMPB(kpoints, data, a = 1, title='', saveas='', show=True, x_range=[], y_range=[], y_lambda=False, x_as_index=False, invert_yaxis=False):
   import matplotlib.pyplot as plt
   
   fig = plt.figure()
@@ -600,7 +600,7 @@ def plotMPB(kpoints, data, a = 1, title='', saveas='', show=True, x_range=[], y_
   plt.ylim(ymin, ymax)
   
   ax = plt.gca()
-  if y_lambda:
+  if invert_yaxis:
     ax.invert_yaxis()
   
   # ax.xaxis.set_minor_locator(matplotlib.ticker.MultipleLocator(7.5))
@@ -661,6 +661,7 @@ def main():
   parser_plot.add_argument('--y-lambda', action='store_true', help='Use lambda on the Y axis instead of normalized frequency.')
   parser_plot.add_argument('--x-range-auto', action='store_true')
   parser_plot.add_argument('--y-range-auto', action='store_true')
+  parser_plot.add_argument('--invert-yaxis', action='store_true')
   parser_plot.add_argument('-a', default=1, type=float)
   parser_plot.add_argument('--title', default='')
   parser_plot.add_argument('--x-range', nargs=2, default=[0, 45], metavar=('MIN', 'MAX'), type=float)
@@ -683,4 +684,4 @@ def main():
   return(0)
 
 if __name__ == '__main__':
-	main()
+  main()
