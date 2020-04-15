@@ -477,6 +477,9 @@ def subcommand_plotMPB(args):
   
   # get path components
   (outfile_base, ext) = os.path.splitext(args.infile.name)
+
+  if not args.saveas=='':
+    outfile_base = args.saveas
   
   # loop through the list of **MPB_data** instances
   for idx, obj in enumerate(MPB_data_list):
@@ -642,6 +645,7 @@ def main():
   parser.add_argument('-v', '--verbose', action='count', dest='verbosity', default=0)
   parser.add_argument('-m', '--merge-datasets', action='store_true')
   parser.add_argument('-a', '--angles', action='store_true', help='print the angles in degrees of k relative to the Z axis')
+  parser.add_argument('--saveas', default='', help='basename for output files. Example: "foo" -> "foo.csv", "foo.png"')
   parser.add_argument('infile', type=argparse.FileType('r'))
 
   subparsers = parser.add_subparsers(help='Available subcommands', dest='chosen_subcommand')
