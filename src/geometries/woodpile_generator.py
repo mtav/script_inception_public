@@ -90,7 +90,7 @@ def createWoodpile_1(DSTDIR):
 def main():
   parser = argparse.ArgumentParser()
   parser.add_argument('DSTDIR', default=tempfile.gettempdir(), nargs='?')
-  args = parser.parse_args()  
+  args = parser.parse_args()
   print(args.DSTDIR)
 
   createWoodpile_1(args.DSTDIR)
