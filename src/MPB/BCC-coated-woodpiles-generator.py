@@ -9,6 +9,7 @@ import argparse
 import tempfile
 import subprocess
 import textwrap
+from utilities.common import matlab_range
 
 #testq              --      --    01:00:00   --    0   0 --   E R
 #veryshort          --      --    12:00:00   --  435 431 --   E R
@@ -221,7 +222,7 @@ def main():
   parser.add_argument('DSTDIR', default=tempfile.gettempdir(), nargs='?')
   parser.add_argument('-v', '--verbose', action="count", dest="verbosity", default=0, help='verbosity level')
   args = parser.parse_args()
-  print(args)
+  # print(args)
   
   if not os.path.isdir(args.DSTDIR):
     os.mkdir(args.DSTDIR)
@@ -240,9 +241,54 @@ def main():
     
     #thickness_list = numpy.linspace(0.001, 0.005, 5)
     # thickness_list = numpy.append(numpy.linspace(0.006, 0.009, 4), numpy.linspace(0.010,0.150,15))
-    thickness_list = [0.001, 0.002, 0.003, 0.004, 0.006, 0.015]
-    
-    for coating_index in [3.1]:
+    # thickness_list = [0.001, 0.002, 0.003, 0.004, 0.006, 0.015]
+
+    # coating_index_list = numpy.arange(2.0, 3.1+0.1, 0.1)
+    # thickness_list = numpy.arange(10, 30+5, 5)
+    # cf https://stackoverflow.com/questions/37571622/matlab-range-in-python
+    # Note: Does not work properly for float or float64!!!
+
+    # # SUCCESS
+    # eps = numpy.finfo(numpy.float32).eps
+    # coating_index_list = numpy.arange(2.0, 3.1+eps, 0.1)
+    # thickness_list = numpy.arange(10, 30+eps, 5)
+    # print(coating_index_list)
+    # print(thickness_list)
+    # print(len(coating_index_list))
+    # print(len(thickness_list))
+    # print(len(coating_index_list) * len(thickness_list))
+
+    # # FAIL
+    # eps = numpy.finfo(numpy.float64).eps
+    # coating_index_list = numpy.arange(2.0, 3.1+eps, 0.1)
+    # thickness_list = numpy.arange(10, 30+eps, 5)
+    # print(coating_index_list)
+    # print(thickness_list)
+    # print(len(coating_index_list))
+    # print(len(thickness_list))
+    # print(len(coating_index_list) * len(thickness_list))
+
+    # # FAIL
+    # coating_index_list = matlab_range(2.0, 0.1, 3.1)
+    # thickness_list = matlab_range(10, 5, 30)
+    # print(coating_index_list)
+    # print(thickness_list)
+    # print(len(coating_index_list))
+    # print(len(thickness_list))
+    # print(len(coating_index_list) * len(thickness_list))
+
+    # SUCCESS
+    coating_index_list = numpy.linspace(2.0, 3.1, 12)
+    thickness_list = numpy.linspace(0.010, 0.030, 5)    
+    # print(coating_index_list)
+    # print(thickness_list)
+    # print(len(coating_index_list))
+    # print(len(thickness_list))
+    # print(len(coating_index_list) * len(thickness_list))
+    # print('Total simulations: ', (len(coating_index_list) * len(thickness_list) * 4) + 4)
+
+    # coating_index_list = [3.1]
+    for coating_index in coating_index_list:
       for thickness_mum in thickness_list:
         sim = coatedWoodpile()
         sim.coated_rods = True
