@@ -125,7 +125,8 @@ class coatedWoodpile():
       ;; (set_kpoints FCC_standard_kpoints)
       ;; (define kpoint_list RotAround_-x+y_quarter)
       ;; (define kpoint_list (list X+z U+z+x+y L+x+y+z K+x+y))
-      (define kpoint_list (list U+z+x+y L+x+y+z K+x+y))
+      ;; (define kpoint_list (list U+z+x+y L+x+y+z K+x+y)) ;; Sun 23 Feb 18:15:45 GMT 2020
+      (define kpoint_list (list U+z+x+y L+x+y+z))
       
       (set_kpoints kpoint_list)
       (print_kpoints_labels_matlab_style kpoint_list)
@@ -238,7 +239,8 @@ def main():
     sim.generate()
     
     #thickness_list = numpy.linspace(0.001, 0.005, 5)
-    thickness_list = numpy.append(numpy.linspace(0.006, 0.009, 4), numpy.linspace(0.010,0.150,15))
+    # thickness_list = numpy.append(numpy.linspace(0.006, 0.009, 4), numpy.linspace(0.010,0.150,15))
+    thickness_list = [0.001, 0.002, 0.003, 0.004, 0.006, 0.015]
     
     for coating_index in [3.1]:
       for thickness_mum in thickness_list:
