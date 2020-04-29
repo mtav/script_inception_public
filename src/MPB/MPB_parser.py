@@ -126,21 +126,64 @@ class MPB_data():
     # print('===================')
     return(k_point_data)
 
-  def writeCSV(self, fname):
-    
+  def writeCSV(self, fname, extraInfo=True, sameFile=False):
     data = self.getData()
+    (header, data) = writeDataToCSV(data, fname)
+
+    if extraInfo and not sameFile:
+      (a,b) = os.path.splitext(fname)
+      fname_extradata = a + '.extradata.csv'
+      (header_kpoints, kpoints) = self.writeCSV_ExtraData(fname_extradata)
+
+      # import numpy.lib.recfunctions as rfn
+      # m = rfn.merge_arrays([data, kpoints], flatten = True)
+      # fname_extradata_merged = a + '.extradata.merged.csv'
+      # self.writeCSV_ExtraData(fname_extradata_merged)
     
-    # format header entries for easier processing in other tools
-    header = []
-    for i in data.dtype.names:
-      header.append(i.replace('/','_over_').replace(' ','_'))
-      
-    delimiter = '; '
-    comments = ''
-    fmt = ['%d']+(len(header)-1)*['%.18e']
-    
-    numpy.savetxt(fname, data, delimiter=delimiter, header=delimiter.join(header), fmt=fmt, comments=comments)
     return (header, data)
+    
+    # # format header entries for easier processing in other tools
+    # header = []
+    # for i in data.dtype.names:
+      # header.append(i.replace('/','_over_').replace(' ','_'))
+      
+    # delimiter = '; '
+    # comments = ''
+    # fmt = ['%d']+(len(header)-1)*['%.18e']
+    # numpy.savetxt(fname, data, delimiter=delimiter, header=delimiter.join(header), fmt=fmt, comments=comments)
+    
+    # if extraInfo and not sameFile:
+      # kpoints = self.getKpointData()
+      # numpy.savetxt(fname_extradata, kpoints, delimiter=delimiter, header=delimiter.join(header), fmt=fmt, comments=comments)
+      
+    # return (header, data)
+    
+  def writeCSV_ExtraData(self, fname):
+    kpoints = self.getKpointData()
+    return writeDataToCSV(kpoints, fname)
+  
+    # kpoints = self.getKpointData()
+    # numpy.savetxt(fname, data, delimiter=delimiter, header=delimiter.join(header), fmt=fmt, comments=comments)
+
+    # if extraInfo and not sameFile:
+      # numpy.savetxt(fname, data, delimiter=delimiter, header=delimiter.join(header), fmt=fmt, comments=comments)
+
+      # import os
+      # import sys
+      # import code
+      # print('argv = {}'.format(sys.argv))
+
+      # # # read in ~/.pystartup to have all the desired modules
+      # # pystartup = os.path.expanduser("~/.pystartup")
+      # # with open(pystartup) as f:
+        # # code_object = compile(f.read(), pystartup, 'exec')
+        # # exec(code_object)
+
+      # # start the interactive shell
+      # code.interact(local=locals())
+
+
+    # return (header, data)
 
   def getLatticeVectors(self):
     a0 = self.lattice[:,0]
@@ -380,6 +423,21 @@ def parse_MPB(infile, verbosity=0, merge_datasets=False):
 
   return(MPB_data_list)
 
+def writeDataToCSV(data, fname):
+  # a bit of a mess, but just to reduce code duplication in case more things need to be written...
+
+  # format header entries for easier processing in other tools
+  header = []
+  for i in data.dtype.names:
+    header.append(i.replace('/','_over_').replace(' ','_'))
+    
+  delimiter = '; '
+  comments = ''
+  fmt = ['%d']+(len(header)-1)*['%.18e']
+  numpy.savetxt(fname, data, delimiter=delimiter, header=delimiter.join(header), fmt=fmt, comments=comments)
+  
+  return (header, data)
+
 def writeCSV(infile, verbosity=0, merge_datasets=False):
   
   MPB_data_list = parse_MPB(infile, verbosity, merge_datasets=merge_datasets)
@@ -461,6 +519,29 @@ def subcommand_printInfo(args):
   printInfo(args.infile, args.verbosity, args.merge_datasets, args.angles)
   return
 
+def subcommand_interactive(args):
+  MPB_data_list = parse_MPB(args.infile, args.verbosity, merge_datasets=args.merge_datasets)
+  for idx, obj in enumerate(MPB_data_list):
+    data = obj.getData()
+    kpoints = obj.getKpointData()
+
+
+    # import os
+    # import sys
+    # import code
+    # print('argv = {}'.format(sys.argv))
+
+    # read in ~/.pystartup to have all the desired modules (and tab completion)
+    pystartup = os.path.expanduser("~/.pystartup")
+    with open(pystartup) as f:
+      code_object = compile(f.read(), pystartup, 'exec')
+      exec(code_object)
+
+    # start the interactive shell
+    code.interact(local=locals())
+
+  return
+
 def subcommand_plotMPB(args):
   import pandas
   
@@ -499,6 +580,7 @@ def subcommand_plotMPB(args):
       # raise
       data = obj.getData()
       kpoints = obj.getKpointData()
+      
       # print(a)
       # print(pandas.DataFrame(a, index=range(len(a)), columns=a.dtype.names))
       if args.x_range_auto:
@@ -513,7 +595,7 @@ def subcommand_plotMPB(args):
         title=args.title
       else:
         title=args.infile.name
-      plotMPB(kpoints, data, title=title, a=args.a, saveas=pngfilename, show=not args.no_show, x_range=x_range, y_range=y_range, y_lambda=args.y_lambda, x_as_index=args.x_as_index, invert_yaxis=args.invert_yaxis)
+      plotMPB(kpoints, data, title=title, a=args.a, saveas=pngfilename, show=not args.no_show, x_range=x_range, y_range=y_range, y_lambda=args.y_lambda, x_as_index=args.x_as_index, invert_yaxis=args.invert_yaxis, y_divisions=args.y_divisions)
     else:
       print('no data found')
 
@@ -533,7 +615,7 @@ def plot_something(x, y, ax=None, **kwargs):
     # Do some cool data transformations...
     return ax.plot(x, y, **kwargs)
 
-def plotMPB(kpoints, data, a = 1, title='', saveas='', show=True, x_range=[], y_range=[], y_lambda=False, x_as_index=False, invert_yaxis=False):
+def plotMPB(kpoints, data, a = 1, title='', saveas='', show=True, x_range=[], y_range=[], y_lambda=False, x_as_index=False, invert_yaxis=False, y_divisions=8):
   import matplotlib.pyplot as plt
   
   fig = plt.figure()
@@ -614,8 +696,8 @@ def plotMPB(kpoints, data, a = 1, title='', saveas='', show=True, x_range=[], y_
   # ax.yaxis.set_minor_locator(matplotlib.ticker.MultipleLocator(0.05))
   # ax.yaxis.set_major_locator(matplotlib.ticker.MultipleLocator(0.1))
 
-  ax.yaxis.set_minor_locator(matplotlib.ticker.MultipleLocator(abs(ymax-ymin)/8/2))
-  ax.yaxis.set_major_locator(matplotlib.ticker.MultipleLocator(abs(ymax-ymin)/8))
+  ax.yaxis.set_minor_locator(matplotlib.ticker.MultipleLocator(abs(ymax-ymin)/y_divisions/2))
+  ax.yaxis.set_major_locator(matplotlib.ticker.MultipleLocator(abs(ymax-ymin)/y_divisions))
   if y_lambda:
     # ax.yaxis.set_minor_locator(matplotlib.ticker.MultipleLocator(0.05))
     # ax.yaxis.set_major_locator(matplotlib.ticker.MultipleLocator(0.1))
@@ -670,8 +752,12 @@ def main():
   parser_plot.add_argument('--title', default='')
   parser_plot.add_argument('--x-range', nargs=2, default=[0, 45], metavar=('MIN', 'MAX'), type=float)
   parser_plot.add_argument('--y-range', nargs=2, default=[0.9, 1.7], metavar=('MIN', 'MAX'), type=float)
+  parser_plot.add_argument('--y-divisions', type=int, default=8, help='number of divisions on the Y axis (default: 8)')
   parser_plot.set_defaults(func=subcommand_plotMPB)
   
+  parser_interactive = subparsers.add_parser('interactive', help='start interactive prompt with data loaded')
+  parser_interactive.set_defaults(func=subcommand_interactive)
+    
   args = parser.parse_args()
   
   if args.dry_run:
