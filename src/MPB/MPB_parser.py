@@ -130,15 +130,21 @@ class MPB_data():
     data = self.getData()
     (header, data) = writeDataToCSV(data, fname)
 
-    if extraInfo and not sameFile:
-      (a,b) = os.path.splitext(fname)
-      fname_extradata = a + '.extradata.csv'
-      (header_kpoints, kpoints) = self.writeCSV_ExtraData(fname_extradata)
+    if extraInfo:
+      if not sameFile:
+        (a,b) = os.path.splitext(fname)
+        fname_extradata = a + '.extradata.csv'
+        (header_kpoints, kpoints) = self.writeCSV_ExtraData(fname_extradata)
+      else:
+        import numpy.lib.recfunctions as rfn
+        #remove common fields from data1 (simply change to data2 if you wish to remove from data2)
+        common_fields = set(kpoints.dtype.names).intersection(set(data.dtype.names))
+        data = data[[name for name in data.dtype.names if name not in common_fields]]
 
-      # import numpy.lib.recfunctions as rfn
-      # m = rfn.merge_arrays([data, kpoints], flatten = True)
-      # fname_extradata_merged = a + '.extradata.merged.csv'
-      # self.writeCSV_ExtraData(fname_extradata_merged)
+        arrays = [kpoints, data]
+        m = rfn.merge_arrays(arrays, flatten = True)
+        fname_merged = a + '.merged.csv'
+        (header_merged, data_merged) = writeDataToCSV(m, fname_merged)
     
     return (header, data)
     
