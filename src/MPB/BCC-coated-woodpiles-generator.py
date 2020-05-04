@@ -20,7 +20,7 @@ from utilities.common import matlab_range
 ressource_dictionary = {32: [1, 12],
                         64: [1, 120],
                         128: [2, 240],
-                        256: [10, 360],
+                        256: [16, 360],
                         }
 
 class coatedWoodpile():
@@ -230,14 +230,16 @@ def main():
   #128 -> ~4GB -> PPN = 1 or 2
   #256 -> ~33GB RAM -> PPN = 9
   for resolution in [32, 64, 128, 256]:
-  
-    # generate a non-coated reference
-    sim = coatedWoodpile()
-    sim.coated_rods = False
-    sim.resolution = resolution
-    sim.dstdir = os.path.join(args.DSTDIR, 'resolution={:d}'.format(resolution), 'non-coated')
-    os.makedirs(sim.dstdir, exist_ok=True)
-    sim.generate()
+
+    makeref = False
+    if makeref:
+      # generate a non-coated reference
+      sim = coatedWoodpile()
+      sim.coated_rods = False
+      sim.resolution = resolution
+      sim.dstdir = os.path.join(args.DSTDIR, 'resolution={:d}'.format(resolution), 'non-coated')
+      os.makedirs(sim.dstdir, exist_ok=True)
+      sim.generate()
     
     #thickness_list = numpy.linspace(0.001, 0.005, 5)
     # thickness_list = numpy.append(numpy.linspace(0.006, 0.009, 4), numpy.linspace(0.010,0.150,15))
@@ -279,7 +281,9 @@ def main():
 
     # SUCCESS
     coating_index_list = numpy.linspace(2.0, 3.1, 12)
-    thickness_list = numpy.linspace(0.010, 0.030, 5)    
+    # thickness_list = numpy.linspace(0.010, 0.030, 5)
+    coating_index_list = [3.1]
+    thickness_list = [0.015, 0.050]
     # print(coating_index_list)
     # print(thickness_list)
     # print(len(coating_index_list))
