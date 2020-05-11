@@ -90,6 +90,10 @@ function File = GetFullPath(File)
 % Handle cell strings:
 % NOTE: It is faster to create a function @cell\GetFullPath.m under Linux,
 % but under Windows this would shadow the fast C-Mex.
+if isa(File, 'string')
+    File = convertStringsToChars(File);
+end
+
 if isa(File, 'cell')
    for iC = 1:numel(File)
       File{iC} = GetFullPath(File{iC});
