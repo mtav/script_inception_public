@@ -56,3 +56,33 @@ find examples/ -type f | while read line; do echo "Processing file '${line}'"; m
 find testing/ -type f
 
 find testing/ -type f | while read line; do echo "Processing file '${line}'"; mv -iv ${line} src/${line}; done
+
+Windows Subsystem for GNU/Linux (WSL) setup:
+--------------------------------------------
+1) git clone
+
+2) install WSL
+
+3) install Xming
+
+4) install mpb
+
+5) install other requirements:
+sudo apt install python3-numpy python3-matplotlib
+
+6) Create a symlink for convenience:
+mkdir $HOME/Development
+ln -s /mnt/c/Development/script_inception_public $HOME/Development/script_inception_public
+
+7) Add this to ~/.bashrc:
+##################
+# GUILE
+##################
+export GUILE_LOAD_PATH=${HOME}/Development/script_inception_public/src/MPB/library:.
+export GUILE_WARN_DEPRECATED=no
+### for guile experts
+# export GUILE_WARN_DEPRECATED=detailed
+
+export PYTHONPATH=$PYTHONPATH:${HOME}/Development/script_inception_public/src
+
+export DISPLAY=:0.0
