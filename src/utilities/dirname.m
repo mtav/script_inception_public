@@ -1,5 +1,5 @@
-function result = dirname(path)
-  % function result = dirname(path)
+function result = dirname(PATH)
+  % function result = dirname(PATH)
   %
   % If path ends with a "/", it returns path, but as a full path. (based on python's os.path.dirname() behaviour)
   % Else, it strips away any trailing /component and returns the full path containing /component.
@@ -10,7 +10,7 @@ function result = dirname(path)
   % TODO: improve doc
   
   curDir = pwd();
-  [pathstr, name, ext] = fileparts(GetFullPath(path));
+  [pathstr, name, ext] = fileparts(GetFullPath(PATH));
   if exist(pathstr, 'dir')
     cd(pathstr);
     result = pwd(); % full (absolute) path
