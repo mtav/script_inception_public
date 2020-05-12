@@ -9,8 +9,8 @@ cd ~/Development/
 module load tools/git-2.22.0
 git clone https://github.com/mtav/script_inception_public.git
 
-ln --symbolic ~/Development/script_inception_public/config/.bash_local.BC3 ~/.bash_local
-ln --symbolic ~/Development/script_inception_public/config/.bash_profile_local ~/.bash_profile_local
+ln --symbolic ~/Development/script_inception_public/config/.bash_local.BC3.sh ~/.bash_local
+ln --symbolic ~/Development/script_inception_public/config/.bash_profile_local.sh ~/.bash_profile_local
 ln --symbolic ~/Development/script_inception_public/config/.pystartup ~/.pystartup
 
 TODO: need to install h5py...
@@ -56,6 +56,15 @@ find examples/ -type f | while read line; do echo "Processing file '${line}'"; m
 find testing/ -type f
 
 find testing/ -type f | while read line; do echo "Processing file '${line}'"; mv -iv ${line} src/${line}; done
+
+GNU/Linux on Windows options:
+=============================
+http://colinux.org/
+https://www.cygwin.com/
+https://docs.microsoft.com/en-us/windows/wsl/install-win10
+
+More infos:
+https://superuser.com/questions/1360748/what-is-the-difference-between-windows-subsystem-for-linux-wsl-cooperative-li
 
 Windows Subsystem for GNU/Linux (WSL) setup:
 --------------------------------------------
