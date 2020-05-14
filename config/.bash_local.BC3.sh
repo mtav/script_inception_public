@@ -212,3 +212,11 @@ fi
 # short              --      --    120:00:0   --  108 1051 --   E R
 # medium             --      --    240:00:0   --   58  18 --   E R
 # long               --      --    360:00:0   --   88 123 --   E R
+
+# Windows 10 WSL specific configuration
+if grep -qEi "(Microsoft|WSL)" /proc/version &> /dev/null ; then
+    #echo "Windows 10 Bash"
+	export DISPLAY=:0.0
+#else
+#    echo "Anything else"
+fi
