@@ -80,19 +80,31 @@ export CPATH=/cm/shared/libraries/gnu_builds/hdf5-1.8.12/include/
 
 loadgit() {
   ### git
-  #module unload apps/matlab-r2015a
-  #module load tools/git-1.8.4.2
-  #module load tools/git-1.7.9
-  #module load tools/git-2.18.0
-  module load tools/git-2.22.0
+  LATEST_GIT=$(module avail 2>&1 | grep git | sort | tail -1)
+  module load ${LATEST_GIT}
+  # module unload apps/matlab-r2015a
+  # module load tools/git-1.8.4.2
+  # module load tools/git-1.7.9
+  # module load tools/git-2.18.0
+  # module load tools/git-2.22.0
 }
 
 loadmatlab() {
-  module load apps/matlab-r2015a
+  LATEST_MATLAB=$(module avail 2>&1 | grep matlab | sort | tail -1)
+  module load ${LATEST_MATLAB}
+  # module load apps/matlab-r2015a
   # module load apps/matlab-r2013a
   # module load apps/matlab-r2013b
   # module load matlab-R2014a-x86_64
   # module load apps/matlab-R2009a
+}
+
+unloadmatlab() {
+  if module list 2>&1 | grep matlab >/dev/null
+  then
+    MATLAB_MODULE=$(module list 2>&1 | grep matlab | awk '{print $2}')
+    module unload ${MATLAB_MODULE}
+  fi
 }
 
 loadModules() {
@@ -153,6 +165,7 @@ loadModules() {
   # module load libraries/gnu_builds/atlas-3.10.1
   
   ### load most recent matlab
+  # loading matlab changes the curl library to one not supporting https, which prevents the use of git
   loadmatlab
 
   ### load most recent git
@@ -163,10 +176,24 @@ loadModules() {
   module load photonics-shared-binaries
 }
 
+loadBC3config()
+{
+  echo "Loading BC3 config"
+  alias git='git.sh'
+}
+
 if declare -f module >/dev/null
 then
   loadModules &> /dev/null
 fi
+
+case $(hostname) in
+  newblue*) loadBC3config;;
+#   bigblue*) export PPN=8;;
+#   bluecrystal*) export PPN=4;;
+#   babyblue*) export PPN=4;;
+#   *) export PPN=1;;
+esac
 
 ##########################################################
 ##### reference info
