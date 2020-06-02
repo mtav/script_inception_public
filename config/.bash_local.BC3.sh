@@ -178,7 +178,7 @@ loadModules() {
 
 loadBC3config()
 {
-  echo "Loading BC3 config"
+#   echo "Loading BC3 config"
   alias git='git.sh'
 }
 
