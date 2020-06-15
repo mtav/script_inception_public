@@ -15,6 +15,9 @@ export PATH=$HOME/opt/bin:$PATH
 export PATH=$HOME/opt/usr/bin:$PATH
 # export PATH=$PATH:$HOME/opt/usr/bin
 
+# where python packages and others install their binaries:
+export PATH=${PATH}:${HOME}/.local/bin
+
 export PATH=$PATH:$HOME/bin/public_bin
 export PATH=$PATH:$HOME/bin/community_bin
 
@@ -28,7 +31,7 @@ export PATH=$PATH:$HOME/Development/script_inception_public/src/h5_vtk_stl_conve
 ##################
 export PYTHONSTARTUP=$HOME/.pystartup
 #export PYTHONPATH=$PYTHONPATH:$HOME/opt/lib/python3.3/site-packages/
-export PYTHONPATH=$PYTHONPATH:${MODULE_PREFIX}/opt/lib/python3.3/site-packages/
+#export PYTHONPATH=$PYTHONPATH:${MODULE_PREFIX}/opt/lib/python3.3/site-packages/
 export PYTHONPATH=$PYTHONPATH:$HOME/Development/script_inception_public/src
 
 # export PYTHONPATH=$PYTHONPATH:$HOME/opt/lib/python3.4/site-packages/
@@ -135,7 +138,8 @@ loadModules() {
   # module load gnu_builds/h5utils
 
   ### python
-  module load languages/python-3.3.2
+  module load languages/python-3.7.7
+  # module load languages/python-3.3.2
   # module load languages/python-2.7.10
   # module load languages/python-2.7.6-sklearn
   # module load languages/python-2.7.6
