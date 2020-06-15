@@ -18,6 +18,9 @@ TODO: simplify dotfile system...
 TODO: create setup script
 TODO: share repos instead of always syncing? (but prevents local editing+testing)
 
+-python requirements:
+  pip3 install --user h5py matplotlib pandas
+
 For setting up the SIP environment on a personal computer:
 ----------------------------------------------------------
 # Note: Matlab will create ~/Documents/MATLAB on startup if it is missing, so we might as well turn it into a symlink to avoid having an empty directory...
