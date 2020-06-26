@@ -171,7 +171,7 @@ def float_array(A):
     .. todo:: rename to float_list, since it returns a python list and not a numpy array, or replace with [f(i) for i in L]
     '''
     for i in range(len(A)):
-        A[i] = float(A[i])
+      A[i] = float(A[i])
     return(A)
   
 def int_array(A):

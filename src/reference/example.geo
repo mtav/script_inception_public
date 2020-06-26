@@ -2,22 +2,34 @@
 
 BLOCK **Block Definition (XL,YL,ZL,XU,YU,ZU)
 {
-"id" **ID CHARACTER (ALWAYS USE QUOTES) 
-"id"
+** "id" **ID CHARACTER (ALWAYS USE QUOTES)
+** "id"
 0.000000E+000 **XL
 18.000000E+000 **ghgh}
-dgashgdja
+** dgashgdja
+0
+1
+2
+1
+2
+2
 }
 
 **GEOMETRY FILE
 
 BLOCK **Block Definition (XL,YL,ZL,XU,YU,ZU)
 {
-"id" **ID CHARACTER (ALWAYS USE QUOTES) 
-"id"
+** "id" **ID CHARACTER (ALWAYS USE QUOTES) 
+** "id"
 0.000000E+000 **XL
 18.000000E+000 **ghgh}
-dgashgdja
+** dgashgdja
+0
+1
+2
+1
+2
+2
 }
 
 
