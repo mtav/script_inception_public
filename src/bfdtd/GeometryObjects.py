@@ -258,13 +258,16 @@ class Block(GeometryObject):
     '''read an entry extracted from a .geo file'''
     if entry.name:
       self.name = entry.name
-    lower_absolute = array(float_array(entry.data[0:3]))
-    upper_absolute = array(float_array(entry.data[3:6]))
+    try:
+      lower_absolute = array(float_array(entry.data[0:3]))
+      upper_absolute = array(float_array(entry.data[3:6]))
+      self.permittivity = float(entry.data[6])
+      self.conductivity = float(entry.data[7])
+    except:
+      raise Exception('Incorrect format for BLOCK entry. Correct format is 8 float values: LX, LY, LZ, UX, UY, UZ, permittivity, conductivity')
     self.setLocation( (array(lower_absolute) + array(upper_absolute))/2 )
     self.setLowerAbsolute(lower_absolute)
     self.setUpperAbsolute(upper_absolute)
-    self.permittivity = float(entry.data[6])
-    self.conductivity = float(entry.data[7])
     
   def write_entry(self, FILE=sys.stdout):
     '''write an entry to a file object'''
@@ -445,7 +448,6 @@ class Distorted(GeometryObject):
   def getCentroOfMassAbsolute(self):
     ''' Returns the "centro of mass" of the object, i.e. sum(vertices)/8. '''
     vertices_absolute = self.getVerticesAbsolute()
-    print(vertices_absolute)
     return sum(vertices_absolute)/len(vertices_absolute)
     #S = numpy.array([0,0,0])
     #for v in self.vertices_relative:
@@ -488,11 +490,7 @@ class Distorted(GeometryObject):
     for i in range(8):
       vertices_absolute[i] = array(float_array(entry.data[3*i:3*i+3]))
     
-    print(vertices_absolute)
-    #raise()
     self.setVerticesAbsolute(vertices_absolute)
-    print(self.getCentroOfMassAbsolute())
-    #raise()
     self.setOriginToGeometry()
       
     self.permittivity = float(entry.data[8*3])
