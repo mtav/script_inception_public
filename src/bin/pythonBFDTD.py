@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 
 # A script reading in BFDTD files into a BFDTDobject named "sim" and then dropping to an interactive python prompt for further processing.
 ## for use with python3 -i:
