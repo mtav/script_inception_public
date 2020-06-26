@@ -1177,17 +1177,17 @@ class BFDTDobject(object):
         #print('ERROR: Not a file: {}'.format(current_filename), file=sys.stderr)
         return(-1)
       
-      extension = getExtension(current_filename)
-      if extension == 'in':
+      (root, extension) = os.path.splitext(current_filename)
+      if extension == '.in':
         if self.verbosity>0: print('.in file detected')
         self.readFileList(current_filename)
-      elif extension == 'inp':
+      elif extension == '.inp':
         if self.verbosity>0: print('.inp file detected')
         self.readInputFile(current_filename)
-      elif extension == 'geo':
+      elif extension == '.geo':
         if self.verbosity>0: print('.geo file detected')
         self.readInputFile(current_filename)
-      elif extension == 'prn':
+      elif extension == '.prn':
         raise Exception('.prn file detected: Not supported yet')
       else:
         raise Exception('Unknown file format: {}'.format(extension))
@@ -1202,6 +1202,7 @@ class BFDTDobject(object):
       .. todo:: Store full comment as attribute of object
       .. todo:: This parsing system may need to be rewritten because rotation entries should apply to the previous entry... (partially done, but may cause problems in case of multiple rotations)
       .. todo:: separation of snapshots into correct classes on read-in by checking attributes (+ later MVboxes, etc of course, using special comment system)
+      .. todo:: proper validation of entries (number and type of arguments), with output of lines on which errors occur.
       '''
       if self.verbosity>0: print('Processing ' + filename)
       box_read = False
@@ -1262,77 +1263,91 @@ class BFDTDobject(object):
           entry.name = name
           entry.data = data
           entries.append(entry)
-          
-          # mandatory objects
-          if entry.Type == 'XMESH':
-              self.mesh.setXmeshDelta(float_array(entry.data))
-              xmesh_read = True
-          elif entry.Type == 'YMESH':
-              self.mesh.setYmeshDelta(float_array(entry.data))
-          elif entry.Type == 'ZMESH':
-              self.mesh.setZmeshDelta(float_array(entry.data))
-          elif entry.Type == 'FLAG':
-              self.flag.read_entry(entry)
-          elif entry.Type == 'BOUNDARY':
-              self.boundaries.read_entry(entry)
-          elif entry.Type == 'BOX':
-              self.box.read_entry(entry)
-              box_read = True
-                  
-          # geometry objects
-          elif entry.Type == 'SPHERE':
-              sphere = Sphere()
-              sphere.read_entry(entry)
-              self.sphere_list.append(sphere)
-              self.geometry_object_list.append(sphere)
-          elif entry.Type == 'BLOCK':
-              block = Block()
-              block.read_entry(entry)
-              self.block_list.append(block)
-              self.geometry_object_list.append(block)
-          elif entry.Type == 'DISTORTED':
-              distorted = Distorted()
-              distorted.read_entry(entry)
-              self.distorted_list.append(distorted)
-              self.geometry_object_list.append(distorted)
-          elif entry.Type == 'CYLINDER':
-              cylinder = Cylinder()
-              cylinder.read_entry(entry)
-              self.cylinder_list.append(cylinder)
-              self.geometry_object_list.append(cylinder)
-              
-          elif entry.Type == 'ROTATION':
-              rotation = Rotation()
-              rotation.read_entry(entry)
-              self.global_rotation_list.append(rotation)
-              self.geometry_object_list[-1].rotation_list.append(rotation) # append rotation to previous object (pb of course, if multiple rotations...)
-          
-          # excitation objects
-          elif entry.Type == 'EXCITATION':
-              current_excitation = Excitation()
-              current_excitation.read_entry(entry)
-              self.excitation_list.append(current_excitation)
-          
-          # measurement objects
-          elif entry.Type == 'FREQUENCY_SNAPSHOT':
-              frequency_snapshot = FrequencySnapshot()
-              frequency_snapshot.read_entry(entry)
-              frequency_snapshot.setFullExtensionOff()
-              self.frequency_snapshot_list.append(frequency_snapshot)
-              self.snapshot_list.append(frequency_snapshot)
-          elif entry.Type == 'SNAPSHOT':
-              time_snapshot = TimeSnapshot()
-              time_snapshot.read_entry(entry)
-              time_snapshot.setFullExtensionOff()
-              self.time_snapshot_list.append(time_snapshot)
-              self.snapshot_list.append(time_snapshot)
-          elif entry.Type == 'PROBE':
-              probe = Probe()
-              probe.read_entry(entry)
-              self.probe_list.append(probe)
-  
-          else:
-              print('Unknown Type: ', entry.Type)
+
+          try:
+            # mandatory objects
+            if entry.Type == 'XMESH':
+                self.mesh.setXmeshDelta(float_array(entry.data))
+                xmesh_read = True
+            elif entry.Type == 'YMESH':
+                self.mesh.setYmeshDelta(float_array(entry.data))
+            elif entry.Type == 'ZMESH':
+                self.mesh.setZmeshDelta(float_array(entry.data))
+            elif entry.Type == 'FLAG':
+                self.flag.read_entry(entry)
+            elif entry.Type == 'BOUNDARY':
+                self.boundaries.read_entry(entry)
+            elif entry.Type == 'BOX':
+                self.box.read_entry(entry)
+                box_read = True
+                    
+            # geometry objects
+            elif entry.Type == 'SPHERE':
+                sphere = Sphere()
+                sphere.read_entry(entry)
+                self.sphere_list.append(sphere)
+                self.geometry_object_list.append(sphere)
+            elif entry.Type == 'BLOCK':
+                block = Block()
+                block.read_entry(entry)
+                self.block_list.append(block)
+                self.geometry_object_list.append(block)
+            elif entry.Type == 'DISTORTED':
+                distorted = Distorted()
+                distorted.read_entry(entry)
+                self.distorted_list.append(distorted)
+                self.geometry_object_list.append(distorted)
+            elif entry.Type == 'CYLINDER':
+                cylinder = Cylinder()
+                cylinder.read_entry(entry)
+                self.cylinder_list.append(cylinder)
+                self.geometry_object_list.append(cylinder)
+                
+            elif entry.Type == 'ROTATION':
+                rotation = Rotation()
+                rotation.read_entry(entry)
+                self.global_rotation_list.append(rotation)
+                self.geometry_object_list[-1].rotation_list.append(rotation) # append rotation to previous object (pb of course, if multiple rotations...)
+            
+            # excitation objects
+            elif entry.Type == 'EXCITATION':
+                current_excitation = Excitation()
+                current_excitation.read_entry(entry)
+                self.excitation_list.append(current_excitation)
+            
+            # measurement objects
+            elif entry.Type == 'FREQUENCY_SNAPSHOT':
+                frequency_snapshot = FrequencySnapshot()
+                frequency_snapshot.read_entry(entry)
+                frequency_snapshot.setFullExtensionOff()
+                self.frequency_snapshot_list.append(frequency_snapshot)
+                self.snapshot_list.append(frequency_snapshot)
+            elif entry.Type == 'SNAPSHOT':
+                time_snapshot = TimeSnapshot()
+                time_snapshot.read_entry(entry)
+                time_snapshot.setFullExtensionOff()
+                self.time_snapshot_list.append(time_snapshot)
+                self.snapshot_list.append(time_snapshot)
+            elif entry.Type == 'PROBE':
+                probe = Probe()
+                probe.read_entry(entry)
+                self.probe_list.append(probe)
+    
+            else:
+                print('Unknown Type: ', entry.Type)
+
+          except:
+            if self.verbosity > 0:
+              print('Failed to read the following entry:')
+              print(objects[i])
+              print('Entry number: {}'.format(i))
+              print('Type: {}'.format(objects[i]['Type']))
+              print('nameblob: {}'.format(objects[i]['nameblob']))
+              print('data:')
+              for i in objects[i]['data'].splitlines():
+                print('  {}'.format(i))
+            
+            raise
 
       return [ xmesh_read, box_read ]
 
