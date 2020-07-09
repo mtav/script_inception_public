@@ -36,6 +36,7 @@ import bfdtd
 import blender_scripts.modules.GeometryObjects as GeometryObjects
 import blender_scripts.modules.bfdtd_import
 # from blender_scripts.modules.bfdtd_import import createLineMeshFromCylinders
+import blender_scripts.modules.blender_utilities as blender_utilities
 
 from bpy_extras.object_utils import AddObjectHelper, object_data_add
 
@@ -63,7 +64,7 @@ def GEOmesh1D(name, coords, location=[0,0,0]):
   obj.name = name
   obj.location = Vector(location)
 
-  return(bpy.context.scene.objects.active)
+  return(blender_utilities.getActiveObject(bpy.context))
 
 def GEOmesh1D_bmesh(name, coords, location=[0,0,0]):
   '''Creates a "1D mesh" from a given list of coordinates. (bmesh using version)'''
@@ -398,8 +399,14 @@ class FDTDGeometryObjects(object):
         material = bpy.data.materials[name]
       else:
         material = bpy.data.materials.new(name)
-        material.diffuse_color = diffuse_color
-        material.alpha = alpha
+        if bpy.app.version >= (2, 8, 0):
+          material.diffuse_color[0] = diffuse_color[0] # red
+          material.diffuse_color[1] = diffuse_color[1] # green
+          material.diffuse_color[2] = diffuse_color[2] # blue
+          material.diffuse_color[3] = alpha            # alpha
+        else:
+          material.diffuse_color = diffuse_color
+          material.alpha = alpha
       return(material)
       
     def updateMaterialDictionary(self):
@@ -438,9 +445,10 @@ class FDTDGeometryObjects(object):
       
       if (permittivity, conductivity) not in self.material_dict.keys():
         mat_name = 'n_{:.2f}_p_{:.2f}_c{:.2f}'.format(numpy.sqrt(permittivity), permittivity, conductivity)
-        permittivity_material = bpy.data.materials.new(mat_name)
-        permittivity_material.diffuse_color = self.getMaterialColor(permittivity, conductivity)
-        permittivity_material.alpha = 0.5
+        diffuse_color = self.getMaterialColor(permittivity, conductivity)
+        alpha = 0.5
+        permittivity_material = self.getCustomMaterial(mat_name, diffuse_color, alpha)
+        # permittivity_material = bpy.data.materials.new(mat_name)
         permittivity_material['permittivity'] = permittivity
         permittivity_material['conductivity'] = conductivity
         self.material_dict[(permittivity, conductivity)] = permittivity_material
@@ -1088,7 +1096,7 @@ class FDTDGeometryObjects(object):
         # print('Nedges=', len(edges))
         # print('Nedges=', Nx*Ny + Ny*Nz + Nz*Nx)
     
-        return(bpy.context.scene.objects.active)
+        return(blender_utilities.getActiveObject(bpy.context))
         
     #def GEOexcitation(self, name, P1, P2):
     def GEOexcitation(self, excitation):

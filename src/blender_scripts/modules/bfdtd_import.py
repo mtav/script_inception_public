@@ -28,6 +28,7 @@ import pickle
 import utilities.brisFDTD_ID_info as brisFDTD_ID_info
 import time
 from blender_scripts.modules.blender_utilities import selectObjects
+import blender_scripts.modules.blender_utilities as blender_utilities
 import argparse
 
 import bpy
@@ -266,20 +267,21 @@ class BristolFDTDimporter(object):
       # older version
       #bpy.ops.group.create(name=group_name)
       # This version ensures that a new group name is created if necessary and stores the new group in *current_group*.
-      current_group = bpy.data.groups.new(name=group_name)
-      group_name = current_group.name
+      # current_group = bpy.data.groups.new(name=group_name) # blender<2.8
+      # group_name = current_group.name # blender<2.8
+      collection_current_file = blender_utilities.make_collection(group_name)  # blender>=2.8
 
-      if not 'meshes' in bpy.data.groups: bpy.ops.group.create(name='meshes')
-      if not 'boxes' in bpy.data.groups: bpy.ops.group.create(name='boxes')
-      if not 'excitations' in bpy.data.groups: bpy.ops.group.create(name='excitations')
-      if not 'frequencySnapshots' in bpy.data.groups: bpy.ops.group.create(name='frequencySnapshots')
-      if not 'timeSnapshots' in bpy.data.groups: bpy.ops.group.create(name='timeSnapshots')
-      if not 'epsilonSnapshots' in bpy.data.groups: bpy.ops.group.create(name='epsilonSnapshots')
-      if not 'spheres' in bpy.data.groups: bpy.ops.group.create(name='spheres')
-      if not 'distorted' in bpy.data.groups: bpy.ops.group.create(name='distorted')
-      if not 'blocks' in bpy.data.groups: bpy.ops.group.create(name='blocks')
-      if not 'cylinders' in bpy.data.groups: bpy.ops.group.create(name='cylinders')
-      if not 'probes' in bpy.data.groups: bpy.ops.group.create(name='probes')
+      collection_meshes = blender_utilities.make_collection('meshes')
+      collection_boxes = blender_utilities.make_collection('boxes')
+      collection_excitations = blender_utilities.make_collection('excitations')
+      collection_frequencySnapshots = blender_utilities.make_collection('frequencySnapshots')
+      collection_timeSnapshots = blender_utilities.make_collection('timeSnapshots')
+      collection_epsilonSnapshots = blender_utilities.make_collection('epsilonSnapshots')
+      collection_spheres = blender_utilities.make_collection('spheres')
+      collection_distorted = blender_utilities.make_collection('distorted')
+      collection_blocks = blender_utilities.make_collection('blocks')
+      collection_cylinders = blender_utilities.make_collection('cylinders')
+      collection_probes = blender_utilities.make_collection('probes')
       ##################
 
       # we create an instance of the FDTDGeometryObjects class, which allows adding objects to the scene with shared materials (TODO: maybe find a better system?)
@@ -292,18 +294,34 @@ class BristolFDTDimporter(object):
       # Box
       #Blender.Window.SetActiveLayer(1<<layerManager.DefaultLayers.index('box'));
       obj = FDTDGeometryObjects_obj.GEObox(structured_entries.box.name, Vector(structured_entries.box.lower), Vector(structured_entries.box.upper));
-      bpy.context.scene.objects.active = obj
-      bpy.ops.object.group_link(group=group_name)
-      bpy.ops.object.group_link(group='boxes')
+      blender_utilities.setActiveObject(obj)
+      # if bpy.app.version >= (2, 8, 0):
+        # bpy.context.view_layer.objects.active = obj
+      # else:
+        # bpy.context.scene.objects.active = obj
+
+      # if bpy.app.version >= (2, 8, 0):
+      blender_utilities.addToCollection(obj, group_name, removeFromOthers=False)
+      blender_utilities.addToCollection(obj, 'boxes', removeFromOthers=False)
+        
+        # blender_utilities.addToCollection(obj, 'cylinders', removeFromOthers=False)
+        # blender_utilities.addToCollection(obj, 'cylinders', removeFromOthers=False)
+        # blender_utilities.addToCollection(obj, 'probes', removeFromOthers=False)
+        # blender_utilities.addToCollection(obj, collection_probes, removeFromOthers=False)
+        # blender_utilities.addToCollection(obj, collection_spheres, removeFromOthers=True)
+      # else:
+        # bpy.ops.object.group_link(group=group_name)
+        # bpy.ops.object.group_link(group='boxes')
       
       # mesh
       #Blender.Window.SetActiveLayer(1<<layerManager.DefaultLayers.index('mesh'));
       #FDTDGeometryObjects_obj.GEOmesh('mesh', False, structured_entries.delta_X_vector,structured_entries.delta_Y_vector,structured_entries.delta_Z_vector);
       #Blender.Window.SetActiveLayer(1<<layerManager.DefaultLayers.index('mesh'));
       obj = FDTDGeometryObjects_obj.GEOmesh('mesh', False, structured_entries.mesh.getXmeshDelta(),structured_entries.mesh.getYmeshDelta(),structured_entries.mesh.getZmeshDelta());
-      bpy.context.scene.objects.active = obj
-      bpy.ops.object.group_link(group=group_name)
-      bpy.ops.object.group_link(group='meshes')
+      blender_utilities.setActiveObject(obj, context=bpy.context)
+      
+      blender_utilities.addToCollection(obj, group_name, removeFromOthers=False)
+      blender_utilities.addToCollection(obj, 'meshes', removeFromOthers=False)
 
       # Time_snapshot (time or EPS)
       Ntsnaps = 0
@@ -318,18 +336,18 @@ class BristolFDTDimporter(object):
         if time_snapshot.eps == 0:
           #Blender.Window.SetActiveLayer(1<<layerManager.DefaultLayers.index('time_snapshots_'+planeNumberName(time_snapshot.plane)[1]))
           obj = FDTDGeometryObjects_obj.GEOtime_snapshot(time_snapshot.name, time_snapshot.getPlaneLetter(), time_snapshot.P1, time_snapshot.P2)
-          bpy.context.scene.objects.active = obj
-          bpy.ops.object.group_link(group=group_name)
-          bpy.ops.object.group_link(group='timeSnapshots')
+          blender_utilities.setActiveObject(obj, context=bpy.context)
+          blender_utilities.addToCollection(obj, group_name, removeFromOthers=False)
+          blender_utilities.addToCollection(obj, 'timeSnapshots', removeFromOthers=False)
         else:
           #Blender.Window.SetActiveLayer(1<<layerManager.DefaultLayers.index('eps_snapshots_'+planeNumberName(time_snapshot.plane)[1]))
 
           obj = FDTDGeometryObjects_obj.GEOeps_snapshot(TimeSnapshotFileName, time_snapshot.getPlaneLetter(), time_snapshot.P1, time_snapshot.P2)
           #obj = FDTDGeometryObjects_obj.GEOeps_snapshot(time_snapshot.name, time_snapshot.plane, time_snapshot.P1, time_snapshot.P2)
 
-          bpy.context.scene.objects.active = obj
-          bpy.ops.object.group_link(group=group_name)
-          bpy.ops.object.group_link(group='epsilonSnapshots')
+          blender_utilities.setActiveObject(obj, context=bpy.context)
+          blender_utilities.addToCollection(obj, group_name, removeFromOthers=False)
+          blender_utilities.addToCollection(obj, 'epsilonSnapshots', removeFromOthers=False)
 
       # Frequency_snapshot
       # TODO: Finally get a correct system for filenames/comment names/etc implemented. getfilename() or something...
@@ -346,9 +364,9 @@ class BristolFDTDimporter(object):
         obj = FDTDGeometryObjects_obj.GEOfrequency_snapshot(FrequencySnapshotFileName, frequency_snapshot.getPlaneLetter(), frequency_snapshot.P1, frequency_snapshot.P2)
         #obj = FDTDGeometryObjects_obj.GEOfrequency_snapshot(frequency_snapshot.name, frequency_snapshot.plane, frequency_snapshot.P1, frequency_snapshot.P2)
 
-        bpy.context.scene.objects.active = obj
-        bpy.ops.object.group_link(group=group_name)
-        bpy.ops.object.group_link(group='frequencySnapshots')
+        blender_utilities.setActiveObject(obj, context=bpy.context)
+        blender_utilities.addToCollection(obj, group_name, removeFromOthers=False)
+        blender_utilities.addToCollection(obj, 'frequencySnapshots', removeFromOthers=False)
 
       # Excitation
       #Blender.Window.SetActiveLayer(1<<layerManager.DefaultLayers.index('excitations'));
@@ -357,9 +375,9 @@ class BristolFDTDimporter(object):
           #print(Blender.Window.GetActiveLayer())
           #print(excitation)
           obj = FDTDGeometryObjects_obj.GEOexcitation(excitation);
-          bpy.context.scene.objects.active = obj
-          bpy.ops.object.group_link(group=group_name)
-          bpy.ops.object.group_link(group='excitations')
+          blender_utilities.setActiveObject(obj, context=bpy.context)
+          blender_utilities.addToCollection(obj, group_name, removeFromOthers=False)
+          blender_utilities.addToCollection(obj, 'excitations', removeFromOthers=False)
           #FDTDGeometryObjects_obj.GEOexcitation(excitation.name, Vector(excitation.P1), Vector(excitation.P2));
       # Probe
       #Blender.Window.SetActiveLayer(1<<layerManager.DefaultLayers.index('probes'));
@@ -370,9 +388,9 @@ class BristolFDTDimporter(object):
           ProbeFileName = 'p' + str(Nprobes).zfill(2) + structured_entries.flag.id_string.replace('\"','') + '.prn'
           #FDTDGeometryObjects_obj.GEOprobe(probe.name+' ('+ProbeFileName+')', Vector(probe.position));
           obj = FDTDGeometryObjects_obj.GEOprobe(ProbeFileName, Vector(probe.position));
-          bpy.context.scene.objects.active = obj
-          bpy.ops.object.group_link(group=group_name)
-          bpy.ops.object.group_link(group='probes')
+          blender_utilities.setActiveObject(obj, context=bpy.context)
+          blender_utilities.addToCollection(obj, group_name, removeFromOthers=False)
+          blender_utilities.addToCollection(obj, 'probes', removeFromOthers=False)
 
       ##################################################################
       ### geometry loading
@@ -430,9 +448,9 @@ class BristolFDTDimporter(object):
               obj = FDTDGeometryObjects_obj.GEOsphere(sphere.name, sphere.getLocation(), sphere.outer_radius, sphere.inner_radius, sphere.permittivity, sphere.conductivity)
               #FDTDGeometryObjects_obj.GEOsphere_matrix(sphere.name, rotation_matrix, sphere.outer_radius, sphere.inner_radius, sphere.permittivity, sphere.conductivity);
               #FDTDGeometryObjects_obj.GEOblock_matrix(sphere.name, rotation_matrix, sphere.permittivity, sphere.conductivity);
-              bpy.context.scene.objects.active = obj
-              bpy.ops.object.group_link(group=group_name)
-              bpy.ops.object.group_link(group='spheres')
+              blender_utilities.setActiveObject(obj, context=bpy.context)
+              blender_utilities.addToCollection(obj, group_name, removeFromOthers=False)
+              blender_utilities.addToCollection(obj, 'spheres', removeFromOthers=False)
 
           if self.import_blocks:
             # Block
@@ -454,30 +472,36 @@ class BristolFDTDimporter(object):
 
                 # position object
                 T = Matrix.Translation(pos)
-                rotation_matrix *= T
+                if bpy.app.version >= (2, 8, 0):
+                  rotation_matrix @= T
+                else:
+                  rotation_matrix *= T
 
                 ## scale object
                 Sx = Matrix.Scale(abs(diag[0]), 4, Vector((1,0,0)) )
                 Sy = Matrix.Scale(abs(diag[1]), 4, Vector((0,1,0)) )
                 Sz = Matrix.Scale(abs(diag[2]), 4, Vector((0,0,1)) )
-                rotation_matrix *= Sx*Sy*Sz;
+                if bpy.app.version >= (2, 8, 0):
+                  rotation_matrix @= Sx@Sy@Sz
+                else:
+                  rotation_matrix *= Sx*Sy*Sz
 
                 # create object
                 obj = FDTDGeometryObjects_obj.GEOblock_matrix(block.name, rotation_matrix, block.permittivity, block.conductivity)
                 #FDTDGeometryObjects_obj.GEOblock(block.name, block.lower, block.upper, block.permittivity, block.conductivity)
-                bpy.context.scene.objects.active = obj
-                bpy.ops.object.group_link(group=group_name)
-                bpy.ops.object.group_link(group='blocks')
+                blender_utilities.setActiveObject(obj, context=bpy.context)
+                blender_utilities.addToCollection(obj, group_name, removeFromOthers=False)
+                blender_utilities.addToCollection(obj, 'blocks', removeFromOthers=False)
 
           # Distorted
           for distorted in structured_entries.distorted_list:
               # create object
               #print(distorted)
               obj = FDTDGeometryObjects_obj.GEOdistorted(distorted);
-              bpy.context.scene.objects.active = obj
-              bpy.ops.object.group_link(group=group_name)
+              blender_utilities.setActiveObject(obj, context=bpy.context)
+              blender_utilities.addToCollection(obj, group_name, removeFromOthers=False)
               #bpy.ops.object.group_link(group=type(distorted).__name__)
-              bpy.ops.object.group_link(group='distorted')
+              blender_utilities.addToCollection(obj, 'distorted', removeFromOthers=False)
 
           #########################
           # Cylinders
@@ -620,9 +644,9 @@ class BristolFDTDimporter(object):
                   #obj = FDTDGeometryObjects_obj.GEOcylinder_matrix(cylinder.name, rotation_matrix, cylinder.inner_radius, cylinder.outer_radius, cylinder.height, cylinder.permittivity, cylinder.conductivity)
                   #obj = FDTDGeometryObjects_obj.GEOcylinder_passedObj(cyl_list[i], cylinder.name, r.axis_point, r.axis_direction, r.angle_degrees, inner_radius, outer_radius, height, permittivity, conductivity)
 
-                  bpy.context.scene.objects.active = obj
-                  bpy.ops.object.group_link(group=group_name)
-                  bpy.ops.object.group_link(group='cylinders')
+                  blender_utilities.setActiveObject(obj, context=bpy.context)
+                  blender_utilities.addToCollection(obj, group_name, removeFromOthers=False)
+                  blender_utilities.addToCollection(obj, 'cylinders', removeFromOthers=False)
 
                   #angle_X = numpy.deg2rad(-90)
                   #angle_X = -0.5*numpy.pi

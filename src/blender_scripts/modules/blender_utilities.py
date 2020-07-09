@@ -16,6 +16,7 @@ import bpy
 import math
 import bmesh
 import warnings
+import bpy_types
 import collections
 from bpy_extras import object_utils
 from numpy import pi, cos, sin
@@ -313,6 +314,59 @@ def add_array_modifier(obj, label, size, vec3):
   array_mod.use_constant_offset = True
   array_mod.use_relative_offset = False
   array_mod.constant_offset_displace = vec3
+
+########################################################################
+# new blender >=2.8 code:
+# source: https://devtalk.blender.org/t/what-are-the-python-codes-related-to-collection-actions-for-blender-2-8/4479/4
+def find_collection(context, item):
+    collections = item.users_collection
+    if len(collections) > 0:
+        return collections[0]
+    return context.scene.collection
+
+def make_collection(collection_name, parent_collection = bpy.context.scene.collection):
+    if collection_name in bpy.data.collections: # Does the collection already exist?
+        return bpy.data.collections[collection_name]
+    else:
+        new_collection = bpy.data.collections.new(collection_name)
+        parent_collection.children.link(new_collection) # Add the new collection under a parent
+        return new_collection
+
+def addToCollection(obj, collection, removeFromOthers=False, context=bpy.context):
+  '''
+  Add object *obj* to the collection *collection*.
+  *collection* can be either a string or an instance of type bpy_types.Collection.
+
+  If removeFromOthers=True, the object will be removed from all other collections.
+  '''
+  if bpy.app.version >= (2, 8, 0):
+    if isinstance(collection, str):
+      coll = bpy.data.collections[collection]
+    else:
+      coll = collection
+
+    if removeFromOthers:
+      bpy.ops.collection.objects_remove_all()
+    
+    if not coll in obj.users_collection:
+      coll.objects.link(obj)
+  else:
+    setActiveObject(obj, context=context)
+    bpy.ops.object.group_link(group=collection)
+  return
+
+def setActiveObject(obj, context=bpy.context):
+  if bpy.app.version >= (2, 8, 0):
+    context.view_layer.objects.active = obj
+  else:
+    context.scene.objects.active = obj
+  
+def getActiveObject(context=bpy.context):
+  if bpy.app.version >= (2, 8, 0):
+    return context.view_layer.objects.active
+  else:
+    return context.scene.objects.active
+########################################################################
 
 if __name__ == '__main__':
   pass
