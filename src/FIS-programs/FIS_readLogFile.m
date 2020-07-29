@@ -1,6 +1,15 @@
 function FIS_info = FIS_readLogFile(logfile)
   % extract structured data from an FIS log file
-  
+
+  if ~exist('logfile', 'var')
+    [FileName, PathName] = uigetfile('*.txt','Select the log file');
+    if isequal(FileName, 0)
+      disp('User selected Cancel');
+      return
+    end
+    logfile = [PathName, FileName];
+  end
+
   FIS_info = struct();
   [fid, message] = fopen(logfile, 'r');
   if fid == -1
