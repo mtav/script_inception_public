@@ -89,15 +89,21 @@ function [header, data, ux, uy] = readPrnFile(filename, varargin)
   %%%%%%%%%%%%%%%%
   %%% get header (and guess delimiter if necessary)
   [header, delimiter] = readHeader(filename, delimiter, p.Results.GuessCsvDelimiter);
+  % hack to work around repeated space delimiters
+  if strcmp(delimiter, ' ')
+      delimiter_data = '';
+  else
+      delimiter_data = delimiter;
+  end
   %%%%%%%%%%%%%%%%
   %%% get data
 
   % We start reading from the second line, skipping the header.
   %if exist('max_lines','var') == 0 || exist('max_cols','var') == 0
   if isnan(max_lines) || isnan(max_cols)
-    data = dlmread(filename, delimiter, 1, 0);
+    data = dlmread(filename, delimiter_data, 1, 0);
   else
-    data = dlmread(filename, delimiter, [1, 0, max_lines, max_cols-1]);
+    data = dlmread(filename, delimiter_data, [1, 0, max_lines, max_cols-1]);
   end
 
   % We store the number of columns for processing the header at the end.
@@ -135,7 +141,9 @@ function [header, data, ux, uy] = readPrnFile(filename, varargin)
   % make sure header and data have same number of columns
   
   if ncols > length(header)
-    warning('Not enough column headers found for the number of columns of data.');
+    warning('Not enough column headers found for the number of columns of data. ncols=%d, length(header)=%d', ncols, length(header));
+    data
+    size(data)
   end
   
   % truncate header, so it fits data
