@@ -1,6 +1,18 @@
 #!/bin/bash
 
-for eps1 in 13 12 1
+set -eu
+
+echo "=== MPB run ==="
+for ((eps1=1;eps1<=13;eps1++));
+do
+  BASENAME="DBR-stack_${eps1}-13"
+  mpb eps1=${eps1} eps2=13 DBR-stack.ctl | tee ${BASENAME}.out
+  postprocess_mpb.sh ${BASENAME}.out
+done
+echo "-----> MPB run complete"
+
+echo "=== h5tovtk run ==="
+for ((eps1=1;eps1<=13;eps1++));
 do
   BASENAME="DBR-stack_${eps1}-13"
   echo ${BASENAME}
@@ -15,6 +27,7 @@ do
     h5tovtk -d data ${BASENAME}-hpwr.k23.b0${N}.tm.h5
   done
 done
+echo "-----> h5tovtk run complete"
 
 # 
 # h5tovtk -d z.r ${BASENAME}-e.k23.b02.tm.h5
