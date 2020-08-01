@@ -20,6 +20,11 @@ TODO: share repos instead of always syncing? (but prevents local editing+testing
 
 -python requirements:
   pip3 install --user h5py matplotlib pandas pick
+  
+-matlab requirements:
+  Symbolic math toolbox
+  Optimization Toolbox (optional)
+  GUIDE to App Designer Migration Tool for MATLAB (optional)
 
 For setting up the SIP environment on a personal computer:
 ----------------------------------------------------------

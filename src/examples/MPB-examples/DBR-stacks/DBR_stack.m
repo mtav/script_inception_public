@@ -6,6 +6,7 @@ cd(dirname(which('DBR_stack')));
 pwd();
 
 for eps1 = 1:13
+  fprintf('eps1 = %.2f\n', eps1);
   BASENAME = sprintf('DBR-stack_%d-13', eps1);
 %   cmd = sprintf('mpb eps1=%d eps2=13 DBR-stack.ctl | tee %s', eps1, [BASENAME, '.out']);
 %   system(cmd);

@@ -14,9 +14,11 @@ function info = DBRinfo(n1, n2, varargin)
   %   t2: thickness of layer 2
   %   a: thickness of a unit-cell (layer 1 + layer 2)
   %
+  % Note: The bot/mid/top-gap values are normalized, i.e. omega/(2pi*c0/a) = a/lambda.
+  %
   % TODO: create GUI
   % TODO: support more parameter sets
-  % TODO: return normalized t1,t2, etc + bot/mid/topgap values in real+normalized freqs+wavelengths (maybe as list for easy use with vline)
+  % TODO: return normalized t1,t2, etc + bot/mid/top-gap values in real+normalized freqs+wavelengths (maybe as list for easy use with vline)
   
   p = inputParser();
   p = inputParserWrapper(p, 'addRequired', 'n1', @isnumeric);
@@ -39,7 +41,7 @@ function info = DBRinfo(n1, n2, varargin)
   info.epsilon1 = (info.n1).^2;
   info.epsilon2 = (info.n2).^2;
   info.delta_epsilon = abs(info.epsilon2 - info.epsilon1);
-  info.criteria1 = info.delta_epsilon ./ min(info.epsilon1, info.epsilon2); % This should be << 1.
+  info.approximate.criteria1 = info.delta_epsilon ./ min(info.epsilon1, info.epsilon2); % This should be << 1.
 
   % check if general DBR
   general_DBR = true;
@@ -54,34 +56,45 @@ function info = DBRinfo(n1, n2, varargin)
   end
 
   if general_DBR
-    info.midgap = info.a ./ ( 2*(info.n1 .* info.t1 + info.n2 .* info.t2) );
-    info.criteria2 = min(info.t1, info.t2) ./ info.a; % This should be "small", but logically will always be in [0,1] or even [0,0.5] with current definition.
-    info.gapsize_relative = info.criteria1 * sin(pi.*(info.t1)./(info.a)) ./ pi;
-    info.wavelength = info.a ./ info.midgap;
+    info.approximate.midgap = info.a ./ ( 2*(info.n1 .* info.t1 + info.n2 .* info.t2) );
+    info.approximate.criteria2 = min(info.t1, info.t2) ./ info.a; % This should be "small", but logically will always be in [0,1] or even [0,0.5] with current definition.
+    info.approximate.gapsize_relative = info.approximate.criteria1 * sin(pi.*(info.t1)./(info.a)) ./ pi;
+    info.approximate.wavelength = info.a ./ info.approximate.midgap;
   elseif isnan(info.t1) && isnan(info.t2)
     % quarter-wave stack
-    info.midgap = (info.n1 + info.n2) ./ (4 * info.n1 .* info.n2);
-    info.gapsize_relative = (4/pi) * asin(abs( (info.n1 - info.n2) ./ (info.n1 + info.n2) ));
+    info.approximate.midgap = (info.n1 + info.n2) ./ (4 * info.n1 .* info.n2);
+    info.approximate.gapsize_relative = (4/pi) * asin(abs( (info.n1 - info.n2) ./ (info.n1 + info.n2) ));
     if ~isnan(info.wavelength)
       info.t1 = info.wavelength ./ (4*info.n1);
       info.t2 = info.wavelength ./ (4*info.n2);
       info.a = info.t1 + info.t2;
     elseif ~isnan(info.a)
-      info.wavelength = info.a ./ ( (1 ./ (4*info.n1)) + (1 ./ (4*info.n2)) )
+      info.wavelength = info.a ./ ( (1 ./ (4*info.n1)) + (1 ./ (4*info.n2)) );
       info.t1 = info.wavelength ./ (4*info.n1);
       info.t2 = info.wavelength ./ (4*info.n2);
     end
   else
     error('unsupported parameter set');
   end
-  info.gapsize_absolute = info.gapsize_relative .* info.midgap;
-  info.botgap = info.midgap - 0.5*info.gapsize_absolute;
-  info.topgap = info.midgap + 0.5*info.gapsize_absolute;
+  info.approximate.gapsize_absolute = info.approximate.gapsize_relative .* info.approximate.midgap;
+  info.approximate.botgap = info.approximate.midgap - 0.5*info.approximate.gapsize_absolute;
+  info.approximate.topgap = info.approximate.midgap + 0.5*info.approximate.gapsize_absolute;
+  info.approximate.gap_points_wavelength = [info.a./info.approximate.topgap, info.a./info.approximate.midgap, info.a./info.approximate.botgap];
   info.t1_over_a = info.t1/info.a;
   info.t2_over_a = info.t2/info.a;
-  info.gap_points_wavelength = [info.a./info.topgap, info.a./info.midgap, info.a./info.botgap];
   
-  if info.criteria1 >= 1
-      warning('Criteria 1 not met: delta(epsilon)/epsilon > 1. Approximation only valid for delta(epsilon)/epsilon << 1.\ndelta(epsilon)/epsilon=%.2f', info.criteria1);
+  % if info.approximate.criteria1 >= 1
+      % warning('Criteria 1 not met: delta(epsilon)/epsilon > 1. Approximation only valid for delta(epsilon)/epsilon << 1.\ndelta(epsilon)/epsilon=%.2f', info.approximate.criteria1);
+  % end
+  if ~any(isnan([info.n1, info.n2, info.t1, info.t2]))
+    % new gap edge values, found by solving the exact equation numerically
+    info.solved.botgap = DBR_bands_getOmega(pi, info.n1, info.n2, info.t1, info.t2, 1);
+    info.solved.topgap = DBR_bands_getOmega(pi, info.n1, info.n2, info.t1, info.t2, 2);
+    info.solved.midgap = (info.solved.botgap + info.solved.topgap)./2;
+    info.solved.gap_points_wavelength = [info.a./info.solved.topgap, info.a./info.solved.midgap, info.a./info.solved.botgap];
+    info.solved.gapsize_absolute = info.solved.topgap - info.solved.botgap;
+    info.solved.gapsize_relative = info.solved.gapsize_absolute ./ info.solved.midgap;
+    info.solved.wavelength = info.a./info.solved.midgap;
   end
+
 end

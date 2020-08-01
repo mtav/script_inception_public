@@ -29,7 +29,7 @@ function plotDBR(datfile, eps1)
   title(datfile, 'interpreter', 'none');
   
   info = DBRinfo(sqrt(eps1), sqrt(13), 't1', 0.5, 't2', 0.5);
-  hline(info.topgap, 'r--', 'topgap');
-  hline(info.midgap, 'b--', 'midgap');
-  hline(info.botgap, 'r--', 'botgap');
+  hline(info.solved.topgap, 'r--', 'topgap');
+  hline(info.solved.midgap, 'b--', 'midgap');
+  hline(info.solved.botgap, 'r--', 'botgap');
 end
