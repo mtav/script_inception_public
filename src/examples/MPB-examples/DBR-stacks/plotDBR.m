@@ -24,8 +24,8 @@ function plotDBR(datfile, eps1)
   hold on;
   wn = linspace(wn_range(1), wn_range(2));
   k = DBR_bands(wn, sqrt(eps1), sqrt(13), 0.5, 0.5);
-  plot(k./(2*pi), wn, 'k-');
-  plot(-k./(2*pi), wn, 'k-');
+  plot(real(k)./(2*pi), wn, 'k-');
+  plot(-real(k)./(2*pi), wn, 'k-');
   title(datfile, 'interpreter', 'none');
   
   info = DBRinfo(sqrt(eps1), sqrt(13), 't1', 0.5, 't2', 0.5);

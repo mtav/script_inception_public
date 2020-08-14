@@ -20,7 +20,9 @@ function wn = DBR_bands_getOmega(k, n1, n2, d1, d2, band_index)
       neff = n1*d1+n2*d2;
       omega_bragg = (get_c0()./neff) .* (pi./a);
 
-      midgap_approximate = a ./ ( 2*(n1 .* d1 + n2 .* d2) );
+      % midgap_approximate = a ./ ( 2*(n1 .* d1 + n2 .* d2) );
+      [wn_bot, wn_top] = DBR_bands_getBandgap(n1, n2, d1, d2);
+      midgap_approximate = (wn_bot + wn_top)./2;
 
       % cos(k*a) == 1./t12t21 * (cos(2*pi*neff*wn)-r12_squared*cos(2*pi*neff*C*wn));
       % k = acos(1./t12t21 * (cos(2*pi*neff*wn)-r12_squared*cos(2*pi*neff*C*wn))) ./ a;
@@ -30,7 +32,7 @@ function wn = DBR_bands_getOmega(k, n1, n2, d1, d2, band_index)
         if ~isempty(solution)
             wn_sym(idx) = solution;
         else
-            error('No solution found in range.');
+            error('No solution found in range: band_index=%d, midgap_approximate=%.3f, range=[%.3f, %.3f]', band_index, midgap_approximate, (band_index -1)*midgap_approximate, band_index*midgap_approximate);
         end
       end
       wn = double(wn_sym);

@@ -88,8 +88,8 @@ function info = DBRinfo(n1, n2, varargin)
   % end
   if ~any(isnan([info.n1, info.n2, info.t1, info.t2]))
     % new gap edge values, found by solving the exact equation numerically
-    info.solved.botgap = DBR_bands_getOmega(pi, info.n1, info.n2, info.t1, info.t2, 1);
-    info.solved.topgap = DBR_bands_getOmega(pi, info.n1, info.n2, info.t1, info.t2, 2);
+    info.solved.botgap = DBR_bands_getOmega(pi./(info.t1+info.t2), info.n1, info.n2, info.t1, info.t2, 1);
+    info.solved.topgap = DBR_bands_getOmega(pi./(info.t1+info.t2), info.n1, info.n2, info.t1, info.t2, 2);
     info.solved.midgap = (info.solved.botgap + info.solved.topgap)./2;
     info.solved.gap_points_wavelength = [info.a./info.solved.topgap, info.a./info.solved.midgap, info.a./info.solved.botgap];
     info.solved.gapsize_absolute = info.solved.topgap - info.solved.botgap;
