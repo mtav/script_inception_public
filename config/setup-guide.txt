@@ -20,6 +20,8 @@ TODO: share repos instead of always syncing? (but prevents local editing+testing
 
 -python requirements:
   pip3 install --user h5py matplotlib pandas pick
+WSL:
+  sudo apt install python3-h5py
   
 -matlab requirements:
   Symbolic math toolbox
