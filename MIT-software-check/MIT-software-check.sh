@@ -35,7 +35,14 @@ h5topng -V
 proceed
 
 echo "=== checking convert version ==="
-convert-imagemagick.exe --version
+if which convert-imagemagick.exe
+then
+  CONVERT_EXE=convert-imagemagick.exe
+else
+  CONVERT_EXE=convert
+fi
+echo "CONVERT_EXE=${CONVERT_EXE}"
+${CONVERT_EXE} -version
 proceed
 
 echo "=== testing mpb ==="
@@ -67,7 +74,9 @@ h5topng -t 0:329 -R -Zc dkbluered -a yarg -A bend-eps-000000.00.h5 bend-ez.h5
 proceed
 
 echo "=== testing convert ==="
-convert-imagemagick.exe bend-ez.t*.png bend-ez.gif
+${CONVERT_EXE} bend-ez.t*.png bend-ez.gif
 proceed
+
+echo "CONVERT_EXE=${CONVERT_EXE}"
 
 echo "All $N tests successful! :)"
