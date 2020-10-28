@@ -1,8 +1,8 @@
-function data = FIS_getData(folder_name, measurement_type)
+function data = FIS_getData_VIS(folder_name, measurement_type)
   % Create a meshgrid data structure with the fields Position, Lambda, Intensity based on the data files in "folder_name" of type "measurement_type".
   % This can then be used as follows:
-  %   Sample = FIS_getData(folder_name, 'Sample');
-  %   Mirror = FIS_getData(folder_name, 'Mirror');
+  %   Sample = FIS_getData_VIS(folder_name, 'Sample');
+  %   Mirror = FIS_getData_VIS(folder_name, 'Mirror');
   %   surf(Sample.Position, Sample.Lambda, Sample.Intensity./Mirror.Intensity); view(2); shading interp;
   
   data = struct();

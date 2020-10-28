@@ -145,7 +145,7 @@ function axes2D_DarkBackground_pushbutton_reset_Callback(hObject, eventdata, han
 end
 
 function axes2D_DarkBackground_pushbutton_load_Callback(hObject, eventdata, handles)
-  handles.DarkBackground = FIS_getData();
+  handles.DarkBackground = FIS_getData_VIS();
   if length(handles.DarkBackground.Position) > 0
     plot2D(handles, handles.axes2D_DarkBackground, handles.axes2D_DarkBackground_text_min, handles.axes2D_DarkBackground_text_max, handles.DarkBackground);
     update_FIS_plots(hObject, handles);
@@ -154,7 +154,7 @@ function axes2D_DarkBackground_pushbutton_load_Callback(hObject, eventdata, hand
 end
 
 function axes2D_Sample_pushbutton_load_Callback(hObject, eventdata, handles)
-  handles.Sample = FIS_getData();
+  handles.Sample = FIS_getData_VIS();
   if length(handles.Sample.Position) > 0
     plot2D(handles, handles.axes2D_Sample, handles.axes2D_Sample_text_min, handles.axes2D_Sample_text_max, handles.Sample);
     update_FIS_plots(hObject, handles);
@@ -192,7 +192,7 @@ function axes2D_Sample_pushbutton_reset_Callback(hObject, eventdata, handles)
 end
 
 function axes2D_Reference_pushbutton_load_Callback(hObject, eventdata, handles)
-  handles.Reference = FIS_getData();
+  handles.Reference = FIS_getData_VIS();
   if length(handles.Reference.Position) > 0
     plot2D(handles, handles.axes2D_Reference, handles.axes2D_Reference_text_min, handles.axes2D_Reference_text_max, handles.Reference);
     update_FIS_plots(hObject, handles);

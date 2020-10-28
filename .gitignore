@@ -1,5 +1,8 @@
 *~
 *.pyc
+tmp*.txt
+
+*.deprecated.m
 
 # dolphin
 .directory
