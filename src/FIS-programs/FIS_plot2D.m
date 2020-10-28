@@ -1,5 +1,7 @@
-function [data, ax, mini, maxi] = FIS_plot2D()
-  data = FIS_getData();
+function [data, ax, mini, maxi] = FIS_plot2D(data)
+  if ~exist('data', 'var')
+    data = FIS_getData();
+  end
   if length(data.Position) > 0
       figure();
       ax = axes();
