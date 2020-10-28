@@ -18,6 +18,10 @@ function data = FIS_getData_VIS(folder_name, measurement_type)
   end
   
   FIS_data_files = FIS_getFiles(folder_name);
+  data.metadata.folder_name = folder_name;
+  data.metadata.folder_name_full = fullfile(pwd, folder_name);
+  data.metadata.FIS_data_files = FIS_data_files;
+  
   measurement_types = {'Sample', 'Mirror', 'DarkBackground', 'NosampleBackground'};
   available_measurement_types = {};
   for idx = 1:length(measurement_types)
@@ -37,6 +41,8 @@ function data = FIS_getData_VIS(folder_name, measurement_type)
       measurement_type = available_measurement_types{idx};
     end
   end
+  
+  data.metadata.measurement_type = measurement_type;
   %fprintf(1, 'folder_name = %s\n', folder_name);
   %fprintf(1, 'measurement_type = %s\n', measurement_type);
   
