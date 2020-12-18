@@ -622,6 +622,13 @@ def plot_something(x, y, ax=None, **kwargs):
     return ax.plot(x, y, **kwargs)
 
 def plotMPB(kpoints, data, a = 1, title='', saveas='', show=True, x_range=[], y_range=[], y_lambda=False, x_as_index=False, invert_yaxis=False, y_divisions=8):
+
+  # if not showing plots, avoid using X server, as it can be problematic
+  # cf: https://stackoverflow.com/questions/4931376/generating-matplotlib-graphs-without-a-running-x-server
+  if not show:
+    import matplotlib as mpl
+    mpl.use('Agg')
+
   import matplotlib.pyplot as plt
   
   fig = plt.figure()
