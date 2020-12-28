@@ -21,3 +21,6 @@ docs/doctrees
 
 # IDE config files
 .idea
+
+# output files
+*.out
