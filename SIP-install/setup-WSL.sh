@@ -3,16 +3,58 @@
 
 set -eu
 
+##### functions
+safe_link_dir()
+{
+  if [[ ! $1 ]];then exit 2; fi
+  if [[ ! $2 ]];then exit 2; fi
+
+  TARGET="$1"
+  DEST="$2"
+  FILE="$DEST/$(basename $TARGET)"
+
+  if [ ! -e $TARGET ]
+  then
+    echo "ERROR: Target $TARGET not found."
+    exit 1
+  fi
+
+  # check if target already exists and remove eventually
+  if [ -L "$FILE" ] # FILE exists and is a symbolic link (same as -h)
+  then
+      echo "WARNING: Removing symbolic link $FILE"
+      ls -l "$FILE"
+      rm -v "$FILE"
+  else
+    if [ -e $FILE ]
+    then
+      echo "WARNING: $FILE already exists and is not a symbolic link."
+      ls -l "$FILE"
+      cp -iv "$FILE" "$FILE.$(date +%Y%m%d_%H%M%S)"
+      rm -iv "$FILE"
+    fi
+  fi
+
+  # link if the file does not exist
+  if [ ! -e $FILE ]
+  then
+    echo "Linking $TARGET"
+    ln -s "$TARGET" "$FILE"
+  fi
+}
+
+##### main code
+
 echo "===================================="
 echo "==> Updating and installing packages"
 # echo "------------------------------------"
 # update & install main packages
 sudo apt update
 sudo apt upgrade
-sudo apt install mpb h5utils python3-numpy python3-matplotlib x11-apps python3-pandas dos2unix tofrodos ack
+sudo apt install mpb h5utils python3-numpy python3-matplotlib x11-apps python3-pandas dos2unix tofrodos ack python3-h5py python3-vtk7
 
 echo "===================================="
-echo "==> Setting up symlink"
+echo "==> Setting up symlinks"
 # echo "------------------------------------"
 # setup symlinks
 mkdir --parents ${HOME}/Development
@@ -35,6 +77,8 @@ if ( test -e ${SIP_LINK} ) && ( test -d ${SIP_LINK} ) && ( test -L ${SIP_LINK} )
 then
   echo "${SIP_LINK} is now a symlink to the directory: $(readlink -f ${SIP_LINK})"
 fi
+
+safe_link_dir ${HOME}/Development/script_inception_public/config/.pystartup ${HOME}
 
 echo "===================================="
 echo "==> Setting up .bashrc"
