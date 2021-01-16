@@ -6,14 +6,14 @@
     (center 0 -0.5 -0.5)
     (height 1)
     (radius 0.25)
-    (material (make dielectric (epsilon 4)) )
+    (material (make dielectric (epsilon 2)) )
   )
   (make cylinder
     (axis 0 1 0)
     (center -0.5 0 -0.5)
     (height 1)
     (radius 0.25)
-    (material (make dielectric (epsilon 4)) )
+    (material (make dielectric (epsilon 3)) )
   )
   (make cylinder
     (axis 0 0 1)
@@ -50,14 +50,14 @@
     (center 0 -0.5 -0.5)
     (height L1)
     (radius 0.25)
-    (material (make dielectric (epsilon 4)) )
+    (material (make dielectric (epsilon 2)) )
   )
   (make cylinder
     (axis 0 1 0)
     (center -0.5 0 -0.5)
     (height L2)
     (radius 0.25)
-    (material (make dielectric (epsilon 4)) )
+    (material (make dielectric (epsilon 3)) )
   )
   (make cylinder
     (axis 0 0 1)
