@@ -27,19 +27,19 @@
 (set! filename-prefix "lattice-cartesian-")
 (run)
 
-(define u1 (vector3 0 2 3))
-(define u2 (vector3 1 0 3))
-(define u3 (vector3 1 2 0))
+(define a1 (vector3 0 2 3))
+(define a2 (vector3 1 0 3))
+(define a3 (vector3 1 2 0))
 
-(define L1 (/ (vector3-norm u1) 2))
-(define L2 (/ (vector3-norm u2) 2))
-(define L3 (/ (vector3-norm u3) 2))
+(define L1 (/ (vector3-norm a1) 2))
+(define L2 (/ (vector3-norm a2) 2))
+(define L3 (/ (vector3-norm a3) 2))
 
 (set! geometry-lattice
   (make lattice
-    (basis1 u1)
-    (basis2 u2)
-    (basis3 u3)
+    (basis1 a1)
+    (basis2 a2)
+    (basis3 a3)
     (basis-size L1 L2 L3)
   )
 )
