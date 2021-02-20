@@ -8,9 +8,9 @@ import warnings
 import configparser
 from numpy import array
 
-import utilities
-from utilities.common import *
-from constants.physcon import get_c0, get_e, get_eV, get_epsilon0, get_mu0, get_h, get_h_eVs, get_hb, get_me
+import photonics.utilities as utilities
+from photonics.utilities.common import *
+from photonics.constants.physcon import get_c0, get_e, get_eV, get_epsilon0, get_mu0, get_h, get_h_eVs, get_hb, get_me
 
 from .meshobject import *
 from .excitationTemplate import *

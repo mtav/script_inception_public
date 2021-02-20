@@ -71,12 +71,12 @@ import tempfile
 
 from numpy import array
 
-import utilities.common
-from utilities.common import fixLowerUpper, planeNumberName, float_array, findNearest, findNearestInSortedArray
-from constants.physcon import get_c0
-from utilities.brisFDTD_ID_info import numID_to_alphaID_TimeSnapshot, numID_to_alphaID_FrequencySnapshot, numID_to_alphaID_ModeFilteredProbe
+import photonics.utilities.common
+from photonics.utilities.common import fixLowerUpper, planeNumberName, float_array, findNearest, findNearestInSortedArray
+from photonics.constants.physcon import get_c0
+from photonics.utilities.brisFDTD_ID_info import numID_to_alphaID_TimeSnapshot, numID_to_alphaID_FrequencySnapshot, numID_to_alphaID_ModeFilteredProbe
 
-from bfdtd.meshobject import MeshObject
+from photonics.bfdtd.meshobject import MeshObject
 
 #from .BFDTDobject import *
 #from bfdtd.BFDTDobject import BFDTDobject
