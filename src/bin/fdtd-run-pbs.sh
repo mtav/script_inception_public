@@ -41,6 +41,9 @@ if [ "$1" = "-n" ]; then
     shift
 fi
 
+# default return code
+ret_code=0
+
 #For each fsp file listed on the command line, generate the
 #submission script and submit it with qsub
 while(( $# > 0 ))
@@ -56,7 +59,16 @@ do
     echo Submitting: $SHELLFILE
     cd $(dirname $SHELLFILE)
     qsub $(basename $SHELLFILE)
+    #qsub missing.sh
+
+    if test $? -ne 0
+    then
+	    ret_code=$((ret_code+1))
+    fi
+
     cd -
 
 shift
 done
+
+exit $ret_code

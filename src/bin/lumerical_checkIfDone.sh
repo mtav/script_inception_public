@@ -1,6 +1,8 @@
 #!/bin/bash
 set -eu
 
+# speed could be optimized using grep -l and grep -L (matching and non-matching)
+
 function checkIfDone() {
   FSP=${1}
   SHELLFILE=${1%.fsp}.sh
@@ -25,6 +27,10 @@ function resubmit() {
     rm -fv ${SHELLFILE}.o* ${SHELLFILE}.e*
     fdtd-run-pbs.sh ${FSP}
   fi
+}
+
+function getFinished() {
+  echo
 }
 
 S=0
