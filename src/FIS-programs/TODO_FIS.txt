@@ -1,0 +1,5 @@
+-fix logfile spellings + add more infos
+-simplify/clarify how strings from the interface are used in filenames, use automatic dates, etc
+-same interface for IR and VIS?
+-save user settings, add presets, configurable hardware, etc (cf Joe's python lib for fluorescence scans)
+-scan preview

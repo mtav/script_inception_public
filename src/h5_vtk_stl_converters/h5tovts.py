@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 # works with vtk 6.1.0, i.e. the python-vtk6 package on Debian-based distros

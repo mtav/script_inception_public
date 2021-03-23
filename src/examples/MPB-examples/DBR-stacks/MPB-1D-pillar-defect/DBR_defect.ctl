@@ -140,7 +140,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (define mybandfunc (combine-band-functions
-  fix-hfield-phase output-hfield output-hpwr
+  fix-hfield-phase output-hfield output-bpwr
   fix-dfield-phase output-dfield output-dpwr
   fix-efield-phase output-efield
 ))

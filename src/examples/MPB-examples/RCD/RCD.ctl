@@ -37,9 +37,9 @@
 (define rod-material (make dielectric (index rod-index-RCD)))
 
 (define mykpoints (list Gamma
-X+z
-U+z+x+y
-L+x+y+z
+  X+z
+  U+z+x+y
+  L+x+y+z
 ))
 
 ;; (define mykpoints (list Gamma
@@ -47,6 +47,18 @@ L+x+y+z
 ;; W+z+x
 ;; K+x+z
 ;; ))
+
+; (define mykpoints (list
+  ; Gamma
+  ; X+z
+  ; U+z+x+y
+  ; L+x+y+z
+  ; Gamma
+  ; X+z
+  ; W+z+x
+  ; K+x+z
+  ; Gamma
+; ))
 
 ;; (set! k-points (interpolate num-k-points RCD_kpoints ))
 ;; (set_kpoints RCD_kpoints)

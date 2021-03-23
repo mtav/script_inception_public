@@ -9,7 +9,7 @@ import argparse
 import tempfile
 import subprocess
 
-import utilities.common
+import photonics.utilities.common
 
 def AABB_intersect(box1_minBB, box1_maxBB, box2_minBB, box2_maxBB):
   dims = len(box1_minBB)

@@ -14,13 +14,16 @@ mpb defect-mode?=true cavity_index=${INDEX} DBR_defect.ctl | tee ${OUTFILE_DEFEC
 
 postprocess_mpb.sh ${OUTFILE_BANDS} ${OUTFILE_DEFECT_MODE}
 
+# convert epsilon .h5 file to VTK
+h5tovtk -d data ${BASENAME}-epsilon.h5
+
+# convert field .h5 files to VTK for each band
 for N in 1 2 3
 do
   echo "N=${N}"
-  h5tovtk -d data ${BASENAME}-epsilon.h5
   h5tovtk -d z.r ${BASENAME}-e.k01.b0${N}.tm.h5
   h5tovtk -d z.r ${BASENAME}-d.k01.b0${N}.tm.h5
   h5tovtk -d z.r ${BASENAME}-h.k01.b0${N}.tm.h5
   h5tovtk -d data ${BASENAME}-dpwr.k01.b0${N}.tm.h5
-  h5tovtk -d data ${BASENAME}-hpwr.k01.b0${N}.tm.h5
+  h5tovtk -d data ${BASENAME}-bpwr.k01.b0${N}.tm.h5
 done

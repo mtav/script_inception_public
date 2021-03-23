@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import sys
-from utilities.common import *
+from photonics.utilities.common import *
 
 # measurement objects
 

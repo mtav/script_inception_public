@@ -1,0 +1,8 @@
+DarkBG_gold-mirror_pol0_
+Totoal-spatial-points: 15
+Spatial-Resolution(mm): 0.5
+Initial-Position(mm): 3, 4
+Final-position(mm): 9, 8
+Integration-time(ms): 200
+Boxcart: 3
+Sample Reference Number: _singleFileForPoint_LineScan_
