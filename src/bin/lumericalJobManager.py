@@ -92,8 +92,39 @@ def checkStatus(fsp_file, job_dict):
   
   return status
 
+def cleanupJob(fsp_file, dry_run=False, verbosity=0):
+  ##### get various related filenames
+  fsp_file_fullpath = os.path.realpath(fsp_file)
+  DIR, BASE_FSP = os.path.split(fsp_file_fullpath)
+  BASE, EXT = os.path.splitext(BASE_FSP)
+  
+  sh_file = BASE+'.sh'
+  log_file = BASE+'_p0.log'
+  fsp_tmp_file = BASE+'.fsp.tmp'
+  
+  sh_file_fullpath = os.path.join(DIR, sh_file)
+  log_file_fullpath = os.path.join(DIR, log_file)
+  fsp_tmp_file_fullpath = os.path.join(DIR, fsp_tmp_file)
+  
+  out_file_list = glob.glob(os.path.join(DIR, BASE+'.sh.o*'))
+  err_file_list = glob.glob(os.path.join(DIR, BASE+'.sh.e*'))  
+  
+  generated_files = [sh_file_fullpath, log_file_fullpath, fsp_tmp_file_fullpath]
+  generated_files.extend(out_file_list)
+  generated_files.extend(err_file_list)
+  for i in generated_files:
+    if os.path.exists(i):
+      if not dry_run:
+        if verbosity>0:
+          print(f'Removing {i}')
+        os.remove(i)
+      else:
+        print(f'Would remove {i}')
+      
+  return
+
 def listJobs(args):
-  N=len(args.fsp_files)
+  N = len(args.fsp_files)
 
   #sys.stderr.close()
   job_dict = bin.qstat.getUserJobDict()
@@ -153,7 +184,8 @@ def submitJobs(args):
 
 def subCommand_cleanupJobs(args):
   for idx, f in enumerate(args.fsp_files):
-    cleanupJob(f)
+    print(f'==> {idx+1}/{len(args.fsp_files)}: {f}')
+    cleanupJob(f, dry_run=args.dry_run, verbosity=args.verbosity)
   return
 
 def main():
@@ -181,7 +213,7 @@ def main():
   # create the parser for the "submit" command
   parser_submit = subparsers.add_parser('cleanup', help='Remove .o, .e, .log files.')
   parser_submit.add_argument('fsp_files', metavar='FSP', nargs='+', help='.fsp files')
-  parser_list.add_argument('-n', '--dry-run', action='store_true', help='Only list files that would be removed, without removing them.')
+  parser_submit.add_argument('-n', '--dry-run', action='store_true', help='Only list files that would be removed, without removing them.')
   parser_submit.set_defaults(func=subCommand_cleanupJobs)
   
   args = parser.parse_args()
