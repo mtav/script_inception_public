@@ -180,19 +180,18 @@ loadModules() {
   module load photonics-shared-binaries
 }
 
-loadBC3config()
+loadBC3config_LoginNode()
 {
-#   echo "Loading BC3 config"
+  if declare -f module >/dev/null
+  then
+    loadModules &> /dev/null
+  fi
   alias git='git.sh'
 }
 
-if declare -f module >/dev/null
-then
-  loadModules &> /dev/null
-fi
-
 case $(hostname) in
-  newblue*) loadBC3config;;
+  newblue*) loadBC3config_LoginNode;; # BC3 login node
+#  node*) loadBC3config_ComputeNode;; # BC3 compute node
 #   bigblue*) export PPN=8;;
 #   bluecrystal*) export PPN=4;;
 #   babyblue*) export PPN=4;;
