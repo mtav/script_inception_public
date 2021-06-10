@@ -399,7 +399,7 @@ class FDTDGeometryObjects(object):
         material = bpy.data.materials[name]
       else:
         material = bpy.data.materials.new(name)
-        if bpy.app.version >= (2, 8, 0):
+        if bpy.app.version >= (2, 80, 0):
           material.diffuse_color[0] = diffuse_color[0] # red
           material.diffuse_color[1] = diffuse_color[1] # green
           material.diffuse_color[2] = diffuse_color[2] # blue

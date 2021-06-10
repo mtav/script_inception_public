@@ -269,30 +269,41 @@ def loadBasicMaterials():
   '''
   if 'red' not in [i.name for i in bpy.data.materials]:
     material = bpy.data.materials.new('red')
-    material.diffuse_color = Color((1, 0, 0))
+    setDiffuseColor(material, Color((1, 0, 0)))
   if 'green' not in [i.name for i in bpy.data.materials]:
     material = bpy.data.materials.new('green')
-    material.diffuse_color = Color((0, 1, 0))
+    setDiffuseColor(material, Color((0, 1, 0)))
   if 'blue' not in [i.name for i in bpy.data.materials]:
     material = bpy.data.materials.new('blue')
-    material.diffuse_color = Color((0, 0, 1))
+    setDiffuseColor(material, Color((0, 0, 1)))
 
   if 'cyan' not in [i.name for i in bpy.data.materials]:
     material = bpy.data.materials.new('cyan')
-    material.diffuse_color = Color((0, 1, 1))
+    setDiffuseColor(material, Color((0, 1, 1)))
   if 'magenta' not in [i.name for i in bpy.data.materials]:
     material = bpy.data.materials.new('magenta')
-    material.diffuse_color = Color((1, 0, 1))
+    setDiffuseColor(material, Color((1, 0, 1)))
   if 'yellow' not in [i.name for i in bpy.data.materials]:
     material = bpy.data.materials.new('yellow')
-    material.diffuse_color = Color((1, 1, 0))
+    setDiffuseColor(material, Color((1, 1, 0)))
 
   if 'black' not in [i.name for i in bpy.data.materials]:
     material = bpy.data.materials.new('black')
-    material.diffuse_color = Color((0, 0, 0))
+    setDiffuseColor(material, Color((0, 0, 0)))
   if 'white' not in [i.name for i in bpy.data.materials]:
     material = bpy.data.materials.new('white')
-    material.diffuse_color = Color((1, 1, 1))
+    setDiffuseColor(material, Color((1, 1, 1)))
+
+def setDiffuseColor(material, color_object, alpha=1):
+  '''Extra function to simplify backward compatibility. color_object should be a Color object and can be defined as follows: color_object=Color((R,G,B)).'''
+  if bpy.app.version >= (2, 80, 0):
+    material.diffuse_color[0] = color_object[0] # red
+    material.diffuse_color[1] = color_object[1] # green
+    material.diffuse_color[2] = color_object[2] # blue
+    material.diffuse_color[3] = alpha            # alpha
+  else:
+    material.diffuse_color = color_object
+    material.alpha = alpha
 
 def joinObjects(obj_list, origin=None, name=None, context = bpy.context):
   ''' Joins the objects from *obj_list* into a single object, sets the origin to *origin*, names the new object *name* and returns it.'''
@@ -324,13 +335,14 @@ def find_collection(context, item):
         return collections[0]
     return context.scene.collection
 
-def make_collection(collection_name, parent_collection = bpy.context.scene.collection):
-    if collection_name in bpy.data.collections: # Does the collection already exist?
-        return bpy.data.collections[collection_name]
-    else:
-        new_collection = bpy.data.collections.new(collection_name)
-        parent_collection.children.link(new_collection) # Add the new collection under a parent
-        return new_collection
+if bpy.app.version >= (2, 80, 0):
+  def make_collection(collection_name, parent_collection = bpy.context.scene.collection):
+      if collection_name in bpy.data.collections: # Does the collection already exist?
+          return bpy.data.collections[collection_name]
+      else:
+          new_collection = bpy.data.collections.new(collection_name)
+          parent_collection.children.link(new_collection) # Add the new collection under a parent
+          return new_collection
 
 def addToCollection(obj, collection, removeFromOthers=False, context=bpy.context):
   '''
@@ -339,7 +351,7 @@ def addToCollection(obj, collection, removeFromOthers=False, context=bpy.context
 
   If removeFromOthers=True, the object will be removed from all other collections.
   '''
-  if bpy.app.version >= (2, 8, 0):
+  if bpy.app.version >= (2, 80, 0):
     if isinstance(collection, str):
       coll = bpy.data.collections[collection]
     else:
@@ -347,7 +359,7 @@ def addToCollection(obj, collection, removeFromOthers=False, context=bpy.context
 
     if removeFromOthers:
       bpy.ops.collection.objects_remove_all()
-    
+
     if not coll in obj.users_collection:
       coll.objects.link(obj)
   else:
@@ -356,13 +368,13 @@ def addToCollection(obj, collection, removeFromOthers=False, context=bpy.context
   return
 
 def setActiveObject(obj, context=bpy.context):
-  if bpy.app.version >= (2, 8, 0):
+  if bpy.app.version >= (2, 80, 0):
     context.view_layer.objects.active = obj
   else:
     context.scene.objects.active = obj
-  
+
 def getActiveObject(context=bpy.context):
-  if bpy.app.version >= (2, 8, 0):
+  if bpy.app.version >= (2, 80, 0):
     return context.view_layer.objects.active
   else:
     return context.scene.objects.active

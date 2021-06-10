@@ -267,9 +267,9 @@ class BristolFDTDimporter(object):
       # older version
       #bpy.ops.group.create(name=group_name)
       # This version ensures that a new group name is created if necessary and stores the new group in *current_group*.
-      # current_group = bpy.data.groups.new(name=group_name) # blender<2.8
-      # group_name = current_group.name # blender<2.8
-      collection_current_file = blender_utilities.make_collection(group_name)  # blender>=2.8
+      # current_group = bpy.data.groups.new(name=group_name) # blender<2.80
+      # group_name = current_group.name # blender<2.80
+      collection_current_file = blender_utilities.make_collection(group_name)  # blender>=2.80
 
       collection_meshes = blender_utilities.make_collection('meshes')
       collection_boxes = blender_utilities.make_collection('boxes')
@@ -295,12 +295,7 @@ class BristolFDTDimporter(object):
       #Blender.Window.SetActiveLayer(1<<layerManager.DefaultLayers.index('box'));
       obj = FDTDGeometryObjects_obj.GEObox(structured_entries.box.name, Vector(structured_entries.box.lower), Vector(structured_entries.box.upper));
       blender_utilities.setActiveObject(obj)
-      # if bpy.app.version >= (2, 8, 0):
-        # bpy.context.view_layer.objects.active = obj
-      # else:
-        # bpy.context.scene.objects.active = obj
 
-      # if bpy.app.version >= (2, 8, 0):
       blender_utilities.addToCollection(obj, group_name, removeFromOthers=False)
       blender_utilities.addToCollection(obj, 'boxes', removeFromOthers=False)
         
@@ -472,7 +467,7 @@ class BristolFDTDimporter(object):
 
                 # position object
                 T = Matrix.Translation(pos)
-                if bpy.app.version >= (2, 8, 0):
+                if bpy.app.version >= (2, 80, 0):
                   rotation_matrix @= T
                 else:
                   rotation_matrix *= T
@@ -481,7 +476,7 @@ class BristolFDTDimporter(object):
                 Sx = Matrix.Scale(abs(diag[0]), 4, Vector((1,0,0)) )
                 Sy = Matrix.Scale(abs(diag[1]), 4, Vector((0,1,0)) )
                 Sz = Matrix.Scale(abs(diag[2]), 4, Vector((0,0,1)) )
-                if bpy.app.version >= (2, 8, 0):
+                if bpy.app.version >= (2, 80, 0):
                   rotation_matrix @= Sx@Sy@Sz
                 else:
                   rotation_matrix *= Sx*Sy*Sz
