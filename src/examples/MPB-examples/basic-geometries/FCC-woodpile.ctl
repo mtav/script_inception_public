@@ -18,7 +18,8 @@
 
 (define-param k-interp 9)
 
-(set! k-points (interpolate k-interp FCC_standard_kpoints))
+(set_kpoints FCC_standard_kpoints)
+;; (set! k-points (interpolate k-interp FCC_standard_kpoints))
 ;; (set! k-points (list))
 
 (define-param backfill-index 1 )
@@ -139,4 +140,6 @@
 
 (set-param! resolution 32)
 (set-param! num-bands 10)
-(run)
+;; Using this instead of (run) enables "mpb output_epsilon_only?=true FCC-woodpile.ctl" and "mpb_wrapper.py --output_epsilon_only FCC-woodpile.ctl" to only output epsilon.
+(run-mpb run)
+(exit)
