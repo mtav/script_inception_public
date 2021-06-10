@@ -6,13 +6,13 @@ Module containing the basic geometry objects available in BFDTD.
 '''
 
 import sys
-import photonics.utilities
-import photonics.utilities.geometry
+import utilities
+import utilities.geometry
 
 from numpy.linalg import norm
 from numpy import array, rad2deg, cross, dot, sqrt, ceil, deg2rad
-from photonics.utilities.common import *
-import photonics.utilities.geometry
+from utilities.common import *
+import utilities.geometry
 from .meshobject import MeshObject, MeshingParameters
 
 class GeometryObject(object):

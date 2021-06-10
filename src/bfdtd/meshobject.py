@@ -45,8 +45,8 @@ import numpy
 import warnings
 from numpy import array, ceil
 
-from photonics.meshing.meshing import subGridMultiLayer, increaseResolution
-from photonics.utilities.common import findNearestInSortedArray
+from meshing.meshing import subGridMultiLayer, increaseResolution
+from utilities.common import findNearestInSortedArray
 
 from .BFDTDentry import BFDTDentry
 from .meshobject import *

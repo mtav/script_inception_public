@@ -115,11 +115,11 @@ import re
 from numpy.linalg import norm
 from numpy import array, rad2deg, cross, dot, sqrt, ceil
 
-from photonics.utilities.common import *
-import photonics.utilities.brisFDTD_ID_info
-from photonics.meshing.meshing import subGridMultiLayer
+from utilities.common import *
+import utilities.brisFDTD_ID_info
+from meshing.meshing import subGridMultiLayer
 
-from photonics.constants.physcon import get_c0, get_e, get_eV, get_epsilon0, get_mu0, get_h, get_h_eVs, get_hb, get_me
+from constants.physcon import get_c0, get_e, get_eV, get_epsilon0, get_mu0, get_h, get_h_eVs, get_hb, get_me
 
 from .BFDTDobject import BFDTDobject
 from .bristolFDTD_generator_functions import *

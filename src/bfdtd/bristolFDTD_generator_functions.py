@@ -7,8 +7,8 @@ import tempfile
 import argparse
 import textwrap
 
-from photonics.utilities.getuserdir import *
-from photonics.utilities.common import *
+from utilities.getuserdir import *
+from utilities.common import *
 
 ########################
 # GENERATOR FUNCTIONS
