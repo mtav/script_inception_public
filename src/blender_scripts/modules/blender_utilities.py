@@ -335,14 +335,19 @@ def find_collection(context, item):
         return collections[0]
     return context.scene.collection
 
-if bpy.app.version >= (2, 80, 0):
-  def make_collection(collection_name, parent_collection = bpy.context.scene.collection):
-      if collection_name in bpy.data.collections: # Does the collection already exist?
-          return bpy.data.collections[collection_name]
-      else:
-          new_collection = bpy.data.collections.new(collection_name)
-          parent_collection.children.link(new_collection) # Add the new collection under a parent
-          return new_collection
+def make_collection(collection_name, parent_collection = None):
+  if bpy.app.version >= (2, 80, 0):
+    if parent_collection is None:
+      parent_collection = bpy.context.scene.collection
+    if collection_name in bpy.data.collections: # Does the collection already exist?
+        return bpy.data.collections[collection_name]
+    else:
+        new_collection = bpy.data.collections.new(collection_name)
+        parent_collection.children.link(new_collection) # Add the new collection under a parent
+        return new_collection
+  else:
+    current_group = bpy.data.groups.new(name=collection_name) # blender<2.80
+    return current_group.name
 
 def addToCollection(obj, collection, removeFromOthers=False, context=bpy.context):
   '''
