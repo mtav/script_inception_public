@@ -17,7 +17,7 @@
 set -eu
 
 # test path setup
-${HOME}/Development/script_inception_public/src/testing/test_guile_load_path.sh
+bash ${HOME}/Development/script_inception_public/src/testing/test_guile_load_path.sh
 
 # test MPB plotting setup
 TESTDIR=$(mktemp -d)
