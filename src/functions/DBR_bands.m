@@ -7,8 +7,8 @@ function k = DBR_bands(wn, n1, n2, d1, d2)
   % See the scripts in src/examples/MPB-examples/DBR-stacks/ for an example application.
   %
   % Example use:
-  % n1=1; n2=2; info=DBRinfo(n1, n2);
-  % wn=linspace(0,3); k = DBR_bands(wn, n1, n2, info.t1, info.t2); plot(k, wn);
+  %   n1=1; n2=2; info=DBRinfo(n1, n2, 'a', 1);
+  %   wn=linspace(0,3); k = DBR_bands(wn, n1, n2, info.t1, info.t2); plot(k, wn);
 
   a = d1 + d2;
   g = 2*pi./a;
