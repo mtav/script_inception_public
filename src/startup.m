@@ -28,13 +28,28 @@ function startup(varargin)
       PRIVATE_REPO_DIR_DEFAULT = fullfile('C:', 'Development', 'script_inception_private');
       OPENEMS_REPO_DIR_DEFAULT = fullfile('C:', 'opt', 'openEMS', 'share');
     else
+      % not a Windows platform
       userDir = getenv('HOME');
       if isempty(userDir)
         userDir = char(java.lang.System.getProperty('user.home'));
       end
+      fprintf('userDir: %s\n', userDir);
+      
+      % default path values
       PUBLIC_REPO_DIR_DEFAULT = fullfile(userDir, 'Development', 'script_inception_public', 'src');
       PRIVATE_REPO_DIR_DEFAULT = fullfile(userDir, 'Development', 'script_inception_private');
       OPENEMS_REPO_DIR_DEFAULT = fullfile(userDir, 'opt', 'openEMS', 'share');
+      
+      % environment variable override
+      if ~isempty(getenv('SIP_PATH'))
+        fprintf('SIP_PATH defined as: %s\n', getenv('SIP_PATH'));
+        PUBLIC_REPO_DIR_DEFAULT = getenv('SIP_PATH');
+      end
+      
+      if ~exist(PUBLIC_REPO_DIR_DEFAULT, 'dir')
+        warning('SIP_PATH not found. Please add an entry to your environment variables named "SIP_PATH" and pointing to the full path location of "script_inception_public/src".');
+      end
+
     end
 
     if exist('OCTAVE_VERSION','builtin') ~= 0 && exist('inputParser') == 0
