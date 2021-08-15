@@ -1153,10 +1153,18 @@ class FDTDGeometryObjects(object):
 
         bpy.ops.object.select_all(action = 'DESELECT')
         scene = bpy.context.scene
-        scene.objects.active = arrow_cylinder_obj
         
-        arrow_cylinder_obj.select = True
-        arrow_cone_obj.select = True
+        if bpy.app.version >= (2, 80, 0):
+          bpy.context.view_layer.objects.active = arrow_cylinder_obj
+        else:
+          scene.objects.active = arrow_cylinder_obj
+        
+        if bpy.app.version >= (2, 80, 0):
+          arrow_cylinder_obj.select_set(True)
+          arrow_cone_obj.select_set(True)
+        else:
+          arrow_cylinder_obj.select = True
+          arrow_cone_obj.select = True
         bpy.ops.object.join()
 
         
@@ -1245,11 +1253,19 @@ class FDTDGeometryObjects(object):
         mesh_data = bpy.data.meshes.new(name=name)
         mesh_data.from_pydata(verts, edges, faces)
         mesh_data.update() # (calc_edges=True) not needed here
+
+        from bpy_extras import object_utils
+        object_utils.object_data_add(bpy.context, mesh_data) # Always better to use this. Otherwise weird things happen...
         
-        new_object = bpy.data.objects.new(name, mesh_data)
+        new_object = bpy.context.active_object
+
+        # new_object = bpy.data.objects.new(name, mesh_data)
         
-        scene = bpy.context.scene
-        scene.objects.link(new_object)
+        # scene = bpy.context.scene
+        # if bpy.app.version >= (2, 80, 0):
+          # scene.collection.objects.link(new_object)
+        # else:
+          # scene.objects.link(new_object)
         
         if self.verbosity > 0:
           print('==> snapshot_type = '+str(snapshot_type))

@@ -217,22 +217,34 @@ def selectObjects(obj_list, active_object=None, context = bpy.context):
   
   bpy.ops.object.select_all(action = 'DESELECT')
   for obj in obj_list:
-    obj.select = True
+    if bpy.app.version >= (2, 80, 0):
+      obj.select_set(True)
+    else:
+      obj.select = True
   if active_object:
     context.scene.objects.active = active_object
   return
 
 def setOrigin(obj, loc):
     # store cursor location
-    orig_cursor = bpy.context.scene.cursor_location.copy()
+    if bpy.app.version >= (2, 80, 0):
+      orig_cursor = bpy.context.scene.cursor.location.copy()
+    else:
+      orig_cursor = bpy.context.scene.cursor_location.copy()
     # move cursor
-    bpy.context.scene.cursor_location = loc
+    if bpy.app.version >= (2, 80, 0):
+      bpy.context.scene.cursor.location = loc
+    else:
+      bpy.context.scene.cursor_location = loc
     # select object
     selectObjects([obj])
     # change origin
     bpy.ops.object.origin_set(type='ORIGIN_CURSOR')
     # restore cursor location
-    bpy.context.scene.cursor_location = orig_cursor
+    if bpy.app.version >= (2, 80, 0):
+      bpy.context.scene.cursor.location = orig_cursor
+    else:
+      bpy.context.scene.cursor_location = orig_cursor
 
 def grid_index(Nx, Ny, Nz, i, j, k):
     return (Ny*Nz*i + Nz*j + k)
@@ -335,11 +347,11 @@ def find_collection(context, item):
         return collections[0]
     return context.scene.collection
 
-def make_collection(collection_name, parent_collection = None):
+def make_collection(collection_name, parent_collection = None, checkExisting=True):
   if bpy.app.version >= (2, 80, 0):
     if parent_collection is None:
       parent_collection = bpy.context.scene.collection
-    if collection_name in bpy.data.collections: # Does the collection already exist?
+    if checkExisting and (collection_name in bpy.data.collections): # Does the collection already exist?
         return bpy.data.collections[collection_name]
     else:
         new_collection = bpy.data.collections.new(collection_name)
@@ -348,6 +360,14 @@ def make_collection(collection_name, parent_collection = None):
   else:
     current_group = bpy.data.groups.new(name=collection_name) # blender<2.80
     return current_group.name
+
+def setCollections(obj, collection_list, context=bpy.context):
+  # print(f'---->setCollections({obj}, {collection_list})')
+  for idx, collection in enumerate(collection_list):
+    if idx==0:
+      addToCollection(obj, collection, removeFromOthers=True, context=bpy.context)
+    else:
+      addToCollection(obj, collection, removeFromOthers=False, context=bpy.context)
 
 def addToCollection(obj, collection, removeFromOthers=False, context=bpy.context):
   '''
