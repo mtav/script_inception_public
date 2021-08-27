@@ -895,11 +895,18 @@ class Cylinder(GeometryObject):
     return(obj)
 
 
-class Cone(Cylinder):
+class Tube(GeometryObject):
   def __init__(self):
     super().__init__()
-    self.inner_radius_2 = 0
-    self.outer_radius_2 = 1
+    self.endpoint_1 = [1, 2, 3]
+    self.a1 = 0.25
+    self.b1 = 0.5
+    
+    self.endpoint_2 = [4, 5, 6]
+    self.a2 = 0.5
+    self.b2 = 1
+    
+    self.face_orientation = 'z'
   
   def setInnerRadius2(self, inner_radius_2):
     self.inner_radius_2 = inner_radius_2
@@ -917,6 +924,52 @@ class Cone(Cylinder):
     return(self.getInnerRadius())
   def getOuterRadius1(self):
     return(self.getOuterRadius())
+
+  def write_entry(self, FILE=sys.stdout):
+    '''
+    TUBE
+    {
+      1-3 Coordinates of first end: X1, Y1, Z1
+      4 **a1** first radius of the elliptical cross-section of the first end
+      5 **b1** second radius of the elliptical cross-section of the first end
+      6-8 Coordinates of second end: X2, Y2, Z2
+      9 **a2** first radius of the elliptical cross-section of the second end
+      10 **b2** second radius of the elliptical cross-section of the second end
+      11 **face orientation** 1=x, 2=y or 3=z depending on which direction the tube is pointing
+      12 **relative permittivity -> n=sqrt(mu_r*epsilon_r)
+      13 **relative conductivity
+    }
+    '''
+  
+    FILE.write('CYLINDER **name='+self.name+'\n')
+    FILE.write('{\n')
+    FILE.write("%E **X centro\n" % self.location[0])
+    FILE.write("%E **Y centro\n" % self.location[1])
+    FILE.write("%E **Z centro\n" % self.location[2])
+    FILE.write("%E **inner_radius\n" % self.inner_radius)
+    FILE.write("%E **outer_radius\n" % self.outer_radius)
+    FILE.write("%E **height\n" % self.height)
+    FILE.write("{:E} **relative permittivity -> n=sqrt(mu_r*epsilon_r)={:.2f}\n".format(self.permittivity, sqrt(self.permittivity)))
+    FILE.write("%E **relative conductivity\n" % self.conductivity)
+    FILE.write("%E **angle of rotation in degrees around -Z=(0,0,-1)\n" % self.angle_deg)
+    FILE.write('}\n')
+    FILE.write('\n')
+    
+    #angle_degrees = rad2deg(Angle([0,1,0],self.axis))
+    #if angle_degrees != 0:
+      #rot = Rotation(name = 'cylinder_rotation', axis_point = self.location, axis_direction = cross([0,1,0],self.axis), angle_degrees = angle_degrees)
+      #rot.write_entry(FILE)
+    
+    # TODO: BFDTD cylinders are along the Y axis by default, so rotation_axis_angle needs to be adapted for that... Just rotate back to Y first?
+    #print(self.rotation_axis_angle)
+    # HACK: We just always rotate for now. Adding the custom BFDTD object adder in Blender should fix this (but then for MPB/MEEP/etc... :/ )
+    #rot = Rotation(name = self.name+'_rotation', axis_point = self.getCentro(), axis_direction = [1,0,0], angle_degrees = -90)
+    #rot.write_entry(FILE)
+    if self.rotation_axis_angle[0] != 0:
+      rot = Rotation(name = self.name+'_rotation', axis_point = self.getLocation(), axis_direction = self.rotation_axis_angle[1:4], angle_degrees = rad2deg(self.rotation_axis_angle[0]))
+      rot.write_entry(FILE)
+      
+    self.writeRotations(FILE)
 
 class Rotation(object):
   # .. todo:: meshing params in case of rotations
