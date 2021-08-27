@@ -22,8 +22,8 @@
 bl_info = {
     'name': 'Import BristolFDTD Format (.geo,.inp,.in)',
     'author': 'mtav',
-    'version': (0, 0, 1),
-    'blender': (2, 63, 0),
+    'version': (0, 0, 2),
+    'blender': (2, 83, 0),
     'location': 'File > Import > BristolFDTD (.geo,.inp,.in)',
     'description': 'Import files in the BristolFDTD format (.geo,.inp,.in)',
     'wiki_url': '',
@@ -256,11 +256,11 @@ def menu_func_import(self, context):
 
 def register():
     bpy.utils.register_class(ImportBristolFDTD)
-    bpy.types.INFO_MT_file_import.append(menu_func_import)
+    bpy.types.TOPBAR_MT_file_import.append(menu_func_import)
 
 def unregister():
     bpy.utils.unregister_class(ImportBristolFDTD)
-    bpy.types.INFO_MT_file_import.remove(menu_func_import)
+    bpy.types.TOPBAR_MT_file_import.remove(menu_func_import)
 
 if __name__ == "__main__":
     register()
