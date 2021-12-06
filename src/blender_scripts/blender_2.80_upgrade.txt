@@ -1,0 +1,46 @@
+Reference notes for upgrading addons to Blender >=2.80:
+=======================================================
+1) https://wiki.blender.org/wiki/Reference/Release_Notes/2.80/Python_API/Addons
+
+2) AttributeError:
+  error:
+    AttributeError: 'RNA_Types' object has no attribute 'INFO_MT_mesh_add'
+  solution:
+      INFO_MT_mesh_add -> VIEW3D_MT_mesh_add
+      INFO_MT_file_import -> TOPBAR_MT_file_import
+
+3) Warning: class MESH_OT_tapsterite_add contains a property which should be an annotation!
+  https://s-nako.work/2020/02/blender-warning-class-class_name-contains-a-property-which-should-be-an-annotation/
+
+  Classes that contain properties from bpy.props now use Python’s type annotations (see PEP 526) and should be assigned using a single colon : in Blender 2.8x instead of equals = as was done in 2.7x 
+
+  Example:
+  class MY_OT_import_file(bpy.types.Operator):
+      bl_idname = "my.import_file"
+      bl_label = "My Import file"
+      bl_description = "Custom import addon"
+      bl_options = {'REGISTER', 'UNDO'}
+      
+      filepath : bpy.props.StringProperty(default="",subtype="FILE_PATH")
+      
+      def execute(self, context):
+
+4) get active object:
+  Error on:
+    obj = context.scene.objects.active
+  Use these instead:
+    bpy.context.object
+    bpy.context.active_object
+  https://blender.stackexchange.com/questions/124014/blender-2-8-python-active-removed-from-api-how-to-pick-active-object-now
+  https://blender.stackexchange.com/questions/126577/blender-2-8-api-python-set-active-object
+
+5) set active object:
+  context.scene.objects.active = ob -> context.view_layer.objects.active = ob
+  -> see: blender_utilities.setActiveObject(obj)
+
+6) select object:
+  ob.select = True -> ob.select_set(True)
+
+7) label() errors:
+  layout.label("Output:") -> layout.label(text="Output:")
+  https://b3d.interplanety.org/en/porting-add-on-from-blender-2-7-to-blender-2-8/

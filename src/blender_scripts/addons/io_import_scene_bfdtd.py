@@ -73,39 +73,39 @@ class ImportBristolFDTD(Operator, ImportHelper):
     bl_options = {'REGISTER', 'UNDO', 'PRESET'}
 
     # ImportHelper mixin class uses this
-    filter_glob = StringProperty(default="*.geo;*.inp;*.in", options={'HIDDEN'})
+    filter_glob : StringProperty(default="*.geo;*.inp;*.in", options={'HIDDEN'})
 
     # to enable multi-file import
-    files = CollectionProperty(
+    files : CollectionProperty(
             name="File Path",
             type=OperatorFileListElement,
             )
 
-    directory = StringProperty(
+    directory : StringProperty(
             subtype='DIR_PATH',
             )
 
     # List of operator properties, the attributes will be assigned
     # to the class instance from the operator settings before calling.
-    use_placeholder = BoolProperty(
+    use_placeholder : BoolProperty(
             name="Use placeholder",
             description="Use a placeholder for objects to increase import speed",
             default=False,
             )
     
-    cylinder_to_line_mesh = BoolProperty(
+    cylinder_to_line_mesh : BoolProperty(
             name="cylinders->line-mesh",
             description="Create a single line mesh from cylinders",
             default=True,
             )
     
-    create_vertex_mesh = BoolProperty(
+    create_vertex_mesh : BoolProperty(
             name="Objects -> vertex mesh",
             description="Import all objects into single vertex-based mesh, where vertex position = object position",
             default=False,
             )
     
-    placeholder_type = EnumProperty(
+    placeholder_type : EnumProperty(
             name="Placeholder type",
             description="Choose between two items",
             items=(
@@ -116,9 +116,9 @@ class ImportBristolFDTD(Operator, ImportHelper):
             default='first_imported_object',
             )
 
-    restrict_import_volume = BoolProperty(name="Restrict import volume", description="Restrict import volume to increase import speed", default=False)
+    restrict_import_volume : BoolProperty(name="Restrict import volume", description="Restrict import volume to increase import speed", default=False)
 
-    volume_specification_style = EnumProperty(items = (
+    volume_specification_style : EnumProperty(items = (
       ("min-max-relative", "min-max-relative", "min-max-relative"),
       ("centre-size-relative","centre-size-relative","centre-size-relative"),
       ("min-max-absolute", "min-max-absolute", "min-max-absolute"),
@@ -126,29 +126,29 @@ class ImportBristolFDTD(Operator, ImportHelper):
       ),
       default='centre-size-relative', name = "volume_specification_style")
 
-    xmin = FloatProperty(name="xmin", default=0)
-    xmax = FloatProperty(name="xmax", default=1)
-    ymin = FloatProperty(name="ymin", default=0)
-    ymax = FloatProperty(name="ymax", default=1)
-    zmin = FloatProperty(name="zmin", default=0)
-    zmax = FloatProperty(name="zmax", default=1)
+    xmin : FloatProperty(name="xmin", default=0)
+    xmax : FloatProperty(name="xmax", default=1)
+    ymin : FloatProperty(name="ymin", default=0)
+    ymax : FloatProperty(name="ymax", default=1)
+    zmin : FloatProperty(name="zmin", default=0)
+    zmax : FloatProperty(name="zmax", default=1)
 
-    centre_x = FloatProperty(name="centre_x", default=0.5)
-    centre_y = FloatProperty(name="centre_y", default=0.5)
-    centre_z = FloatProperty(name="centre_z", default=0.5)
-    size_x = FloatProperty(name="size_x", default=1/10)
-    size_y = FloatProperty(name="size_y", default=1/10)
-    size_z = FloatProperty(name="size_z", default=1/10)
+    centre_x : FloatProperty(name="centre_x", default=0.5)
+    centre_y : FloatProperty(name="centre_y", default=0.5)
+    centre_z : FloatProperty(name="centre_z", default=0.5)
+    size_x : FloatProperty(name="size_x", default=1/10)
+    size_y : FloatProperty(name="size_y", default=1/10)
+    size_z : FloatProperty(name="size_z", default=1/10)
     
-    pre_2008_BFDTD_version = BoolProperty(name="BFDTD version < 2008", description="Use the old snapshot indexing system", default=False)
+    pre_2008_BFDTD_version : BoolProperty(name="BFDTD version < 2008", description="Use the old snapshot indexing system", default=False)
 
-    import_cylinders = BoolProperty(name="Import cylinders", description="Import cylinders", default=True)
-    import_blocks = BoolProperty(name="Import blocks", description="Import blocks", default=True)
+    import_cylinders : BoolProperty(name="Import cylinders", description="Import cylinders", default=True)
+    import_blocks : BoolProperty(name="Import blocks", description="Import blocks", default=True)
 
-    numbered_prefixes = BoolProperty(name="Numbered prefixes", description="Use numbered prefixes in case of multiple files", default=True)
+    numbered_prefixes : BoolProperty(name="Numbered prefixes", description="Use numbered prefixes in case of multiple files", default=True)
     
-    use_Nmax_objects = BoolProperty(name="Limit number of imported objects", description="Limit number of imported objects", default=True)
-    Nmax_objects = IntProperty(name="Maximum number of objects", default=500)
+    use_Nmax_objects : BoolProperty(name="Limit number of imported objects", description="Limit number of imported objects", default=True)
+    Nmax_objects : IntProperty(name="Maximum number of objects", default=500)
 
     def draw(self, context):
         layout = self.layout

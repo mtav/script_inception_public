@@ -88,7 +88,10 @@ def createObjectFromMesh(mesh, object_name='object', operator=None, context=bpy.
     
     object_utils.object_data_add(context, mesh, operator=operator)
     #object_utils.object_data_add(context, mesh)
-    obj = context.scene.objects.active
+    if bpy.app.version >= (2, 80, 0):
+      obj = bpy.context.object
+    else:
+      obj = context.scene.objects.active
     #print(obj)
     obj.name = object_name
     return (obj,mesh)
@@ -222,7 +225,10 @@ def selectObjects(obj_list, active_object=None, context = bpy.context):
     else:
       obj.select = True
   if active_object:
-    context.scene.objects.active = active_object
+    if bpy.app.version >= (2, 80, 0):
+      context.view_layer.objects.active = active_object
+    else:
+      context.scene.objects.active = active_object
   return
 
 def setOrigin(obj, loc):
