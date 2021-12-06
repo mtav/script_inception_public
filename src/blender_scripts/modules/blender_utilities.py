@@ -409,6 +409,44 @@ def getActiveObject(context=bpy.context):
     return context.view_layer.objects.active
   else:
     return context.scene.objects.active
+
+def applyModifiers(obj, context=bpy.context):
+    # source: https://blenderartists.org/t/how-to-apply-all-the-modifiers-with-python/1314483/2
+    ctx = context.copy()
+    ctx['object'] = obj
+    for _, m in enumerate(obj.modifiers):
+        try:
+            ctx['modifier'] = m
+            bpy.ops.object.modifier_apply(ctx, modifier=m.name)
+        except RuntimeError:
+            print(f"Error applying {m.name} to {obj.name}, removing it instead.")
+            obj.modifiers.remove(m)
+
+    for m in obj.modifiers:
+        obj.modifiers.remove(m)
+
+def removeInteriorFaces(obj, context=bpy.context):
+  setActiveObject(obj, context=context)
+  
+  bpy.ops.object.mode_set(mode='EDIT')
+
+  bpy.ops.mesh.select_mode(type='VERT', action='ENABLE')
+  bpy.ops.mesh.select_all(action='SELECT')
+  bpy.ops.mesh.remove_doubles()
+
+  bpy.ops.mesh.select_all(action='DESELECT')
+  bpy.ops.mesh.select_mode(type='FACE', action='ENABLE')
+  bpy.ops.mesh.select_interior_faces()
+  bpy.ops.mesh.delete(type='ONLY_FACE')
+
+  # extra non-manifold removal
+  bpy.ops.mesh.select_all(action='DESELECT')
+  bpy.ops.mesh.select_mode(type='VERT', action='ENABLE')
+  bpy.ops.mesh.select_non_manifold()
+  bpy.ops.mesh.delete(type='EDGE_FACE')
+
+  bpy.ops.object.mode_set(mode='OBJECT')
+  return
 ########################################################################
 
 if __name__ == '__main__':
