@@ -888,7 +888,7 @@ class Cylinder(GeometryObject):
     from blender_scripts.modules.blender_utilities import selectObjects
     
     # get cursor location for placement
-    cursor_location3 = numpy.array(bpy.context.scene.cursor_location)
+    cursor_location3 = numpy.array(bpy.context.scene.cursor.location)
     
     A,B = self.getStartEndPoints()
     obj = add_cylinder(self, A, B, name='BFDTD-Cylinder', cylinder_radius=self.getOuterRadius())

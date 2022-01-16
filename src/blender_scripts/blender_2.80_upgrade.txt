@@ -44,3 +44,11 @@ Reference notes for upgrading addons to Blender >=2.80:
 7) label() errors:
   layout.label("Output:") -> layout.label(text="Output:")
   https://b3d.interplanety.org/en/porting-add-on-from-blender-2-7-to-blender-2-8/
+
+8) cursor location:
+  bpy.context.scene.cursor_location -> bpy.context.scene.cursor.location
+
+9) draw type:
+  bpy.context.object.draw_type -> bpy.context.object.display_type
+
+10) Matrix multiplication: A*B replaced by A@B

@@ -12,7 +12,7 @@ bl_info = {
     "name": "align_with_axis",
     "author": "mtav",
     "version": (1, 0),
-    "blender": (2, 69, 0),
+    "blender": (2, 80, 0),
     "location": "View3D > Tool shelf -> SIP -> Align with axis",
     "description": "Allows you to align an object along a specific axis, including with a specific rotation around that axis and specific dimensions.",
     "warning": "",
@@ -37,19 +37,19 @@ class AlignWithAxis(bpy.types.Operator):
   bl_label = "Align with axis"
   bl_options = {'REGISTER', 'UNDO', 'PRESET'}
 
-  origin = FloatVectorProperty(name="origin", default=Vector((0,0,0)))
+  origin : FloatVectorProperty(name="origin", default=Vector((0,0,0)))
 
-  direction_specification_style = EnumProperty(items = (("vector","vector","vector"),("endpoint","endpoint","endpoint")), default='endpoint', name = "direction_specification_style")
-  e3_vec3 = FloatVectorProperty(name="e3_vec3", default=Vector((0,0,1)))
-  e1_vec3 = FloatVectorProperty(name="e1_vec3", default=Vector((1,0,0)))
+  direction_specification_style : EnumProperty(items = (("vector","vector","vector"),("endpoint","endpoint","endpoint")), default='endpoint', name = "direction_specification_style")
+  e3_vec3 : FloatVectorProperty(name="e3_vec3", default=Vector((0,0,1)))
+  e1_vec3 : FloatVectorProperty(name="e1_vec3", default=Vector((1,0,0)))
   
-  norm_specification_style = EnumProperty(items = (("normalized","normalized","normalized"),("specific_norm","specific norm","specific norm"),("norm_from_vectors","norm from vectors","norm from vectors")), default='specific_norm', name = "norm_specification_style")
+  norm_specification_style : EnumProperty(items = (("normalized","normalized","normalized"),("specific_norm","specific norm","specific norm"),("norm_from_vectors","norm from vectors","norm from vectors")), default='specific_norm', name = "norm_specification_style")
 
-  e1_norm = FloatProperty(name="e1_norm", default=1)
-  e2_norm = FloatProperty(name="e2_norm", default=1)
-  e3_norm = FloatProperty(name="e3_norm", default=1)
+  e1_norm : FloatProperty(name="e1_norm", default=1)
+  e2_norm : FloatProperty(name="e2_norm", default=1)
+  e3_norm : FloatProperty(name="e3_norm", default=1)
 
-  bool_inverse = BoolProperty(name="inverse", description="Use inverse transformation", default=False)
+  bool_inverse : BoolProperty(name="inverse", description="Use inverse transformation", default=False)
 
   a_raw = Vector()
   b_raw = Vector()
@@ -74,18 +74,18 @@ class AlignWithAxis(bpy.types.Operator):
     box.prop(self, 'bool_inverse')
     
     # display information about resulting basis vectors
-    layout.label("Information:")
+    layout.label(text="Information:")
     box = layout.box()
     
     col = box.column(align=False)
-    col.label('non-normalized:')
-    col.label('a = [{}, {}, {}]'.format(*self.a_raw))
-    col.label('b = [{}, {}, {}]'.format(*self.b_raw))
-    col.label('c = [{}, {}, {}]'.format(*self.c_raw))
-    col.label('normalized:')
-    col.label('a/norm(a) = [{}, {}, {}]'.format(*self.a_normalized))
-    col.label('b/norm(b) = [{}, {}, {}]'.format(*self.b_normalized))
-    col.label('c/norm(c) = [{}, {}, {}]'.format(*self.c_normalized))
+    col.label(text='non-normalized:')
+    col.label(text='a = [{}, {}, {}]'.format(*self.a_raw))
+    col.label(text='b = [{}, {}, {}]'.format(*self.b_raw))
+    col.label(text='c = [{}, {}, {}]'.format(*self.c_raw))
+    col.label(text='normalized:')
+    col.label(text='a/norm(a) = [{}, {}, {}]'.format(*self.a_normalized))
+    col.label(text='b/norm(b) = [{}, {}, {}]'.format(*self.b_normalized))
+    col.label(text='c/norm(c) = [{}, {}, {}]'.format(*self.c_normalized))
 
   def execute(self, context):
     
@@ -156,7 +156,7 @@ class AlignWithAxis(bpy.types.Operator):
     T = Matrix.Translation(start)
 
     # create the final transformation matrix
-    Mfinal = T*Matrix((a,b,c,d)).transposed()*Sx*Sy*Sz
+    Mfinal = T @ Matrix((a,b,c,d)).transposed() @ Sx @ Sy @ Sz
 
     # apply the final transformation matrix
     obj = context.object

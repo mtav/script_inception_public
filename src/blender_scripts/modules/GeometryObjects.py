@@ -70,7 +70,7 @@ def add_block(blender_operator, location3 = [0, 0, 0], size3 = [1, 1, 1], name='
   bpy.ops.object.transform_apply(location=False, rotation=False, scale=True)
 
   if wiremode:
-    obj.draw_type = 'WIRE'
+    obj.display_type = 'WIRE'
   
   return(obj)
 
@@ -542,7 +542,7 @@ def add_lattice_cell(self, a0, a1, a2, name='lattice_cell', shift_origin=False, 
   obj_lattice_cell.name = name
   
   if wiremode:
-    bpy.context.object.draw_type = 'WIRE'
+    bpy.context.object.display_type = 'WIRE'
 
   return (obj_lattice_cell)
 

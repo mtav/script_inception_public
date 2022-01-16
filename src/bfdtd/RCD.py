@@ -478,7 +478,7 @@ class RCD_HexagonalLattice(GeometryObject):
     from blender_scripts.modules.blender_utilities import selectObjects, joinObjects
     
     # get cursor location for placement
-    cursor_location3 = numpy.array(bpy.context.scene.cursor_location)
+    cursor_location3 = numpy.array(bpy.context.scene.cursor.location)
     
     self.setLocation(cursor_location3)
     
@@ -508,14 +508,25 @@ class FRD_HexagonalLattice(RCD_HexagonalLattice):
     A unit-cell containing 3 "tetrahedrons".
     lattice vectors: u1,v1,w1
     '''
-    raise()
-
     geo_list = []
     unit_cell_location = i*self.__u1__ + j*self.__v1__ + k*self.__w1__
     
-    geo_list.extend(self.tetra(self.location + (unit_cell_location - self.__offset1__ + self.__R0__)*self.cubic_unit_cell_size, 'cell.{}.{}.{}.R0'.format(i,j,k)))
-    geo_list.extend(self.tetra(self.location + (unit_cell_location - self.__offset1__ + self.__G0__)*self.cubic_unit_cell_size, 'cell.{}.{}.{}.G0'.format(i,j,k)))
-    geo_list.extend(self.tetra(self.location + (unit_cell_location - self.__offset1__ + self.__B0__)*self.cubic_unit_cell_size, 'cell.{}.{}.{}.B0'.format(i,j,k)))
+    # TODO: Check why +sqrt(3)/4 and not -sqrt(3)/4 (Actually works with both. cf FRD symmetries.)
+    FRD_offset = array([0, 0, -sqrt(3)/4])
+    
+    # RCD part
+    if self.RCD_on:
+      self.setRefractiveIndex(self.refractive_index_RCD)
+      geo_list.extend(self.tetra(self.location + (unit_cell_location - self.__offset1__ + self.__R0__)*self.cubic_unit_cell_size, 'cell.{}.{}.{}.R0'.format(i,j,k)))
+      geo_list.extend(self.tetra(self.location + (unit_cell_location - self.__offset1__ + self.__G0__)*self.cubic_unit_cell_size, 'cell.{}.{}.{}.G0'.format(i,j,k)))
+      geo_list.extend(self.tetra(self.location + (unit_cell_location - self.__offset1__ + self.__B0__)*self.cubic_unit_cell_size, 'cell.{}.{}.{}.B0'.format(i,j,k)))
+      
+    # FRD part
+    if self.FRD_on:
+      self.setRefractiveIndex(self.refractive_index_FRD)
+      geo_list.extend(self.tetra(self.location + (FRD_offset + unit_cell_location - self.__offset2__ + self.__R1__)*self.cubic_unit_cell_size, 'cell.{}.{}.{}.R1.FRD'.format(i,j,k)))
+      geo_list.extend(self.tetra(self.location + (FRD_offset + unit_cell_location - self.__offset2__ + self.__G1__)*self.cubic_unit_cell_size, 'cell.{}.{}.{}.G1.FRD'.format(i,j,k)))
+      geo_list.extend(self.tetra(self.location + (FRD_offset + unit_cell_location - self.__offset2__ + self.__B1__)*self.cubic_unit_cell_size, 'cell.{}.{}.{}.B1.FRD'.format(i,j,k)))
 
     return(geo_list)
   
@@ -524,9 +535,6 @@ class FRD_HexagonalLattice(RCD_HexagonalLattice):
     A unit-cell containing 6 "tetrahedrons".
     lattice vectors: u2,v2,w2
     '''
-
-    
-    #self.setRefractiveIndex(self.refractive_index_RCD)
     
     geo_list = []
     unit_cell_location = i*self.__u2__ + j*self.__v2__ + k*self.__w2__

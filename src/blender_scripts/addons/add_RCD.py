@@ -5,7 +5,7 @@ bl_info = {
     "name": "Rod Connected Diamond (RCD) crystal",
     "author": "mtav",
     "version": (1, 0),
-    "blender": (2, 69, 0),
+    "blender": (2, 80, 0),
     "location": "View3D > Add > Mesh > RCD",
     "description": "Adds a new Rod Connected Diamond (RCD) crystal",
     "warning": "",
@@ -49,19 +49,19 @@ class OBJECT_OT_add_RCD(Operator, AddObjectHelper):
     bl_label = "Add Rod Connected Diamond (RCD) crystal"
     bl_options = {'REGISTER', 'UNDO', 'PRESET'}
     
-    size = FloatProperty(name="size", default=1, min=0)
-    shift_cell = BoolProperty(name="shift cell", default=False)
-    shift_origin = BoolProperty(name="shift origin", default=False)
-    radius = FloatProperty(name="radius", default=0.05, min=0)
+    size : FloatProperty(name="size", default=1, min=0)
+    shift_cell : BoolProperty(name="shift cell", default=False)
+    shift_origin : BoolProperty(name="shift origin", default=False)
+    radius : FloatProperty(name="radius", default=0.05, min=0)
     
-    add_unit_cell_BB = BoolProperty(name="Add unit-cell bounding box", default=True)
+    add_unit_cell_BB : BoolProperty(name="Add unit-cell bounding box", default=True)
     
-    create_array = BoolProperty(name="Create an array", default=False)
-    array_size_X = IntProperty(name="number of periods in X", default = 2, min=1)
-    array_size_Y = IntProperty(name="number of periods in Y", default = 3, min=1)
-    array_size_Z = IntProperty(name="number of periods in Z", default = 4, min=1)
+    create_array : BoolProperty(name="Create an array", default=False)
+    array_size_X : IntProperty(name="number of periods in X", default = 2, min=1)
+    array_size_Y : IntProperty(name="number of periods in Y", default = 3, min=1)
+    array_size_Z : IntProperty(name="number of periods in Z", default = 4, min=1)
     
-    cell_type = EnumProperty(items = (("RCD","RCD","RCD"),
+    cell_type : EnumProperty(items = (("RCD","RCD","RCD"),
                                       ("RCD111_v1","RCD111 type 1","RCD111 with 3 tetras"),
                                       ("RCD111_v2","RCD111 type 2","RCD111 with 6 tetras"),
                                       ("RCD111_inverse","RCD111_inverse","Add a pre-made inverse RCD111 unit-cell"),
@@ -70,9 +70,9 @@ class OBJECT_OT_add_RCD(Operator, AddObjectHelper):
                                       ), default='RCD111_v2', name = "Cell type:")
     #sub_cell_type = EnumProperty(items = (("cell_type_1","cell type 1","3 tetras"), ("cell_type_2","cell type 2","6 tetras")), default='cell_type_2', name = "RCD111 cell type:")
 
-    RCD111_v2_advanced = BoolProperty(name="Create array filling a box", default=False)
-    RCD111_v2_location = FloatVectorProperty(name="location", default = (0,0,0))
-    RCD111_v2_size = FloatVectorProperty(name="size", default = (numpy.sqrt(2)/2, numpy.sqrt(6)/2, numpy.sqrt(3)), min=0)
+    RCD111_v2_advanced : BoolProperty(name="Create array filling a box", default=False)
+    RCD111_v2_location : FloatVectorProperty(name="location", default = (0,0,0))
+    RCD111_v2_size : FloatVectorProperty(name="size", default = (numpy.sqrt(2)/2, numpy.sqrt(6)/2, numpy.sqrt(3)), min=0)
     # RCD111_v2_size = IntVectorProperty(name="size", default = (1,1,1))
     
     # RCD111_v2_Nx = IntProperty(name="number of periods in X", default = 1, min=1)
@@ -101,7 +101,7 @@ class OBJECT_OT_add_RCD(Operator, AddObjectHelper):
       box.prop(self, 'RCD111_v2_advanced')
       if self.RCD111_v2_advanced:
         box1 = layout.box()
-        box1.label('Advanced RCD111 options:')
+        box1.label(text='Advanced RCD111 options:')
         box1.prop(self, 'RCD111_v2_location')
         box1.prop(self, 'RCD111_v2_size')
         # box1.prop(self, 'RCD111_v2_Nx')
@@ -123,7 +123,7 @@ class OBJECT_OT_add_RCD(Operator, AddObjectHelper):
       if self.cell_type == 'RCD':
         # .. todo:: set to cursor location (check how addCube & co initialize it -> It is set when object_data_add(context, mesh, operator=self) is called, which means ideally a mesh should be created and then passed to that function. It should take care of rotation&co too.)
         ## get cursor location for placement
-        #cursor_location3 = numpy.array(bpy.context.scene.cursor_location)
+        #cursor_location3 = numpy.array(bpy.context.scene.cursor.location)
         #self.setLocation(cursor_location3)
       
         location = Vector(self.location)
@@ -164,14 +164,16 @@ class OBJECT_OT_add_RCD(Operator, AddObjectHelper):
         tri_nors = None
         axis_forward='Y'
         axis_up='Z'
-        global_scale = 1
-        global_matrix = axis_conversion(from_forward=axis_forward, from_up=axis_up).to_4x4() * Matrix.Scale(global_scale, 4)
-        print(global_matrix)
+        global_scale = self.size
+        global_matrix = axis_conversion(from_forward=axis_forward, from_up=axis_up).to_4x4() @ Matrix.Scale(global_scale, 4)
         blender_utils.create_and_link_mesh(objName, tris, tri_nors, pts, global_matrix)
         obj_blender = context.active_object
         
         # get cursor location for placement
-        obj_blender.location = numpy.array(bpy.context.scene.cursor_location)
+        if obj_blender:
+          obj_blender.location = numpy.array(context.scene.cursor.location)
+        else:
+          raise Exception('obj_blender is None')
         
         obj_bfdtd = bfdtd.RCD.RCD_HexagonalLattice()
         obj_bfdtd.setOuterRadius(self.radius)
@@ -225,12 +227,11 @@ def add_RCD_button(self, context):
 
 def register():
     bpy.utils.register_class(OBJECT_OT_add_RCD)
-    bpy.types.INFO_MT_mesh_add.append(add_RCD_button)
-
+    bpy.types.VIEW3D_MT_mesh_add.append(add_RCD_button)
 
 def unregister():
     bpy.utils.unregister_class(OBJECT_OT_add_RCD)
-    bpy.types.INFO_MT_mesh_add.remove(add_RCD_button)
+    bpy.types.VIEW3D_MT_mesh_add.remove(add_RCD_button)
 
 if __name__ == "__main__":
     register()
