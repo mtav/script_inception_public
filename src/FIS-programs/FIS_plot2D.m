@@ -67,7 +67,7 @@ function [data, ax, mini, maxi] = FIS_plot2D(data, drawing_function, bool_x_axis
         surf(x_values, data.Lambda, data.Intensity);
       end
       xlabel(x_label);
-      ylabel('lambda (nm)');
+      ylabel('wavelength (nm)');
       zlabel('intensity (AU)');
       colorbar(); % The colorbar can mess up axis overlays!
       shading interp;
