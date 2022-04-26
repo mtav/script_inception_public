@@ -14,5 +14,6 @@
   (at-beginning output-epsilon)
 ;;   (to-appended "fields" (at-every 0.1 output-efield output-hfield))
 ;;   (at-every 0.1 output-efield output-hfield)
-  (at-every 0.1 output-efield-z)
+  (to-appended "fields" (at-every 0.1 output-efield-z))  ;; store everything in one file
+  (at-every 0.1 output-efield-z) ;; store each time slice in a separate file
 )
