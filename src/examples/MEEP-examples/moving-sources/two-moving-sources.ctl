@@ -15,21 +15,24 @@
 
 ;;;;; Parameters for source 1
 (define-param v1 0.7) ; velocity of point charge
-(define-param cx1 -10) ; centre X
+(define-param cx1 0) ; centre X
 (define-param cy1 0) ; centre Y
-(define-param r1 10) ; radius
+(define-param r1 15) ; radius
 (define-param phi1 0) ; initial phase shift
 (define omega1 (/ v1 r1)) ; angular velocity
 (print "omega1:" omega1 "\n")
 
 ;;;;; Parameters for source 2
 (define-param v2 0.7) ; velocity of point charge
-(define-param cx2 10) ; centre X
+(define-param cx2 0) ; centre X
 (define-param cy2 0) ; centre Y
-(define-param r2 10) ; radius
+(define-param r2 15) ; radius
 (define-param phi2 pi) ; initial phase shift
 (define omega2 (/ v2 r2)) ; angular velocity
 (print "omega2:" omega2 "\n")
+
+(define simulation_duration (/ (* 2 pi) omega1) ) ;; Run the simulation for the time it takes source 1 to go once around the circle.
+(print "simulation_duration:" simulation_duration "\n")
 
 ;;;;; put output in a subdirectory
 (use-output-directory) ; put output in a subdirectory
@@ -47,7 +50,7 @@
   )
 )
 
-(run-until 100
+(run-until simulation_duration
   (lambda ()
     (change-sources! (list
       (make source
