@@ -211,7 +211,7 @@ def createLumericalScript(lsf_file, script_txt, dry_run=False):
 def subCommand_savesweepJobs(args):
   print(args)
 
-  workdir = os.path.dirname(os.path.normpath(args.fsp_file))
+  workdir = os.path.relpath(os.path.dirname(os.path.abspath(args.fsp_file)))
   print('workdir:', workdir)
 
   base, ext = os.path.splitext(os.path.basename(args.fsp_file))
@@ -230,7 +230,7 @@ def subCommand_savesweepJobs(args):
 def subCommand_loadsweepJobs(args):
   print(args)
 
-  workdir = os.path.dirname(os.path.normpath(args.fsp_file))
+  workdir = os.path.relpath(os.path.dirname(os.path.abspath(args.fsp_file)))
   print('workdir:', workdir)
 
   base, ext = os.path.splitext(os.path.basename(args.fsp_file))
