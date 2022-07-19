@@ -3,7 +3,7 @@
 #SBATCH --partition=cpu                    # replace with one of options - veryshort (6 hours limit), cpu (10 days limit), test (1 hour limit), hmem (when v.high RAM is needed)
 #SBATCH --mem=<total_memory>M              # Specify the real memory required per node. Default units are megabytes. Different units can be specified using the suffix [K|M|G|T].
 #SBATCH --cpus-per-task=<n>                # adjust to number of cores per node
-#SBATCH --output=%x.%j.out                 # custom output filename for convenience. %x: job name, %j: job id
+#SBATCH --output=%x.out                    # custom output filename for convenience. %x: job name, %j: job id
 
 ########## output SLURM infos:
 echo "---> SLURM infos:"

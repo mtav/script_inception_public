@@ -38,10 +38,11 @@ PROCS=8
 SCRIPTONLY=false
 PRINTSCRIPTONLY=false
 SPECIFYJOBNAME=false
+SBATCHOPTIONS=""
 
 print_help() {
   echo "usage :"
-  echo "`basename $0` [-p|--print-script-only] [-s|--create-script-only] [-n PROCS] FILE1.fsp FILE2.fsp FILE3.fsp ..."
+  echo "`basename $0` [-ps|--print-script-only] [-s|--create-script-only] [-n PROCS] [-t WALLTIME] [-j JOBNAME] [-p PARTITION] FILE1.fsp FILE2.fsp FILE3.fsp ..."
 }
 
 POSITIONAL_ARGS=()
@@ -49,7 +50,22 @@ POSITIONAL_ARGS=()
 while [[ $# -gt 0 ]]; do
   case $1 in
     -n)
-      PROCS=$2
+      PROCS=${2}
+      shift
+      shift
+      ;;
+    -t|--time)
+      WALLTIME=${2}
+      shift
+      shift
+      ;;
+    -j|--job-name)
+      JOBNAME=${2}
+      shift
+      shift
+      ;;
+    -p|--partition)
+      PARTITION=${2}
       shift
       shift
       ;;
@@ -57,12 +73,8 @@ while [[ $# -gt 0 ]]; do
       SCRIPTONLY=true
       shift
       ;;
-    -p|--print-script-only)
+    -ps|--print-script-only)
       PRINTSCRIPTONLY=true
-      shift
-      ;;
-    -j|--job-name=)
-      SPECIFYJOBNAME=true # not yet implemented
       shift
       ;;
     -h|--help)
@@ -93,6 +105,29 @@ fi
 echo "-------------------------"
 echo "PROCS: ${PROCS}"
 echo "SCRIPTONLY: ${SCRIPTONLY}"
+echo "PRINTSCRIPTONLY: ${PRINTSCRIPTONLY}"
+if [ -z ${WALLTIME+x} ]
+then
+  echo "WALLTIME is unset";
+else
+  echo "WALLTIME: ${WALLTIME}"
+  SBATCHOPTIONS="${SBATCHOPTIONS} --time=${WALLTIME}"
+fi
+if [ -z ${JOBNAME+x} ]
+then
+  echo "JOBNAME is unset";
+else
+  echo "JOBNAME: ${JOBNAME}"
+  SBATCHOPTIONS="${SBATCHOPTIONS} --job-name=${JOBNAME}"
+fi
+if [ -z ${PARTITION+x} ]
+then
+  echo "PARTITION is unset";
+else
+  echo "PARTITION: ${PARTITION}"
+  SBATCHOPTIONS="${SBATCHOPTIONS} --partition=${PARTITION}"
+fi
+echo "SBATCHOPTIONS: ${SBATCHOPTIONS}"
 echo "FILES: ${@}"
 echo "-------------------------"
 
@@ -122,7 +157,7 @@ do
       #Submit the job scrtipt using qsub
       echo "Submitting: ${SHELLFILE}"
       cd $(dirname ${SHELLFILE})
-      sbatch $(basename ${SHELLFILE})
+      sbatch ${SBATCHOPTIONS} $(basename ${SHELLFILE})
     fi
 
     if test $? -ne 0

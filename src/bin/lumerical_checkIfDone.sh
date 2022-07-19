@@ -64,3 +64,6 @@ done
 
 echo "======================================"
 echo "SUCCESS: ${S}/${N}, FAILURE: ${F}/${N}"
+
+# return error if at least one file failed
+test ${F} -eq 0
