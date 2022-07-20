@@ -115,6 +115,7 @@ def memoryStudy2():
   parser.add_argument('-r', '--range', default=[1,28], nargs=2, metavar=('N_START','N_END'), help='Range of numbers to try.', type=int)
   parser.add_argument('-p', '--partition', default='test', help='Partition/queue to use.')
   parser.add_argument('-t', '--time', default='00:05:00', help='Time limit for jobs.')
+  parser.add_argument("-c", "--check-results", help="check results", action='store_true')
   parser.add_argument('fspfile')
   args = parser.parse_args()
   print(args)
@@ -127,11 +128,16 @@ def memoryStudy2():
     base, ext = os.path.splitext(os.path.basename(args.fspfile))
     # print(base, ext)
     workdir = f'{base}-nprocs-{nprocs}'
-    # print(workdir)
-    print(f'---> nprocs: {nprocs}, fspfile: {args.fspfile}, workdir: {workdir}')
-    if not args.dry_run:
-      # testLocalRun(nprocs, args.fspfile, workdir)
-      testSbatchRun(nprocs, args.fspfile, workdir, args)
+    if not args.check_results:
+      # print(workdir)
+      print(f'---> nprocs: {nprocs}, fspfile: {args.fspfile}, workdir: {workdir}')
+      if not args.dry_run:
+        # testLocalRun(nprocs, args.fspfile, workdir)
+        testSbatchRun(nprocs, args.fspfile, workdir, args)
+    else:
+      cmd = ['grep', '-A1', 'success', f'{workdir}/{base}_p0.log']
+      #print(' '.join(cmd))
+      subprocess.run(cmd)
 
 def main():
   # memoryStudyLocalRun()
