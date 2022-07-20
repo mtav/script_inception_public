@@ -32,7 +32,7 @@ def testLocalRun(nprocs, fspfile, workdir):
   os.chdir(origdir)
   print(f'pwd={os.getcwd()}')
 
-def testSbatchRun(nprocs, fspfile, workdir):
+def testSbatchRun(nprocs, fspfile, workdir, args):
   '''
   -create a new directory
   -copy the fsp file to it
@@ -62,7 +62,7 @@ def testSbatchRun(nprocs, fspfile, workdir):
   
   scriptname = f'{base}.sh'
   jobname = os.path.basename(os.path.abspath(workdir))
-  cmd = ['sbatch', '--job-name', jobname, scriptname] # create script only
+  cmd = ['sbatch', '--time', args.time, '--partition', args.partition, '--job-name', jobname, scriptname] # command to submit jobs
   print(f"-> cmd: {' '.join(cmd)}")
   subprocess.run(cmd)
   
@@ -110,21 +110,28 @@ def getJobScript():
   return
       
 def memoryStudy2():
-  parser = argparse.ArgumentParser()
+  parser = argparse.ArgumentParser(description='Submit multiple jobs, with varying numbers of cores.')
   parser.add_argument("-n", "--dry-run", help="do not submit jobs", action='store_true')
+  parser.add_argument('-r', '--range', default=[1,28], nargs=2, metavar=('N_START','N_END'), help='Range of numbers to try.', type=int)
+  parser.add_argument('-p', '--partition', default='test', help='Partition/queue to use.')
+  parser.add_argument('-t', '--time', default='00:05:00', help='Time limit for jobs.')
   parser.add_argument('fspfile')
   args = parser.parse_args()
   print(args)
 
-  start=4
-  end=28
+  start=args.range[0]
+  end=args.range[1]
   for nprocs in range(start, end+1):
     # workdir = f'login-node-fdtd-run-local.sh-test-n{nprocs}'
-    workdir = f'sbatch-mpiexec-n{nprocs}'
+    # workdir = f'sbatch-mpiexec-n{nprocs}'
+    base, ext = os.path.splitext(os.path.basename(args.fspfile))
+    # print(base, ext)
+    workdir = f'{base}-nprocs-{nprocs}'
+    # print(workdir)
     print(f'---> nprocs: {nprocs}, fspfile: {args.fspfile}, workdir: {workdir}')
     if not args.dry_run:
       # testLocalRun(nprocs, args.fspfile, workdir)
-      testSbatchRun(nprocs, args.fspfile, workdir)
+      testSbatchRun(nprocs, args.fspfile, workdir, args)
 
 def main():
   # memoryStudyLocalRun()
