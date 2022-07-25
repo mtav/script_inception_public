@@ -39,10 +39,11 @@ SCRIPTONLY=false
 PRINTSCRIPTONLY=false
 SPECIFYJOBNAME=false
 SBATCHOPTIONS=""
+TEMPLATEOPTIONS=""
 
 print_help() {
   echo "usage :"
-  echo "`basename $0` [-ps|--print-script-only] [-s|--create-script-only] [-n PROCS] [-t WALLTIME] [-j JOBNAME] [-p PARTITION] FILE1.fsp FILE2.fsp FILE3.fsp ..."
+  echo "`basename $0` [-ps|--print-script-only] [-s|--create-script-only] [-n PROCS] [-t WALLTIME] [-j JOBNAME] [-p PARTITION] [-m MEM_IN_MB] FILE1.fsp FILE2.fsp FILE3.fsp ..."
 }
 
 POSITIONAL_ARGS=()
@@ -66,6 +67,11 @@ while [[ $# -gt 0 ]]; do
       ;;
     -p|--partition)
       PARTITION=${2}
+      shift
+      shift
+      ;;
+    -m|--mem)
+      MEM_IN_MB=${2}
       shift
       shift
       ;;
@@ -127,6 +133,14 @@ else
   echo "PARTITION: ${PARTITION}"
   SBATCHOPTIONS="${SBATCHOPTIONS} --partition=${PARTITION}"
 fi
+if [ -z ${MEM_IN_MB+x} ]
+then
+  echo "MEM_IN_MB is unset";
+else
+  echo "MEM_IN_MB: ${MEM_IN_MB}"
+  TEMPLATEOPTIONS="${TEMPLATEOPTIONS} -mem ${MEM_IN_MB}"
+fi
+echo "TEMPLATEOPTIONS: ${TEMPLATEOPTIONS}"
 echo "SBATCHOPTIONS: ${SBATCHOPTIONS}"
 echo "FILES: ${@}"
 echo "-------------------------"
@@ -146,10 +160,10 @@ do
     if ${PRINTSCRIPTONLY}
     then
       # echo "${SCRIPTDIR}/fdtd-process-template-slurm.sh ${1} ${TEMPLATE} ${PROCS}"
-      ${SCRIPTDIR}/fdtd-process-template-slurm.sh ${1} ${TEMPLATE} ${PROCS}
+      ${SCRIPTDIR}/fdtd-process-template-slurm.sh ${TEMPLATEOPTIONS} ${1} ${TEMPLATE} ${PROCS}
       exit
     else
-      ${SCRIPTDIR}/fdtd-process-template-slurm.sh ${1} ${TEMPLATE} ${PROCS} > $SHELLFILE
+      ${SCRIPTDIR}/fdtd-process-template-slurm.sh ${TEMPLATEOPTIONS} ${1} ${TEMPLATE} ${PROCS} > $SHELLFILE
     fi
 
     if ! ${SCRIPTONLY}

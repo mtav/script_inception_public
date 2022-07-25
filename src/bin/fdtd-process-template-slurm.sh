@@ -50,6 +50,9 @@ MEMORY_SAFETY=110
 PROC_MEMORY_MIN=1024
 TOTAL_MEMORY_MIN=1024
 
+GRIDPTS=1000
+TIMESTEPS=1000
+
 #Process command line options
 while [ $# -gt 3 ] ; do
     case $1 in
@@ -62,6 +65,8 @@ while [ $# -gt 3 ] ; do
         -mm) PROC_MEMORY_MIN=$2
          ;;
         -tmm) TOTAL_MEMORY_MIN=$2
+         ;;
+        -mem) SPECIFIED_MEMORY=$2
          ;;
     esac
     shift
@@ -88,14 +93,27 @@ FILENAME=`basename $1`
 #$SCRIPTDIR/fdtd-engine-mpich2nem -mr $1 > $1.tmp
 module load apps/lumerical/2021-R2
 
-# create memory requirement file
-fdtd-engine-mpich2nem -mr $1 > $1.tmp
+if [ -z ${SPECIFIED_MEMORY+x} ]
+then
+  # echo "SPECIFIED_MEMORY is unset. Attempting to estimate required memory...";
+  # create memory requirement file
+  fdtd-engine-mpich2nem -mr $1 > $1.tmp
 
-#Estimated memory
-ESTMEM=`grep memory $1.tmp | sed 's/^.*=//'`
+  #Estimated memory
+  ESTMEM=`grep memory $1.tmp | sed 's/^.*=//'`
 
-#Total memory required
-TOTALMEM=$(( ESTMEM * MEMORY_SAFETY / 100 ))
+  #Total memory required
+  TOTALMEM=$(( ESTMEM * MEMORY_SAFETY / 100 ))
+
+  #Gridpoints
+  GRIDPTS=`grep gridpoints $1.tmp | sed 's/^.*=//'`
+
+  #Timesteps
+  TIMESTEPS=`grep time_steps $1.tmp | sed 's/^.*=//'`
+else
+  # echo "SPECIFIED_MEMORY: ${SPECIFIED_MEMORY}"
+  TOTALMEM=${SPECIFIED_MEMORY}
+fi
 
 #Memory required perprocess
 PROCMEM=$((TOTALMEM / PROCS))
@@ -109,12 +127,6 @@ if test "$TOTALMEM" -lt "$TOTAL_MEMORY_MIN"; then
 fi
 # echo "=====> PROCMEM: $PROCMEM"
 # echo "=====> TOTALMEM: $TOTALMEM"
-
-#Gridpoints
-GRIDPTS=`grep gridpoints $1.tmp | sed 's/^.*=//'`
-
-#Timesteps
-TIMESTEPS=`grep time_steps $1.tmp | sed 's/^.*=//'`
 
 #Estimated time
 TIME=$(( GRIDPTS * TIMESTEPS / PROCS / RATE / 1000000 ))
