@@ -34,7 +34,7 @@ TEMPLATE=$SCRIPTDIR/../templates/lumerical-fdtd-slurm-template.sh
 
 #Determine number of processes to use. Default is 8 if no -n argument is
 #given
-PROCS=8
+PROCS=4
 SCRIPTONLY=false
 PRINTSCRIPTONLY=false
 SPECIFYJOBNAME=false
