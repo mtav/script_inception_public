@@ -192,6 +192,7 @@ def subCommand_cleanupJobs(args):
 def runLumericalScript(lsf_file, fsp_file, dry_run=False, workdir=None):
   cmd = ['fdtd-solutions', '-nw', '-run', lsf_file, fsp_file]
   print('----> Running Lumerical:')
+  print('workdir:', workdir)
   print('cmd:')
   print(f"  {' '.join(cmd)}")
   if not dry_run:
@@ -246,6 +247,13 @@ def subCommand_loadsweepJobs(args):
   createLumericalScript(lsf_file, script_txt, dry_run=args.dry_run)
   runLumericalScript(lsf_file, args.fsp_file, dry_run=args.dry_run, workdir=workdir)
 
+def subCommand_runscriptJobs(args):
+  lsf_file = os.path.abspath(args.lsf_file)
+  print('lsf_file:', lsf_file)
+  for idx, f in enumerate(args.fsp_files):
+    workdir = os.path.relpath(os.path.dirname(os.path.abspath(f)))
+    runLumericalScript(lsf_file, f, dry_run=args.dry_run, workdir=workdir)
+  
 def main():
   parser = argparse.ArgumentParser(description='Manage lumerical jobs.')
   # parser.add_argument('fsp_files', metavar='FSP', nargs='+', help='.fsp files')
@@ -287,6 +295,13 @@ def main():
   parser_loadsweep.add_argument('sweepname', help='Name of the sweep in the .fsp file.')
   parser_loadsweep.add_argument('-n', '--dry-run', action='store_true', help='Show what would be done only.')
   parser_loadsweep.set_defaults(func=subCommand_loadsweepJobs)
+
+  # create the parser for the "runscript" command
+  parser_runscript = subparsers.add_parser('runscript', help='Run script file.', description='Run the same script on multiple .fsp files, running each in its own subdirectory.')
+  parser_runscript.add_argument('lsf_file', help='.lsf file to run on each .fsp file.', metavar='LSF_SCRIPT')
+  parser_runscript.add_argument('fsp_files', metavar='FSP', nargs='+', help='.fsp files')
+  parser_runscript.add_argument('-n', '--dry-run', action='store_true', help='Show what would be done only.')
+  parser_runscript.set_defaults(func=subCommand_runscriptJobs)
 
   args = parser.parse_args()
   # print(args)
