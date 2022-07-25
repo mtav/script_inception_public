@@ -6,8 +6,10 @@ set -eu
 function checkIfDone() {
   FSP=${1}
   SHELLFILE=${1%.fsp}.sh
+  LUMERICAL_LOGFILE=${1%.fsp}_p0.log
 
-  if grep finished ${SHELLFILE}.o* &> /dev/null
+  #if grep finished ${SHELLFILE}.o* &> /dev/null
+  if grep "Simulation completed successfully at:" ${LUMERICAL_LOGFILE} &> /dev/null
   then
     return 0
   else
@@ -19,14 +21,17 @@ function resubmit() {
   FSP=${1}
   SHELLFILE=${1%.fsp}.sh
 
-  if grep finished ${SHELLFILE}.o* &> /dev/null
-  then
-    echo "${FSP} : DONE"
-  else
-    echo "${FSP} : RESUBMITTING"
-    rm -fv ${SHELLFILE}.o* ${SHELLFILE}.e*
-    fdtd-run-pbs.sh ${FSP}
-  fi
+  rm -fv ${SHELLFILE}.o* ${SHELLFILE}.e*
+  fdtd-run-slurm.sh -p veryshort -n 1 -m 1024 -t 01:00:00 ${FSP}
+
+  # if grep finished ${SHELLFILE}.o* &> /dev/null
+  # then
+    # echo "${FSP} : DONE"
+  # else
+    # echo "${FSP} : RESUBMITTING"
+    # rm -fv ${SHELLFILE}.o* ${SHELLFILE}.e*
+    # fdtd-run-pbs.sh ${FSP}
+  # fi
 }
 
 function getFinished() {
@@ -57,6 +62,7 @@ do
     S=$((S + 1))
   else
     echo "${FSP} : FAILURE"
+    # resubmit "${FSP}"
     F=$((F + 1))
   fi
   N=$((N + 1))
