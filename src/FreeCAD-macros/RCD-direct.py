@@ -118,10 +118,10 @@ def RCDCubicUnitCell_FRD(i, j, k):
 def createRCD():
 	L = []
 	for i in range(-1, 2):
-	  for j in range(-1, 2):
-	    for k in range(-1, 2):
-			U = RCDCubicUnitCell(i, j, k)
-			L.append(U)
+		for j in range(-1, 2):
+			for k in range(-1, 2):
+				U = RCDCubicUnitCell(i, j, k)
+				L.append(U)
 	RCD = App.activeDocument().addObject("Part::MultiFuse","Fusion")
 	RCD.Shapes = L
 	return(RCD)

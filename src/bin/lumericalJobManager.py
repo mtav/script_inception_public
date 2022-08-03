@@ -8,6 +8,7 @@ import os
 import glob
 import bin.qstat
 import sys
+import textwrap
 
 from datetime import datetime
 
@@ -188,6 +189,71 @@ def subCommand_cleanupJobs(args):
     cleanupJob(f, dry_run=args.dry_run, verbosity=args.verbosity)
   return
 
+def runLumericalScript(lsf_file, fsp_file, dry_run=False, workdir=None):
+  cmd = ['fdtd-solutions', '-nw', '-run', lsf_file, fsp_file]
+  print('----> Running Lumerical:')
+  print('workdir:', workdir)
+  print('cmd:')
+  print(f"  {' '.join(cmd)}")
+  if not dry_run:
+    subprocess.run(cmd, cwd=workdir)
+
+def createLumericalScript(lsf_file, script_txt, dry_run=False):
+  # create LSF script
+  print(f'----> Creating file {lsf_file} with these contents:')
+  print('----')
+  print(script_txt.strip())
+  print('----')
+  if not dry_run:
+    with open(lsf_file, "w") as f:
+        f.write(script_txt)
+  return
+
+def subCommand_savesweepJobs(args):
+  print(args)
+
+  workdir = os.path.relpath(os.path.dirname(os.path.abspath(args.fsp_file)))
+  print('workdir:', workdir)
+
+  base, ext = os.path.splitext(os.path.basename(args.fsp_file))
+  lsf_file = os.path.join(workdir, f'{base}.savesweep.lsf')
+  print('lsf_file:', lsf_file)
+
+  script_txt = textwrap.dedent(f'''\
+                write('write: Creating files for sweep {args.sweepname}...');
+                savesweep('{args.sweepname}');
+                write('write: DONE');
+                ''')
+
+  createLumericalScript(lsf_file, script_txt, dry_run=args.dry_run)
+  runLumericalScript(lsf_file, args.fsp_file, dry_run=args.dry_run, workdir=workdir)
+
+def subCommand_loadsweepJobs(args):
+  print(args)
+
+  workdir = os.path.relpath(os.path.dirname(os.path.abspath(args.fsp_file)))
+  print('workdir:', workdir)
+
+  base, ext = os.path.splitext(os.path.basename(args.fsp_file))
+  lsf_file = os.path.join(workdir, f'{base}.loadsweep.lsf')
+  print('lsf_file:', lsf_file)
+
+  script_txt = textwrap.dedent(f'''\
+                write('write: Loading files for sweep {args.sweepname}...');
+                loadsweep('{args.sweepname}');
+                write('write: DONE');
+                ''')
+
+  createLumericalScript(lsf_file, script_txt, dry_run=args.dry_run)
+  runLumericalScript(lsf_file, args.fsp_file, dry_run=args.dry_run, workdir=workdir)
+
+def subCommand_runscriptJobs(args):
+  lsf_file = os.path.abspath(args.lsf_file)
+  print('lsf_file:', lsf_file)
+  for idx, f in enumerate(args.fsp_files):
+    workdir = os.path.relpath(os.path.dirname(os.path.abspath(f)))
+    runLumericalScript(lsf_file, f, dry_run=args.dry_run, workdir=workdir)
+  
 def main():
   parser = argparse.ArgumentParser(description='Manage lumerical jobs.')
   # parser.add_argument('fsp_files', metavar='FSP', nargs='+', help='.fsp files')
@@ -210,12 +276,33 @@ def main():
   # parser_submit.add_argument('y', type=float)
   parser_submit.set_defaults(func=submitJobs)
   
-  # create the parser for the "submit" command
-  parser_submit = subparsers.add_parser('cleanup', help='Remove .o, .e, .log files.')
-  parser_submit.add_argument('fsp_files', metavar='FSP', nargs='+', help='.fsp files')
-  parser_submit.add_argument('-n', '--dry-run', action='store_true', help='Only list files that would be removed, without removing them.')
-  parser_submit.set_defaults(func=subCommand_cleanupJobs)
+  # create the parser for the "cleanup" command
+  parser_cleanup = subparsers.add_parser('cleanup', help='Remove .o, .e, .log files.')
+  parser_cleanup.add_argument('fsp_files', metavar='FSP', nargs='+', help='.fsp files')
+  parser_cleanup.add_argument('-n', '--dry-run', action='store_true', help='Only list files that would be removed, without removing them.')
+  parser_cleanup.set_defaults(func=subCommand_cleanupJobs)
   
+  # create the parser for the "savesweep" command
+  parser_savesweep = subparsers.add_parser('savesweep', help='Create sweep files.')
+  parser_savesweep.add_argument('fsp_file', help='.fsp file')
+  parser_savesweep.add_argument('sweepname', help='Name of the sweep in the .fsp file.')
+  parser_savesweep.add_argument('-n', '--dry-run', action='store_true', help='Show what would be done only.')
+  parser_savesweep.set_defaults(func=subCommand_savesweepJobs)
+
+  # create the parser for the "loadsweep" command
+  parser_loadsweep = subparsers.add_parser('loadsweep', help='Load sweep files.')
+  parser_loadsweep.add_argument('fsp_file', help='.fsp file')
+  parser_loadsweep.add_argument('sweepname', help='Name of the sweep in the .fsp file.')
+  parser_loadsweep.add_argument('-n', '--dry-run', action='store_true', help='Show what would be done only.')
+  parser_loadsweep.set_defaults(func=subCommand_loadsweepJobs)
+
+  # create the parser for the "runscript" command
+  parser_runscript = subparsers.add_parser('runscript', help='Run script file.', description='Run the same script on multiple .fsp files, running each in its own subdirectory.')
+  parser_runscript.add_argument('lsf_file', help='.lsf file to run on each .fsp file.', metavar='LSF_SCRIPT')
+  parser_runscript.add_argument('fsp_files', metavar='FSP', nargs='+', help='.fsp files')
+  parser_runscript.add_argument('-n', '--dry-run', action='store_true', help='Show what would be done only.')
+  parser_runscript.set_defaults(func=subCommand_runscriptJobs)
+
   args = parser.parse_args()
   # print(args)
   if 'func' in args:
