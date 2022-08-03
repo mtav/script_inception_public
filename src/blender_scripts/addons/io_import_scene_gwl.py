@@ -30,8 +30,8 @@
 bl_info = {
     'name': 'Import GWL Format (.gwl)',
     'author': 'mtav',
-    'version': (0, 0, 1),
-    'blender': (2, 63, 0),
+    'version': (2022, 8, 3),
+    'blender': (3, 2, 0),
     'location': 'File > Import > GWL (.gwl)',
     'description': 'Import files in the GWL format (.gwl)',
     'warning': '',
@@ -88,14 +88,25 @@ def menu_func_import(self, context):
     self.layout.operator(ImportGWL.bl_idname, text="GWL (.gwl)")
 
 def register():
+    print('registering ', os.path.basename(__file__))
     bpy.utils.register_class(ImportGWL)
-    bpy.types.INFO_MT_file_import.append(menu_func_import)
+    if bpy.app.version >= (2, 80, 0):
+      bpy.types.TOPBAR_MT_file_import.append(menu_func_import)
+    else:
+      bpy.types.INFO_MT_file_import.append(menu_func_import)
+      raise
 
 def unregister():
+    print('unregistering ', os.path.basename(__file__))
     bpy.utils.unregister_class(ImportGWL)
-    bpy.types.INFO_MT_file_import.remove(menu_func_import)
+    if bpy.app.version >= (2, 80, 0):
+      bpy.types.TOPBAR_MT_file_import.remove(menu_func_import)
+    else:
+      bpy.types.INFO_MT_file_import.remove(menu_func_import)
+      raise
 
 if __name__ == "__main__":
+    print('main:', os.path.basename(__file__))
     register()
     # test call
     bpy.ops.import_gwl.gwl('INVOKE_DEFAULT')

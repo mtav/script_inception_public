@@ -52,3 +52,11 @@ Reference notes for upgrading addons to Blender >=2.80:
   bpy.context.object.draw_type -> bpy.context.object.display_type
 
 10) Matrix multiplication: A*B replaced by A@B
+
+11) dupli_type missing:
+    bpy.context.object.dupli_type = 'VERTS'
+    -> bpy.context.object.instance_type = 'VERTS'
+
+Extra notes:
+============
+Addon not registering/loading? -> Check for imports of other modules with bl_info definitions in them.

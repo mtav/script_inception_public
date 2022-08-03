@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 # To make Blender happy:
-bl_info = {"name":"GWL_import", "category": "User"}
+#bl_info = {"name":"GWL_import", "category": "User"}
 
 """
 Name: 'GWL (*.gwl)'
@@ -235,7 +235,12 @@ def importGWL(filename):
     mesh_new = bpy.data.meshes.new(name=os.path.basename(filename))
     mesh_new.from_pydata(verts, edges, faces)
     object_utils.object_data_add(bpy.context, mesh_new)
-    bpy.context.object.dupli_type = 'VERTS'
+    
+    # pre-enable Duplication Vertices (or DupliVerts)
+    if bpy.app.version >= (2, 80, 0):
+      bpy.context.object.instance_type = 'VERTS'
+    else:
+      bpy.context.object.dupli_type = 'VERTS'
     
     #add_object_data(bpy.context, mesh_new)
     # useful for development when the mesh may be invalid.
