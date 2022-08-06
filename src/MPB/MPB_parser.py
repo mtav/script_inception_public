@@ -252,6 +252,7 @@ class MPB_Gap():
 def parse_MPB(infile, verbosity=0, merge_datasets=False):
   '''
   Parses an MPB output ".out" file (command-line output from MPB).
+  infile: A io.TextIOWrapper instance, as returned by f=open(path)
   Returns a list of **MPB_data** instances.
   '''
 
