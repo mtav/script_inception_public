@@ -99,8 +99,82 @@ class DBR():
         period = self.t1 + self.t2
         return period
     
-    # def getBandEdges(self, omega_min=1, omega_max=, beta=1, Spol=True):
-    #     return xs,
+    def getBandEdges(self, omega=1, beta=1, Spol=True):
+        # get matrix elements
+        (A,B,C,D) = self.getMatrixElements(omega=omega, beta=beta, Spol=Spol)
+        cosval = np.abs((1/2)*(A+D))
+    
+        # create dataframe that will contain the band edge data
+        df = pd.DataFrame()
+    
+        xs = []
+        ys = []
+        xs_list = []
+        ys_list = []
+        for slice_idx, plot_X_slice in enumerate(plot_X[:,0]):
+                
+            x = omega_normalized[slice_idx,:]
+            y = cosval[slice_idx,:]
+            y2 = np.abs(y-1)
+            idx = argrelmin(y2)
+            r1 = x[idx]
+            
+            ys = np.append(ys, r1)
+            xs = np.append(xs, np.ones_like(r1)*plot_X_slice)
+            ys_list.append(r1)
+            xs_list.append(np.ones_like(r1)*plot_X_slice)
+    
+            col = pd.DataFrame(data=r1, columns=[plot_X_slice])
+            df = pd.concat([df, col], axis=1)
+    
+            # print(y.shape)
+            # print(y)
+        
+        df = df.T
+        df.columns = [f'band_{i}' for i in df.columns]
+        print('===> DATAFRAME')
+        print(df)
+        print('==============')
+        df.plot(style='b.', legend=False, markersize=1)
+        plt.title('dataframe scatter')
+    
+        df.plot(legend=False, linewidth=1)
+        plt.title('dataframe lines')
+        # df.plot.scatter(x=df.index)
+        # return
+        
+        L = [len(i) for i in ys_list]
+        L = np.array(L)
+        Nmax = max(L)
+        print('Nmax:', Nmax)
+        Nmin = min(L)
+        print('Nmin:', Nmin, L.argmin(), plot_X[:,0][L.argmin()])
+        
+        x_ordered = plot_X[:,0]
+        y_ordered = np.ones((len(x_ordered), Nmax))*np.nan
+        # for i in range(len(x_ordered)):
+        #     y_ordered[i,:] = ys_list[i]
+            
+        print('---------')
+        print(y_ordered)
+        print('---------')
+        print(y_ordered.shape)
+        print('---------')
+        
+        print(xs)
+        print(ys)
+        print(xs.shape)
+        print(ys.shape)
+        plt.figure()
+        plt.scatter(xs, ys, marker='.', color='r', s=1)
+        plt.title('xs, ys')
+        for fn in [f1,f2,f3,f4]:
+            plt.figure(fn.number)
+            plt.scatter(xs, ys, marker='.', color='r', s=1)
+            plt.axvline(x=plot_X[:,0][L.argmin()])
+            for i in ys_list[L.argmin()]:
+                plt.axhline(y=i)
+        return
 
 def plot2D(x,y,z):
     # z_min, z_max = -abs(z).max(), abs(z).max()
@@ -223,43 +297,64 @@ def testBrewsterAngles():
     foo.n2=1.33
     print(f'-> Brewster angles for n1={foo.n1}, n2={foo.n2}:\n in radians: {foo.getBrewsterAngles()}\n in degrees: {foo.getBrewsterAngles(degrees=True)}')
 
-def findBandEdges(dbr_instance=DBR(), Spol=True):
-    omega_normalized = np.linspace(0, 1.4, 300)
-    beta_normalized = np.linspace(0, 1, 200)
+def findBandEdges(dbr_instance=DBR(), Spol=True, n_in = DBR.n1, vs_angle=False):
+    if vs_angle:
+        ##### vs angle
+        omega_normalized = np.linspace(0, 1.4, 300)
+        angle_deg = np.linspace(0, 90, 300)
+    
+        omega_normalized, angle_deg = np.meshgrid(omega_normalized, angle_deg)
+    
+        omega = omega_normalized * (2*np.pi*get_c0()/dbr_instance.getPeriod())
+            
+        angle_rad = np.deg2rad(angle_deg)
+    
+        beta = (omega*n_in/get_c0()) * np.sin(angle_rad)
+        beta_normalized = beta / (2*np.pi/dbr_instance.getPeriod())
+    
+        plot_X = angle_deg
+        plot_X_label = r"Incident angle $\theta_{in}$ (degrees)"
+        ##############################################################
 
-    omega_normalized, beta_normalized = np.meshgrid(omega_normalized, beta_normalized)
+    else:
+        ##### vs ky
+        omega_normalized = np.linspace(0, 1.4, 300)
+        beta_normalized = np.linspace(0, 1, 200)
+    
+        omega_normalized, beta_normalized = np.meshgrid(omega_normalized, beta_normalized)
+    
+        omega = omega_normalized * (2*np.pi*get_c0()/dbr_instance.getPeriod())
+        beta = beta_normalized * (2*np.pi/dbr_instance.getPeriod())
+        plot_X = beta_normalized
+        plot_X_label = "Wave vector $k_y a/(2\pi)$"
+        ##############################################################
 
-    omega = omega_normalized * (2*np.pi*get_c0()/dbr_instance.getPeriod())
-    beta = beta_normalized * (2*np.pi/dbr_instance.getPeriod())
+    title_base = fr"Spol={Spol}, $n_{{in}}$={n_in}"
 
     K_Spol = dbr_instance.getK(omega=omega, beta=beta, Spol=Spol)
 
-    f1 = plot2D(beta_normalized, omega_normalized, np.isreal(K_Spol)) # plot bands for reference
-    plt.xlabel("Wave vector $k_y a/(2\pi)$")
+    f1 = plot2D(plot_X, omega_normalized, np.isreal(K_Spol)) # plot bands for reference
+    plt.xlabel(plot_X_label)
     plt.ylabel("Frequency $\omega a / (2 \pi c)$")
-    plt.title(f"Spol={Spol}")
-    # plt.axvline(x=beta_normalized_slice, color='r')
+    plt.title(fr"{title_base}: isreal(K)")
 
-    f2 = plot2D(beta_normalized, omega_normalized, np.abs(K_Spol)) # plot bands for reference
-    plt.xlabel("Wave vector $k_y a/(2\pi)$")
+    f2 = plot2D(plot_X, omega_normalized, np.abs(K_Spol)) # plot bands for reference
+    plt.xlabel(plot_X_label)
     plt.ylabel("Frequency $\omega a / (2 \pi c)$")
-    plt.title(f"Spol={Spol}: abs(K)")
+    plt.title(fr"{title_base}: abs(K)")
     
-    f3 = plot2D(beta_normalized, omega_normalized, np.real(K_Spol)) # plot bands for reference
-    plt.xlabel("Wave vector $k_y a/(2\pi)$")
+    f3 = plot2D(plot_X, omega_normalized, np.real(K_Spol)) # plot bands for reference
+    plt.xlabel(plot_X_label)
     plt.ylabel("Frequency $\omega a / (2 \pi c)$")
-    plt.title(f"Spol={Spol}: real(K)")
+    plt.title(fr"{title_base}: real(K)")
     
-    f4 = plot2D(beta_normalized, omega_normalized, np.imag(K_Spol)) # plot bands for reference
-    plt.xlabel("Wave vector $k_y a/(2\pi)$")
+    f4 = plot2D(plot_X, omega_normalized, np.imag(K_Spol)) # plot bands for reference
+    plt.xlabel(plot_X_label)
     plt.ylabel("Frequency $\omega a / (2 \pi c)$")
-    plt.title(f"Spol={Spol}: imag(K)")
+    plt.title(fr"{title_base}: imag(K)")
 
     (A,B,C,D) = dbr_instance.getMatrixElements(omega=omega, beta=beta, Spol=Spol)
     cosval = np.abs((1/2)*(A+D))
-
-    # f2 = plot2D(beta_normalized, omega_normalized, np.isclose(cosval,1, atol=6e-2)) # plot values close to 1
-    # plt.axvline(x=beta_normalized_slice, color='r')
 
     df = pd.DataFrame()
 
@@ -267,26 +362,21 @@ def findBandEdges(dbr_instance=DBR(), Spol=True):
     ys = []
     xs_list = []
     ys_list = []
-    for beta_normalized_slice_idx, beta_normalized_slice in enumerate(beta_normalized[:,0]):
-        # beta_normalized_slice = 0.6
-        # beta_normalized_slice_idx = np.abs(beta_normalized[:,0] - beta_normalized_slice).argmin()
+    for slice_idx, plot_X_slice in enumerate(plot_X[:,0]):
             
-        x = omega_normalized[beta_normalized_slice_idx,:]
-        y = cosval[beta_normalized_slice_idx,:]
+        x = omega_normalized[slice_idx,:]
+        y = cosval[slice_idx,:]
         y2 = np.abs(y-1)
         idx = argrelmin(y2)
         r1 = x[idx]
         
         ys = np.append(ys, r1)
-        xs = np.append(xs, np.ones_like(r1)*beta_normalized_slice)
+        xs = np.append(xs, np.ones_like(r1)*plot_X_slice)
         ys_list.append(r1)
-        xs_list.append(np.ones_like(r1)*beta_normalized_slice)
+        xs_list.append(np.ones_like(r1)*plot_X_slice)
 
-        col = pd.DataFrame(data=r1, columns=[beta_normalized_slice])
+        col = pd.DataFrame(data=r1, columns=[plot_X_slice])
         df = pd.concat([df, col], axis=1)
-
-        # print(y.shape)
-        # print(y)
     
     df = df.T
     df.columns = [f'band_{i}' for i in df.columns]
@@ -294,10 +384,10 @@ def findBandEdges(dbr_instance=DBR(), Spol=True):
     print(df)
     print('==============')
     df.plot(style='b.', legend=False, markersize=1)
-    plt.title('dataframe scatter')
+    plt.title(f'{title_base}: dataframe scatter')
 
     df.plot(legend=False, linewidth=1)
-    plt.title('dataframe lines')
+    plt.title(f'{title_base}: dataframe lines')
     # df.plot.scatter(x=df.index)
     # return
     
@@ -306,9 +396,9 @@ def findBandEdges(dbr_instance=DBR(), Spol=True):
     Nmax = max(L)
     print('Nmax:', Nmax)
     Nmin = min(L)
-    print('Nmin:', Nmin, L.argmin(), beta_normalized[:,0][L.argmin()])
+    print('Nmin:', Nmin, L.argmin(), plot_X[:,0][L.argmin()])
     
-    x_ordered = beta_normalized[:,0]
+    x_ordered = plot_X[:,0]
     y_ordered = np.ones((len(x_ordered), Nmax))*np.nan
     # for i in range(len(x_ordered)):
     #     y_ordered[i,:] = ys_list[i]
@@ -325,11 +415,11 @@ def findBandEdges(dbr_instance=DBR(), Spol=True):
     print(ys.shape)
     plt.figure()
     plt.scatter(xs, ys, marker='.', color='r', s=1)
-    plt.title('xs, ys')
+    plt.title(f'{title_base}: xs, ys')
     for fn in [f1,f2,f3,f4]:
         plt.figure(fn.number)
         plt.scatter(xs, ys, marker='.', color='r', s=1)
-        plt.axvline(x=beta_normalized[:,0][L.argmin()])
+        plt.axvline(x=plot_X[:,0][L.argmin()])
         for i in ys_list[L.argmin()]:
             plt.axhline(y=i)
     # plt.figure(f2.number)
@@ -425,8 +515,8 @@ def main():
     # return
     
     foo = DBR()
-    foo.t1 = 0.5
-    foo.t2 = 0.5
+    # foo.t1 = 0.5
+    # foo.t2 = 0.5
     
     # plotDBR(dbr_instance=foo)
     # plotDBR_vs_angle(dbr_instance=foo, n_in=1)
@@ -434,8 +524,12 @@ def main():
     # plotDBR_vs_angle(dbr_instance=foo, n_in=foo.n2)
 
     # testExtremeCases(dbr_instance=foo)
-    findBandEdges(dbr_instance=foo, Spol=True)
+    # findBandEdges(dbr_instance=foo, Spol=True)
     # findBandEdges(dbr_instance=foo, Spol=False)
+    # findBandEdges(dbr_instance=foo, Spol=False, n_in=1)
+    # findBandEdges(dbr_instance=foo, Spol=False, n_in=foo.n1)
+    # findBandEdges(dbr_instance=foo, Spol=False, n_in=foo.n2, vs_angle=False)
+    findBandEdges(dbr_instance=foo, Spol=False, n_in=foo.n2, vs_angle=True)
     
     plt.show()
 
