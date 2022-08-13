@@ -60,6 +60,15 @@ class DBR():
             B = np.exp(-1j*k1x*a) * ( ( 1/2)*1j*(u - v)*np.sin(k2x*b) )
             C = np.exp( 1j*k1x*a) * ( (-1/2)*1j*(u - v)*np.sin(k2x*b) )
             D = np.exp(-1j*k1x*a) * ( np.cos(k2x*b) - (1/2)*1j*(u + v)*np.sin(k2x*b) )
+            
+        ##### when k1x=k2x=0, A=D=1 and B=C=0
+        for idx, val in np.ndenumerate(omega):
+            if k1x[idx]==0 and k2x[idx]==0:
+                A[idx] = 1
+                B[idx] = 0
+                C[idx] = 0
+                D[idx] = 1
+                
         return(A, B, C, D)
 
     def getK(self, omega=1, beta=1, Spol=True):
@@ -96,77 +105,75 @@ def test_plot2D():
     plt.show()
     print(R.shape)
 
-def plotDBR():
-    foo = DBR()
+def plotDBR(dbr_instance = DBR()):
+    
     omega_normalized = np.linspace(0, 1.4, 300)
     beta_normalized = np.linspace(0, 1, 200)
-    omega = omega_normalized * (2*np.pi*get_c0()/foo.getPeriod())
-    beta = beta_normalized * (2*np.pi/foo.getPeriod())
+    omega = omega_normalized * (2*np.pi*get_c0()/dbr_instance.getPeriod())
+    beta = beta_normalized * (2*np.pi/dbr_instance.getPeriod())
     
     Y, X = np.meshgrid(omega, beta)
     YN, XN = np.meshgrid(omega_normalized, beta_normalized)
     
-    K_Spol = foo.getK(omega=Y, beta=X, Spol=True)
+    K_Spol = dbr_instance.getK(omega=Y, beta=X, Spol=True)
     plot2D(XN, YN, np.isreal(K_Spol))
     plt.xlabel("Wave vector $k_y a/(2\pi)$")
     plt.ylabel("Frequency $\omega a / (2 \pi c)$")
     plt.title("S polarization")
 
-    K_Ppol = foo.getK(omega=Y, beta=X, Spol=False)
+    K_Ppol = dbr_instance.getK(omega=Y, beta=X, Spol=False)
     plot2D(XN, YN, np.isreal(K_Ppol))
     plt.xlabel("Wave vector $k_y a/(2\pi)$")
     plt.ylabel("Frequency $\omega a / (2 \pi c)$")
     plt.title("P polarization")
     
-    (thetaB_1_rad, thetaB_2_rad) = foo.getBrewsterAngles(degrees=False)
+    (thetaB_1_rad, thetaB_2_rad) = dbr_instance.getBrewsterAngles(degrees=False)
     
-    slope = 1 / ( foo.n1 * np.sin( thetaB_1_rad ) )
+    slope = 1 / ( dbr_instance.n1 * np.sin( thetaB_1_rad ) )
     plt.plot(beta_normalized, slope*beta_normalized, 'r-', label=r'$slope = 1/(n_1*sin(\theta_{B1}))$')
 
     slope = 1
     plt.plot(beta_normalized, slope*beta_normalized, 'k--', label='$slope = 1$')
 
-    slope = 1/foo.n1
+    slope = 1/dbr_instance.n1
     plt.plot(beta_normalized, slope*beta_normalized, 'g:', label='$slope = 1/n_1$')
 
-    slope = 1/foo.n2
+    slope = 1/dbr_instance.n2
     plt.plot(beta_normalized, slope*beta_normalized, 'b:', label='$slope = 1/n_2$')
 
     plt.legend()
 
-def plotDBR_vs_angle(n_in = DBR.n1):
-    
-    foo = DBR()
+def plotDBR_vs_angle(dbr_instance = DBR(), n_in = DBR.n1):
     
     omega_normalized = np.linspace(0, 1.4, 300)
     angle_deg = np.linspace(0, 90, 300)
 
     omega_normalized, angle_deg = np.meshgrid(omega_normalized, angle_deg)
 
-    omega = omega_normalized * (2*np.pi*get_c0()/foo.getPeriod())
+    omega = omega_normalized * (2*np.pi*get_c0()/dbr_instance.getPeriod())
         
     angle_rad = np.deg2rad(angle_deg)
 
     beta = (omega*n_in/get_c0()) * np.sin(angle_rad)
-    beta_normalized = beta / (2*np.pi/foo.getPeriod())
+    beta_normalized = beta / (2*np.pi/dbr_instance.getPeriod())
     
-    K_Spol = foo.getK(omega=omega, beta=beta, Spol=True)
+    K_Spol = dbr_instance.getK(omega=omega, beta=beta, Spol=True)
     plot2D(angle_deg, omega_normalized, np.isreal(K_Spol))
     plt.xlabel(r"Incident angle $\theta_{in}$ (degrees)")
     plt.ylabel(r"Frequency $\omega a / (2 \pi c)$")
     plt.title(fr"S polarization, $n_{{in}} = {n_in}$")
 
-    K_Ppol = foo.getK(omega=omega, beta=beta, Spol=False)
+    K_Ppol = dbr_instance.getK(omega=omega, beta=beta, Spol=False)
     plot2D(angle_deg, omega_normalized, np.isreal(K_Ppol))
     plt.xlabel(r"Incident angle $\theta_{in}$ (degrees)")
     plt.ylabel(r"Frequency $\omega a / (2 \pi c)$")
     plt.title(fr"P polarization, $n_{{in}} = {n_in}$")
     
-    (thetaB_1_deg, thetaB_2_deg) = foo.getBrewsterAngles(degrees=True)
+    (thetaB_1_deg, thetaB_2_deg) = dbr_instance.getBrewsterAngles(degrees=True)
     plt.axvline(x = thetaB_1_deg, color = 'r', label = r'$\theta_{B1}$')
     plt.axvline(x = thetaB_2_deg, color = 'b', label = r'$\theta_{B2}$')
 
-    plt.axvline(x = np.rad2deg(np.arcsin(foo.n1/foo.n2)), color = 'k', label = r'$\theta_C$')
+    plt.axvline(x = np.rad2deg(np.arcsin(dbr_instance.n1/dbr_instance.n2)), color = 'k', label = r'$\theta_C$')
     plt.legend()
     
 def testBrewsterAngles():
@@ -180,12 +187,65 @@ def testBrewsterAngles():
     foo.n1=1
     foo.n2=1.33
     print(f'-> Brewster angles for n1={foo.n1}, n2={foo.n2}:\n in radians: {foo.getBrewsterAngles()}\n in degrees: {foo.getBrewsterAngles(degrees=True)}')
+
+def findBandEdges(dbr_instance=DBR(), Spol=True):
+    omega_normalized = np.linspace(0, 1.4, 300)
+    beta_normalized = np.linspace(0, 1, 200)
+
+    omega_normalized, beta_normalized = np.meshgrid(omega_normalized, beta_normalized)
+
+    omega = omega_normalized * (2*np.pi*get_c0()/dbr_instance.getPeriod())
+    beta = beta_normalized * (2*np.pi/dbr_instance.getPeriod())
+    
+    K_Spol = dbr_instance.getK(omega=omega, beta=beta, Spol=Spol)
+    plot2D(beta_normalized, omega_normalized, np.isreal(K_Spol))
+    plt.xlabel("Wave vector $k_y a/(2\pi)$")
+    plt.ylabel("Frequency $\omega a / (2 \pi c)$")
+    plt.title("S polarization")
+
+    (A,B,C,D) = dbr_instance.getMatrixElements(omega=omega, beta=beta, Spol=Spol)
+    
+    cosval = np.abs((1/2)*(A+D))
+    
+    plot2D(beta_normalized, omega_normalized, np.isclose(cosval,1, atol=6e-2))
+    x = omega_normalized[0,:]
+    y = cosval[0,:]
+    # print(y.shape)
+    # print(y)
+    plt.figure()
+    plt.plot(y,x)
+    plt.axvline(x=1, color='k', linestyle='--')
+    
+    
+    return
+
+def testExtremeCases(dbr_instance=DBR()):
+    print('-------------------------------')
+    beta = [0, 1, dbr_instance.n1*1/get_c0(), dbr_instance.n2*1/get_c0()]
+    beta = np.array([beta, beta])
+    omega = np.array([[0,0,0,0],[1,1,1,1]])
+
+    for Spol in [True, False]:
+        print(f'===> Spol: {Spol}')
+        (A,B,C,D) = dbr_instance.getMatrixElements(omega=omega, beta=beta, Spol=Spol)
+        for idx,val in np.ndenumerate(omega):
+            print(f'omega={omega[idx]}, beta={beta[idx]}:')
+            M=[[A[idx],B[idx]], [C[idx],D[idx]]]
+            print(M)
     
 def main():
-    plotDBR()
-    plotDBR_vs_angle(n_in=1)
-    plotDBR_vs_angle(n_in=DBR.n1)
-    plotDBR_vs_angle(n_in=DBR.n2)
+    foo = DBR()
+    foo.t1 = 0.5
+    foo.t2 = 0.5
+    
+    # plotDBR(dbr_instance=foo)
+    # plotDBR_vs_angle(dbr_instance=foo, n_in=1)
+    # plotDBR_vs_angle(dbr_instance=foo, n_in=foo.n1)
+    # plotDBR_vs_angle(dbr_instance=foo, n_in=foo.n2)
+
+    # testExtremeCases(dbr_instance=foo)
+    findBandEdges(dbr_instance=foo)
+    
     plt.show()
 
 if __name__ == "__main__":
