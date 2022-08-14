@@ -156,5 +156,9 @@ def plot2D(x,y,z):
     fig.tight_layout()
     #plt.show()
 
-# quarterwavestack()
-reference_DBR()
+def main():
+    # quarterwavestack()
+    reference_DBR()
+    
+if __name__ == "__main__":
+    main()
