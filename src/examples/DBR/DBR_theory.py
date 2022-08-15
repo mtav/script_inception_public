@@ -175,28 +175,6 @@ class plottingRange():
     '''
     A class to handle plotting parameters.
     '''
-    # ##### Public attributes (fundamental)
-    # wvl_1D = None
-    # angle_deg_1D = None
-    # beta_vacuum_1D = None
-    
-    # lattice_constant = None
-    # n_in = None
-    
-    # ##### Private variables (computed when update is called).
-    # ##### They are all 2D
-    # __wvl = None
-    # __angle_deg = None
-    # __beta_vacuum = None # beta in vacuum
-    
-    # __wvl_n = None       # normalized wavelength
-    # __f_n = None         # normalized f and omega f_n = omega_n = (a/lambda)
-    # __f = None
-    # __omega = None
-    
-    # __angle_rad = None
-    # __beta = None        # beta in material
-    # __beta_n = None      # normalized beta
 
     __beta_n_1D = None
     __angle_deg_1D = None
@@ -241,24 +219,7 @@ class plottingRange():
     def omega_1D(self): return (2*np.pi*get_c0()/self.__lattice_constant)*self.__fn_1D
     @property
     def omega_2D(self): return (2*np.pi*get_c0()/self.__lattice_constant)*self.__fn_2D
-    
-    # @property
-    # def wvl(self): return self.__wvl
-    # @property
-    # def angle_deg(self): return self.__angle_deg
-    # @property
-    # def beta_vacuum(self): return self.__beta_vacuum
-    # @property
-    # def f(self): return get_c0()/self.__wvl
-    # @property
-    # def omega(self): return 2*np.pi*get_c0()/self.__wvl
-    # @property
-    # def angle_rad(self): return self.__angle_rad
-    # @property
-    # def beta(self): return self.__beta
-    # @property
-    # def beta_n(self): return self.__beta_n
-    
+        
     def __init__(self,
                  wvl=None,
                  fn=None,
@@ -295,7 +256,7 @@ class plottingRange():
 
     def update(self):
       if self.__beta_n_1D is not None:
-        print('==> X = beta_n_1D')
+        # print('==> X = beta_n_1D')
         self.__fn_2D, self.__beta_n_2D = np.meshgrid(self.__fn_1D, self.__beta_n_1D)
         
         with warnings.catch_warnings():
@@ -303,21 +264,9 @@ class plottingRange():
           warnings.filterwarnings("ignore", category=RuntimeWarning, message="invalid value encountered in true_divide", append=False)
           warnings.filterwarnings("ignore", category=RuntimeWarning, message="invalid value encountered in arcsin", append=False)
           self.__angle_deg_2D = np.rad2deg( np.arcsin( self.__beta_n_2D / (self.__n_in * self.__fn_2D) ) )
-        
-        # omega_normalized = np.linspace(0, 1.4, 300)
-        # if vs_K_normal:
-        #     beta_normalized = 0
-        # else:
-        #     beta_normalized = np.linspace(0, n_in*1.4, 200)
-
-        # omega = omega_normalized * (2*np.pi*get_c0()/dbr_instance.getPeriod())
-        # beta = beta_normalized * (2*np.pi/dbr_instance.getPeriod())
-
-        # plot_X = beta_normalized
-        # plot_X_label = "Wave vector $k_y a/(2\pi)$"
 
       elif self.__angle_deg_1D is not None:
-        print('==> X = angle_deg_1D')
+        # print('==> X = angle_deg_1D')
         self.__fn_2D, self.__angle_deg_2D = np.meshgrid(self.__fn_1D, self.__angle_deg_1D)
 
         with warnings.catch_warnings():
@@ -325,33 +274,8 @@ class plottingRange():
           warnings.filterwarnings("ignore", category=RuntimeWarning, message="invalid value encountered in sin", append=False)
           self.__beta_n_2D = self.__n_in * self.__fn_2D * np.sin( np.deg2rad(self.__angle_deg_2D) )
         
-        # omega_normalized = np.linspace(0, 1.4, 400)
-        # angle_deg = np.linspace(0, 90, 300)
-        # omega_normalized, angle_deg = np.meshgrid(omega_normalized, angle_deg)
-
-        # omega = omega_normalized * (2*np.pi*get_c0()/dbr_instance.getPeriod())
-        
-        # angle_rad = np.deg2rad(angle_deg)
-        # beta = (omega*n_in/get_c0()) * np.sin(angle_rad)
-        # beta_normalized = beta / (2*np.pi/dbr_instance.getPeriod())
-    
-        # plot_X = angle_deg
-        # plot_X_label = r"Incident angle $\theta_{in}$ (degrees)"
       else:
         raise
-
-        # with warnings.catch_warnings():
-        #     warnings.filterwarnings("ignore", category=RuntimeWarning, message="invalid value encountered in true_divide", append=True)
-        #     warnings.filterwarnings("ignore", category=RuntimeWarning, message="divide by zero encountered in true_divide", append=True)
-        #     warnings.filterwarnings("ignore", category=RuntimeWarning, message="invalid value encountered in cdouble_scalars", append=True)
-        #     warnings.filterwarnings("ignore", category=RuntimeWarning, message="divide by zero encountered in cdouble_scalars", append=True)
-        #     warnings.filterwarnings("error", append=True)
-
-      # self.__f = get_c0()/self.__wvl
-      # self.__omega = 2*np.pi*get_c0()/self.__wvl
-      # self.__wvl_n = self.__wvl / self.lattice_constant
-      # self.__f_n = self.lattice_constant / self.__wvl
-
 
       return
 
@@ -398,37 +322,16 @@ class plottingRange():
       s+=f'beta_n_2D = {self.beta_n_2D}\n'
 
       return s
-    
-    # def setWavelength(self, wvl):
-    #   # self.omega_normalized = self.lattice_constant / wvl
-    #   self.wvl = wvl
-
-    # def setOmegaNormalized(self, fn):
-    #   self.wvl = self.lattice_constant / fn
-
-    # def setBetaNormalized(self, beta_normalized):
-    #   angle_rad = np.arcsin( beta_normalized / (self.n_in*self.omega_normalized) )
-    #   self.angle_deg = np.rad2deg(angle_rad)
-    
-    # def getWavelength():
-    #   # wvl = self.lattice_constant / self.omega_normalized
-    #   return self.wvl
-    
-    # def getOmega(self):
-    #   omega = self.omega_normalized * (2*np.pi*get_c0()/self.lattice_constant)
-    #   return omega
-    
-    # def getAngleRad(self):
-    #   angle_rad = np.deg2rad(self.angle_deg)
-    #   return angle_rad
-      
-    # def getBeta(self):
-    #   beta = (omega*self.n_in/get_c0()) * np.sin(self.getAngleRad())
-    #   return beta
-    
-    # def getBetaNormalized(self):
-    #   beta_normalized = self.getBeta() / (2*np.pi/self.lattice_constant)
-    #   return beta_normalized
+  
+    def is_vs_angle(self):
+        '''Returns True if arrays are defined based on angle, else returns False.'''
+        if self.__beta_n_1D is not None:
+          return False
+        elif self.__angle_deg_1D is not None:
+          return True
+        else:
+          raise
+        pass
 
 def plot2D(x,y,z):
     # z_min, z_max = -abs(z).max(), abs(z).max()
@@ -826,83 +729,67 @@ def findBandEdgesAnalysis(dbr_instance=DBR(), Spol=True, n_in = DBR.n1, vs_angle
     
     return
 
-def findBandEdges(dbr_instance=DBR(), Spol=False, n_in = DBR.n1, vs_angle=False, details=False, vs_K_normal=False):
+def findBandEdges(dbr_instance=DBR(), Spol=False, n_in = DBR.n1, vs_angle=None, details=False, vs_K_normal=False, pr=None, vs_wavelength=False):
 
     title_base = fr"Spol={Spol}, $n_{{in}}$={n_in}"
 
+    if pr is None:
+        pr = getTestPlottingRanges(vs_angle, vs_K_normal, n_in, dbr_instance)
+    
+    omega_normalized = pr.fn_2D
+    angle_deg = pr.angle_deg_2D
+    omega = pr.omega_2D
+    beta = pr.beta_2D
+    beta_normalized = pr.beta_n_2D
+
+    # define vs_angle based on pr
+    if vs_angle is None:
+        vs_angle = pr.is_vs_angle()
+    
     if vs_angle and not vs_K_normal:
         ##### vs angle
-        omega_normalized = np.linspace(0, 1.4, 400)
-        angle_deg = np.linspace(0, 90, 300)
-        
-        pr = plottingRange(fn=omega_normalized, angle_deg=angle_deg, n_in=n_in)
-        omega_normalized = pr.fn_2D
-        angle_deg = pr.angle_deg_2D
-        omega = pr.omega_2D
-        beta = pr.beta_2D
-        beta_normalized = pr.beta_n_2D
-        
-        # omega_normalized, angle_deg = np.meshgrid(omega_normalized, angle_deg)
-
-        # omega = omega_normalized * (2*np.pi*get_c0()/dbr_instance.getPeriod())
-        
-        # angle_rad = np.deg2rad(angle_deg)
-        # beta = (omega*n_in/get_c0()) * np.sin(angle_rad)
-        # beta_normalized = beta / (2*np.pi/dbr_instance.getPeriod())
-    
         plot_X = angle_deg
         plot_X_label = r"Incident angle $\theta_{in}$ (degrees)"
     else:
         ##### vs ky
-        omega_normalized = np.linspace(0, 1.4, 300)
-        if vs_K_normal:
-            beta_normalized = 0
-        else:
-            beta_normalized = np.linspace(0, n_in*1.4, 200)
-
-        pr = plottingRange(fn=omega_normalized, beta_normalized=beta_normalized, n_in=n_in)
-        omega_normalized = pr.fn_2D
-        angle_deg = pr.angle_deg_2D
-        omega = pr.omega_2D
-        beta = pr.beta_2D
-        beta_normalized = pr.beta_n_2D
-
-        # omega_normalized, beta_normalized = np.meshgrid(omega_normalized, beta_normalized)
-
-        # omega = omega_normalized * (2*np.pi*get_c0()/dbr_instance.getPeriod())
-        # beta = beta_normalized * (2*np.pi/dbr_instance.getPeriod())
-
         plot_X = beta_normalized
         plot_X_label = "Wave vector $k_y a/(2\pi)$"
-        
+
+    if vs_wavelength:        
+        plot_Y = pr.wvl_2D*1e9
+        plot_Y_label = "Wavelength $\lambda_0$ (nm)"
+    else:
+        plot_Y = pr.fn_2D
+        plot_Y_label = "Frequency $\omega a / (2 \pi c)$"
+    
     ##### compute values
     K_normal = dbr_instance.getK(omega=omega, beta=beta, Spol=Spol)
-    df, df_idx = dbr_instance.getBandEdges(omega=omega, beta=beta, Spol=Spol, plot_X=plot_X, plot_Y=omega_normalized)
+    df, df_idx = dbr_instance.getBandEdges(omega=omega, beta=beta, Spol=Spol, plot_X=plot_X, plot_Y=plot_Y)
 
     ##### create plots
     if not vs_K_normal:
-        f1 = plot2D(plot_X, omega_normalized, np.isreal(K_normal)) # plot bands for reference
+        f1 = plot2D(plot_X, plot_Y, np.isreal(K_normal)) # plot bands for reference
         plt.xlabel(plot_X_label)
-        plt.ylabel("Frequency $\omega a / (2 \pi c)$")
+        plt.ylabel(plot_Y_label)
         plt.title(fr"{title_base}: isreal(K)")
         df.plot(style='r.', legend=False, markersize=1, ax=plt.gca())
     
         if details:
-            f2 = plot2D(plot_X, omega_normalized, np.abs(K_normal)) # plot bands for reference
+            f2 = plot2D(plot_X, plot_Y, np.abs(K_normal)) # plot bands for reference
             plt.xlabel(plot_X_label)
-            plt.ylabel("Frequency $\omega a / (2 \pi c)$")
+            plt.ylabel(plot_Y_label)
             plt.title(fr"{title_base}: abs(K)")
             df.plot(style='r.', legend=False, markersize=1, ax=plt.gca())
             
-            f3 = plot2D(plot_X, omega_normalized, np.real(K_normal)) # plot bands for reference
+            f3 = plot2D(plot_X, plot_Y, np.real(K_normal)) # plot bands for reference
             plt.xlabel(plot_X_label)
-            plt.ylabel("Frequency $\omega a / (2 \pi c)$")
+            plt.ylabel(plot_Y_label)
             plt.title(fr"{title_base}: real(K)")
             df.plot(style='r.', legend=False, markersize=1, ax=plt.gca())
             
-            f4 = plot2D(plot_X, omega_normalized, np.imag(K_normal)) # plot bands for reference
+            f4 = plot2D(plot_X, plot_Y, np.imag(K_normal)) # plot bands for reference
             plt.xlabel(plot_X_label)
-            plt.ylabel("Frequency $\omega a / (2 \pi c)$")
+            plt.ylabel(plot_Y_label)
             plt.title(fr"{title_base}: imag(K)")
             df.plot(style='r.', legend=False, markersize=1, ax=plt.gca())
         
@@ -913,11 +800,11 @@ def findBandEdges(dbr_instance=DBR(), Spol=False, n_in = DBR.n1, vs_angle=False,
             # print(idx, val, np.isreal(val))
             if np.isreal(val):
                 x.append( np.real(val) / (2*np.pi/dbr_instance.getPeriod()) )
-                y.append( omega_normalized[idx] )
+                y.append( plot_Y[idx] )
         plt.figure()
         plt.scatter(x, y, marker='.', s=1)
         plt.xlabel("Wave vector $k_{normal}$ $a/(2\pi)$")
-        plt.ylabel("Frequency $\omega a / (2 \pi c)$")
+        plt.ylabel(plot_Y_label)
         plt.title(title_base)
         # plt.figure()
         # plt.imshow(np.isreal(K_normal))
@@ -1000,6 +887,31 @@ def testDataFrameConversion():
    # K[1,2]=np.nan
     print(K)
 
+def getTestPlottingRanges(vs_angle, vs_K_normal, n_in, dbr_instance):
+    
+    fn = np.linspace(0, 1.4, 400) # non-zero fn needed to plot vs lambda
+    # fn = np.linspace(1e-2, 1.4, 400) # non-zero fn needed to plot vs lambda
+    
+    if vs_angle and not vs_K_normal:
+        ##### vs angle
+        pr = plottingRange(fn=fn,
+                           angle_deg=np.linspace(0, 90, 300),
+                           n_in=n_in,
+                           lattice_constant=dbr_instance.getPeriod())
+    else:
+        ##### vs ky
+        if vs_K_normal:
+            beta_normalized = 0
+        else:
+            beta_normalized = np.linspace(0, n_in*1.4, 200)
+
+        pr = plottingRange(fn=fn,
+                           beta_normalized=beta_normalized,
+                           n_in=n_in,
+                           lattice_constant=dbr_instance.getPeriod())
+
+    return pr
+        
 def reference_DBR():
     dbr_instance = DBR()
     """
@@ -1017,10 +929,8 @@ def reference_DBR():
     dbr_instance.t1 = 246e-9 #m
     dbr_instance.t2 = 343e-9 #m
     
-    wvl_min_nm = 345.038
-    wvl_max_nm = 1034.95
-    pr = plottingRange(wvl=np.linspace(wvl_min_nm, wvl_max_nm),
-                       angle_deg = np.linspace(0,45,100),
+    pr = plottingRange(wvl=np.linspace(345.038e-9, 1034.95e-9,300),
+                       angle_deg = np.linspace(-45,45,600),
                        n_in=1,
                        lattice_constant=dbr_instance.getPeriod())
 
@@ -1043,20 +953,22 @@ def test_plottingRange():
     foo = plottingRange(n_in=12, lattice_constant=34, fn=fn, angle_deg=x)
     print(foo)
     foo.imshow()
+    a=foo
     
     foo = plottingRange(n_in=12, lattice_constant=34, wvl=y, angle_deg=x)
     print(foo)
     foo.imshow()
+    b=foo
     
     foo = plottingRange(n_in=12, lattice_constant=34, fn=fn, beta_normalized=x)
     print(foo)
     foo.imshow()
-    a=foo
+    c=foo
     
     foo = plottingRange(n_in=12, lattice_constant=34, wvl=y, beta_normalized=x)
     print(foo)
     foo.imshow()
-    b=foo
+    d=foo
     
     plt.figure()
     plt.imshow(foo.fn_2D)
@@ -1064,8 +976,16 @@ def test_plottingRange():
     
     plt.show()
     
-    print(a.angle_deg_2D)
-    print(b.angle_deg_2D)
+    print(a.beta_n_2D)
+    print(b.beta_n_2D)
+    
+    print(c.angle_deg_2D)
+    print(d.angle_deg_2D)
+    
+    print(a.is_vs_angle())
+    print(b.is_vs_angle())
+    print(c.is_vs_angle())
+    print(d.is_vs_angle())
     
   # print(foo.angle_deg)
   # foo = plottingRange(wvl=[1,2,3], beta_normalized=[2,3,4])
@@ -1074,19 +994,35 @@ def test_plottingRange():
   
   return
 
-def main():
-    # test_plottingRange()
-    # return
-    # testFillBands()
-    # test_plot2D()
-    # testPandas()
-    # testDataFrameConversion()
-    # return
-    
+def test_findBandEdges_v1():
+    foo = DBR()
+    findBandEdges(dbr_instance=foo, vs_K_normal=True, vs_angle=False)
+    findBandEdges(dbr_instance=foo, vs_K_normal=False, vs_angle=False)
+    findBandEdges(dbr_instance=foo, Spol=True)
+    findBandEdges(dbr_instance=foo, Spol=False)
+    findBandEdges(dbr_instance=foo, Spol=False, n_in=1)
+    findBandEdges(dbr_instance=foo, Spol=False, n_in=foo.n1)
+    findBandEdges(dbr_instance=foo, Spol=False, n_in=foo.n2, vs_angle=False)
+    findBandEdges(dbr_instance=foo, Spol=False, n_in=foo.n2, vs_angle=True)
+    for Spol in [True,False]:
+        for n_in in [1,foo.n1,foo.n2]:
+            for vs_angle in [False,True]:
+                findBandEdges(dbr_instance=foo, Spol=Spol, n_in=n_in, vs_angle=vs_angle)
+
+def test_findBandEdges_v2():
     foo = DBR()
     pr = plottingRange()
     
-    # foo, pr = reference_DBR()
+    pr00 = getTestPlottingRanges(vs_angle=False, vs_K_normal=False, n_in=foo.n1, dbr_instance=foo)
+    pr01 = getTestPlottingRanges(vs_angle=False, vs_K_normal=True, n_in=foo.n1, dbr_instance=foo)
+    pr10 = getTestPlottingRanges(vs_angle=True, vs_K_normal=False, n_in=foo.n1, dbr_instance=foo)
+    pr11 = getTestPlottingRanges(vs_angle=True, vs_K_normal=True, n_in=foo.n1, dbr_instance=foo)
+
+    # pr = pr00
+    # pr = pr10
+    # print(pr.is_vs_angle())
+    # return
+    
     # foo.t1 = 0.5
     # foo.t2 = 0.5
     
@@ -1096,24 +1032,38 @@ def main():
     # plotDBR_vs_angle(dbr_instance=foo, n_in=foo.n2)
 
     # testExtremeCases(dbr_instance=foo)
+    # for pr in [pr00,pr01,pr10,pr11]:
+    # for Spol in [True, False]:
+    #     findBandEdges(dbr_instance=foo, vs_angle=False, vs_K_normal=True, n_in=foo.n1, Spol=Spol, pr=pr01)
+    #     findBandEdges(dbr_instance=foo, vs_angle=False, vs_K_normal=False, n_in=foo.n1, Spol=Spol, pr=pr00)
+    #     findBandEdges(dbr_instance=foo, vs_angle=True, vs_K_normal=False, n_in=foo.n1, Spol=Spol, pr=pr10)
+
+    # for pr in [pr00,pr01,pr10,pr11]:
+    for vs_wavelength in [False]:
+        for pr in [pr00,pr10]:
+            for Spol in [True, False]:
+                # findBandEdges(dbr_instance=foo, vs_K_normal=True, n_in=foo.n1, Spol=Spol, pr=pr)
+                findBandEdges(dbr_instance=foo, vs_K_normal=False, n_in=foo.n1, Spol=Spol, pr=pr, vs_wavelength=vs_wavelength)
+                    # findBandEdges(dbr_instance=foo, vs_angle=True, vs_K_normal=False, n_in=foo.n1, Spol=Spol, pr=pr10)
+
+def test_reference_DBR():
+    foo, pr = reference_DBR()
     for Spol in [True, False]:
-        findBandEdges(dbr_instance=foo, vs_K_normal=True, vs_angle=False, n_in=foo.n1, Spol=Spol)
-        findBandEdges(dbr_instance=foo, vs_K_normal=False, vs_angle=False, n_in=foo.n1, Spol=Spol)
-        findBandEdges(dbr_instance=foo, vs_K_normal=False, vs_angle=True, n_in=foo.n1, Spol=Spol)
-    # findBandEdges(dbr_instance=foo, vs_K_normal=True, vs_angle=False)
-    # findBandEdges(dbr_instance=foo, vs_K_normal=False, vs_angle=False)
-    # findBandEdges(dbr_instance=foo, Spol=True)
-    # findBandEdges(dbr_instance=foo, Spol=False)
-    # findBandEdges(dbr_instance=foo, Spol=False, n_in=1)
-    # findBandEdges(dbr_instance=foo, Spol=False, n_in=foo.n1)
-    # findBandEdges(dbr_instance=foo, Spol=False, n_in=foo.n2, vs_angle=False)
-    # findBandEdges(dbr_instance=foo, Spol=False, n_in=foo.n2, vs_angle=True)
-    # for Spol in [True,False]:
-    #     for n_in in [1,foo.n1,foo.n2]:
-    #         for vs_angle in [False,True]:
-    #             findBandEdges(dbr_instance=foo, Spol=Spol, n_in=n_in, vs_angle=vs_angle)
-    # plotOmegaVsKz()
+        findBandEdges(dbr_instance=foo, vs_K_normal=False, n_in=1, Spol=Spol, pr=pr, vs_wavelength=True)
+        findBandEdges(dbr_instance=foo, vs_K_normal=False, n_in=1, Spol=Spol, pr=pr, vs_wavelength=False)
+    
+def main():
+    # test_plottingRange()
+    # testFillBands()
+    # test_plot2D()
+    # testPandas()
+    # testDataFrameConversion()
+    # test_findBandEdges_v1()
+    # test_findBandEdges_v2()
+    test_reference_DBR()
+
     plt.show()
+    print('SUCCESS')
 
 if __name__ == "__main__":
     main()

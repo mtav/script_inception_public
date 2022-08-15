@@ -82,7 +82,13 @@ def quarterwavestack():
     plt.ylabel("a/\lambda")
     return
 
-def reference_DBR():
+def reference_DBR(pol='p',
+                    Nx = 201,
+                    Ny = 400,
+                   # Nx = 21,
+                   # Ny = 40,
+                  ):
+
     wvl_min_nm = 345.038
     wvl_max_nm = 1034.95
   
@@ -115,35 +121,39 @@ def reference_DBR():
     # list of refractive indices
     # n_list = [1, 2.2, 3.3+0.3j, 1]
     # list of wavenumbers to plot in nm^-1
-    ks = linspace(1./wvl_max_nm, 1./wvl_min_nm, num=400)
+    ks = linspace(1./wvl_max_nm, 1./wvl_min_nm, num=Ny)
     #lam_list = linspace(10, 2000, num=40000)
     #ks = 1./lam_list
     
     # initialize lists of y-values to plot
     Rnorm = []
     R45 = []
-    x = linspace(-45,45,201)
+    x = linspace(-45,45,Nx)
     y = 1/ks # wavelength in nm
     Y, X = np.meshgrid(y, x)
     R = np.ones(X.shape)
     for idx, theta_deg in enumerate(x):
         data1D = []
         for k in ks:
-            data1D.append(coh_tmm('p', n_list, d_list, theta_deg*degree, 1/k)['R'])
+            data1D.append(coh_tmm(pol, n_list, d_list, theta_deg*degree, 1/k)['R'])
         R[idx]=data1D
     kcm = ks * 1e7 #ks in cm^-1 rather than nm^-1
 
     # wavelength in nm
-    plot2D(X,Y,R)
+    fig = plot2D(X,Y,R)
     plt.xlabel("Angle (degrees)")
     plt.ylabel("$\lambda (nm)$")
-    plt.show()
+    plt.title(f'pol={pol}')
+    fig.tight_layout()
+    # plt.show()
   
     # normalized frequency
-    plot2D(X, a/Y, R)
+    fig = plot2D(X, a/Y, R)
     plt.xlabel("Angle (degrees)")
     plt.ylabel("$a/\lambda$")
-    plt.show()
+    plt.title(f'pol={pol}')
+    fig.tight_layout()
+    # plt.show()
     return
 
 def plot2D(x,y,z):
@@ -155,10 +165,16 @@ def plot2D(x,y,z):
         
     fig.tight_layout()
     #plt.show()
+    return fig
 
 def main():
     # quarterwavestack()
-    reference_DBR()
+    print('S-pol...')
+    reference_DBR('s')
+    print('P-pol...')
+    reference_DBR('p')
+    print('All done.')
+    plt.show()
     
 if __name__ == "__main__":
     main()
