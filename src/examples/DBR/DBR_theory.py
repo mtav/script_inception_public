@@ -15,6 +15,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 from scipy.signal import argrelextrema, argrelmin, find_peaks
+from tmm import coh_tmm
 
 def get_c0():
     '''
@@ -200,6 +201,10 @@ class plottingRange():
     def angle_deg_1D(self): return self.__angle_deg_1D
     @property
     def angle_deg_2D(self): return self.__angle_deg_2D
+    @property
+    def angle_rad_1D(self): return np.deg2rad(self.__angle_deg_1D)
+    @property
+    def angle_rad_2D(self): return np.deg2rad(self.__angle_deg_2D)
 
     @property
     def fn_1D(self): return self.__fn_1D
@@ -912,7 +917,7 @@ def getTestPlottingRanges(vs_angle, vs_K_normal, n_in, dbr_instance):
 
     return pr
         
-def reference_DBR():
+def reference_DBR(Nx=600,Ny=300):
     dbr_instance = DBR()
     """
     Layer 1) Ta2O5, 246nm, n=2.05
@@ -929,8 +934,9 @@ def reference_DBR():
     dbr_instance.t1 = 246e-9 #m
     dbr_instance.t2 = 343e-9 #m
     
-    pr = plottingRange(wvl=np.linspace(345.038e-9, 1034.95e-9,300),
-                       angle_deg = np.linspace(-45,45,600),
+    pr = plottingRange(wvl=np.linspace(345.038e-9, 1034.95e-9,Ny),
+                       # angle_deg = np.linspace(-45,45,Nx),
+                       angle_deg = np.linspace(-90,90,Nx),
                        n_in=1,
                        lattice_constant=dbr_instance.getPeriod())
 
@@ -1051,6 +1057,125 @@ def test_reference_DBR():
     for Spol in [True, False]:
         findBandEdges(dbr_instance=foo, vs_K_normal=False, n_in=1, Spol=Spol, pr=pr, vs_wavelength=True)
         findBandEdges(dbr_instance=foo, vs_K_normal=False, n_in=1, Spol=Spol, pr=pr, vs_wavelength=False)
+
+def testTMM():
+    for Spol in [True, False]:
+        dbr_instance, pr = reference_DBR(200,300)
+    
+        # pr = plottingRange(wvl=np.linspace(345.038e-9, 1034.95e-9,3),
+        #                    angle_deg = np.linspace(-45,45,6),
+        #                    n_in=1,
+        #                    lattice_constant=dbr_instance.getPeriod())
+    
+        print(pr.angle_deg_2D.shape)
+        print(pr.wvl_2D.shape)
+        # print(pr.angle_deg_1D)
+        # print(pr.wvl_1D)
+        # plt.figure()
+        # plt.imshow(pr.angle_deg_2D)
+        # plt.figure()
+        # plt.imshow(pr.wvl_2D)
+        
+        # Spol = True
+        if Spol:
+            pol = 's'
+        else:
+            pol = 'p'
+        Nlayers = 15
+    
+        d_list = [np.inf] + Nlayers*[dbr_instance.t1, dbr_instance.t2] + [dbr_instance.t1] + [np.inf]
+        n_list = [1] + Nlayers*[dbr_instance.n1, dbr_instance.n2] + [dbr_instance.n1] + [1]
+    
+        # n_list = [1, dbr_instance.n1, dbr_instance.n2, 1]
+        # d_list = [np.inf, dbr_instance.t1, dbr_instance.t2, np.inf]
+        
+        # coh_tmm_for_arrays(pol, n_list, d_list, pr.angle_rad_1D, pr.wvl_1D)
+        ret = coh_tmm_for_arrays(pol, n_list, d_list, pr.angle_rad_2D, pr.wvl_2D)
+    
+        # for k,v in ret.items():
+        #     # print(k,v)
+        #     if k!='pol' and k!='n_list' and k!='d_list':
+        #         plt.figure()
+        #         plt.imshow(np.real(v))
+        #         plt.title(k)
+    
+        fig1 = plot2D(pr.angle_deg_2D, pr.wvl_2D*1e9, ret['T'])
+        plt.xlabel("Angle (degrees)")
+        plt.ylabel("$\lambda (nm)$")
+        plt.title(f'pol={pol}')
+        fig1.tight_layout()
+    
+        fig2 = plot2D(pr.angle_deg_2D, pr.fn_2D, ret['T'])
+        plt.xlabel("Angle (degrees)")
+        plt.ylabel("$a/\lambda$")
+        plt.title(f'pol={pol}')
+        fig2.tight_layout()
+    
+        findBandEdges(dbr_instance=dbr_instance, vs_K_normal=False, n_in=1, Spol=Spol, pr=pr, vs_wavelength=True)
+        findBandEdges(dbr_instance=dbr_instance, vs_K_normal=False, n_in=1, Spol=Spol, pr=pr, vs_wavelength=False)
+    
+        df1, df1_idx = dbr_instance.getBandEdges(omega=pr.omega_2D, beta=pr.beta_2D, Spol=Spol,
+                                               plot_X=pr.angle_deg_2D, plot_Y=pr.wvl_2D*1e9)
+    
+        df2, df2_idx = dbr_instance.getBandEdges(omega=pr.omega_2D, beta=pr.beta_2D, Spol=Spol,
+                                               plot_X=pr.angle_deg_2D, plot_Y=pr.fn_2D)
+    
+        plt.figure(fig1)
+        df1.plot(style='r.', legend=False, markersize=3, ax=plt.gca())
+        plt.figure(fig2)
+        df2.plot(style='r.', legend=False, markersize=3, ax=plt.gca())
+    
+        # pass
+        # s = coh_tmm(pol, n_list, d_list, pr.angle_rad_2D[3,2], pr.wvl_2D[3,2])
+        # for k,v in s.items():
+        #     # print(k,v)
+        #     if k!='pol':
+        #         # print('--> shape:', k, v.shape)
+        #         if v.shape == ():
+        #             print(k)
+
+def testParallelPython():
+    pass
+
+def coh_tmm_for_arrays(pol, n_list, d_list, th_0, lam_vac):
+    '''
+    Wrapper around tmm.coh_tmm() to support numpy arrays.
+    th_0 and lam_vac must be of the same size/shape
+    Note: Unlike coh_tmm, it does not return vw_list, kz_list, th_list.
+    TODO: Parallelize the for loop.
+    '''
+    r = np.ones_like(lam_vac, dtype=np.complex_)*np.nan
+    t = np.ones_like(lam_vac, dtype=np.complex_)*np.nan
+    R = np.ones_like(lam_vac)*np.nan
+    T = np.ones_like(lam_vac)*np.nan
+    power_entering = np.ones_like(lam_vac)*np.nan
+    
+    for idx, val in np.ndenumerate(lam_vac):
+        # print('idx', idx)
+        scalar_dict = coh_tmm(pol, n_list, d_list, th_0[idx], lam_vac[idx])
+        r[idx] = scalar_dict['r']
+        t[idx] = scalar_dict['t']
+        R[idx] = scalar_dict['R']
+        T[idx] = scalar_dict['T']
+        power_entering[idx] = scalar_dict['power_entering']
+        
+    return {'r': r,
+            't': t,
+            'R': R,
+            'T': T,
+            'power_entering': power_entering,
+            'pol': pol,
+            'n_list': n_list,
+            'd_list': d_list,
+            'th_0': th_0,
+            'lam_vac':lam_vac}
+    
+def testNanxyArrays():
+    x = [1,2,3]
+    y = [4,5,6,7]
+    x,y=np.meshgrid(x,y)
+    z = x+y
+    plt.pcolormesh(x,y,z)
     
 def main():
     # test_plottingRange()
@@ -1060,7 +1185,10 @@ def main():
     # testDataFrameConversion()
     # test_findBandEdges_v1()
     # test_findBandEdges_v2()
-    test_reference_DBR()
+    # test_reference_DBR()
+    testTMM()
+    # testParallelPython()
+    # testNanxyArrays()
 
     plt.show()
     print('SUCCESS')
