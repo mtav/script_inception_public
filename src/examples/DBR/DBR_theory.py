@@ -338,8 +338,23 @@ class plottingRange():
           raise
         pass
 
-def plot2D(x,y,z):
+def plot2D(x, y, z, yhack=True):
     # z_min, z_max = -abs(z).max(), abs(z).max()
+    
+    if yhack:
+        if np.isinf(y).any():
+            x = x[:,1:]
+            y = y[:,1:]
+            z = z[:,1:]
+    
+    if np.isinf(x).any():
+        raise Exception('x has infinite values.')
+    if np.isinf(y).any():
+        raise Exception('y has infinite values.')
+    if np.isnan(x).any():
+        raise Exception('x has NaN values.')
+    if np.isnan(y).any():
+        raise Exception('y has NaN values.')
     
     fig = plt.figure()
     # c = plt.pcolormesh(x, y, z, cmap='RdBu', vmin=z_min, vmax=z_max, shading='gouraud')
@@ -892,15 +907,20 @@ def testDataFrameConversion():
    # K[1,2]=np.nan
     print(K)
 
-def getTestPlottingRanges(vs_angle, vs_K_normal, n_in, dbr_instance):
+def getTestPlottingRanges(vs_angle=True,
+                          vs_K_normal=False,
+                          n_in=1,
+                          dbr_instance=DBR(),
+                          Nx=300,
+                          Ny=400):
     
-    fn = np.linspace(0, 1.4, 400) # non-zero fn needed to plot vs lambda
+    fn = np.linspace(0, 1.4, Ny) # non-zero fn needed to plot vs lambda
     # fn = np.linspace(1e-2, 1.4, 400) # non-zero fn needed to plot vs lambda
     
     if vs_angle and not vs_K_normal:
         ##### vs angle
         pr = plottingRange(fn=fn,
-                           angle_deg=np.linspace(0, 90, 300),
+                           angle_deg=np.linspace(0, 90, Nx),
                            n_in=n_in,
                            lattice_constant=dbr_instance.getPeriod())
     else:
@@ -908,7 +928,7 @@ def getTestPlottingRanges(vs_angle, vs_K_normal, n_in, dbr_instance):
         if vs_K_normal:
             beta_normalized = 0
         else:
-            beta_normalized = np.linspace(0, n_in*1.4, 200)
+            beta_normalized = np.linspace(0, n_in*1.4, Nx)
 
         pr = plottingRange(fn=fn,
                            beta_normalized=beta_normalized,
@@ -916,8 +936,30 @@ def getTestPlottingRanges(vs_angle, vs_K_normal, n_in, dbr_instance):
                            lattice_constant=dbr_instance.getPeriod())
 
     return pr
-        
-def reference_DBR(Nx=600,Ny=300):
+
+def reference_DBR_1(Nx, Ny):
+    dbr_instance = DBR()
+    pr = getTestPlottingRanges(vs_angle=True,
+                               vs_K_normal=False,
+                               n_in=dbr_instance.n2,
+                               dbr_instance=dbr_instance,
+                               Nx=Nx,
+                               Ny=Ny)
+    return dbr_instance, pr
+
+def reference_DBR_2(Nx, Ny):
+    dbr_instance = DBR()
+    dbr_instance.t1 = 0.5
+    dbr_instance.t2 = 0.5
+    pr = getTestPlottingRanges(vs_angle=True,
+                               vs_K_normal=False,
+                               n_in=dbr_instance.n2,
+                               dbr_instance=dbr_instance,
+                               Nx=Nx,
+                               Ny=Ny)
+    return dbr_instance, pr
+
+def reference_DBR_3(Nx=600,Ny=300):
     dbr_instance = DBR()
     """
     Layer 1) Ta2O5, 246nm, n=2.05
@@ -1052,23 +1094,39 @@ def test_findBandEdges_v2():
                 findBandEdges(dbr_instance=foo, vs_K_normal=False, n_in=foo.n1, Spol=Spol, pr=pr, vs_wavelength=vs_wavelength)
                     # findBandEdges(dbr_instance=foo, vs_angle=True, vs_K_normal=False, n_in=foo.n1, Spol=Spol, pr=pr10)
 
-def test_reference_DBR():
-    foo, pr = reference_DBR()
+def test_reference_DBR_3():
+    foo, pr = reference_DBR_3()
     for Spol in [True, False]:
         findBandEdges(dbr_instance=foo, vs_K_normal=False, n_in=1, Spol=Spol, pr=pr, vs_wavelength=True)
         findBandEdges(dbr_instance=foo, vs_K_normal=False, n_in=1, Spol=Spol, pr=pr, vs_wavelength=False)
 
-def testTMM():
+def testTMM(Nx=100,Ny=100):
+    print('=== reference_DBR_1 ===')
+    dbr_instance, pr = reference_DBR_1(Nx,Ny)
+    # plt.figure()
+    # plt.imshow(pr.beta_n_2D)
+    # plt.figure()
+    # plt.imshow(pr.angle_deg_2D)
+    plotTMM(dbr_instance, pr)
+    
+    print('=== reference_DBR_2 ===')
+    dbr_instance, pr = reference_DBR_2(Nx,Ny)
+    plotTMM(dbr_instance, pr)
+    
+    print('=== reference_DBR_3 ===')
+    dbr_instance, pr = reference_DBR_3(Nx,Ny)
+    plotTMM(dbr_instance, pr)
+
+def plotTMM(dbr_instance, pr):
     for Spol in [True, False]:
-        dbr_instance, pr = reference_DBR(200,300)
     
         # pr = plottingRange(wvl=np.linspace(345.038e-9, 1034.95e-9,3),
         #                    angle_deg = np.linspace(-45,45,6),
         #                    n_in=1,
         #                    lattice_constant=dbr_instance.getPeriod())
     
-        print(pr.angle_deg_2D.shape)
-        print(pr.wvl_2D.shape)
+        # print(pr.angle_deg_2D.shape)
+        # print(pr.wvl_2D.shape)
         # print(pr.angle_deg_1D)
         # print(pr.wvl_1D)
         # plt.figure()
@@ -1084,7 +1142,7 @@ def testTMM():
         Nlayers = 15
     
         d_list = [np.inf] + Nlayers*[dbr_instance.t1, dbr_instance.t2] + [dbr_instance.t1] + [np.inf]
-        n_list = [1] + Nlayers*[dbr_instance.n1, dbr_instance.n2] + [dbr_instance.n1] + [1]
+        n_list = [pr.n_in] + Nlayers*[dbr_instance.n1, dbr_instance.n2] + [dbr_instance.n1] + [pr.n_in]
     
         # n_list = [1, dbr_instance.n1, dbr_instance.n2, 1]
         # d_list = [np.inf, dbr_instance.t1, dbr_instance.t2, np.inf]
@@ -1099,7 +1157,8 @@ def testTMM():
         #         plt.imshow(np.real(v))
         #         plt.title(k)
     
-        fig1 = plot2D(pr.angle_deg_2D, pr.wvl_2D*1e9, ret['T'])
+        # special handling for nan/inf values
+        fig1 = plot2D(pr.angle_deg_2D, pr.wvl_2D*1e9, ret['T'], yhack=True)
         plt.xlabel("Angle (degrees)")
         plt.ylabel("$\lambda (nm)$")
         plt.title(f'pol={pol}')
@@ -1111,8 +1170,8 @@ def testTMM():
         plt.title(f'pol={pol}')
         fig2.tight_layout()
     
-        findBandEdges(dbr_instance=dbr_instance, vs_K_normal=False, n_in=1, Spol=Spol, pr=pr, vs_wavelength=True)
-        findBandEdges(dbr_instance=dbr_instance, vs_K_normal=False, n_in=1, Spol=Spol, pr=pr, vs_wavelength=False)
+        # findBandEdges(dbr_instance=dbr_instance, vs_K_normal=False, n_in=1, Spol=Spol, pr=pr, vs_wavelength=True)
+        # findBandEdges(dbr_instance=dbr_instance, vs_K_normal=False, n_in=1, Spol=Spol, pr=pr, vs_wavelength=False)
     
         df1, df1_idx = dbr_instance.getBandEdges(omega=pr.omega_2D, beta=pr.beta_2D, Spol=Spol,
                                                plot_X=pr.angle_deg_2D, plot_Y=pr.wvl_2D*1e9)
@@ -1185,7 +1244,7 @@ def main():
     # testDataFrameConversion()
     # test_findBandEdges_v1()
     # test_findBandEdges_v2()
-    # test_reference_DBR()
+    # test_reference_DBR_3()
     testTMM()
     # testParallelPython()
     # testNanxyArrays()
