@@ -1,11 +1,27 @@
+Setup on GNU/Linux:
+-------------------
+Run setup_linux.sh
+
+Setup on Windows:
+-----------------
+Place them into the following directory:
+%APPDATA%\Blender Foundation\Blender\3.2\scripts
+
+Adapt the Blender version number as needed.
+
 Old deprecated Blender 2.49 setup information:
 ----------------------------------------------
 
 To use these scripts in Blender:
 
 -On Windows: Place them into the following directory:
-C:\Documents and Settings\$USER\Application Data\Blender Foundation\Blender\.blender\scripts
+	C:\Documents and Settings\$USER\Application Data\Blender Foundation\Blender\.blender\scripts
+Or on newer Windows versions (Windows 10 and later):
+	C:\Users\$USER\AppData\Roaming\Blender Foundation\Blender\2.93\scripts
 
+	 cygpath "C:\Users\$USERNAME\AppData\Roaming\Blender Foundation\Blender\2.93\scripts"
+	/c/Users/${USERNAME}/AppData/Roaming/Blender Foundation/Blender/2.93/scripts
+  
 -On GNU/Linux: Place them into the following directory:
 ~/.blender/scripts/
 (I recommend creating a symlink to the scripts in the checked out repository instead. That way you can update it easily with "git pull". :) )
