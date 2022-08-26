@@ -5,7 +5,7 @@ bl_info = {
     "name": "Brillouin zone generator",
     "author": "mtav",
     "version": (1, 0),
-    "blender": (2, 76, 0),
+    "blender": (3, 2, 0),
     "location": "View3D > Add > Mesh > Add Brillouin zone",
     "description": "Adds a Brillouin zone mesh",
     "warning": "",
@@ -281,7 +281,7 @@ class AddBrillouinZone(Operator, AddObjectHelper):
     bl_label = "Add Brillouin zone"
     bl_options = {'REGISTER', 'UNDO', 'PRESET'}
 
-    lattice = EnumProperty(
+    lattice : EnumProperty(
       items = (
       ("CS","Cubic simple",""),
       ("H","Hexagonal",""),
@@ -292,7 +292,7 @@ class AddBrillouinZone(Operator, AddObjectHelper):
       ),
       name = "Lattice", default="FCT")
 
-    updating = BoolProperty(name="updating", default=False)
+    updating : BoolProperty(name="updating", default=False)
 
     def update_direct_lattice(self, context):
       if not self.updating:
@@ -312,15 +312,15 @@ class AddBrillouinZone(Operator, AddObjectHelper):
         #print(self.a1, self.a2, self.a3)
         #print(self.b1, self.b2, self.b3)
 
-    a1 = FloatVectorProperty(name="a1", default=Vector((1,0,0)), update = update_direct_lattice)
-    a2 = FloatVectorProperty(name="a2", default=Vector((0,1,0)), update = update_direct_lattice)
-    a3 = FloatVectorProperty(name="a3", default=Vector((0,0,1)), update = update_direct_lattice)
+    a1 : FloatVectorProperty(name="a1", default=Vector((1,0,0)), update = update_direct_lattice)
+    a2 : FloatVectorProperty(name="a2", default=Vector((0,1,0)), update = update_direct_lattice)
+    a3 : FloatVectorProperty(name="a3", default=Vector((0,0,1)), update = update_direct_lattice)
 
-    b1 = FloatVectorProperty(name="b1", default=Vector((1,0,0)), update = update_reciprocal_lattice)
-    b2 = FloatVectorProperty(name="b2", default=Vector((0,1,0)), update = update_reciprocal_lattice)
-    b3 = FloatVectorProperty(name="b3", default=Vector((0,0,1)), update = update_reciprocal_lattice)
+    b1 : FloatVectorProperty(name="b1", default=Vector((1,0,0)), update = update_reciprocal_lattice)
+    b2 : FloatVectorProperty(name="b2", default=Vector((0,1,0)), update = update_reciprocal_lattice)
+    b3 : FloatVectorProperty(name="b3", default=Vector((0,0,1)), update = update_reciprocal_lattice)
 
-    unit_cube_size = FloatVectorProperty(name="unit cube size", default=Vector((1,1,0.8)))
+    unit_cube_size : FloatVectorProperty(name="unit cube size", default=Vector((1,1,0.8)))
 
     def draw(self, context):
         layout = self.layout
@@ -328,29 +328,29 @@ class AddBrillouinZone(Operator, AddObjectHelper):
         
         if self.lattice == "Custom":
           box1 = layout.box()
-          box1.label('Lattice vectors:')
+          box1.label(text='Lattice vectors:')
           box1.prop(self, 'a1')
           box1.prop(self, 'a2')
           box1.prop(self, 'a3')
           box2 = layout.box()
-          box2.label('Reciprocal lattice vectors (/ 2 pi):')
+          box2.label(text='Reciprocal lattice vectors (/ 2 pi):')
           box2.prop(self, 'b1')
           box2.prop(self, 'b2')
           box2.prop(self, 'b3')
         elif self.lattice == "FCT":
           layout.prop(self, 'unit_cube_size')
           box1 = layout.box()
-          box1.label('Lattice vectors:')
+          box1.label(text='Lattice vectors:')
           col1 = box1.column(align=False)
-          col1.label('a1 = {}'.format(self.a1[:]))
-          col1.label('a2 = {}'.format(self.a2[:]))
-          col1.label('a3 = {}'.format(self.a3[:]))
+          col1.label(text='a1 = {}'.format(self.a1[:]))
+          col1.label(text='a2 = {}'.format(self.a2[:]))
+          col1.label(text='a3 = {}'.format(self.a3[:]))
           box2 = layout.box()
-          box2.label('Reciprocal lattice vectors (/ 2 pi):')
+          box2.label(text='Reciprocal lattice vectors (/ 2 pi):')
           col2 = box2.column(align=False)
-          col2.label('b1 = {}'.format(self.b1[:]))
-          col2.label('b2 = {}'.format(self.b2[:]))
-          col2.label('b3 = {}'.format(self.b3[:]))
+          col2.label(text='b1 = {}'.format(self.b1[:]))
+          col2.label(text='b2 = {}'.format(self.b2[:]))
+          col2.label(text='b3 = {}'.format(self.b3[:]))
         
     def execute(self, context):
         if self.lattice == "FCT":
@@ -362,11 +362,11 @@ def menu_func(self, context):
 
 def register():
     bpy.utils.register_class(AddBrillouinZone)
-    bpy.types.INFO_MT_mesh_add.append(menu_func)
+    bpy.types.VIEW3D_MT_mesh_add.append(menu_func)
 
 def unregister():
     bpy.utils.unregister_class(AddBrillouinZone)
-    bpy.types.INFO_MT_mesh_add.remove(menu_func)
+    bpy.types.VIEW3D_MT_mesh_add.remove(menu_func)
 
 if __name__ == '__main__':
     register()
