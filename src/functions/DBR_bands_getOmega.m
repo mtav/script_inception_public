@@ -13,12 +13,12 @@ function wn = DBR_bands_getOmega(k, n1, n2, d1, d2, band_index)
   a = d1 + d2;
   
   if n1 ~= n2
-      g = 2*pi./a;
+      g = 2*pi./a; % normalization factor for wavevectors
       r12_squared = (n2-n1).^2 ./ (n1+n2).^2;
       t12t21 = 4*n1*n2 ./ (n1+n2).^2;
       C = (n1*d1-n2*d2)./(n1*d1+n2*d2);
-      neff = n1*d1+n2*d2;
-      omega_bragg = (get_c0()./neff) .* (pi./a);
+      neff = (n1*d1+n2*d2)./a; % average refractive index (TODO: Check that this is correct and matches simulations.)
+      omega_bragg = (get_c0()./neff) .* (pi./a); % Bragg frequency
 
       % midgap_approximate = a ./ ( 2*(n1 .* d1 + n2 .* d2) );
       [wn_bot, wn_top] = DBR_bands_getBandgap(n1, n2, d1, d2);
