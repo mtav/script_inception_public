@@ -12,8 +12,6 @@ k_points = [mp.Vector3(),          # Gamma
 
 k_points = mp.interpolate(4, k_points)
 
-[mp.Vector3(0, 0, 0), mp.Vector3(0.1, 0.0, 0.0), mp.Vector3(0.2, 0.0, 0.0), mp.Vector3(0.3, 0.0, 0.0), mp.Vector3(0.4, 0.0, 0.0), mp.Vector3(0.5, 0, 0), mp.Vector3(0.5, 0.1, 0.0), mp.Vector3(0.5, 0.2, 0.0), mp.Vector3(0.5, 0.3, 0.0), mp.Vector3(0.5, 0.4, 0.0), mp.Vector3(0.5, 0.5, 0), mp.Vector3(0.4, 0.4, 0.0), mp.Vector3(0.3, 0.3, 0.0), mp.Vector3(0.2, 0.2, 0.0), mp.Vector3(0.1, 0.1, 0.0), mp.Vector3(0, 0, 0)]
-
 geometry = [mp.Cylinder(0.2, material=mp.Medium(epsilon=12))]
 
 geometry_lattice = mp.Lattice(size=mp.Vector3(1, 1))
@@ -32,5 +30,13 @@ ms = mpb.ModeSolver(num_bands=num_bands,
 #print_heading("Square lattice of rods: TE bands")
 ms.run_te()
 
+# quick plotting
+import matplotlib.pyplot as plt
+plt.plot(ms.all_freqs)
+plt.xlabel('k index')
+plt.ylabel('$a/\lambda$')
+plt.show()
+
+# output testing
 ms.run_tm(mpb.output_efield_z)
 ms.run_te(mpb.output_at_kpoint(mp.Vector3(0.5), mpb.output_hfield_z, mpb.output_dpwr))
