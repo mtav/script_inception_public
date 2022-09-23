@@ -16,6 +16,14 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from scipy.signal import argrelextrema, argrelmin, find_peaks
 from tmm import coh_tmm
+import math
+import meep as mp
+from meep import mpb
+import matplotlib.pyplot as plt
+
+# https://blakeaw.github.io/2020-05-25-improve-matplotlib-notebook-inline-res/
+plt.rcParams['figure.dpi'] = 300
+plt.rcParams['savefig.dpi'] = 300
 
 def get_c0():
     '''
@@ -1251,31 +1259,99 @@ def testNanxyArrays():
     z = x+y
     plt.pcolormesh(x,y,z)
 
-def plotMPB():
+def showGeometry(ms, init_params=True, periods=1, resolution=32):
+    if init_params:
+        ms.init_params(p=mp.NO_PARITY, reset_fields=True)
+        eps = ms.get_epsilon()
+        md = mpb.MPBData(rectify=True, periods=periods, resolution=resolution)
+        converted_eps = md.convert(eps)
+    # if is1D:
+    #     # show geometry 1D
+    #     scaley=10
     
-    dbr = DBR()
-    dbr.n1 = 1.5
-    dbr.n2 = 3.5
-    dbr.t1 = 0.5
-    dbr.t2 = 0.5
+    #     # # alternative trick to use imshow on a 1D array
+    #     # bob = np.atleast_2d(converted_eps)
+        
+    #     # simple trick to expand the 1D data along the Y axis
+    #     converted_eps,b = np.meshgrid(converted_eps, range(scaley))
+        
+    # else:
+    #     pass
     
-    pr = plottingRange(beta_normalized=np.linspace(-0.5,0.5),
-                       fn=np.linspace(0,0.30),
-                       lattice_constant=dbr.a)
-    
-    import math
-    import meep as mp
-    from meep import mpb
-    import matplotlib.pyplot as plt
+    # alternative trick to use imshow on a 1D array
+    if len(converted_eps.shape)<=1:
+        plt.imshow(np.atleast_2d(converted_eps))#, interpolation='spline36', cmap='binary')
+    else:
+        plt.imshow(np.atleast_2d(converted_eps).T)#, interpolation='spline36', cmap='binary')
+        
+    ax = plt.gca()
+    ax.set_aspect('auto')
 
+    # plt.ylim([-10,10])
+    plt.colorbar()
+    # plt.axis('square')
+    # plt.axis('off')
+    plt.show()
+
+def plotMPB_1D(dbr, pr):
+
+    num_bands = 8
+    resolution = 32
+    geometry = MPB_getGeometry(dbr)
+    
     geometry_lattice_1D = mp.Lattice(size=mp.Vector3(1, 0, 0))
+
+    k_points = [
+        mp.Vector3(-0.5),          # M
+        mp.Vector3(),               # Gamma
+        mp.Vector3(0.5),          # M
+    ]
+    k_points = mp.interpolate(10, k_points)
+
+    ms_1D = mpb.ModeSolver(
+        geometry = geometry,
+        geometry_lattice = geometry_lattice_1D,
+        k_points = k_points,
+        resolution = resolution,
+        num_bands = num_bands
+    )
+    
+    plt.title('1D')
+    showGeometry(ms_1D)
+    plt.title('1D')
+    showGeometry(ms_1D, periods=3)
+
+    ms_1D.run_tm()
+    # ms.run_tm(mpb.output_at_kpoint(mp.Vector3(-1./3, 1./3), mpb.fix_efield_phase,
+    #           mpb.output_efield_z))
+    tm_freqs = ms_1D.all_freqs
+    tm_gaps = ms_1D.gap_list
+    
+    ms_1D.run_te()
+    te_freqs = ms_1D.all_freqs
+    te_gaps = ms_1D.gap_list
+    
+    x = [k[0] for k in ms_1D.k_points]
+
+    plt.title('1D')
+    plt.plot(x, te_freqs*(2*np.pi*get_c0()/dbr.a)/dbr.getBraggFrequency() )
+    plt.ylim([0,2.5])
+    plt.xlabel('$k_N^x$')
+    plt.ylabel('$\omega/\omega_{Bragg}$')
+    
+    return
+
+def plotMPB_2D(dbr, pr):
+    
+    num_bands = 8
+    resolution = 32
+    geometry = MPB_getGeometry(dbr)
+
     geometry_lattice_2D = mp.Lattice(size=mp.Vector3(1, 1, 0))
                                   # basis_size=mp.Vector3(1, 1),
                                   # basis1=mp.Vector3(math.sqrt(3)/2, 0.5),
                                   # basis2=mp.Vector3(math.sqrt(3)/2, -0.5))
     
-    num_bands = 8
-    resolution = 32
     # geometry_lattice = mp.Lattice(size=mp.Vector3(1, 1),
     #                               basis1=mp.Vector3(math.sqrt(3)/2, 0.5),
     #                               basis2=mp.Vector3(math.sqrt(3)/2, -0.5))
@@ -1288,17 +1364,7 @@ def plotMPB():
     #     basis2=mp.Vector3(1, 0, 1),
     #     basis3=mp.Vector3(1, 1)
     # )    
-    
-    block1 = mp.Block(center=mp.Vector3(-dbr.a/2+dbr.t1/2),
-             size=mp.Vector3(dbr.t1, mp.inf, mp.inf),
-             material=mp.Medium(index=dbr.n1))
-
-    block2 = mp.Block(center=mp.Vector3(dbr.t1/2),
-             size=mp.Vector3(dbr.t2, mp.inf, mp.inf),
-             material=mp.Medium(index=dbr.n2))
-    
-    geometry = [block1, block2]
-    
+        
     # k_points = [
     #     mp.Vector3(),               # Gamma
     #     mp.Vector3(y=0.5),          # M
@@ -1312,42 +1378,51 @@ def plotMPB():
     ]
     k_points = mp.interpolate(10, k_points)
 
-    ms = mpb.ModeSolver(
+    ms_2D = mpb.ModeSolver(
         geometry = geometry,
         geometry_lattice = geometry_lattice_2D,
         k_points = k_points,
         resolution = resolution,
         num_bands = num_bands
     )
-    ms.init_params(p=mp.NO_PARITY, reset_fields=True)
-    md = mpb.MPBData(rectify=True, periods=1, resolution=32)
-    eps = ms.get_epsilon()
-    converted_eps = md.convert(eps)
-    plt.imshow(converted_eps.T)#, interpolation='spline36', cmap='binary')
-    plt.colorbar()
-    plt.axis('off')
     
-    plt.show()
+
+    plt.figure()
+    plt.title('2D')
+    showGeometry(ms_2D)
+    plt.title('2D')
+    showGeometry(ms_2D, periods=5)
+    pass
     
-    ms = mpb.ModeSolver(
-        geometry = geometry,
-        geometry_lattice = geometry_lattice_1D,
-        k_points = k_points,
-        resolution = resolution,
-        num_bands = num_bands
-    )
-    ms.run_tm()
-    # ms.run_tm(mpb.output_at_kpoint(mp.Vector3(-1./3, 1./3), mpb.fix_efield_phase,
-    #           mpb.output_efield_z))
-    tm_freqs = ms.all_freqs
-    tm_gaps = ms.gap_list
-    ms.run_te()
-    te_freqs = ms.all_freqs
-    te_gaps = ms.gap_list
+def MPB_getGeometry(dbr):
+    block1 = mp.Block(center=mp.Vector3(-dbr.a/2+dbr.t1/2),
+             size=mp.Vector3(dbr.t1, mp.inf, mp.inf),
+             material=mp.Medium(index=dbr.n1))
+
+    block2 = mp.Block(center=mp.Vector3(dbr.t1/2),
+             size=mp.Vector3(dbr.t2, mp.inf, mp.inf),
+             material=mp.Medium(index=dbr.n2))
     
-    x = [k[0] for k in ms.k_points]
-    plt.plot(x, te_freqs*(2*np.pi*get_c0()/dbr.a)/dbr.getBraggFrequency() )
-    plt.ylim([0,2.5])
+    geometry = [block1, block2]
+    return geometry
+
+def plotMPB():
+    
+    dbr = DBR()
+    dbr.n1 = 1.5
+    dbr.n2 = 3.5
+    dbr.t1 = 0.5
+    dbr.t2 = 1-dbr.t1
+    
+    pr = plottingRange(beta_normalized=np.linspace(-0.5,0.5),
+                       fn=np.linspace(0,0.30),
+                       lattice_constant=dbr.a)
+    
+    
+    
+    # plotMPB_1D(dbr, pr)
+    plotMPB_2D(dbr, pr)
+    
     return
     
     fig, ax = plt.subplots()
