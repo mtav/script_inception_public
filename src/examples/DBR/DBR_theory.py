@@ -1347,8 +1347,29 @@ def plotMPB_2D(dbr, pr):
     resolution = 32
     geometry = MPB_getGeometry(dbr)
 
-    geometry_lattice_2D = mp.Lattice(size=mp.Vector3(1, 1, 0))
-                                  # basis_size=mp.Vector3(1, 1),
+    theta_max_deg = 70
+    theta_max_rad = np.deg2rad(theta_max_deg)
+    theta_deg = 70
+    theta_rad = np.deg2rad(theta_deg)
+    
+    a1 = 1
+    a2 = a1 / np.tan(theta_max_rad)
+    
+    b1 = 2*np.pi/a1
+    b2 = 2*np.pi/a2
+    
+    kmax_x = b1/2
+    kmax = kmax_x / np.cos(theta_rad)
+    kmax_y = kmax*np.sin(theta_rad)
+    
+    kmax_x_n = kmax_x / (2*np.pi/a1)
+    kmax_y_n = kmax_y / (2*np.pi/a1)
+
+    geometry_lattice_2D = mp.Lattice(size=mp.Vector3(1, 1, 0),
+                                     basis_size=mp.Vector3(a1, a2, 1))
+    
+    # geometry_lattice_2D = mp.Lattice(size=mp.Vector3(1, 1, 0),
+    #                                  basis_size=mp.Vector3(a1, a2))
                                   # basis1=mp.Vector3(math.sqrt(3)/2, 0.5),
                                   # basis2=mp.Vector3(math.sqrt(3)/2, -0.5))
     
@@ -1371,10 +1392,22 @@ def plotMPB_2D(dbr, pr):
     #     mp.Vector3(-1./3, 1./3),    # K
     #     mp.Vector3(),               # Gamma
     # ]
+    # theta_deg = 45
+    # ax = 1
+    # if theta_deg==0:
+    #   kymax_n = 0
+    # else:
+    #   ay = ax / np.tan(np.deg2rad(theta_deg))
+    #   # by = (2pi/ay)
+    #   # kymax = by/2 = pi/ay
+    #   # kymax_n = pi/ay/(2pi/ax) = ax/(2*ay)
+    #   kymax_n = ax/(2*ay)
+    
+    # kmax = 78
+    # for np.linspace()
     k_points = [
-        mp.Vector3(-0.5),          # M
-        mp.Vector3(),               # Gamma
-        mp.Vector3(0.5),          # M
+        mp.Vector3(0,0),               # Gamma
+        mp.Vector3(kmax_x_n,kmax_y_n),          # M
     ]
     k_points = mp.interpolate(10, k_points)
 
@@ -1385,14 +1418,12 @@ def plotMPB_2D(dbr, pr):
         resolution = resolution,
         num_bands = num_bands
     )
-    
 
     plt.figure()
     plt.title('2D')
     showGeometry(ms_2D)
     plt.title('2D')
     showGeometry(ms_2D, periods=5)
-    pass
     
 def MPB_getGeometry(dbr):
     block1 = mp.Block(center=mp.Vector3(-dbr.a/2+dbr.t1/2),
@@ -1413,6 +1444,9 @@ def plotMPB():
     dbr.n2 = 3.5
     dbr.t1 = 0.5
     dbr.t2 = 1-dbr.t1
+    
+    (thetaB_1_deg, thetaB_2_deg) = dbr.getBrewsterAngles(degrees=True)
+    print("thetaB_1_deg, thetaB_2_deg: ", thetaB_1_deg, thetaB_2_deg)
     
     pr = plottingRange(beta_normalized=np.linspace(-0.5,0.5),
                        fn=np.linspace(0,0.30),
@@ -1460,6 +1494,27 @@ def plotMPB():
     ax.grid(True)
     
     plt.show()
+
+def MPB_basis_size_test():
+  L1 = mp.Lattice(size=mp.Vector3(1, 1, 0))
+  L2 = mp.Lattice(size=mp.Vector3(1, 1, 0), basis_size=mp.Vector3(1, 1, 1))
+  
+  # geometry_lattice_2D = mp.Lattice(size=mp.Vector3(1, 1, 0),
+  #                                  basis_size=mp.Vector3(a1, a2))
+                                # basis1=mp.Vector3(math.sqrt(3)/2, 0.5),
+                                # basis2=mp.Vector3(math.sqrt(3)/2, -0.5))
+  
+  # geometry_lattice = mp.Lattice(size=mp.Vector3(1, 1),
+  #                               basis1=mp.Vector3(math.sqrt(3)/2, 0.5),
+  #                               basis2=mp.Vector3(math.sqrt(3)/2, -0.5))
+
+  ms_2D = mpb.ModeSolver(
+      geometry = [],
+      geometry_lattice = L2,
+      k_points = [],
+      resolution = 32,
+      num_bands = 2
+  )
     
 def main():
     # test_plottingRange()
@@ -1474,6 +1529,7 @@ def main():
     # testParallelPython()
     # testNanxyArrays()
     plotMPB()
+    # MPB_basis_size_test()
 
     plt.show()
     print('SUCCESS')
