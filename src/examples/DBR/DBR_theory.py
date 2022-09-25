@@ -1333,84 +1333,75 @@ def plotMPB_1D(dbr, pr):
     
     x = [k[0] for k in ms_1D.k_points]
 
+    scale_factor = (2*np.pi*get_c0()/dbr.a)/dbr.getBraggFrequency()
     plt.title('1D')
-    plt.plot(x, te_freqs*(2*np.pi*get_c0()/dbr.a)/dbr.getBraggFrequency() )
+    plt.plot(x, te_freqs*scale_factor )
     plt.ylim([0,2.5])
     plt.xlabel('$k_N^x$')
     plt.ylabel('$\omega/\omega_{Bragg}$')
+    # Plot gaps
+    ax=plt.gca()
+    for gap in te_gaps:
+        if gap[0] > 1:
+            ax.fill_between(x, gap[1]*scale_factor, gap[2]*scale_factor, color='blue', alpha=0.2)
     
     return
 
 def plotMPB_2D(dbr, pr):
     
-    num_bands = 8
-    resolution = 32
+    # mode = 'fixed_angle'
+    mode = 'k_transverse'
+    
+    num_bands = 6
+    resolution = 64
     geometry = MPB_getGeometry(dbr)
 
     theta_max_deg = 70
     theta_max_rad = np.deg2rad(theta_max_deg)
-    theta_deg = 70
+    theta_deg = 20
     theta_rad = np.deg2rad(theta_deg)
     
     a1 = 1
-    a2 = a1 / np.tan(theta_max_rad)
+    a2 = 0.25 # a1 / np.tan(theta_max_rad)
     
-    b1 = 2*np.pi/a1
+    b1 = 2*np.pi/a1 # 2pi
     b2 = 2*np.pi/a2
     
-    kmax_x = b1/2
+    g = b1
+    
+    kmax_x = b1/2 # pi
     kmax = kmax_x / np.cos(theta_rad)
     kmax_y = kmax*np.sin(theta_rad)
     
-    kmax_x_n = kmax_x / (2*np.pi/a1)
+    kmax_x_n = kmax_x / (2*np.pi/a1) # 0.5
     kmax_y_n = kmax_y / (2*np.pi/a1)
 
     geometry_lattice_2D = mp.Lattice(size=mp.Vector3(1, 1, 0),
                                      basis_size=mp.Vector3(a1, a2, 1))
     
-    # geometry_lattice_2D = mp.Lattice(size=mp.Vector3(1, 1, 0),
-    #                                  basis_size=mp.Vector3(a1, a2))
-                                  # basis1=mp.Vector3(math.sqrt(3)/2, 0.5),
-                                  # basis2=mp.Vector3(math.sqrt(3)/2, -0.5))
     
-    # geometry_lattice = mp.Lattice(size=mp.Vector3(1, 1),
-    #                               basis1=mp.Vector3(math.sqrt(3)/2, 0.5),
-    #                               basis2=mp.Vector3(math.sqrt(3)/2, -0.5))
-    # geometry = [mp.Cylinder(0.2, material=mp.Medium(epsilon=12))]
-
-    # sqrt_half = math.sqrt(0.5)
-    # geometry_lattice = mp.Lattice(
-    #     basis_size=mp.Vector3(sqrt_half, sqrt_half, sqrt_half),
-    #     basis1=mp.Vector3(0, 1, 1),
-    #     basis2=mp.Vector3(1, 0, 1),
-    #     basis3=mp.Vector3(1, 1)
-    # )    
+    if mode == 'fixed_angle':
+        k_points = [
+            mp.Vector3(0,0),               # Gamma
+            mp.Vector3(kmax_x_n,kmax_y_n), # M
+        ]
+        k_points = mp.interpolate(10, k_points)
+    else:
+        k_points = [
+            mp.Vector3(kmax_x_n, 0),        # Gamma
+            mp.Vector3(kmax_x_n, kmax_y_n), # M
+        ]
+        k_points_all = []
+        for kx in mp.interpolate(10, [0,0.5]):
+        # for kx in [0,0.5]:
+            k_points = [
+                mp.Vector3(kx, 0, 0),    # Gamma
+                mp.Vector3(kx, g/b2, 0) # M
+            ]
+            k_points = mp.interpolate(10, k_points)
+            k_points_all.extend(k_points)
+        k_points = k_points_all
         
-    # k_points = [
-    #     mp.Vector3(),               # Gamma
-    #     mp.Vector3(y=0.5),          # M
-    #     mp.Vector3(-1./3, 1./3),    # K
-    #     mp.Vector3(),               # Gamma
-    # ]
-    # theta_deg = 45
-    # ax = 1
-    # if theta_deg==0:
-    #   kymax_n = 0
-    # else:
-    #   ay = ax / np.tan(np.deg2rad(theta_deg))
-    #   # by = (2pi/ay)
-    #   # kymax = by/2 = pi/ay
-    #   # kymax_n = pi/ay/(2pi/ax) = ax/(2*ay)
-    #   kymax_n = ax/(2*ay)
-    
-    # kmax = 78
-    # for np.linspace()
-    k_points = [
-        mp.Vector3(0,0),               # Gamma
-        mp.Vector3(kmax_x_n,kmax_y_n),          # M
-    ]
-    k_points = mp.interpolate(10, k_points)
-
     ms_2D = mpb.ModeSolver(
         geometry = geometry,
         geometry_lattice = geometry_lattice_2D,
@@ -1424,7 +1415,169 @@ def plotMPB_2D(dbr, pr):
     showGeometry(ms_2D)
     plt.title('2D')
     showGeometry(ms_2D, periods=5)
+
+    ms_2D.run_tm()
+    # ms.run_tm(mpb.output_at_kpoint(mp.Vector3(-1./3, 1./3), mpb.fix_efield_phase,
+    #           mpb.output_efield_z))
+    tm_freqs = ms_2D.all_freqs
+    tm_gaps = ms_2D.gap_list
     
+    ms_2D.run_te()
+    te_freqs = ms_2D.all_freqs
+    te_gaps = ms_2D.gap_list
+    
+    if mode == 'fixed_angle':
+        # x = range(len(ms_2D.k_points))
+        x = [kn.norm()*2*np.pi for kn in ms_2D.k_points]
+        xlabel = '$|k|$'
+    else:
+        x = [k[1]*b2/g for k in ms_2D.k_points]
+        xlabel = '$k_y/g$'
+
+    scale_factor = (2*np.pi*get_c0()/dbr.a)/dbr.getBraggFrequency()
+    
+    plt.figure()
+    plt.title('2D-TM')
+    plt.plot(x, tm_freqs*scale_factor, '.')
+    plt.ylim([0,2.5])
+    plt.xlabel(xlabel)
+    plt.ylabel('$\omega/\omega_{Bragg}$')
+    # Plot gaps
+    ax = plt.gca()
+    for gap in tm_gaps:
+        if gap[0] > 1:
+            ax.fill_between(x, gap[1]*scale_factor, gap[2]*scale_factor, color='blue', alpha=0.2)
+    
+    plt.figure()
+    plt.title('2D-TE')
+    plt.plot(x, te_freqs*scale_factor, '.')
+    plt.ylim([0,2.5])
+    plt.xlabel(xlabel)
+    plt.ylabel('$\omega/\omega_{Bragg}$')
+    # Plot gaps
+    ax = plt.gca()
+    for gap in te_gaps:
+        if gap[0] > 1:
+            ax.fill_between(x, gap[1]*scale_factor, gap[2]*scale_factor, color='red', alpha=0.2)    
+
+
+    print('kmax:', kmax)
+    print('a1:', a1)
+    print('a2:', a2)
+    print('b1:', b1)
+    print('b2:', b2)
+    print('kmax_y_n', kmax_y_n)
+
+def plotMPB_hack(dbr, pr):
+    
+    n1=1.5
+    n2=3.5
+    
+    d1=0.5
+    d2=0.5
+    
+    resolution=64
+    num_bands=6
+    
+    a =d1+d2
+    c1 = (d1/2) - (a/2)
+    c2 = (a/2) - (d2/2)
+
+    d1n = d1/a
+    d2n = d2/a
+
+    c1n = c1/a
+    c2n = c2/a
+
+    n_average = ((n1*d1) + (n2*d2))/a
+    omega_bragg_normalized = 1 / (2*n_average)
+    brewster_angle = np.arctan(n2/n1)
+
+    # a1 = 0.25
+    a1 = 0.25
+    a2 = 1
+    g = 2*np.pi/a2
+    b1 = 2*np.pi/a1
+    b2 = 2*np.pi/a2
+    
+    geometry_lattice_2D = mp.Lattice(size=mp.Vector3(1, 1, 0),
+                                     basis_size=mp.Vector3(a1, a2, 1))
+
+
+    block1 = mp.Block(center=mp.Vector3(0, c1n),
+             size=mp.Vector3(mp.inf, d1n, mp.inf),
+             material=mp.Medium(index=n1))
+
+    block2 = mp.Block(center=mp.Vector3(0, c2n),
+             size=mp.Vector3(mp.inf, d2n, mp.inf),
+             material=mp.Medium(index=n2))
+    
+    geometry = [block1, block2]
+
+
+    k_points_all = []
+    # for ky in mp.interpolate(10, [0,0.5]):
+    for ky in [0,0.5]:
+        k_points = [
+            mp.Vector3(0, ky, 0),    # Gamma
+            mp.Vector3(g/b1, ky, 0) # M
+        ]
+        k_points = mp.interpolate(10, k_points)
+        k_points_all.extend(k_points)
+    
+    ms_2D = mpb.ModeSolver(
+        geometry = geometry,
+        geometry_lattice = geometry_lattice_2D,
+        k_points = k_points_all,
+        resolution = resolution,
+        num_bands = num_bands
+    )
+
+    plt.figure()
+    plt.title('2D')
+    showGeometry(ms_2D)
+    # plt.title('2D')
+    # showGeometry(ms_2D, periods=5)
+
+    ms_2D.run_tm()
+    # ms.run_tm(mpb.output_at_kpoint(mp.Vector3(-1./3, 1./3), mpb.fix_efield_phase,
+    #           mpb.output_efield_z))
+    tm_freqs = ms_2D.all_freqs
+    tm_gaps = ms_2D.gap_list
+    
+    ms_2D.run_te()
+    te_freqs = ms_2D.all_freqs
+    te_gaps = ms_2D.gap_list
+    
+    x = [k[0]*b1/g for k in ms_2D.k_points]
+    xlabel = '$k_x/g$'
+
+    scale_factor = (2*np.pi*get_c0()/dbr.a)/dbr.getBraggFrequency()
+    
+    plt.figure()
+    plt.title('2D-TM')
+    plt.plot(x, tm_freqs*scale_factor, '.')
+    plt.ylim([0,2.5])
+    plt.xlabel(xlabel)
+    plt.ylabel('$\omega/\omega_{Bragg}$')
+    # Plot gaps
+    ax = plt.gca()
+    for gap in tm_gaps:
+        if gap[0] > 1:
+            ax.fill_between(x, gap[1]*scale_factor, gap[2]*scale_factor, color='blue', alpha=0.2)
+    
+    plt.figure()
+    plt.title('2D-TE')
+    plt.plot(x, te_freqs*scale_factor, '.')
+    plt.ylim([0,2.5])
+    plt.xlabel(xlabel)
+    plt.ylabel('$\omega/\omega_{Bragg}$')
+    # Plot gaps
+    ax = plt.gca()
+    for gap in te_gaps:
+        if gap[0] > 1:
+            ax.fill_between(x, gap[1]*scale_factor, gap[2]*scale_factor, color='red', alpha=0.2)    
+
 def MPB_getGeometry(dbr):
     block1 = mp.Block(center=mp.Vector3(-dbr.a/2+dbr.t1/2),
              size=mp.Vector3(dbr.t1, mp.inf, mp.inf),
@@ -1456,6 +1609,7 @@ def plotMPB():
     
     # plotMPB_1D(dbr, pr)
     plotMPB_2D(dbr, pr)
+    # plotMPB_hack(dbr, pr)
     
     return
     
