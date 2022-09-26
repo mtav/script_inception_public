@@ -20,6 +20,7 @@ import math
 import meep as mp
 from meep import mpb
 import matplotlib.pyplot as plt
+from matplotlib.patches import Rectangle
 
 # https://blakeaw.github.io/2020-05-25-improve-matplotlib-notebook-inline-res/
 plt.rcParams['figure.dpi'] = 300
@@ -53,6 +54,11 @@ class DBR():
         
 
     def getBrewsterAngles(self, degrees=False):
+        '''
+        Returns the Brewster angles (thetaB_1_deg, thetaB_2_deg), where:
+            thetaB_1_deg: Brewster angle if light is coming from medium n_in=n1 and the first layer is n2.
+            thetaB_2_deg: Brewster angle if light is coming from medium n_in=n2 and the first layer is n1.
+        '''
         thetaB_1_rad = np.arctan(self.n2/self.n1)
         thetaB_2_rad = np.arctan(self.n1/self.n2)
         if degrees:
@@ -237,11 +243,13 @@ class plottingRange():
     def wvl_1D(self):
       with warnings.catch_warnings():
         warnings.filterwarnings("ignore", category=RuntimeWarning, message="divide by zero encountered in true_divide", append=False)
+        warnings.filterwarnings("ignore", category=RuntimeWarning, message="divide by zero encountered in divide", append=False)
         return self.__lattice_constant / self.__fn_1D
     @property
     def wvl_2D(self):
       with warnings.catch_warnings():
         warnings.filterwarnings("ignore", category=RuntimeWarning, message="divide by zero encountered in true_divide", append=False)
+        warnings.filterwarnings("ignore", category=RuntimeWarning, message="divide by zero encountered in divide", append=False)
         return self.__lattice_constant / self.__fn_2D
     @property
     def omega_1D(self): return (2*np.pi*get_c0()/self.__lattice_constant)*self.__fn_1D
@@ -381,7 +389,11 @@ def plot2D(x, y, z, yhack=True):
     
     fig = plt.figure()
     # c = plt.pcolormesh(x, y, z, cmap='RdBu', vmin=z_min, vmax=z_max, shading='gouraud')
-    c = plt.pcolormesh(x, y, z, shading='gouraud')
+    if np.amax(z) <= 1:
+        c = plt.pcolormesh(x, y, z, shading='gouraud')
+    else:
+        print('Warning: vmax>1! Clipping values.')
+        c = plt.pcolormesh(x, y, z, shading='gouraud', vmax=1)
     fig.colorbar(c)
         
     fig.tight_layout()
@@ -960,7 +972,7 @@ def getTestPlottingRanges(vs_angle=True,
 
     return pr
 
-def reference_DBR_1(Nx, Ny):
+def reference_DBR_1(Nx=50, Ny=50):
     dbr_instance = DBR()
     pr = getTestPlottingRanges(vs_angle=True,
                                vs_K_normal=False,
@@ -970,7 +982,7 @@ def reference_DBR_1(Nx, Ny):
                                Ny=Ny)
     return dbr_instance, pr
 
-def reference_DBR_2(Nx, Ny):
+def reference_DBR_2(Nx=50, Ny=50):
     dbr_instance = DBR()
     dbr_instance.t1 = 0.5
     dbr_instance.t2 = 0.5
@@ -1006,6 +1018,33 @@ def reference_DBR_3(Nx=600,Ny=300):
                        lattice_constant=dbr_instance.getPeriod())
 
     return (dbr_instance, pr)
+
+def reference_DBR_4(Nx=50,Ny=50):
+    """
+    DBR for Saleh&Teich figure 7.2-7
+    """
+    dbr_instance = DBR()
+    dbr_instance.n1 = 3.5
+    dbr_instance.n2 = 1.5
+    dbr_instance.t1 = 0.5
+    dbr_instance.t2 = 0.5
+
+    omega_Bragg = dbr_instance.getBraggFrequency()
+    custom_fn = np.linspace(0, 2.5, Ny)
+    
+    omega = custom_fn*omega_Bragg
+    fn = omega / (2*np.pi*get_c0()/dbr_instance.a)
+    
+    pr = plottingRange(fn=fn,
+                       angle_deg=np.linspace(0, 90, Nx),
+                       n_in=dbr_instance.n2,
+                       lattice_constant=dbr_instance.getPeriod())
+    
+    print(f'n1={dbr_instance.n1}, n2={dbr_instance.n2}')
+    print('Brewster angles:', dbr_instance.getBrewsterAngles(degrees=True))
+    print('Total internal reflection angle:', np.rad2deg( np.arcsin(dbr_instance.n2/dbr_instance.n1) ) )
+    
+    return dbr_instance, pr
 
 def test_plottingRange():
   # foo = plottingRange(n_in=12, lattice_constant=34)
@@ -1123,6 +1162,28 @@ def test_reference_DBR_3():
         findBandEdges(dbr_instance=foo, vs_K_normal=False, n_in=1, Spol=Spol, pr=pr, vs_wavelength=True)
         findBandEdges(dbr_instance=foo, vs_K_normal=False, n_in=1, Spol=Spol, pr=pr, vs_wavelength=False)
 
+def test_reference_DBR_4():
+    # foo, pr = reference_DBR_1(50,50)
+    # plotTMM(foo, pr, plot_wvl=False, plot_theory=False)
+
+    # foo, pr = reference_DBR_2(50,50)
+    # plotTMM(foo, pr, plot_wvl=False, plot_theory=False)
+
+    # foo, pr = reference_DBR_3(50,50)
+    # plotTMM(foo, pr, plot_wvl=False, plot_theory=False)
+
+    foo, pr = reference_DBR_4(100, 100)
+    plotTMM(foo, pr, plot_wvl=False, plot_theory=False)
+    # for i in range(10, 15):
+    #     Nperiods = i+1
+    #     print(f'=====> i={i}, Nperiods={Nperiods}')
+    #     plotTMM(foo, pr, plot_wvl=False, plot_theory=False, Nperiods=Nperiods)
+
+    # # foo, pr = reference_DBR_4()
+    # for Spol in [True, False]:
+    #     # findBandEdges(dbr_instance=foo, vs_K_normal=False, n_in=1, Spol=Spol, pr=pr, vs_wavelength=True)
+    #     findBandEdges(dbr_instance=foo, vs_K_normal=False, n_in=foo.n2, Spol=Spol, pr=pr, vs_wavelength=False)
+
 def testTMM(Nx=100,Ny=100):
     print('=== reference_DBR_1 ===')
     dbr_instance, pr = reference_DBR_1(Nx,Ny)
@@ -1140,7 +1201,7 @@ def testTMM(Nx=100,Ny=100):
     dbr_instance, pr = reference_DBR_3(Nx,Ny)
     plotTMM(dbr_instance, pr)
 
-def plotTMM(dbr_instance, pr):
+def plotTMM(dbr_instance, pr, plot_wvl=True, plot_theory=True, Nperiods = 15):
     for Spol in [True, False]:
     
         # pr = plottingRange(wvl=np.linspace(345.038e-9, 1034.95e-9,3),
@@ -1162,10 +1223,10 @@ def plotTMM(dbr_instance, pr):
             pol = 's'
         else:
             pol = 'p'
-        Nlayers = 15
+        # Nperiods = 15
     
-        d_list = [np.inf] + Nlayers*[dbr_instance.t1, dbr_instance.t2] + [dbr_instance.t1] + [np.inf]
-        n_list = [pr.n_in] + Nlayers*[dbr_instance.n1, dbr_instance.n2] + [dbr_instance.n1] + [pr.n_in]
+        d_list = [np.inf] + Nperiods*[dbr_instance.t1, dbr_instance.t2] + [dbr_instance.t1] + [np.inf]
+        n_list = [pr.n_in] + Nperiods*[dbr_instance.n1, dbr_instance.n2] + [dbr_instance.n1] + [pr.n_in]
     
         # n_list = [1, dbr_instance.n1, dbr_instance.n2, 1]
         # d_list = [np.inf, dbr_instance.t1, dbr_instance.t2, np.inf]
@@ -1181,40 +1242,44 @@ def plotTMM(dbr_instance, pr):
         #         plt.title(k)
     
         # special handling for nan/inf values
-        fig1 = plot2D(pr.angle_deg_2D, pr.wvl_2D*1e9, ret['T'], yhack=True)
-        plt.xlabel("Angle (degrees)")
-        plt.ylabel("$\lambda (nm)$")
-        plt.title(f'pol={pol}')
-        fig1.tight_layout()
+        if plot_wvl:
+            fig1 = plot2D(pr.angle_deg_2D, pr.wvl_2D*1e9, ret['T'], yhack=True)
+            plt.xlabel("Angle (degrees)")
+            plt.ylabel("$\lambda (nm)$")
+            plt.title(f'pol={pol}, Nperiods={Nperiods}+0.5')
+            fig1.tight_layout()
     
         fig2 = plot2D(pr.angle_deg_2D, pr.fn_2D, ret['T'])
         plt.xlabel("Angle (degrees)")
         plt.ylabel("$a/\lambda$")
-        plt.title(f'pol={pol}')
+        plt.title(f'pol={pol}, Nperiods={Nperiods}+0.5')
         fig2.tight_layout()
     
         # findBandEdges(dbr_instance=dbr_instance, vs_K_normal=False, n_in=1, Spol=Spol, pr=pr, vs_wavelength=True)
         # findBandEdges(dbr_instance=dbr_instance, vs_K_normal=False, n_in=1, Spol=Spol, pr=pr, vs_wavelength=False)
-    
-        df1, df1_idx = dbr_instance.getBandEdges(omega=pr.omega_2D, beta=pr.beta_2D, Spol=Spol,
-                                               plot_X=pr.angle_deg_2D, plot_Y=pr.wvl_2D*1e9)
-    
-        df2, df2_idx = dbr_instance.getBandEdges(omega=pr.omega_2D, beta=pr.beta_2D, Spol=Spol,
-                                               plot_X=pr.angle_deg_2D, plot_Y=pr.fn_2D)
-    
-        plt.figure(fig1)
-        df1.plot(style='r.', legend=False, markersize=3, ax=plt.gca())
-        plt.figure(fig2)
-        df2.plot(style='r.', legend=False, markersize=3, ax=plt.gca())
-    
-        # pass
-        # s = coh_tmm(pol, n_list, d_list, pr.angle_rad_2D[3,2], pr.wvl_2D[3,2])
-        # for k,v in s.items():
-        #     # print(k,v)
-        #     if k!='pol':
-        #         # print('--> shape:', k, v.shape)
-        #         if v.shape == ():
-        #             print(k)
+
+        if plot_theory:
+            if plot_wvl:
+                df1, df1_idx = dbr_instance.getBandEdges(omega=pr.omega_2D, beta=pr.beta_2D, Spol=Spol,
+                                                       plot_X=pr.angle_deg_2D, plot_Y=pr.wvl_2D*1e9)
+        
+            df2, df2_idx = dbr_instance.getBandEdges(omega=pr.omega_2D, beta=pr.beta_2D, Spol=Spol,
+                                                   plot_X=pr.angle_deg_2D, plot_Y=pr.fn_2D)
+        
+            if plot_wvl:
+                plt.figure(fig1)
+                df1.plot(style='r.', legend=False, markersize=3, ax=plt.gca())
+            plt.figure(fig2)
+            df2.plot(style='r.', legend=False, markersize=3, ax=plt.gca())
+        
+            # pass
+            # s = coh_tmm(pol, n_list, d_list, pr.angle_rad_2D[3,2], pr.wvl_2D[3,2])
+            # for k,v in s.items():
+            #     # print(k,v)
+            #     if k!='pol':
+            #         # print('--> shape:', k, v.shape)
+            #         if v.shape == ():
+            #             print(k)
 
 def testParallelPython():
     pass
@@ -1468,6 +1533,156 @@ def plotMPB_2D(dbr, pr):
     print('b2:', b2)
     print('kmax_y_n', kmax_y_n)
 
+def plotMPB_2D_vs_angle(dbr, pr, theta_deg):
+    TE=False
+    TM=True
+    showgeom=False
+    
+    num_bands = 6
+    resolution = 32
+    geometry = MPB_getGeometry(dbr)
+
+    # theta_deg = 20
+    theta_rad = np.deg2rad(theta_deg)
+    
+    a1 = 1
+    a2 = 0.25
+    
+    b1 = 2*np.pi/a1 # 2pi
+    b2 = 2*np.pi/a2
+    
+    g = b1 # 2pi (normalization factor for wavevectors)
+    
+    geometry_lattice_2D = mp.Lattice(size=mp.Vector3(1, 1, 0),
+                                     basis_size=mp.Vector3(a1, a2, 1))
+    
+    theta_critical_rad = np.arctan(b2/b1)
+    if theta_rad <= theta_critical_rad:
+        kmax_x = g*b1/2 # pi
+        kmax = kmax_x / np.cos(theta_rad)
+        kmax_y = kmax*np.sin(theta_rad)
+    else:
+        kmax_y = g*b2/2
+        kmax = kmax_y / np.sin(theta_rad)
+        kmax_x = kmax*np.cos(theta_rad)
+    
+    kmax_x_n = kmax_x / (g*b1)
+    kmax_y_n = kmax_y / (g*b2)
+    
+    # k_points_all = []
+    # for kx in mp.interpolate(10, [0,0.5]):
+    # for kx in [0,0.5]:
+    k_points = [
+        mp.Vector3(0, 0, 0),    # Gamma
+        mp.Vector3(kmax_x_n, kmax_y_n, 0) # M
+    ]
+    k_points = mp.interpolate(10, k_points)
+    # k_points_all.extend(k_points)
+    # k_points = k_points_all
+    
+    ms_2D = mpb.ModeSolver(
+        geometry = geometry,
+        geometry_lattice = geometry_lattice_2D,
+        k_points = k_points,
+        resolution = resolution,
+        num_bands = num_bands
+    )
+
+    if showgeom:
+        plt.figure()
+        plt.title('2D')
+        showGeometry(ms_2D)
+
+    x = range(len(ms_2D.k_points))
+    xlabel = '$k_{index}$'
+    scale_factor = (2*np.pi*get_c0()/dbr.a)/dbr.getBraggFrequency()
+    
+    if TE:
+        # TE
+        ms_2D.run_te()
+        te_freqs = ms_2D.all_freqs
+        te_gaps = ms_2D.gap_list
+        
+        plt.figure()
+        plt.title(f'$2D-TE, theta={theta_deg}\degree$')
+        plt.plot(x, te_freqs*scale_factor, '.')
+        plt.ylim([0,2.5])
+        plt.xlabel(xlabel)
+        plt.ylabel('$\omega/\omega_{Bragg}$')
+        # Plot gaps
+        ax = plt.gca()
+        for gap in te_gaps:
+            if gap[0] > 1:
+                ax.fill_between(x, gap[1]*scale_factor, gap[2]*scale_factor, color='red', alpha=0.2)    
+
+    if TM:
+        # TM
+        ms_2D.run_tm()
+        tm_freqs = ms_2D.all_freqs
+        tm_gaps = ms_2D.gap_list
+        
+        plt.figure()
+        plt.title(f'$2D-TM, theta={theta_deg}\degree$')
+        plt.plot(x, tm_freqs*scale_factor, '.')
+        plt.ylim([0,2.5])
+        plt.xlabel(xlabel)
+        plt.ylabel('$\omega/\omega_{Bragg}$')
+        # Plot gaps
+        ax = plt.gca()
+        for gap in tm_gaps:
+            if gap[0] > 1:
+                ax.fill_between(x, gap[1]*scale_factor, gap[2]*scale_factor, color='blue', alpha=0.2)
+
+    print('kmax:', kmax)
+    print('a1:', a1)
+    print('a2:', a2)
+    print('b1:', b1)
+    print('b2:', b2)
+    print('kmax_x_n', kmax_x_n)
+    print('kmax_y_n', kmax_y_n)
+    visualize_k_points(k_points, geometry_lattice_2D, [theta_deg])
+
+def visualize_k_points(k_points, lat, theta_deg_list):
+    
+    b1 = mp.reciprocal_to_cartesian(mp.Vector3(1,0,0), lat)
+    b2 = mp.reciprocal_to_cartesian(mp.Vector3(0,1,0), lat)
+    b3 = mp.reciprocal_to_cartesian(mp.Vector3(0,0,1), lat)
+    
+    print('Reciprocal lattice vectors in cartesian coordinates:')
+    print('b1:', b1)
+    print('b2:', b2)
+    print('b3:', b3)
+
+    k_cart = [mp.reciprocal_to_cartesian(kn, lat) for kn in k_points]
+        
+    # x = [kn[0] for kn in k_points]
+    # y = [kn[1] for kn in k_points]
+    x = [k[0] for k in k_cart]
+    y = [k[1] for k in k_cart]
+    plt.figure()
+    plt.title('k points')
+    plt.scatter(x,y)
+    ax = plt.gca()
+    ax.add_patch(Rectangle((-b1.norm()/2, -b2.norm()/2), b1.norm(), b2.norm(), facecolor='none', edgecolor='r'))
+    
+    for theta_deg in theta_deg_list:
+        # theta_deg = 20
+        theta_rad = np.deg2rad(theta_deg)
+        L = (b1.norm()/2)/np.cos(theta_rad)
+        x = L*np.cos(theta_rad)
+        y = L*np.sin(theta_rad)
+        if y > b2.norm()/2:
+            L = (b2.norm()/2)/np.sin(theta_rad)
+            x = L*np.cos(theta_rad)
+            y = L*np.sin(theta_rad)
+            
+        plt.plot([0, x], [0, y], 'k--')
+        print('x:', x)
+        print('y:', y)
+        # for k in ms.k_points:
+        
+    return
+
 def plotMPB_hack(dbr, pr):
     
     n1=1.5
@@ -1576,7 +1791,7 @@ def plotMPB_hack(dbr, pr):
     ax = plt.gca()
     for gap in te_gaps:
         if gap[0] > 1:
-            ax.fill_between(x, gap[1]*scale_factor, gap[2]*scale_factor, color='red', alpha=0.2)    
+            ax.fill_between(x, gap[1]*scale_factor, gap[2]*scale_factor, color='red', alpha=0.2)
 
 def MPB_getGeometry(dbr):
     block1 = mp.Block(center=mp.Vector3(-dbr.a/2+dbr.t1/2),
@@ -1608,8 +1823,13 @@ def plotMPB():
     
     
     # plotMPB_1D(dbr, pr)
-    plotMPB_2D(dbr, pr)
+    # plotMPB_2D(dbr, pr)
     # plotMPB_hack(dbr, pr)
+    for i in np.linspace(0,89,10):
+        plotMPB_2D_vs_angle(dbr, pr, i)
+    # plotMPB_2D_vs_angle(dbr, pr, 20)
+    # plotMPB_2D_vs_angle(dbr, pr, 30)
+    # plotMPB_2D_vs_angle(dbr, pr, 66.8)
     
     return
     
@@ -1652,6 +1872,15 @@ def plotMPB():
 def MPB_basis_size_test():
   L1 = mp.Lattice(size=mp.Vector3(1, 1, 0))
   L2 = mp.Lattice(size=mp.Vector3(1, 1, 0), basis_size=mp.Vector3(1, 1, 1))
+  L3 = mp.Lattice(size=mp.Vector3(1, 1, 0),
+                  basis_size=mp.Vector3(np.sqrt(2), np.sqrt(2), np.sqrt(2)),
+                  basis1=mp.Vector3(0,1,1),
+                  basis2=mp.Vector3(1,0,1),
+                  basis3=mp.Vector3(1,1,0))
+  
+  L4 = mp.Lattice(size=mp.Vector3(1, 1, 0), basis_size=mp.Vector3(1, 0.25, 1))
+  
+  L=L4
   
   # geometry_lattice_2D = mp.Lattice(size=mp.Vector3(1, 1, 0),
   #                                  basis_size=mp.Vector3(a1, a2))
@@ -1664,12 +1893,19 @@ def MPB_basis_size_test():
 
   ms_2D = mpb.ModeSolver(
       geometry = [],
-      geometry_lattice = L2,
+      geometry_lattice = L,
       k_points = [],
       resolution = 32,
       num_bands = 2
   )
-    
+  ms_2D.run()
+  
+  # print(ms_2D.get_lattice())
+  # L2 = ms_2D.get_lattice()
+  print(mp.reciprocal_to_cartesian(mp.Vector3(1,0,0), L))
+  print(mp.reciprocal_to_cartesian(mp.Vector3(0,1,0), L))
+  print(mp.reciprocal_to_cartesian(mp.Vector3(0,0,1), L))
+  
 def main():
     # test_plottingRange()
     # testFillBands()
@@ -1679,10 +1915,11 @@ def main():
     # test_findBandEdges_v1()
     # test_findBandEdges_v2()
     # test_reference_DBR_3()
+    test_reference_DBR_4()
     # testTMM()
     # testParallelPython()
     # testNanxyArrays()
-    plotMPB()
+    # plotMPB()
     # MPB_basis_size_test()
 
     plt.show()
