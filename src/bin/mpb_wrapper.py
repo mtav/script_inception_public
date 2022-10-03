@@ -33,6 +33,7 @@ def main():
   parser.add_argument('-n', '--dry-run', action='store_true')
   parser.add_argument('-e', '--output_epsilon_only', action='store_true')
   parser.add_argument('-m', '--merge-datasets', action='store_true')
+  parser.add_argument('-r', '--use-relative-paths', action='store_true', help='Use relative paths before running commands. (helps when the path contains unusual characters like "=")')
   parser.add_argument('--h5topng', action='store_true')
   parser.add_argument('--h5topng-options', type=str, default='')
   parser.add_argument('--h5tovtk', action='store_true')
@@ -81,12 +82,18 @@ def main():
 
   if args.output_epsilon_only:
     extra_parameters += ['output_epsilon_only?=true']
-  
+
+  if args.use_relative_paths:
+    infile = os.path.relpath(infile, start=args.workdir)
+    outfile_fullpath = os.path.relpath(outfile_fullpath, start=args.workdir)
+
   cmd_full = ['mpb'] + extra_parameters + parameters + [infile]
 
   epsilon_file = filename_prefix + 'epsilon.h5'
-  
-  if args.verbose >= 3:
+
+  if args.verbose == 1:
+    print(f"workdir: {args.workdir} , cmd: {' '.join(cmd_full)}")
+  elif args.verbose >= 3:
     print(args)
     print('workdir = {}'.format(args.workdir))    
     
@@ -113,7 +120,10 @@ def main():
       os.chdir(args.workdir)
     if args.verbose >= 3:
       print('os.getcwd() = {}'.format(os.getcwd()))
+          
     utilities.common.runCommandAndStoreOutput(cmd_full, outfile_fullpath, args.verbose)
+    
+    
     with open(outfile_fullpath, 'r') as f:
       MPB.MPB_parser.writeCSV(f, verbosity=args.verbose, merge_datasets=args.merge_datasets)
 
