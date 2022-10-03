@@ -9,9 +9,20 @@ cd ~/Development/
 module load tools/git-2.22.0
 git clone https://github.com/mtav/script_inception_public.git
 
-ln --symbolic ~/Development/script_inception_public/config/.bash_local.BC3.sh ~/.bash_local
-ln --symbolic ~/Development/script_inception_public/config/.bash_profile_local.sh ~/.bash_profile_local
-ln --symbolic ~/Development/script_inception_public/config/.pystartup ~/.pystartup
+Config files:
+-------------
+# BC3
+  ln --symbolic ~/Development/script_inception_public/config/.bash_local.BC3.sh ~/.bash_local
+  ln --symbolic ~/Development/script_inception_public/config/.bash_profile_local.sh ~/.bash_profile_local
+
+# OTHER
+  ln --symbolic ~/Development/script_inception_public/config/.bash_local.generic.sh ~/.bash_local
+
+# ALL
+  ln --symbolic ~/Development/script_inception_public/config/.pystartup ~/.pystartup
+
+Other:
+------
 
 TODO: need to install h5py...
 TODO: simplify dotfile system...
