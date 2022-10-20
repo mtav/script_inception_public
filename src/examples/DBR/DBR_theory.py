@@ -1182,7 +1182,7 @@ def test_reference_DBR_4():
         if Spol:
             pol = 's'
         else:
-            pol = 'p'    
+            pol = 'p'
         ret = getTMM_for_DBR(dbr, pr, Spol=Spol, Nperiods=Nperiods)
 
         fig = plot2D(pr.angle_deg_2D, pr.fn_2D*scale_factor, ret['T'])
@@ -1504,11 +1504,11 @@ def plotMPB_2D(dbr, pr):
         num_bands = num_bands
     )
 
-    plt.figure()
-    plt.title('2D')
-    showGeometry(ms_2D)
+    # plt.figure()
     # plt.title('2D')
-    # showGeometry(ms_2D, periods=5)
+    # showGeometry(ms_2D)
+    # plt.title('2D')
+    # showGeometry(ms_2D, periods=15.5)
 
     ms_2D.run_tm()
     # ms.run_tm(mpb.output_at_kpoint(mp.Vector3(-1./3, 1./3), mpb.fix_efield_phase,
@@ -1535,6 +1535,7 @@ def plotMPB_2D(dbr, pr):
     plt.plot(x, tm_freqs*scale_factor, '.')
     plt.xlim([0,1])
     plt.ylim([0,2.5])
+    plt.grid()
     plt.xlabel(xlabel)
     plt.ylabel('$\omega/\omega_{Bragg}$')
     # Plot gaps
@@ -1546,7 +1547,9 @@ def plotMPB_2D(dbr, pr):
     plt.figure()
     plt.title('2D-TE')
     plt.plot(x, te_freqs*scale_factor, '.')
+    plt.xlim([0,1])
     plt.ylim([0,2.5])
+    plt.grid()
     plt.xlabel(xlabel)
     plt.ylabel('$\omega/\omega_{Bragg}$')
     # Plot gaps
@@ -1831,6 +1834,9 @@ def plotMPB_hack(dbr, pr):
             ax.fill_between(x, gap[1]*scale_factor, gap[2]*scale_factor, color='red', alpha=0.2)
 
 def MPB_getGeometry(dbr):
+    '''
+    Creates a DBR geometry for MEEP/MPB along X, i.e. layers in the YZ plane with X being the transverse/normal direction.
+    '''
     block1 = mp.Block(center=mp.Vector3(-dbr.a/2+dbr.t1/2),
              size=mp.Vector3(dbr.t1, mp.inf, mp.inf),
              material=mp.Medium(index=dbr.n1))
@@ -1844,11 +1850,13 @@ def MPB_getGeometry(dbr):
 
 def plotMPB():
     
-    dbr = DBR()
-    dbr.n1 = 1.5
-    dbr.n2 = 3.5
-    dbr.t1 = 0.5
-    dbr.t2 = 1-dbr.t1
+    # dbr = DBR()
+    # dbr.n1 = 1.5
+    # dbr.n2 = 3.5
+    # dbr.t1 = 0.5
+    # dbr.t2 = 1-dbr.t1
+    
+    dbr, pr = reference_DBR_4(Nx=50,Ny=50)
     
     (thetaB_1_deg, thetaB_2_deg) = dbr.getBrewsterAngles(degrees=True)
     print("thetaB_1_deg, thetaB_2_deg: ", thetaB_1_deg, thetaB_2_deg)
@@ -1858,6 +1866,12 @@ def plotMPB():
                        lattice_constant=dbr.a)
     
     
+    # print('==pr==========')
+    # print(pr)
+    # print('==pr2==========')
+    # print(pr2)
+    # print('============')
+    # return
     
     # plotMPB_1D(dbr, pr)
     plotMPB_2D(dbr, pr)
@@ -1958,6 +1972,11 @@ def main():
     # testNanxyArrays()
     plotMPB()
     # MPB_basis_size_test()
+
+    # dbr, pr = reference_DBR_4()
+    # print(pr)
+    # print(min(pr.wvl_1D), max(pr.wvl_1D))
+    # print(min(pr.fn_1D), max(pr.fn_1D))
 
     plt.show()
     print('SUCCESS')
