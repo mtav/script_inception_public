@@ -1173,10 +1173,14 @@ def test_reference_DBR_4():
     # plotTMM(foo, pr, plot_wvl=False, plot_theory=False)
 
     dbr, pr = reference_DBR_4(100, 100)
-    Nperiods = 15
+    # Nperiods = 15
+    Nperiods = 30
     # plotTMM(dbr, pr, plot_wvl=False, plot_theory=False)
     scale_factor = (2*np.pi*get_c0()/dbr.a)/dbr.getBraggFrequency()
 
+    Xs,Ys,Xp,Yp = plotMPB_2D(dbr, pr)
+
+    fig_list = []
     for Spol in [True, False]:
         # Spol = True
         if Spol:
@@ -1190,6 +1194,12 @@ def test_reference_DBR_4():
         plt.ylabel('$\omega/\omega_{Bragg}$')
         plt.title(f'pol={pol}, Nperiods={Nperiods}+0.5')
         fig.tight_layout()
+        fig_list.append(fig)
+        if Spol:
+          plt.plot(Xs, Ys, '.')
+        else:
+          plt.plot(Xp, Yp, '.')
+        plt.ylim(0,2.5)
 
     # for i in range(10, 15):
     #     Nperiods = i+1
@@ -1200,6 +1210,9 @@ def test_reference_DBR_4():
     # for Spol in [True, False]:
     #     # findBandEdges(dbr_instance=foo, vs_K_normal=False, n_in=1, Spol=Spol, pr=pr, vs_wavelength=True)
     #     findBandEdges(dbr_instance=foo, vs_K_normal=False, n_in=foo.n2, Spol=Spol, pr=pr, vs_wavelength=False)
+    fig_Spol = fig_list[0]
+    fig_Ppol = fig_list[1]
+    return fig_Spol, fig_Ppol
 
 def testTMM(Nx=100,Ny=100):
     print('=== reference_DBR_1 ===')
@@ -1442,35 +1455,47 @@ def plotMPB_1D(dbr, pr):
 def plotMPB_2D(dbr, pr):
     
     # mode = 'fixed_angle'
-    mode = 'k_transverse'
+    # mode = 'k_transverse'
+    mode = 'vs_angle'
+    do_run_te = False
+    do_run_tm = False
     
-    num_bands = 6
+    num_bands = 3
     resolution = 32
     geometry = MPB_getGeometry(dbr)
 
-    theta_max_deg = 70
-    theta_max_rad = np.deg2rad(theta_max_deg)
-    theta_deg = 20
-    theta_rad = np.deg2rad(theta_deg)
+    # TODO
+    # theta_max_deg = 70
+    # theta_max_rad = np.deg2rad(theta_max_deg)
+    theta_deg = 0
+    # theta_rad = np.deg2rad(theta_deg)
     
     a1 = 1
-    a2 = 0.25 # a1 / np.tan(theta_max_rad)
+    # a2 = 0.25 # a1 / np.tan(theta_max_rad)
+    a2 = 0.10 # a1 / np.tan(theta_max_rad)
     
     b1 = 2*np.pi/a1 # 2pi
     b2 = 2*np.pi/a2
     
     g = b1
     
-    kmax_x = b1/2 # pi
-    kmax = kmax_x / np.cos(theta_rad)
-    kmax_y = kmax*np.sin(theta_rad)
+    # kmax_x = b1/2 # pi
+    # kmax = kmax_x / np.cos(theta_rad)
+    # kmax_y = kmax*np.sin(theta_rad)
     
-    kmax_x_n = kmax_x / (2*np.pi/a1) # 0.5
-    kmax_y_n = kmax_y / (2*np.pi/a1)
+    # kmax_x_n = kmax_x / (2*np.pi/a1) # 0.5
+    # kmax_y_n = kmax_y / (2*np.pi/a1)
 
     geometry_lattice_2D = mp.Lattice(size=mp.Vector3(1, 1, 0),
                                      basis_size=mp.Vector3(a1, a2, 1))
-    
+      
+    kmax_x_n, kmax_y_n = getBZedge_k_point(theta_deg, geometry_lattice_2D)
+    theta_deg_list = [theta_deg]
+  
+    # for theta_deg in np.linspace(0, 90, 15):
+    #   kx_mpb, ky_mpb = getBZedge_k_point(theta_deg, geometry_lattice_2D)
+    #   print(f'theta_deg: {theta_deg} -> kx_mpb, ky_mpb: {kx_mpb}, {ky_mpb}')
+    # raise
     
     if mode == 'fixed_angle':
         k_points = [
@@ -1478,6 +1503,18 @@ def plotMPB_2D(dbr, pr):
             mp.Vector3(kmax_x_n,kmax_y_n), # M
         ]
         k_points = mp.interpolate(10, k_points)
+    elif mode == 'vs_angle':
+        k_points_all = []
+        theta_deg_list = np.linspace(0, 90, 5)
+        for theta_deg in theta_deg_list:
+            kmax_x_n, kmax_y_n = getBZedge_k_point(theta_deg, geometry_lattice_2D)
+            k_points = [
+                mp.Vector3(0,0),               # Gamma
+                mp.Vector3(kmax_x_n,kmax_y_n), # M
+            ]
+            k_points = mp.interpolate(10, k_points)
+            k_points_all.extend(k_points)
+        k_points = k_points_all
     else:
         # k_points = [
         #     mp.Vector3(kmax_x_n, 0),        # Gamma
@@ -1510,6 +1547,37 @@ def plotMPB_2D(dbr, pr):
     # plt.title('2D')
     # showGeometry(ms_2D, periods=15.5)
 
+    if False: #mode == 'fixed_angle':
+        raise
+        # x = range(len(ms_2D.k_points))
+        x = [kn.norm()*2*np.pi for kn in ms_2D.k_points]
+        xlabel = '$|k|$'
+    else:
+        x = [k[1]*b2/g for k in ms_2D.k_points]
+        xlabel = '$k_y/g$'
+        ms_2D.k_points
+        print(ms_2D.k_points)
+        print()
+        kx = np.ones(len(ms_2D.k_points))*np.nan
+        ky = np.ones(len(ms_2D.k_points))*np.nan
+        angle = np.ones(len(ms_2D.k_points))*np.nan
+        print(kx)
+        for idx, k in enumerate(ms_2D.k_points):
+          # print(idx)
+          kx[idx] = k[0]*b1
+          ky[idx] = k[1]*b2
+          # angle = np.arctan(ky/kx)
+          # angle = 
+        angle_rad = np.arctan(ky/kx)
+        angle_deg = np.rad2deg(angle_rad)
+        # print(kx)
+        # print(angle)
+        # angle = [ np.arctan((k[1]*b2)/(k[0]*b1))  for k in ms_2D.k_points ]
+        print('============')
+        print('angle range (radians):', np.nanmin(angle_rad), np.nanmax(angle_rad))
+        print('angle range (degrees):', np.nanmin(angle_deg), np.nanmax(angle_deg))
+        print('============')
+
     ms_2D.run_tm()
     # ms.run_tm(mpb.output_at_kpoint(mp.Vector3(-1./3, 1./3), mpb.fix_efield_phase,
     #           mpb.output_efield_z))
@@ -1520,18 +1588,10 @@ def plotMPB_2D(dbr, pr):
     te_freqs = ms_2D.all_freqs
     te_gaps = ms_2D.gap_list
     
-    if mode == 'fixed_angle':
-        # x = range(len(ms_2D.k_points))
-        x = [kn.norm()*2*np.pi for kn in ms_2D.k_points]
-        xlabel = '$|k|$'
-    else:
-        x = [k[1]*b2/g for k in ms_2D.k_points]
-        xlabel = '$k_y/g$'
-
     scale_factor = (2*np.pi*get_c0()/dbr.a)/dbr.getBraggFrequency()
     
     plt.figure()
-    plt.title('2D-TM')
+    plt.title('2D-TM (S)')
     plt.plot(x, tm_freqs*scale_factor, '.')
     plt.xlim([0,1])
     plt.ylim([0,2.5])
@@ -1545,7 +1605,7 @@ def plotMPB_2D(dbr, pr):
             ax.fill_between(x, gap[1]*scale_factor, gap[2]*scale_factor, color='blue', alpha=0.2)
     
     plt.figure()
-    plt.title('2D-TE')
+    plt.title('2D-TE (P)')
     plt.plot(x, te_freqs*scale_factor, '.')
     plt.xlim([0,1])
     plt.ylim([0,2.5])
@@ -1558,19 +1618,54 @@ def plotMPB_2D(dbr, pr):
         if gap[0] > 1:
             ax.fill_between(x, gap[1]*scale_factor, gap[2]*scale_factor, color='red', alpha=0.2)    
 
+    # fig_Spol, fig_Ppol = test_reference_DBR_4()
 
-    print('kmax:', kmax)
+    plt.figure()
+    plt.title('2D-TM (S)')
+    plt.plot(angle_deg, tm_freqs*scale_factor, '.')
+    Xs = angle_deg
+    Ys = tm_freqs*scale_factor
+    # plt.xlim([0,1])
+    plt.ylim([0,2.5])
+    plt.grid()
+    plt.xlabel('angle (degrees)')
+    plt.ylabel('$\omega/\omega_{Bragg}$')
+    # Plot gaps
+    ax = plt.gca()
+    for gap in tm_gaps:
+        if gap[0] > 1:
+            ax.fill_between(x, gap[1]*scale_factor, gap[2]*scale_factor, color='blue', alpha=0.2)
+    
+    plt.figure()
+    plt.title('2D-TE (P)')
+    plt.plot(angle_deg, te_freqs*scale_factor, '.')
+    Xp = angle_deg
+    Yp = te_freqs*scale_factor
+    # plt.xlim([0,1])
+    plt.ylim([0,2.5])
+    plt.grid()
+    plt.xlabel('angle (degrees)')
+    plt.ylabel('$\omega/\omega_{Bragg}$')
+    # Plot gaps
+    ax = plt.gca()
+    for gap in te_gaps:
+        if gap[0] > 1:
+            ax.fill_between(x, gap[1]*scale_factor, gap[2]*scale_factor, color='red', alpha=0.2)
+
+    # print('kmax:', kmax)
     print('a1:', a1)
     print('a2:', a2)
     print('b1:', b1)
     print('b2:', b2)
+    print('kmax_x_n', kmax_x_n)
     print('kmax_y_n', kmax_y_n)
     print('g/b2', g/b2)
     print('1/b2', 1/b2)
-    print('ky_max', ky_max)
+    # print('ky_max', ky_max)
     
-    visualize_k_points(k_points, geometry_lattice_2D)
+    visualize_k_points(k_points, geometry_lattice_2D, theta_deg_list)
     # plt.title(f'k-points, $theta={theta_deg}\degree$')
+    return Xs,Ys,Xp,Yp
 
 def plotMPB_2D_vs_angle(dbr, pr, theta_deg):
     TE=False
@@ -1594,6 +1689,7 @@ def plotMPB_2D_vs_angle(dbr, pr, theta_deg):
     
     geometry_lattice_2D = mp.Lattice(size=mp.Vector3(1, 1, 0),
                                      basis_size=mp.Vector3(a1, a2, 1))
+
     
     theta_critical_rad = np.arctan(b2/b1)
     if theta_rad <= theta_critical_rad:
@@ -1689,12 +1785,16 @@ def visualize_k_points(k_points, lat, theta_deg_list=[]):
     b3 = mp.reciprocal_to_cartesian(mp.Vector3(0,0,1), lat)
     
     print('Reciprocal lattice vectors in cartesian coordinates:')
-    print('b1:', b1)
-    print('b2:', b2)
-    print('b3:', b3)
+    print('b1/(2*pi):', b1)
+    print('b2/(2*pi):', b2)
+    print('b3/(2*pi):', b3)
 
     k_cart = [mp.reciprocal_to_cartesian(kn, lat) for kn in k_points]
         
+    # print('k_points', k_points)
+    # print('k_cart', k_cart)
+    # raise
+    
     # x = [kn[0] for kn in k_points]
     # y = [kn[1] for kn in k_points]
     x = [k[0] for k in k_cart]
@@ -1720,8 +1820,38 @@ def visualize_k_points(k_points, lat, theta_deg_list=[]):
         print('x:', x)
         print('y:', y)
         # for k in ms.k_points:
-        
+    
+    plt.grid()
     return
+
+def getBZedge_k_point(theta_deg, lat):
+  '''
+  Given a lattice size a1,a2 and an angle theta, return the MPB k-point coordinates of the edge point.
+  '''
+  b1 = mp.reciprocal_to_cartesian(mp.Vector3(1,0,0), lat)
+  b2 = mp.reciprocal_to_cartesian(mp.Vector3(0,1,0), lat)
+  b3 = mp.reciprocal_to_cartesian(mp.Vector3(0,0,1), lat)
+
+  # print('Reciprocal lattice vectors in cartesian coordinates:')
+  # print('b1/(2*pi):', b1)
+  # print('b2/(2*pi):', b2)
+  # print('b3/(2*pi):', b3)
+  
+  # work out the cartesian coordinates
+  theta_rad = np.deg2rad(theta_deg)
+  L = (b1.norm()/2)/np.cos(theta_rad)
+  x = L*np.cos(theta_rad)
+  y = L*np.sin(theta_rad)
+  if y > b2.norm()/2:
+      L = (b2.norm()/2)/np.sin(theta_rad)
+      x = L*np.cos(theta_rad)
+      y = L*np.sin(theta_rad)
+  
+  # convert to the reciprocal lattice
+  kedge_reciprocal = mp.cartesian_to_reciprocal( mp.Vector3(x, y, 0), lat )
+  kx_mpb = kedge_reciprocal[0]
+  ky_mpb = kedge_reciprocal[1]
+  return kx_mpb, ky_mpb
 
 def plotMPB_hack(dbr, pr):
     
@@ -1966,11 +2096,11 @@ def main():
     # test_findBandEdges_v1()
     # test_findBandEdges_v2()
     # test_reference_DBR_3()
-    # test_reference_DBR_4()
+    test_reference_DBR_4()
     # testTMM()
     # testParallelPython()
     # testNanxyArrays()
-    plotMPB()
+    # plotMPB()
     # MPB_basis_size_test()
 
     # dbr, pr = reference_DBR_4()
