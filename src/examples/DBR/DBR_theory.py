@@ -56,8 +56,8 @@ class DBR():
     def getBrewsterAngles(self, degrees=False):
         '''
         Returns the Brewster angles (thetaB_1_deg, thetaB_2_deg), where:
-            thetaB_1_deg: Brewster angle if light is coming from medium n_in=n1 and the first layer is n2.
-            thetaB_2_deg: Brewster angle if light is coming from medium n_in=n2 and the first layer is n1.
+            * thetaB_1_deg: Brewster angle if light is coming from medium n_in=n1 and the first layer is n2.
+            * thetaB_2_deg: Brewster angle if light is coming from medium n_in=n2 and the first layer is n1.
         '''
         thetaB_1_rad = np.arctan(self.n2/self.n1)
         thetaB_2_rad = np.arctan(self.n1/self.n2)
@@ -1455,16 +1455,16 @@ def plotMPB_1D(dbr, pr):
 def plotMPB_2D(dbr, pr):
     
     # mode = 'fixed_angle'
-    # mode = 'k_transverse'
-    mode = 'vs_angle'
+    mode = 'k_transverse'
+    # mode = 'vs_angle'
     do_run_te = False
     do_run_tm = False
     
     num_bands = 3
     resolution = 32
     geometry = MPB_getGeometry(dbr)
+    n_in = pr.n_in
 
-    # TODO
     # theta_max_deg = 70
     # theta_max_rad = np.deg2rad(theta_max_deg)
     theta_deg = 0
@@ -1523,13 +1523,13 @@ def plotMPB_2D(dbr, pr):
         # ky_max = g/b2 # to stop at ky=g
         ky_max = 0.5
         k_points_all = []
-        for kx in mp.interpolate(5, [0,0.5]):
+        for kx in mp.interpolate(20, [0,0.5]):
         # for kx in [0,0.5]:
             k_points = [
                 mp.Vector3(kx, 0, 0),    # Gamma
                 mp.Vector3(kx, ky_max, 0) # M
             ]
-            k_points = mp.interpolate(20, k_points)
+            k_points = mp.interpolate(200, k_points)
             k_points_all.extend(k_points)
         k_points = k_points_all
         
@@ -1570,6 +1570,7 @@ def plotMPB_2D(dbr, pr):
           # angle = 
         angle_rad = np.arctan(ky/kx)
         angle_deg = np.rad2deg(angle_rad)
+        
         # print(kx)
         # print(angle)
         # angle = [ np.arctan((k[1]*b2)/(k[0]*b1))  for k in ms_2D.k_points ]
@@ -1598,6 +1599,9 @@ def plotMPB_2D(dbr, pr):
     plt.grid()
     plt.xlabel(xlabel)
     plt.ylabel('$\omega/\omega_{Bragg}$')
+    
+    plotAngles(dbr, g, n_in)
+    
     # Plot gaps
     ax = plt.gca()
     for gap in tm_gaps:
@@ -1612,6 +1616,9 @@ def plotMPB_2D(dbr, pr):
     plt.grid()
     plt.xlabel(xlabel)
     plt.ylabel('$\omega/\omega_{Bragg}$')
+
+    plotAngles(dbr, g, n_in)
+
     # Plot gaps
     ax = plt.gca()
     for gap in te_gaps:
@@ -1622,6 +1629,10 @@ def plotMPB_2D(dbr, pr):
 
     plt.figure()
     plt.title('2D-TM (S)')
+    
+    # getAngleBasedOnFrequency()
+
+    # for idx, y in enumerate():
     plt.plot(angle_deg, tm_freqs*scale_factor, '.')
     Xs = angle_deg
     Ys = tm_freqs*scale_factor
@@ -1661,6 +1672,8 @@ def plotMPB_2D(dbr, pr):
     print('kmax_y_n', kmax_y_n)
     print('g/b2', g/b2)
     print('1/b2', 1/b2)
+    print('n_in', n_in)
+    
     # print('ky_max', ky_max)
     
     visualize_k_points(k_points, geometry_lattice_2D, theta_deg_list)
@@ -1777,6 +1790,40 @@ def plotMPB_2D_vs_angle(dbr, pr, theta_deg):
     print('kmax_y_n', kmax_y_n)
     visualize_k_points(k_points, geometry_lattice_2D, [theta_deg])
     plt.title(f'k-points, $theta={theta_deg}\degree$')
+
+def plotAngles(dbr, g, n_in):
+    # plot angles
+    for theta_deg in [0,20,40,60,90]:
+      ky_over_g = np.linspace(0,1)
+      y = getAngleSlope(dbr, ky_over_g, g, n_in, theta_deg)
+      plt.plot(ky_over_g, y, 'k--')
+      
+    # plot Brewster angles
+    (thetaB_1_deg, thetaB_2_deg) = dbr.getBrewsterAngles(degrees=True)
+    print("thetaB_1_deg, thetaB_2_deg: ", thetaB_1_deg, thetaB_2_deg)
+    for theta_deg in [thetaB_1_deg, thetaB_2_deg]:
+      ky_over_g = np.linspace(0,1)
+      y = getAngleSlope(dbr, ky_over_g, g, n_in, theta_deg)
+      plt.plot(ky_over_g, y, 'k-')
+
+    # plot light cones
+    for n in [dbr.n1, dbr.n2]:
+      ky_over_g = np.linspace(0,1)
+      y = getLightCone(dbr, ky_over_g, g, n)
+      plt.plot(ky_over_g, y, 'r:')
+
+def getAngleSlope(dbr, ky_over_g, g, n_in, theta_deg):
+  theta_rad = np.deg2rad(theta_deg)
+  ky = ky_over_g * g
+  omega = ky * ( (get_c0()/n_in)/np.sin(theta_rad) )
+  y = omega/dbr.getBraggFrequency()
+  return y
+
+def getLightCone(dbr, ky_over_g, g, n_in):
+  ky = ky_over_g * g
+  omega = ky * (get_c0()/n_in)
+  y = omega/dbr.getBraggFrequency()
+  return y
 
 def visualize_k_points(k_points, lat, theta_deg_list=[]):
     
