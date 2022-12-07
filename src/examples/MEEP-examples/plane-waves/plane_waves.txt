@@ -1,0 +1,7 @@
+https://meep.readthedocs.io/en/latest/FAQ/#how-do-i-create-an-oblique-planewave-source
+
+https://meep.readthedocs.io/en/latest/Scheme_Tutorials/Eigenmode_Source/
+https://meep.readthedocs.io/en/latest/Python_Tutorials/Eigenmode_Source/
+
+https://meep.readthedocs.io/en/latest/Scheme_Tutorials/Resonant_Modes_and_Transmission_in_a_Waveguide_Cavity/#band-diagram
+https://meep.readthedocs.io/en/latest/Python_Tutorials/Resonant_Modes_and_Transmission_in_a_Waveguide_Cavity/#band-diagram
