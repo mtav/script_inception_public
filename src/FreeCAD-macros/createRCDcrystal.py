@@ -20,7 +20,8 @@ st = time.time()
 FreeCAD.Console.PrintMessage("START...\n")
 ###############################################################################
 
-doc = FreeCAD.activeDocument()
+#doc = FreeCAD.activeDocument()
+doc = App.newDocument()
 
 ###############################################################################
 ##### PARAMETERS YOU CAN CHANGE:
@@ -34,7 +35,8 @@ Nz=1
 # unit-cell size
 cubic_unit_cell_size = 1 # scaling messes up boolean ops sometimes :(
 # cylinder radius
-R=0.05 # cylinder radius
+R=0.10 # cylinder radius
+create_array = False # create array (takes longer)
 ###############################################################################
 ##### DO NOT EDIT ANYTHING BELOW THIS LINE, UNLESS YOU KNOW WHAT YOU ARE DOING.
 ###############################################################################
@@ -409,29 +411,35 @@ if postprocess:
     # App.activeDocument().Common.Shapes = [box, RCD, FRD]
     App.activeDocument().Common.Shapes = [box, crystal]
 
-if convertToMesh:
-    FreeCAD.ActiveDocument.recompute()
-    # print(RCD_truncated)
-    # print(type(RCD_truncated))
-    
-    __shape__=Part.getShape(RCD_truncated,"")
-    # print(__shape__)
-    __mesh__ = App.activeDocument().addObject("Mesh::Feature","Mesh")
-    __mesh__.Mesh = MeshPart.meshFromShape(Shape=__shape__, LinearDeflection=0.1, AngularDeflection=0.523599, Relative=False)
-    
-    _obj_ = Draft.make_ortho_array(__mesh__,
-                                    v_x = FreeCAD.Vector(cubic_unit_cell_size, 0.0, 0.0),
-                                    v_y = FreeCAD.Vector(0.0, cubic_unit_cell_size, 0.0),
-                                    v_z = FreeCAD.Vector(0.0, 0.0, cubic_unit_cell_size),
-                                    n_x=Nx, n_y=Ny, n_z=Nz, use_link=True)
-    _obj_.Fuse = False
-else:
-    _obj_ = Draft.make_ortho_array(RCD_truncated,
-                                    v_x = FreeCAD.Vector(cubic_unit_cell_size, 0.0, 0.0),
-                                    v_y = FreeCAD.Vector(0.0, cubic_unit_cell_size, 0.0),
-                                    v_z = FreeCAD.Vector(0.0, 0.0, cubic_unit_cell_size),
-                                    n_x=Nx, n_y=Ny, n_z=Nz, use_link=True)
-    _obj_.Fuse = False
+if create_array:
+  if convertToMesh:
+      FreeCAD.ActiveDocument.recompute()
+      # print(RCD_truncated)
+      # print(type(RCD_truncated))
+      
+      __shape__=Part.getShape(RCD_truncated,"")
+      print('type(RCD_truncated)', type(RCD_truncated))
+      print('type(__shape__)', type(__shape__))
+      print('RCD_truncated.Shape:', RCD_truncated.Shape)
+      print('RCD_truncated.Shape.Volume:', RCD_truncated.Shape.Volume)
+      #print('Volume 2:', __shape__.Volume)
+      # print(__shape__)
+      __mesh__ = App.activeDocument().addObject("Mesh::Feature","Mesh")
+      __mesh__.Mesh = MeshPart.meshFromShape(Shape=__shape__, LinearDeflection=0.1, AngularDeflection=0.523599, Relative=False)
+      
+      _obj_ = Draft.make_ortho_array(__mesh__,
+                                      v_x = FreeCAD.Vector(cubic_unit_cell_size, 0.0, 0.0),
+                                      v_y = FreeCAD.Vector(0.0, cubic_unit_cell_size, 0.0),
+                                      v_z = FreeCAD.Vector(0.0, 0.0, cubic_unit_cell_size),
+                                      n_x=Nx, n_y=Ny, n_z=Nz, use_link=True)
+      _obj_.Fuse = False
+  else:
+      _obj_ = Draft.make_ortho_array(RCD_truncated,
+                                      v_x = FreeCAD.Vector(cubic_unit_cell_size, 0.0, 0.0),
+                                      v_y = FreeCAD.Vector(0.0, cubic_unit_cell_size, 0.0),
+                                      v_z = FreeCAD.Vector(0.0, 0.0, cubic_unit_cell_size),
+                                      n_x=Nx, n_y=Ny, n_z=Nz, use_link=True)
+      _obj_.Fuse = False
 
 #createDirectRCD()
 #RCDCubicUnitCell(0, 0, 0)
@@ -457,6 +465,11 @@ Gui.ActiveDocument.ActiveView.setAxisCross(True)
 Gui.SendMsgToActiveView("ViewFit")
 
 print(f'convertToMesh={convertToMesh}, postprocess={postprocess}, doFRD={doFRD}')
+
+print('type(RCD_truncated)', type(RCD_truncated))
+print('RCD_truncated.Shape:', RCD_truncated.Shape)
+print('RCD_truncated.Shape.Volume:', RCD_truncated.Shape.Volume)
+print('RCD_truncated.Shape.Area:', RCD_truncated.Shape.Area)
 
 ###############################################################################
 FreeCAD.Console.PrintMessage("...DONE\n")
