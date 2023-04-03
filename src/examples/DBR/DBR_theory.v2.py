@@ -1176,11 +1176,10 @@ def test_reference_DBR_4(mode):
     scale_factor = (2*np.pi*get_c0()/dbr.a)/dbr.getBraggFrequency()
 
     # get the bandstructure points
-    Xs,Ys,Xp,Yp = plotMPB_2D(dbr, pr, mode)
+    Xs,Ys,Xp,Yp = plotMPB_2D(dbr, pr, mode, Ny=2)
 
     fig_list = []
     for Spol in [True, False]:
-        # Spol = True
         if Spol:
             pol = 's'
         else:
@@ -1193,6 +1192,8 @@ def test_reference_DBR_4(mode):
         plt.title(f'pol={pol}, Nperiods={Nperiods}+0.5')
         fig.tight_layout()
         fig_list.append(fig)
+        print('Xs, Ys data shape:', Xs.shape)
+        
         if Spol:
           plt.plot(Xs, Ys, '.')
         else:
@@ -1456,13 +1457,24 @@ def plotMPB_1D(dbr, pr):
 def plotMPB_2D(dbr, pr, mode,
                do_visualize_k_points=True,
                do_plotAngles=True,
-               do_PlotOmegaVsAngle=True):
+               do_PlotOmegaVsAngle=True,
+               Nx = 100,
+               Ny = 10,
+               theta_min_deg=0,
+               theta_max_deg=90):
     '''
     The k-point path used will be defined by *mode*.
     *mode* can be one of the following:
         mode = 'fixed_angle' -> computes omega values for a fixed angle theta_deg (=0 by default, i.e. normal incidence, ky=0)
         mode = 'k_transverse' -> k-points will raster-scan over kx in [0,0.5] and ky in [0,0.5], with lines along fixed ky values.
         mode = 'vs_angle' -> k-points will follow fixed angle lines, for angles going from 0 to 90 degrees.
+    
+    plot resolution settings:
+        Ny: Number of interpolated points along kx or along one given angle.
+        Nx: Number of interpolated points along ky or between angles.
+        theta_min_deg: min angle in degrees when using vs_angle mode
+        theta_max_deg: max angle in degrees when using vs_angle mode
+    
     do_visualize_k_points: enable or disable k-point visualization.
     do_plotAngles: enable or disable angle plot.
     do_PlotOmegaVsAngle: enable or disable omega/omega_Bragg vs angle plot.
@@ -1475,9 +1487,9 @@ def plotMPB_2D(dbr, pr, mode,
 
     '''
 
-    # plot resolution settings
-    Nx = 100
-    Ny = 10
+    # # plot resolution settings
+    # Nx = 100
+    # Ny = 10
     
     num_bands = 3
     resolution = 32
@@ -1507,20 +1519,22 @@ def plotMPB_2D(dbr, pr, mode,
             mp.Vector3(0,0),               # Gamma
             mp.Vector3(kmax_x_n,kmax_y_n), # M
         ]
-        k_points = mp.interpolate(10, k_points)
+        k_points = mp.interpolate(Ny, k_points)
     elif mode == 'vs_angle':
         k_points_all = []
-        theta_deg_list = np.linspace(0, 90, Nx)
+        theta_deg_list = np.linspace(theta_min_deg, theta_max_deg, Nx)
         for theta_deg in theta_deg_list:
             kmax_x_n, kmax_y_n = getBZedge_k_point(theta_deg, geometry_lattice_2D)
             k_points = [
-                mp.Vector3(0,0),               # Gamma
-                mp.Vector3(kmax_x_n,kmax_y_n), # M
+                mp.Vector3(0, 0),               # Gamma
+                # 1e-3*mp.Vector3(kmax_x_n, kmax_y_n), # M
+                # 0.5*mp.Vector3(kmax_x_n, kmax_y_n), # M
+                mp.Vector3(kmax_x_n, kmax_y_n), # M
             ]
             k_points = mp.interpolate(Ny, k_points)
             k_points_all.extend(k_points)
         k_points = k_points_all
-    else:
+    elif mode == 'k_transverse':
         ky_max = 0.5
         k_points_all = []
         for kx in mp.interpolate(Ny, [0,0.5]):
@@ -1532,6 +1546,8 @@ def plotMPB_2D(dbr, pr, mode,
             k_points = mp.interpolate(Nx, k_points)
             k_points_all.extend(k_points)
         k_points = k_points_all
+    else:
+        raise Exception('Unknown mode.')
         
     ms_2D = mpb.ModeSolver(
         geometry = geometry,
@@ -2208,7 +2224,7 @@ def testPlot():
 def main():
     '''
     Plot TMM bands.
-    Plot MPB bands on top.
+    Plot MPB bands on top. (TODO: As continous lines instead of a scatter plot.)
     Plot theory bands.
     Reference DBR: 4
     '''
@@ -2225,8 +2241,8 @@ def main():
     # mode = 'k_transverse'
     # mode = 'vs_angle'
     # test_reference_DBR_4('fixed_angle')
-    # test_reference_DBR_4('k_transverse')
-    test_reference_DBR_4('vs_angle')
+    test_reference_DBR_4('k_transverse')
+    # test_reference_DBR_4('vs_angle')
 
     # testPlot()
     # testTMM()
