@@ -279,6 +279,10 @@ if __name__ == '__main__':
     import sys
     import bpy
     from io_mesh_stl import blender_utils
+    
+    #######################################################
+    ##### Changes from Blender 2.79 io_mesh_stl addon
+    ##### to help with CLI-based STL import:
     from bpy_extras.io_utils import (
             ImportHelper,
             ExportHelper,
@@ -309,3 +313,4 @@ if __name__ == '__main__':
           if region.type == 'WINDOW':
             override = {'area': area, 'region': region, 'edit_object': bpy.context.edit_object}
             bpy.ops.view3d.view_all(override, center=False)
+    #######################################################
