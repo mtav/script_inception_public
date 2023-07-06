@@ -57,6 +57,29 @@ Reference notes for upgrading addons to Blender >=2.80:
     bpy.context.object.dupli_type = 'VERTS'
     -> bpy.context.object.instance_type = 'VERTS'
 
+12) AttributeError: module 'collections' has no attribute 'Iterable':
+  https://stackoverflow.com/questions/59809785/i-get-a-attributeerror-module-collections-has-no-attribute-iterable-when-i
+
+  collections.Iterable -> collections.abc.Iterable
+  
+  in selectObjects
+      if not isinstance(obj_list, collections.Iterable):
+  AttributeError: module 'collections' has no attribute 'Iterable'
+
+13) Groups -> Collections:
+  https://www.katsbits.com/codex/groups/#:~:text=For%20newer%20versions%20of%20Blender,part%20of%20a%20larger%20group.
+  in createGroup
+      bpy.ops.group.create(name=group_name)
+    File "...\blender-3.6.0-windows-x64\3.6\scripts\modules\bpy\ops.py", line 113, in __call__
+      ret = _op_call(self.idname_py(), None, kw)
+  AttributeError: Calling operator "bpy.ops.group.create" error, could not be found
+
+14) Check Blender version:
+  if bpy.app.version >= (2, 80, 0):
+    pass
+  else:
+    pass
+
 Extra notes:
 ============
 Addon not registering/loading? -> Check for imports of other modules with bl_info definitions in them.

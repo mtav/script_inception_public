@@ -432,9 +432,9 @@ def add_arrow(self, start_point, end_point, name='arrow', cone_length=None, cone
 
       # join cylinder and cone
       bpy.ops.object.select_all(action = 'DESELECT')
-      bpy.context.scene.objects.active = arrow_cylinder_obj
-      arrow_cylinder_obj.select = True
-      arrow_cone_obj.select = True
+      bpy.context.view_layer.objects.active = arrow_cylinder_obj
+      arrow_cylinder_obj.select_set(True)
+      arrow_cone_obj.select_set(True)
       bpy.ops.object.join()
     
     # name object and mesh

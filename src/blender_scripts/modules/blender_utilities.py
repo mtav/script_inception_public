@@ -205,17 +205,39 @@ def duplicateObject(obj, linked=True, translation_vector = (0,0,0), context=bpy.
   duplicate = context.object
   return duplicate
 
-def createGroup(obj_list, active_object=None, context = bpy.context, group_name=None):
+def createGroup(obj_list, active_object=None, context = bpy.context, group_name='Collection'):
+  '''
+  Creates a group containing objects from *obj_list*.
+  active_object : Object to make active if specified.
+  context : bpy.context
+  group_name : optional group name
+  
+  For Blender >=2.8, Collections are created instead of groups.
+  '''
+  
+  # Select objects:
   selectObjects(obj_list, active_object=active_object, context = bpy.context)
-  if group_name:
-    bpy.ops.group.create(name=group_name)
+  
+  
+  if bpy.app.version >= (2, 80, 0):
+        # Remove selected objects from all collections:
+        bpy.ops.collection.objects_remove_all()
+        # Create collection:
+        myCol = bpy.data.collections.new(group_name)
+        # Add objects to collection:
+        bpy.context.scene.collection.children.link(myCol)
+        for obj in obj_list:
+            myCol.objects.link(obj)
   else:
-    bpy.ops.group.create()
+    if group_name:
+      bpy.ops.group.create(name=group_name)
+    else:
+      bpy.ops.group.create()
   return
 
 def selectObjects(obj_list, active_object=None, context = bpy.context):
 
-  if not isinstance(obj_list, collections.Iterable):
+  if not isinstance(obj_list, collections.abc.Iterable):
     obj_list = [obj_list]
   
   bpy.ops.object.select_all(action = 'DESELECT')
