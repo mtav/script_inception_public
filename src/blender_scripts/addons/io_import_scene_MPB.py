@@ -8,7 +8,7 @@ bl_info = {
     'name': 'Import MPB output (.out)',
     'author': 'mtav',
     'version': (0, 0, 1),
-    'blender': (2, 76, 0),
+    'blender': (3, 4, 1),
     'location': 'File > Import > MPB (.out)',
     'description': 'Import k-points from MPB output files (.out)',
     'warning': '',
@@ -43,26 +43,26 @@ class Import_MPB_data(Operator, ImportHelper, AddObjectHelper):
     # ImportHelper mixin class uses this
     filename_ext = ".out"
 
-    filter_glob = StringProperty(
+    filter_glob : StringProperty(
             default="*.out;*.dat",
             options={'HIDDEN'},
             )
 
-    bool_cone_length_automatic = BoolProperty(name="Automatic cone length", default=True)
+    bool_cone_length_automatic  : BoolProperty(name="Automatic cone length", default=True)
     cone_length = FloatProperty(
             name="cone_length",
             default=1/5.0,
             description="cone length",
             )
 
-    bool_cone_radius_automatic = BoolProperty(name="Automatic cone radius", default=True)
+    bool_cone_radius_automatic : BoolProperty(name="Automatic cone radius", default=True)
     cone_radius = FloatProperty(
             name="cone_radius",
             default=1/20.0,
             description="cone radius",
             )
 
-    bool_cylinder_radius_automatic = BoolProperty(name="Automatic cylinder radius", default=True)
+    bool_cylinder_radius_automatic : BoolProperty(name="Automatic cylinder radius", default=True)
     cylinder_radius = FloatProperty(
             name="cylinder_radius",
             default=1/40.0,
@@ -114,11 +114,11 @@ def menu_func_import(self, context):
 
 def register():
     bpy.utils.register_class(Import_MPB_data)
-    bpy.types.INFO_MT_file_import.append(menu_func_import)
+    bpy.types.TOPBAR_MT_file_import.append(menu_func_import)
 
 def unregister():
     bpy.utils.unregister_class(Import_MPB_data)
-    bpy.types.INFO_MT_file_import.remove(menu_func_import)
+    bpy.types.TOPBAR_MT_file_import.remove(menu_func_import)
 
 # TODO: Try to integrate this into MPB_parser.py somehow if possible (import bpy&co only when needed)
 class Importer():

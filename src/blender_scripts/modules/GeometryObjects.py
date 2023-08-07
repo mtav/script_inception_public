@@ -573,22 +573,22 @@ def add_lattice_objects(self, a0, a1, a2, b0, b1, b2, name='lattice_objects', co
   obj_rec_lat_shifted_b2.name = 'b2'
   
   for i in [obj_lat_empty, obj_lat_a0, obj_lat_a1, obj_lat_a2, obj_lat_cell]:
-    i.hide = True
+    i.hide_set(True)
     
   for i in [obj_lat_shifted_empty, obj_lat_shifted_a0, obj_lat_shifted_a1, obj_lat_shifted_a2, obj_lat_shifted_cell]:
-    i.hide = True
-  
+    i.hide_set(True)
+
   for i in [obj_rec_lat_empty, obj_rec_lat_b0, obj_rec_lat_b1, obj_rec_lat_b2, obj_rec_lat_cell]:
-    i.hide = True
+    i.hide_set(True)
     
   for i in [obj_rec_lat_shifted_empty, obj_rec_lat_shifted_b0, obj_rec_lat_shifted_b1, obj_rec_lat_shifted_b2, obj_rec_lat_shifted_cell]:
-    i.hide = True
+    i.hide_set(True)
   
-  obj_rec_lat_shifted_cell.hide = False
-  obj_rec_lat_empty.hide = False
-  obj_rec_lat_b0.hide = False
-  obj_rec_lat_b1.hide = False
-  obj_rec_lat_b2.hide = False
+  obj_rec_lat_shifted_cell.hide_set(False)
+  obj_rec_lat_empty.hide_set(False)
+  obj_rec_lat_b0.hide_set(False)
+  obj_rec_lat_b1.hide_set(False)
+  obj_rec_lat_b2.hide_set(False)
   
   # TODO: figure out why this fails with "incorrect context":
   #selectObjects([obj_lat_empty, obj_lat_a0, obj_lat_a1, obj_lat_a2, obj_lat_cell], context=bpy.context)

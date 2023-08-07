@@ -80,6 +80,13 @@ Reference notes for upgrading addons to Blender >=2.80:
   else:
     pass
 
+15) AttributeError: 'Object' object has no attribute 'hide'
+    i.hide = True -> i.hide_set(True)
+    https://blender.stackexchange.com/questions/140481/blender-2-8-object-object-has-no-attribute-hide
+    As the object.hide in Blender 2.79 is replaced by getter and setter function:
+        object.hide_get() # get the hide value {True, False}
+        object.hide_set(True) # set hide to True
+
 Extra notes:
 ============
 Addon not registering/loading? -> Check for imports of other modules with bl_info definitions in them.
