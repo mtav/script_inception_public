@@ -21,6 +21,8 @@ import meep as mp
 from meep import mpb
 import matplotlib.pyplot as plt
 from matplotlib.patches import Rectangle
+from scipy.io import savemat
+import os
 
 # https://blakeaw.github.io/2020-05-25-improve-matplotlib-notebook-inline-res/
 plt.rcParams['figure.dpi'] = 300
