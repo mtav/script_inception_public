@@ -13,6 +13,7 @@ import argparse
 import matplotlib
 # import matplotlib.pyplot as plt # This causes problems when called from Matlab's system() function.
 from utilities.common import float_array
+import textwrap
 
 # ..todo:: nicer print format
 # ..todo:: store lattices in transposed form for easier access to vectors?
@@ -696,13 +697,19 @@ def plotMPB(kpoints, data, a = 1, title='', saveas='', show=True, x_range=[], y_
   return
 
 def main():
-  parser = argparse.ArgumentParser()
+  parser = argparse.ArgumentParser(formatter_class=argparse.RawDescriptionHelpFormatter,
+                                   description=textwrap.dedent('''\
+                                   Parse output from MPB and Python-MPB, i.e. ".out" files obtained using:
+                                       mpb example.ctl > example.out
+                                     or:
+                                       python mpb_example.py > example.out
+                                  '''))
   parser.add_argument('-n', '--dry-run', action='store_true')
   parser.add_argument('-v', '--verbose', action='count', dest='verbosity', default=0)
   parser.add_argument('-m', '--merge-datasets', action='store_true')
   parser.add_argument('-a', '--angles', action='store_true', help='print the angles in degrees of k relative to the Z axis')
   parser.add_argument('--saveas', default='', help='basename for output files. Example: "foo" -> "foo.csv", "foo.png"')
-  parser.add_argument('infile', type=argparse.FileType('r'))
+  parser.add_argument('infile', type=argparse.FileType('r'), metavar='INFILE', help='.out file to parse')
 
   subparsers = parser.add_subparsers(help='Available subcommands', dest='chosen_subcommand')
 
