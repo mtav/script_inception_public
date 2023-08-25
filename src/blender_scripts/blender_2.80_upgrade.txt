@@ -91,6 +91,10 @@ Reference notes for upgrading addons to Blender >=2.80:
     See SIP_menu.py
     # How to add a menu and more: https://blender.stackexchange.com/questions/292694/how-can-i-add-a-custom-menu-entry-to-the-topbar-of-the-3d-viewport
 
+17) View align property not found:
+      #box.prop(self, 'view_align') # blender <=2.79
+      box.prop(self, 'align') # blender >=2.8
+
 Extra notes:
 ============
 Addon not registering/loading? -> Check for imports of other modules with bl_info definitions in them.
