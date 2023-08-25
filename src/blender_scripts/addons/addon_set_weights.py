@@ -8,7 +8,7 @@ bl_info = {
     "name": "Set weights to vertex index",
     "author": "mtav",
     "version": (1, 0),
-    "blender": (2, 75, 0),
+    "blender": (3, 4, 0),
     "location": "SIP panel",
     "description": "Set weights to vertex index",
     "warning": "",
