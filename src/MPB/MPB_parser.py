@@ -4,6 +4,7 @@
 # test data in: ~/DATA/MPB/k-point-import-tests
 # example: ~/DATA/MPB/k-point-import-tests/test.out
 
+import io
 import os
 import re
 import sys
@@ -37,9 +38,17 @@ class MPB_data():
     self.eps_harmonic_mean = None
     self.FF_bigger_than_one = None
     self.FF_mean_position = None
-    self.gap_list = None
+    self.gap_list = []
     return
-    
+
+  # @property
+  # def k_points(self):
+  #       return self._k_points
+  # @k_points.setter
+  # def k_points(self, value):
+  #   print('SETTER CALLED')
+  #   self._k_points = value
+
   def __str__(self):
     (a0,a1,a2) = self.getLatticeVectors()
     (b0,b1,b2) = self.getReciprocalLatticeVectors()
@@ -250,12 +259,24 @@ class MPB_Gap():
   def __str__(self):
     return 'Gap from band {} ({}) to band {} ({}), {}%'.format(self.lower_band, self.gap_min, self.upper_band, self.gap_max, self.gap_size)
 
-def parse_MPB(infile, verbosity=0, merge_datasets=False):
+def parse_MPB(infile_flexible, verbosity=0, merge_datasets=False):
   '''
   Parses an MPB output ".out" file (command-line output from MPB).
-  infile: A io.TextIOWrapper instance, as returned by f=open(path)
+  infile_flexible: A io.TextIOWrapper instance, as returned by f=open(path), or simply a filename string.
   Returns a list of **MPB_data** instances.
+
+  TODO: Test/fix support for mpb split runs, with .out files including mutliple datasets.
   '''
+
+  close_file = False
+  if not isinstance(infile_flexible, io.TextIOWrapper):
+    if isinstance(infile_flexible, str):
+      infile = open(infile_flexible)
+      close_file = True
+    else:
+      raise Exception(f'infile_flexible of type {type(infile_flexible)}, but should be of type io.TextIOWrapper or str.')
+  else:
+    infile = infile_flexible
 
   MPB_data_list = []
   gap_list = []
@@ -387,7 +408,11 @@ def parse_MPB(infile, verbosity=0, merge_datasets=False):
   MPB_data_object.FF_bigger_than_one = FF_bigger_than_one
   MPB_data_object.FF_mean_position = FF_mean_position
   MPB_data_object.gap_list = gap_list
+
   MPB_data_list.append(MPB_data_object)
+
+  if close_file:
+    infile.close()
 
   return(MPB_data_list)
 
@@ -756,3 +781,12 @@ def main():
 
 if __name__ == '__main__':
   main()
+  # obj = MPB_data()
+  # obj = myfunc()
+  # myfile = 'ctl.example.out'
+  # print(os.getcwd())
+  # if not os.path.exists(myfile):
+  #   raise
+  # obj = parse_MPB(myfile)
+  # # obj._k_points = [1,2,3,4,56,7]
+  # print(obj[0])
