@@ -267,10 +267,16 @@ def parse_MPB(infile, verbosity=0, merge_datasets=False):
 
   coord_pattern = '\s*\((.+),(.+),(.+)\)\s*'
 
+  # default values
+  eps_low = None
+  eps_high = None
+  eps_arithmetic_mean = None
+  eps_harmonic_mean = None
+  FF_bigger_than_one = None
+  FF_mean_position = None
+
   for idx, line in enumerate(infile):
     
-    #print(idx, line)
-
     lattice_match = re.match(r'Lattice vectors:', line)
     if lattice_match:
       if data:
@@ -306,8 +312,20 @@ def parse_MPB(infile, verbosity=0, merge_datasets=False):
           raise Exception('Failed to parse reciprocal lattice vector. coord_line = {}'.format(coord_line))
       if verbosity>0:
         print('new reciprocal_lattice:\n {}'.format(reciprocal_lattice))
-    
-    k_points_match = re.match(r'(\d+) k-points:', line)
+
+    ##### Read k-points
+    '''
+    CTL output:
+      16 k-points:
+       (0,0,0)
+       (0.1,0,0)
+    PY output:
+      16 k-points
+        Vector3<0.0, 0.0, 0.0>
+        Vector3<0.1, 0.0, 0.0>
+        Vector3<0.2, 0.0, 0.0>    
+    '''
+    k_points_match = re.match(r'(\d+) k-points:?', line)
     if k_points_match:
       Nkpoints = int(k_points_match.group(1))
       k_points = []
@@ -315,6 +333,8 @@ def parse_MPB(infile, verbosity=0, merge_datasets=False):
         coord_line = infile.readline()
         try:
           coord_match = re.match(coord_pattern, coord_line)
+          if coord_match is None:
+            coord_match = re.match('\s*Vector3<([-+0-9.]+), ([-+0-9.]+), ([-+0-9.]+)>\s*', coord_line)
           k = [float(coord_match.group(1)), float(coord_match.group(2)), float(coord_match.group(3))]
           k_points.append(k)
         except:
@@ -335,37 +355,10 @@ def parse_MPB(infile, verbosity=0, merge_datasets=False):
         data_line = tuple(float_array(data_string[1:]))
         data.append(data_line)
 
+    # fill factor line: Not generated when using python MPB
     fill_factor_match = re.match(r'epsilon: (\d+(?:\.\d+)?)-(\d+(?:\.\d+)?), mean (\d+(?:\.\d+)?), harm. mean (\d+(?:\.\d+)?), (\d+(?:\.\d+)?)% > 1, (\d+(?:\.\d+)?)% "fill"', line)
     if fill_factor_match:
-      # output-nrod_2.40.nbg_1.00/nrod_2.40.nbg_1.00.rn_0.21.out
-      # epsilon: 1-5.76, mean 3.84056, harm. mean 2.05085, 65.4663% > 1, 59.6756% "fill"
-      # epsilon: 1-1, mean 1, harm. mean 1, 0% > 1, 100% "fill"
-
-      # from mpb/mpb/epsilon.c :
-      # mpi_one_printf("epsilon: %g-%g, mean %g, harm. mean %g, "
-      # "%g%% > 1, %g%% \"fill\"\n",
-      # eps_low, eps_high, eps_mean, eps_inv_mean,
-      # (100.0 * fill_count) / N, 
-      # eps_high == eps_low ? 100.0 :
-      # 100.0 * (eps_mean-eps_low) / (eps_high-eps_low));
-      # N = mdata->nx * mdata->ny * mdata->nz;
-      # eps_mean /= N;
-      # // arithmetic mean
-      # eps_mean = eps_mean/N;
-      # // harmonic mean
-      # eps_inv_mean = N/eps_inv_mean;
-      # if (epsilon[i] > 1.0001) ++fill_count;
-      # mpi_one_printf("epsilon: %g-%g, mean %g, harm. mean %g, %g%% > 1, %g%% \"fill\"\n",
-      # eps_low,
-      # eps_high,
-      # eps_mean,
-      # eps_inv_mean,
-      # (100.0 * fill_count) / N, // how many percent have eps > 1.0001
-      # eps_high == eps_low ? 100.0 : 100.0 * (eps_mean-eps_low) / (eps_high-eps_low));
-      # if eps_high == eps_low:
-      #   100.0
-      # else:
-      #   100.0 * (eps_mean-eps_low) / (eps_high-eps_low));
+      # cf mpb/mpb/epsilon.c
       eps_low = fill_factor_match.group(1)
       eps_high = fill_factor_match.group(2)
       eps_arithmetic_mean = fill_factor_match.group(3)
@@ -373,45 +366,12 @@ def parse_MPB(infile, verbosity=0, merge_datasets=False):
       FF_bigger_than_one = fill_factor_match.group(5)
       FF_mean_position = fill_factor_match.group(6)
 
-    # gap_match = re.match(r'epsilon: (\d+(?:\.\d+)?)-(\d+(?:\.\d+)?), mean (\d+(?:\.\d+)?), harm. mean (\d+(?:\.\d+)?), (\d+(?:\.\d+)?)% > 1, (\d+(?:\.\d+)?)% "fill"', line)
-    gap_match = re.match(r'Gap from band (\d+) \((\d+(?:\.\d+)?)\) to band (\d+) \((\d+(?:\.\d+)?)\), (\d+(?:\.\d+)?)%', line)    
+    gap_match = re.match(r'Gap from band (\d+) \((\d+(?:\.\d+)?)\) to band (\d+) \((\d+(?:\.\d+)?)\), (\d+(?:\.\d+)?)%', line)
     if gap_match:
-      # Gap from band 2 (0.5131975478560308) to band 3 (0.515014566007033), 0.3534325508334174%
-      # print(line)
-      # print(gap_match.groups())
       gap = MPB_Gap(gap_match.groups())
-      # print(gap)
       gap_list.append(gap)
-      
-      # (lower_band, gap_min, upper_band, gap_max, gap_size) = gap_match.groups()
-      # print((lower_band, gap_min, upper_band, gap_max, gap_size))
-      # raise Exception('GAGGA')
-
 
     geometric_objects_match = re.match(r'Geometric objects:', line)
-    #if geometric_objects_match:
-      #raise
-      #p=re.compile('Geometric objects:.*Geometric object tree', re.DOTALL)
-      #print(p.search(s).group(0))
-      #raise
-     #sphere, center = (0,0,0)
-          #radius 1
-          #dielectric constant epsilon = 12
-     #cylinder, center = (0,0,0)
-          #radius 1, height 2, axis (0.381, 0.508001, 0.635001)
-          #dielectric constant epsilon = 12
-     #cone, center = (0,0,0)
-          #radius 1, height 2, axis (0.381, 0.508001, 0.635001)
-          #radius2 6
-          #dielectric constant epsilon = 12
-     #block, center = (0,0,0)
-          #size (1,2,3)
-          #axes (0.406138,0.507673,0.609208), (0.442719,0.505964,0.56921), (0.458831,0.504715,0.550598)
-          #dielectric constant epsilon = 12
-     #ellipsoid, center = (0,0,0)
-          #size (1,2,3)
-          #axes (0.406138,0.507673,0.609208), (0.442719,0.505964,0.56921), (0.458831,0.504715,0.550598)
-          #dielectric constant epsilon = 12
 
   MPB_data_object = MPB_data()
   MPB_data_object.lattice = lattice
