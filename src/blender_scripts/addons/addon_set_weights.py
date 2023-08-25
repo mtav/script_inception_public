@@ -9,7 +9,7 @@ bl_info = {
     "author": "mtav",
     "version": (1, 0),
     "blender": (3, 4, 0),
-    "location": "SIP panel",
+    "location": "View3D -> SIP menu",
     "description": "Set weights to vertex index",
     "warning": "",
     "wiki_url": "",
