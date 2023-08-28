@@ -1,13 +1,19 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-##### Draft/notes for a setup script for windows. Python? Bash? Windows .bat? Powershell? or NSIS? Or just .zip files that can be installed in Blender? (best option, system independent, standard way, just requires releases instead of only a git repo)
-##### Script might still be useful for dev environment setup.
+'''
+Setup script for windows.
 
-raise
-#########################
-TODO: create setup script for windows, with Tk GUI to select directory...
+Possible future alternative options:
+  -Bash
+  -Windows .bat
+  -Powershell
+  -NSIS installer (zip2exe based?)
+  -.zip files that can be installed in Blender (best option, system independent, standard way, just requires releases instead of only a git repo)
 
+This script might still be useful for a dev environment setup.
+
+Notes:
 https://www.howtogeek.com/16226/complete-guide-to-symbolic-links-symlinks-on-windows-or-linux/
 https://superuser.com/questions/343074/directory-junction-vs-directory-symbolic-link
 https://stackoverflow.com/questions/58038683/allow-mklink-for-a-non-admin-user
@@ -24,85 +30,70 @@ mklink /D Link Target
 # hard
 mklink /D /H Link Target
 
-%USERPROFILE%\AppData\Roaming\Blender Foundation\Blender\3.6\scripts
+If no admin rights: mklink /j
+'''
 
-mkdir "%USERPROFILE%\AppData\Roaming\Blender Foundation\Blender\3.6\scripts"
-mklink /D Link %USERPROFILE%\AppData\Roaming\Blender Foundation\Blender\3.6\scripts
-mklink "%USERPROFILE%\AppData\Roaming\Blender Foundation\Blender\3.6\scripts" "%USERPROFILE%\Development\script_inception_public\src\blender_scripts\addons"
+import os
+import argparse
+import subprocess
+import shlex
 
-##### Current working solution
-# (Works in cmd.exe, but not powershell. Does not require admin rights.)
-mklink /J "%USERPROFILE%\AppData\Roaming\Blender Foundation\Blender\3.6\scripts\addons" "%USERPROFILE%\Development\script_inception_public\src\blender_scripts\addons"
-mklink /J "%USERPROFILE%\AppData\Roaming\Blender Foundation\Blender\3.6\scripts\modules" "%USERPROFILE%\Development\script_inception_public\src\blender_scripts\modules"
-mklink /J "%USERPROFILE%\AppData\Roaming\Blender Foundation\Blender\3.6\scripts\presets" "%USERPROFILE%\Development\script_inception_public\src\blender_scripts\presets"
-mklink /J "%USERPROFILE%\AppData\Roaming\Blender Foundation\Blender\3.6\scripts\STL-files" "%USERPROFILE%\Development\script_inception_public\src\blender_scripts\STL-files"
+def setupAddonsOnWindows(basedir):
+    '''
+    Sets up the addons for use in Blender on Windows by creating symlinks (junctions) from:
+      %USERPROFILE%\AppData\Roaming\Blender Foundation\Blender\3.6\scripts
+    to:
+      script_inception_public\src\blender_scripts
 
-#########################
-Basic procedure:
-copy all folders from:
-  script_inception_public\src\blender_scripts
-to:
-  %APPDATA%\Blender Foundation\Blender\3.2\scripts
-#########################
-set -eu
+    They still need to be manually activated in Blender via the preferences menu. (for now)
 
-BLENDERSCRIPTDIR="$HOME/Application Data/Blender Foundation/Blender/.blender/scripts"
-SCRIPTS="\
-bfdtd_parser.py \
-bfdtd_import.py \
-bfdtd_export.py \
-meep_parser.py \
-meep_import.py \
-meep_export.py \
-bfdtd_meep_export.py"
+    This function also works if the user has no admin rights.
+    '''
+    basedir = os.path.normpath(basedir)
+    print('basedir:', basedir)
+    target_script_dir = os.path.realpath(os.path.expanduser(os.path.dirname(__file__)))
+    link_script_dir = os.path.join(basedir,'scripts')
 
-function BlenderScriptDir_to_repo()
-{
-    echo "BlenderScriptDir->repo"
-    for f in $SCRIPTS
-    do
-        echo "-> $f"
-        if diff "$BLENDERSCRIPTDIR/$f" "./$f";
-        then
-            echo "No differences. Skipping.";
-        else
-            echo "Differences found.";
-            cp -iv "$BLENDERSCRIPTDIR/$f" ".";
-        fi
-    done
-}
+    print('target_script_dir:', target_script_dir)
+    print('link_script_dir:', link_script_dir)
 
-function repo_to_BlenderScriptDir()
-{
-    echo "repo->BlenderScriptDir";
-    for f in $SCRIPTS
-    do
-        echo "-> $f"
-        if diff "$f" "$BLENDERSCRIPTDIR/$f";
-        then
-            echo "No differences. Skipping.";
-        else
-            echo "Differences found.";
-            cp -iv "$f" "$BLENDERSCRIPTDIR";            
-        fi
-    done
-}
+    for subdir in ['addons', 'modules', 'presets', 'STL-files']:
+        target = os.path.join(target_script_dir, subdir)
+        link_name = os.path.join(link_script_dir, subdir)
+        if not os.path.exists(link_name):
+            cmd = ['cmd', '/c', 'mklink', '/J', link_name, target]
+            print(shlex.join(cmd))
+            subprocess.run(cmd, check=True)
+        else:
+            print(f'WARNING: {link_name} already exists. Skipping link creation.')
+    return
 
-function diff_files()
-{
-    echo "diffing files";
-    for f in $SCRIPTS
-    do
-        echo "-> $f"
-        diff "$f" "$BLENDERSCRIPTDIR/$f";
-    done
-}
+def main():
+    '''
+    Windows setup script. Main function.
+    '''
+    parser = argparse.ArgumentParser(description='Script to set up Blender addons on Windows.')
+    parser.add_argument('dir', nargs='?', help='Blender configuration directory. Usually of the form: %%APPDATA%%\Blender Foundation\Blender\<VERSION NUMBER>')
+    args = parser.parse_args()
 
-echo "0=BlenderScriptDir->repo / 1=repo->BlenderScriptDir / 2=diff repo BlenderScriptDir"
-read ans
-case $ans in
-  0) BlenderScriptDir_to_repo;;
-  1) repo_to_BlenderScriptDir;;
-  2) diff_files;;
-  *) echo "Unknown option";;
-esac
+    print(args)
+
+    if args.dir is None:
+        import tkinter as tk
+        import tkinter.filedialog as fd
+
+        root = tk.Tk()
+        root.withdraw()
+        args.dir = fd.askdirectory(parent=root, initialdir = os.path.join(os.getenv('APPDATA'),'Blender Foundation','Blender'))
+        root.destroy()
+
+    print(args.dir)
+
+    if not args.dir:
+        parser.print_help()
+        return
+
+    setupAddonsOnWindows(args.dir)
+
+if __name__ == '__main__':
+    main()
