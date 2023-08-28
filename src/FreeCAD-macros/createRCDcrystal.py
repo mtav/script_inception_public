@@ -13,6 +13,8 @@ from math import sqrt, pi, sin, cos, asin
 from numpy import array
 
 import time
+import tkinter
+from PySide2 import QtWidgets
 
 ###############################################################################
 # get the start time
@@ -26,8 +28,43 @@ doc = App.newDocument()
 ###############################################################################
 ##### PARAMETERS YOU CAN CHANGE:
 ###############################################################################
-# RCD or FRD?
-doFRD = False
+# Pick the crystal you want:
+
+##### normal RCD
+RCD_parameter_list = [{'shift':False, 'FRD':False}]
+
+##### normal RCD shifted
+# RCD_parameter_list = [{'shift':True, 'FRD':False}]
+
+##### normal RCD rotated 90 degrees
+# RCD_parameter_list = [{'shift':True, 'FRD':True}]
+
+##### normal RCD shifted rotated 90 degrees
+# RCD_parameter_list = [{'shift':False, 'FRD':True}]
+
+##### normal FRD (8 cylinder intersection in the centre)
+# RCD_parameter_list = [{'shift':False, 'FRD':False},
+#                       {'shift':True, 'FRD':True}]
+
+##### shited FRD (ball structure in the centre)
+# RCD_parameter_list = [{'shift':True, 'FRD':False},
+#                       {'shift':False, 'FRD':True}]
+
+##### double RCD
+# RCD_parameter_list = [{'shift':False, 'FRD':False},
+#                       {'shift':True, 'FRD':False}]
+
+##### double RCD shifted
+#RCD_parameter_list = [{'shift':False, 'FRD':True},
+#                       {'shift':True, 'FRD':True}]
+
+#RCD_parameter_list = [{'shift':False, 'FRD':True},
+#                      {'shift':True, 'FRD':True},
+#			{'shift':False, 'FRD':False},
+#			{'shift':True, 'FRD':False}]
+
+########
+
 # number of periods
 Nx=1
 Ny=1
@@ -56,6 +93,30 @@ cyl_delta = 0.1
 u = array([1, 0, 0])
 v = array([0, 1, 0])
 w = array([0, 0, 1])
+
+def mychoicebox(choicelist):
+	# https://stackoverflow.com/questions/50538963/creating-a-choicelist-dialog-box-with-tkinter
+	global result
+
+	def buttonfn():
+		global result
+		result = var.get()
+		choicewin.quit()
+
+	choicewin = tkinter.Tk()
+	choicewin.resizable(False, False)
+	choicewin.title("ChoiceBox")
+
+	tkinter.Label(choicewin, text="Select an item:").grid(row=0, column=0, sticky="W")
+
+	var = tkinter.StringVar(choicewin)
+	var.set("No data")  # default option
+	popupMenu = tkinter.OptionMenu(choicewin, var, *choicelist)
+	popupMenu.grid(sticky=tkinter.N + tkinter.S + tkinter.E + tkinter.W, row=1, column=0)
+
+	tkinter.Button(choicewin, text="Done", command=buttonfn).grid(row=2, column=0)
+	choicewin.mainloop()
+	return result
 
 def addCylinder(loc, dir, name):
 	x = dir[0]
@@ -153,40 +214,44 @@ def RCDCubicUnitCell_FRD(i, j, k, shift=False):
     
     return(f_FRD)
 
+
 def createRCD(Nx, Ny, Nz, add_extra=False, name='RCD', FRD=False, shift=False):
-    L = []
-    if add_extra:
-        imin = -1
-        jmin = -1
-        kmin = -1
-        imax = Nx
-        jmax = Ny
-        kmax = Nz
-    else:
-        imin = 0
-        jmin = 0
-        kmin = 0
-        imax = Nx-1
-        jmax = Ny-1
-        kmax = Nz-1
-    for i in range(imin, imax+1):
-        for j in range(jmin, jmax+1):
-            for k in range(kmin, kmax+1):
-                if FRD:
-                    U = RCDCubicUnitCell_FRD(i, j, k, shift=shift)
-                else:
-                    U = RCDCubicUnitCell(i, j, k, shift=shift)
-                
-                L.append(U)
-    if add_extra or Nx*Ny*Nz>1:
-        RCD = App.activeDocument().addObject("Part::MultiFuse","Fusion")
-        RCD.Shapes = L
-        RCD.Label = name
-        return(RCD)
-    else:
-        # only one unit-cell
-        L[0].Label = name
-        return(L)
+	L = []  # list of unit-cells
+	if add_extra:
+		imin = -1
+		jmin = -1
+		kmin = -1
+		imax = Nx
+		jmax = Ny
+		kmax = Nz
+	else:
+		imin = 0
+		jmin = 0
+		kmin = 0
+		imax = Nx - 1
+		jmax = Ny - 1
+		kmax = Nz - 1
+	for i in range(imin, imax + 1):
+		for j in range(jmin, jmax + 1):
+			for k in range(kmin, kmax + 1):
+				if FRD:
+					U = RCDCubicUnitCell_FRD(i, j, k, shift=shift)
+				else:
+					U = RCDCubicUnitCell(i, j, k, shift=shift)
+
+				L.append(U)
+
+	# if add_extra or Nx*Ny*Nz>1:
+	if len(L) > 1:
+		# merge cells into one supercell
+		RCD = App.activeDocument().addObject("Part::MultiFuse", "Fusion")
+		RCD.Shapes = L
+		RCD.Label = name
+		return (RCD)
+	else:
+		# only one unit-cell
+		L[0].Label = name
+		return (L[0])
 
 def addCube(side_length, loc, name):
 	obj = App.ActiveDocument.addObject("Part::Box", name)
@@ -302,28 +367,6 @@ def createDirectRCD():
 	intersect = App.activeDocument().addObject("Part::MultiCommon","Common")
 	intersect.Shapes = [RCDpart, unitCube]
 
-#	App.activeDocument().Common.Shapes = [App.activeDocument().RCDpart,App.activeDocument().unitCube,]
-#>>> Gui.activeDocument().RCDpart.Visibility=False
-#>>> Gui.activeDocument().unitCube.Visibility=False
-
-#	t2 = tetra(location + (array([1/2, 1/2, 1/2])+array([1/2, 0, -1/2]))*cubic_unit_cell_size, 't0')
-#	t2 = tetra(location + (array([1/2, 1/2, 1/2])+array([1, 1/2, -1/2]))*cubic_unit_cell_size, 't0')
-
-#	t2 = tetra(location + (array([1/2, 1/2, 1/2])+array([0, -1/2, -1/2]))*cubic_unit_cell_size, 't0')
-
-	#main_RCD = RCDCubicUnitCell(0, 0, 0)
-#	main_RCD = RCDCubicUnitCell_FRD(0, 0, 0)
-
-	# X+ face
-#	cyl0 = addCylinder(Base.Vector(1,   1/2,   0)*cubic_unit_cell_size,     [1, -1, 1], 'xplus-0')
-#	cyl0 = addCylinder(Base.Vector(1,   1/2,   0)*cubic_unit_cell_size,     [1, -1, 1], 'xplus-0')
-#	cyl1 = addCylinder(Base.Vector(1, 1/2, 1/2)*cubic_unit_cell_size,     [1,-1,-1], 'xplus-1')
-#	cyl2 = addCylinder(Base.Vector(1, 1/2, 1/2)*cubic_unit_cell_size,     [1, 1, 1], 'xplus-2')
-#	cyl3 = addCylinder(Base.Vector(1,   1,   1)*cubic_unit_cell_size,     [1,-1,-1], 'xplus-3')
-#	xplus = App.activeDocument().addObject("Part::MultiFuse","xplus")
-#	xplus.Shapes = [cyl0, cyl1, cyl2, cyl3]
-
-
 def createBallConnector():
 	sphere = App.ActiveDocument.addObject("Part::Sphere","Sphere")
 	sphere.Label = "Sphere"
@@ -351,7 +394,6 @@ def addSphere(loc, r):
 
 	return(sphere)
 
-
 def createWireBox(box_size, box_thickness):
 
 	p = box_size-box_thickness
@@ -376,107 +418,148 @@ def createWireBox(box_size, box_thickness):
 
 	return
 
-# remove all current objects in document
-for i in doc.Objects:
-	doc.removeObject(i.Name)
+def main():
 
-side_length_X = Nx*cubic_unit_cell_size
-side_length_Y = Ny*cubic_unit_cell_size
-side_length_Z = Nz*cubic_unit_cell_size
+	# remove all current objects in document
+	for i in doc.Objects:
+		doc.removeObject(i.Name)
 
-#RCDCubicUnitCell_FRD(0, 0, 0)
-# for FRD in [False, True]:
-#     for shift in [False, True]:
-#         createRCD(Nx, Ny, Nz, add_extra=False, name=f'RCD_FRD-{FRD}_shift-{shift}', FRD=FRD, shift=shift)
 
-postprocess = True
-convertToMesh = True
-if doFRD:
-    RCD = createRCD(1, 1, 1, add_extra=True, name=f'RCD', FRD=False, shift=False)
-    FRD = createRCD(1, 1, 1, add_extra=True, name=f'FRD', FRD=True, shift=True)
-    if postprocess:
-        crystal = App.activeDocument().addObject("Part::MultiFuse","crystal")
-        crystal.Shapes = [RCD, FRD]
-else:
-    crystal = createRCD(1, 1, 1, add_extra=True, name=f'RCD', FRD=False, shift=False)
+	side_length_X = Nx*cubic_unit_cell_size
+	side_length_Y = Ny*cubic_unit_cell_size
+	side_length_Z = Nz*cubic_unit_cell_size
 
-if postprocess:
-    
-    #createRCD(Nx, Ny, Nz, add_extra=True, name='RCD_ext')
-    # box = addCubeXYZ(side_length_X, side_length_Y, side_length_Z, [0,0,0], 'box')
-    box = addCubeXYZ(1, 1, 1, [0,0,0], 'box')
-    
-    RCD_truncated = App.activeDocument().addObject("Part::MultiCommon","Common")
-    #App.activeDocument().Common.Shapes = [box, RCD]
-    # App.activeDocument().Common.Shapes = [box, RCD, FRD]
-    App.activeDocument().Common.Shapes = [box, crystal]
+	#RCDCubicUnitCell_FRD(0, 0, 0)
+	# for FRD in [False, True]:
+	#     for shift in [False, True]:
+	#         createRCD(Nx, Ny, Nz, add_extra=False, name=f'RCD_FRD-{FRD}_shift-{shift}', FRD=FRD, shift=shift)
 
-if create_array:
-  if convertToMesh:
-      FreeCAD.ActiveDocument.recompute()
-      # print(RCD_truncated)
-      # print(type(RCD_truncated))
-      
-      __shape__=Part.getShape(RCD_truncated,"")
-      print('type(RCD_truncated)', type(RCD_truncated))
-      print('type(__shape__)', type(__shape__))
-      print('RCD_truncated.Shape:', RCD_truncated.Shape)
-      print('RCD_truncated.Shape.Volume:', RCD_truncated.Shape.Volume)
-      #print('Volume 2:', __shape__.Volume)
-      # print(__shape__)
-      __mesh__ = App.activeDocument().addObject("Mesh::Feature","Mesh")
-      __mesh__.Mesh = MeshPart.meshFromShape(Shape=__shape__, LinearDeflection=0.1, AngularDeflection=0.523599, Relative=False)
-      
-      _obj_ = Draft.make_ortho_array(__mesh__,
-                                      v_x = FreeCAD.Vector(cubic_unit_cell_size, 0.0, 0.0),
-                                      v_y = FreeCAD.Vector(0.0, cubic_unit_cell_size, 0.0),
-                                      v_z = FreeCAD.Vector(0.0, 0.0, cubic_unit_cell_size),
-                                      n_x=Nx, n_y=Ny, n_z=Nz, use_link=True)
-      _obj_.Fuse = False
-  else:
-      _obj_ = Draft.make_ortho_array(RCD_truncated,
-                                      v_x = FreeCAD.Vector(cubic_unit_cell_size, 0.0, 0.0),
-                                      v_y = FreeCAD.Vector(0.0, cubic_unit_cell_size, 0.0),
-                                      v_z = FreeCAD.Vector(0.0, 0.0, cubic_unit_cell_size),
-                                      n_x=Nx, n_y=Ny, n_z=Nz, use_link=True)
-      _obj_.Fuse = False
+	postprocess = True
+	convertToMesh = True
+	# if doFRD:
+	#     RCD = createRCD(1, 1, 1, add_extra=True, name=f'RCD', FRD=False, shift=False)
+	#     FRD = createRCD(1, 1, 1, add_extra=True, name=f'FRD', FRD=True, shift=True)
+	#     if postprocess:
+	#         crystal = App.activeDocument().addObject("Part::MultiFuse","crystal")
+	#         crystal.Shapes = [RCD, FRD]
+	# else:
+	#     crystal = createRCD(1, 1, 1, add_extra=True, name=f'RCD', FRD=False, shift=False)
+	#     # crystal.Label = 'mylabel'
 
-#createDirectRCD()
-#RCDCubicUnitCell(0, 0, 0)
-#createInverseRCD()
+	# for FRD in [True, False]:
+	# 	for shift in [True, False]:
+	# 		createRCD(1, 1, 1, add_extra=False, name=f'createRCD_FRD-{FRD}_shift-{shift}', FRD=FRD, shift=shift)
 
-#addSphere(Base.Vector(0.5,0.5,0.5)*cubic_unit_cell_size, 0.24*cubic_unit_cell_size)
+	RCD_list = []
+	for params in RCD_parameter_list:
+		FRD = params['FRD']
+		shift = params['shift']
+		RCD = createRCD(1, 1, 1, add_extra=True, name=f'createRCD_FRD-{FRD}_shift-{shift}', FRD=FRD, shift=shift)
+		RCD_list.append(RCD)
 
-#addCube(cubic_unit_cell_size, [0,0,0], 'unitCube')
+	if postprocess:
+		##### Merge the crystals and truncate them with a box.
 
-#createWireBox(2*cubic_unit_cell_size, 0.05*cubic_unit_cell_size)
+		if len(RCD_list) == 1:
+			crystal = RCD_list[0]
+		else:
+			crystal = App.activeDocument().addObject("Part::MultiFuse", "crystal")
+			crystal.Shapes = RCD_list
 
-#createBallConnector()
+		#createRCD(Nx, Ny, Nz, add_extra=True, name='RCD_ext')
+		# box = addCubeXYZ(side_length_X, side_length_Y, side_length_Z, [0,0,0], 'box')
+		box = addCubeXYZ(1, 1, 1, [0,0,0], 'box')
 
-#unitCube1 = addCube(cubic_unit_cell_size, [0,0,0], 'unitCube1')
-#unitCube2 = addCube(cubic_unit_cell_size, [1/2,1/2,1/2], 'unitCube2')
-#RCD_inverse = App.activeDocument().addObject("Part::Cut","RCD_inverse")
-#RCD_inverse.Base = unitCube1
-#RCD_inverse.Tool = unitCube2
+		RCD_truncated = App.activeDocument().addObject("Part::MultiCommon","Common")
+		#App.activeDocument().Common.Shapes = [box, RCD]
+		# App.activeDocument().Common.Shapes = [box, RCD, FRD]
+		App.activeDocument().Common.Shapes = [box, crystal]
 
-doc.recompute()
-#doc.ActiveView.setAxisCross(True)
-Gui.ActiveDocument.ActiveView.setAxisCross(True)
-Gui.SendMsgToActiveView("ViewFit")
+	if create_array:
+	  if convertToMesh:
+	      FreeCAD.ActiveDocument.recompute()
+	      # print(RCD_truncated)
+	      # print(type(RCD_truncated))
 
-print(f'convertToMesh={convertToMesh}, postprocess={postprocess}, doFRD={doFRD}')
+	      __shape__=Part.getShape(RCD_truncated,"")
+	      print('type(RCD_truncated)', type(RCD_truncated))
+	      print('type(__shape__)', type(__shape__))
+	      print('RCD_truncated.Shape:', RCD_truncated.Shape)
+	      print('RCD_truncated.Shape.Volume:', RCD_truncated.Shape.Volume)
+	      #print('Volume 2:', __shape__.Volume)
+	      # print(__shape__)
+	      __mesh__ = App.activeDocument().addObject("Mesh::Feature","Mesh")
+	      __mesh__.Mesh = MeshPart.meshFromShape(Shape=__shape__, LinearDeflection=0.1, AngularDeflection=0.523599, Relative=False)
 
-print('type(RCD_truncated)', type(RCD_truncated))
-print('RCD_truncated.Shape:', RCD_truncated.Shape)
-print('RCD_truncated.Shape.Volume:', RCD_truncated.Shape.Volume)
-print('RCD_truncated.Shape.Area:', RCD_truncated.Shape.Area)
+	      _obj_ = Draft.make_ortho_array(__mesh__,
+	                                      v_x = FreeCAD.Vector(cubic_unit_cell_size, 0.0, 0.0),
+	                                      v_y = FreeCAD.Vector(0.0, cubic_unit_cell_size, 0.0),
+	                                      v_z = FreeCAD.Vector(0.0, 0.0, cubic_unit_cell_size),
+	                                      n_x=Nx, n_y=Ny, n_z=Nz, use_link=True)
+	      _obj_.Fuse = False
+	  else:
+	      _obj_ = Draft.make_ortho_array(RCD_truncated,
+	                                      v_x = FreeCAD.Vector(cubic_unit_cell_size, 0.0, 0.0),
+	                                      v_y = FreeCAD.Vector(0.0, cubic_unit_cell_size, 0.0),
+	                                      v_z = FreeCAD.Vector(0.0, 0.0, cubic_unit_cell_size),
+	                                      n_x=Nx, n_y=Ny, n_z=Nz, use_link=True)
+	      _obj_.Fuse = False
 
-###############################################################################
-FreeCAD.Console.PrintMessage("...DONE\n")
-# get the end time
-et = time.time()
+	#createDirectRCD()
+	#RCDCubicUnitCell(0, 0, 0)
+	#createInverseRCD()
 
-# get the execution time
-elapsed_time = et - st
-print('Execution time:', elapsed_time, 'seconds')
-###############################################################################
+	#addSphere(Base.Vector(0.5,0.5,0.5)*cubic_unit_cell_size, 0.24*cubic_unit_cell_size)
+
+	#addCube(cubic_unit_cell_size, [0,0,0], 'unitCube')
+
+	#createWireBox(2*cubic_unit_cell_size, 0.05*cubic_unit_cell_size)
+
+	#createBallConnector()
+
+	#unitCube1 = addCube(cubic_unit_cell_size, [0,0,0], 'unitCube1')
+	#unitCube2 = addCube(cubic_unit_cell_size, [1/2,1/2,1/2], 'unitCube2')
+	#RCD_inverse = App.activeDocument().addObject("Part::Cut","RCD_inverse")
+	#RCD_inverse.Base = unitCube1
+	#RCD_inverse.Tool = unitCube2
+
+	doc.recompute()
+	#doc.ActiveView.setAxisCross(True)
+	Gui.ActiveDocument.ActiveView.setAxisCross(True)
+	Gui.SendMsgToActiveView("ViewFit")
+
+	print(f'convertToMesh={convertToMesh}, postprocess={postprocess}')
+
+	print('---> RCD parameters used:')
+	for params in RCD_parameter_list:
+		print(params)
+
+	print('type(RCD_truncated)', type(RCD_truncated))
+	print('RCD_truncated.Shape:', RCD_truncated.Shape)
+	print('RCD_truncated.Shape.Volume:', RCD_truncated.Shape.Volume)
+	print('RCD_truncated.Shape.Area:', RCD_truncated.Shape.Area)
+
+	###############################################################################
+	FreeCAD.Console.PrintMessage("...DONE\n")
+	# get the end time
+	et = time.time()
+
+	# get the execution time
+	elapsed_time = et - st
+	print('Execution time:', elapsed_time, 'seconds')
+
+def getOption(title, label, items):
+    # https://stackoverflow.com/questions/23273858/using-qt-pyside-to-get-user-input-with-qinputdialog
+    app = QtWidgets.QApplication(sys.argv)
+    gui = QtWidgets.QWidget()
+    item, ok = QtWidgets.QInputDialog.getItem(gui, title, label, items, 0, False)
+    app.exit()
+    return item, ok
+
+if __name__ == '__main__':
+    #print(getOption('Crystal options', 'Choose an option:', ['RCD', 'FRD', 'double RCD']))
+    main()
+	# Testing:
+
+	# reply = mychoicebox(["one", "two", "three"])
+	# print("reply:", reply)

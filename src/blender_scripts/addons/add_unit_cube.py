@@ -5,7 +5,7 @@ bl_info = {
     "name": "Unit cube",
     "author": "mtav",
     "version": (1, 0),
-    "blender": (2, 69, 0),
+    "blender": (3, 4, 0),
     "location": "View3D > Add > Mesh > Unit Cube",
     "description": "Adds a new unit cube",
     "warning": "",
@@ -26,16 +26,16 @@ class OBJECT_OT_add_unit_cube(Operator, AddObjectHelper):
     bl_label = "Add unit cube"
     bl_options = {'REGISTER', 'UNDO', 'PRESET'}
 
-    scale = FloatVectorProperty(
+    scale : FloatVectorProperty(
             name="scale",
             default=(1.0, 1.0, 1.0),
             subtype='TRANSLATION',
             description="scaling",
             )
             
-    origin = FloatVectorProperty(name="origin", default=(0, 0, 0))
-    wiremode = BoolProperty(name="wiremode", default=True)
-    origin_is_lower = BoolProperty(name="Origin is lower corner", default=True)
+    origin : FloatVectorProperty(name="origin", default=(0, 0, 0))
+    wiremode : BoolProperty(name="wiremode", default=True)
+    origin_is_lower : BoolProperty(name="Origin is lower corner", default=True)
 
     def draw(self, context):
       layout = self.layout
@@ -44,7 +44,8 @@ class OBJECT_OT_add_unit_cube(Operator, AddObjectHelper):
       box.prop(self, 'origin_is_lower')
       box.prop(self, 'wiremode')
       
-      box.prop(self, 'view_align')
+      #box.prop(self, 'view_align') # blender <=2.79
+      box.prop(self, 'align') # blender >=2.8
       box.prop(self, 'location')
       box.prop(self, 'rotation')
       box.prop(self, 'scale')
@@ -103,7 +104,7 @@ class OBJECT_OT_add_unit_cube(Operator, AddObjectHelper):
       #bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
       
       if self.wiremode:
-        context.object.draw_type = 'WIRE'
+        context.object.display_type = 'WIRE'
       
       return {'FINISHED'}
 
@@ -116,12 +117,12 @@ def add_unit_cube_button(self, context):
 
 def register():
     bpy.utils.register_class(OBJECT_OT_add_unit_cube)
-    bpy.types.INFO_MT_mesh_add.append(add_unit_cube_button)
+    bpy.types.VIEW3D_MT_mesh_add.append(add_unit_cube_button)
 
 
 def unregister():
     bpy.utils.unregister_class(OBJECT_OT_add_unit_cube)
-    bpy.types.INFO_MT_mesh_add.remove(add_unit_cube_button)
+    bpy.types.VIEW3D_MT_mesh_add.remove(add_unit_cube_button)
 
 if __name__ == "__main__":
     register()

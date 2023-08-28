@@ -5,8 +5,8 @@ bl_info = {
     "name": "Create 3D array",
     "author": "mtav",
     "version": (1, 0),
-    "blender": (2, 69, 0),
-    "location": "View3D > Tool shelf -> SIP -> Create 3D array",
+    "blender": (3, 4, 0),
+    "location": "View3D -> SIP menu -> Create 3D array (or as object.create_3d_array in the spacebar search menu)",
     "description": "Create a 3D array from any object (to easily make 3D periodic structures)",
     "warning": "",
     "wiki_url": "",
@@ -57,28 +57,28 @@ class Create3DArray(bpy.types.Operator):
   bl_label = "Create 3D array"
   bl_options = {'REGISTER', 'UNDO', 'PRESET'}
   
-  method = EnumProperty(items = (("three_arrays","Use 3 arrays","Avoids overlapping objects, but the origin and location of the original are modified. Uses less memory."), ("six_arrays","Use 6 arrays","Can lead to overlapping objects. Preserves origin and location of the original. Easy to change periods later. Memory intensive.")), default='three_arrays', name = "Method:")
+  method : EnumProperty(items = (("three_arrays","Use 3 arrays","Avoids overlapping objects, but the origin and location of the original are modified. Uses less memory."), ("six_arrays","Use 6 arrays","Can lead to overlapping objects. Preserves origin and location of the original. Easy to change periods later. Memory intensive.")), default='three_arrays', name = "Method:")
   
-  array_X_positive = BoolProperty(name="Array along +X", default=True)
-  array_X_positive_size = IntProperty(name="number of periods in +X", default = 2, min=1)
-  array_Y_positive = BoolProperty(name="Array along +Y", default=True)
-  array_Y_positive_size = IntProperty(name="number of periods in +Y", default = 3, min=1)
-  array_Z_positive = BoolProperty(name="Array along +Z", default=True)
-  array_Z_positive_size = IntProperty(name="number of periods in +Z", default = 4, min=1)
+  array_X_positive : BoolProperty(name="Array along +X", default=True)
+  array_X_positive_size : IntProperty(name="number of periods in +X", default = 2, min=1)
+  array_Y_positive : BoolProperty(name="Array along +Y", default=True)
+  array_Y_positive_size : IntProperty(name="number of periods in +Y", default = 3, min=1)
+  array_Z_positive : BoolProperty(name="Array along +Z", default=True)
+  array_Z_positive_size : IntProperty(name="number of periods in +Z", default = 4, min=1)
   
-  array_X_negative = BoolProperty(name="Array along -X", default=False)
-  array_X_negative_size = IntProperty(name="number of periods in -X", default = 2, min=1)
-  array_Y_negative = BoolProperty(name="Array along -Y", default=False)
-  array_Y_negative_size = IntProperty(name="number of periods in -Y", default = 3, min=1)
-  array_Z_negative = BoolProperty(name="Array along -Z", default=False)
-  array_Z_negative_size = IntProperty(name="number of periods in -Z", default = 4, min=1)
+  array_X_negative : BoolProperty(name="Array along -X", default=False)
+  array_X_negative_size : IntProperty(name="number of periods in -X", default = 2, min=1)
+  array_Y_negative : BoolProperty(name="Array along -Y", default=False)
+  array_Y_negative_size : IntProperty(name="number of periods in -Y", default = 3, min=1)
+  array_Z_negative : BoolProperty(name="Array along -Z", default=False)
+  array_Z_negative_size : IntProperty(name="number of periods in -Z", default = 4, min=1)
   
-  e1_vec3 = FloatVectorProperty(name="e1_vec3", default=Vector((1,0,0)))
-  e2_vec3 = FloatVectorProperty(name="e2_vec3", default=Vector((0,1,0)))
-  e3_vec3 = FloatVectorProperty(name="e3_vec3", default=Vector((0,0,1)))
+  e1_vec3 : FloatVectorProperty(name="e1_vec3", default=Vector((1,0,0)))
+  e2_vec3 : FloatVectorProperty(name="e2_vec3", default=Vector((0,1,0)))
+  e3_vec3 : FloatVectorProperty(name="e3_vec3", default=Vector((0,0,1)))
   
-  use_scale = BoolProperty(name="Use object scale", default=False) # TODO: Take scale into account?
-  apply_scale = BoolProperty(name="Apply scale first", default=False) # TODO: Take scale into account?
+  use_scale : BoolProperty(name="Use object scale", default=False) # TODO: Take scale into account?
+  apply_scale : BoolProperty(name="Apply scale first", default=False) # TODO: Take scale into account?
   
   #change_origin = BoolProperty(name="Use object scale", default=False) # TODO: Take scale into account?
   #change_location = BoolProperty(name="Use object scale", default=False) # TODO: Take scale into account?

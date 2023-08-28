@@ -12,7 +12,7 @@ bl_info = {
     "name": "align_with_axis",
     "author": "mtav",
     "version": (1, 0),
-    "blender": (2, 80, 0),
+    "blender": (3, 4, 0),
     "location": "View3D > Tool shelf -> SIP -> Align with axis",
     "description": "Allows you to align an object along a specific axis, including with a specific rotation around that axis and specific dimensions.",
     "warning": "",
