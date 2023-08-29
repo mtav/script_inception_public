@@ -15,6 +15,7 @@ import matplotlib
 # import matplotlib.pyplot as plt # This causes problems when called from Matlab's system() function.
 from utilities.common import float_array
 import textwrap
+import bfdtd
 
 # ..todo:: nicer print format
 # ..todo:: store lattices in transposed form for easier access to vectors?
@@ -39,6 +40,7 @@ class MPB_data():
     self.FF_bigger_than_one = None
     self.FF_mean_position = None
     self.gap_list = []
+    self.geometry = []
     return
 
   # @property
@@ -63,6 +65,13 @@ class MPB_data():
     s+='\n b1 = {}'.format(b1)
     s+='\n b2 = {}'.format(b2)
     s+='\n Reciprocal cell volume: {}'.format(self.getReciprocalCellVolume())
+
+    s+='\n=== Geometry ==='
+    for idx, obj in enumerate(self.geometry):
+      s += f'\n->{idx}'
+      s += f'\n{obj}'
+    #   print(idx, ':', obj)
+    s+='\n================'
 
     s+='\n epsilon: {}-{}, mean {}, harm. mean {}, {}% > 1, {}% "fill"'.format(self.eps_low,
                                                                               self.eps_high,
@@ -395,6 +404,9 @@ def parse_MPB(infile_flexible, verbosity=0, merge_datasets=False):
 
     geometric_objects_match = re.match(r'Geometric objects:', line)
 
+  infile.seek(0)
+  geo_obj_list = parseGeometryObjects(infile.read())
+
   MPB_data_object = MPB_data()
   MPB_data_object.lattice = lattice
   MPB_data_object.reciprocal_lattice = reciprocal_lattice
@@ -408,6 +420,7 @@ def parse_MPB(infile_flexible, verbosity=0, merge_datasets=False):
   MPB_data_object.FF_bigger_than_one = FF_bigger_than_one
   MPB_data_object.FF_mean_position = FF_mean_position
   MPB_data_object.gap_list = gap_list
+  MPB_data_object.geometry = geo_obj_list
 
   MPB_data_list.append(MPB_data_object)
 
@@ -779,7 +792,143 @@ def main():
       
   return(0)
 
+# We could use the python MPB objects, but then python-meep needs to be set up, which is not always easy.
+class mpbMaterial():
+  epsilon = 1
+  mu = 1
+
+class mpbGeometricObject():
+  material = mpbMaterial()
+  center = [0,0,0]
+
+class mpbSphere(mpbGeometricObject):
+  def __init__(self, center=[0,0,0], radius=1, material=mpbMaterial()):
+    self.center = center
+    self.radius = radius
+    self.material = material
+
+def parseGeometryObjects(s):
+  '''
+  Parses a string for geometry objects and returns them as a list of *bfdtd.GeometryObject* objects.
+  Objects that are not yet supported will be returned as *None*.
+
+  The input string needs to contain a section of the form:
+  "Geometric objects:
+    ...
+  Geometric object tree..."
+
+  TODO: Convert to cartesian coordinates? -> At the moment, everything is passed as if in a cartesian lattice!
+  TODO: Custom MPB objects? Or use MPB module? -> Harder to set up.
+  '''
+  p = re.compile('Geometric objects:.*Geometric object tree', re.DOTALL)
+  # print(p.search(s).group(0))
+  s = p.search(s).group(0)
+
+
+  # p = re.compile('sphere, center = (1, 0, 0)\s+radius\s+0.25\s+epsilon = 12, mu = 1', re.DOTALL)
+  # n = '([-+.eE0-9]+)'
+  # p = re.compile('sphere, center = \(([-+.0-9]+),([-+.0-9]+),([-+.0-9]+)\)\s+radius ', re.DOTALL)
+  # print(p.findall(s))
+  # p = re.compile(f'sphere, center = \({n},{n},{n}\)\s+radius {n}', re.DOTALL)
+  # print(p.findall(s))
+  # p = re.compile(f'sphere, center = \({n},{n},{n}\)\s+radius {n}\s+epsilon = {n}, mu = {n}', re.DOTALL)
+  # print(p.findall(s))
+  # print('----')
+  # p = re.compile(f'sphere, center = \({n},{n},{n}\)\s+radius {n}(\s+epsilon = {n}, mu = {n})?', re.DOTALL)
+  # print(p.findall(s))
+
+  # re.search('     [a-z]+,.*\n', s)
+  geo_str_list = re.findall('\s{5}[a-z]+,.*\n(?:\s{10}.*\n)+', s)
+  # print(geo_str_list)
+  # print(len(geo_str_list))
+
+  # import bfdtd
+
+  geo_obj_list = []
+  for s in geo_str_list:
+    m = re.match('\s{5}([a-z]+),', s)
+    obj_type = m.groups()[0]
+    # print(obj_type)
+    if obj_type == 'sphere':
+      geo_obj_list.append(parseSphere(s))
+    elif obj_type == 'cylinder':
+      geo_obj_list.append(parseCylinder(s))
+    elif obj_type == 'block':
+      geo_obj_list.append(parseBlock(s))
+    else:
+      geo_obj_list.append(None)
+
+  return geo_obj_list
+
+def parseVector(s):
+  n = '[-+.eE0-9]+'
+  v = f'\(({n}),\s*({n}),\s*({n})\)'
+  m = re.match(v,s)
+  # print(m.groups())
+  vec = [float(i) for i in m.groups()]
+  return vec
+
+def parseSphere(s):
+  n = '([-+.eE0-9]+)'
+  m = re.match(f'\s{{5}}sphere, center = \({n},{n},{n}\)\s+radius {n}(\s+epsilon = {n}, mu = {n})?', s, re.DOTALL)
+  if m is None:
+    print(s)
+    raise
+  obj = bfdtd.Sphere()
+  obj.setLocation([float(i) for i in [m.group(1), m.group(2), m.group(3)]])
+  obj.setOuterRadius(float(m.group(4)))
+  epsilon = m.group(6)
+  mu = m.group(7)
+  if epsilon is not None:
+    obj.setRelativePermittivity(float(epsilon))
+  if mu is not None:
+    obj.setRelativeConductivity(float(mu))
+  return obj
+
+def parseCylinder(s):
+  n = '([-+.eE0-9]+)'
+  m = re.match(f'\s{{5}}cylinder, center = \({n},{n},{n}\)\s+radius {n}, height {n}, axis \({n}, {n}, {n}\)(\s+epsilon = {n}, mu = {n})?', s, re.DOTALL)
+  if m is None:
+    print(s)
+    raise
+  obj = bfdtd.Cylinder()
+  obj.setLocation([float(i) for i in [m.group(1), m.group(2), m.group(3)]])
+  obj.setOuterRadius(float(m.group(4)))
+  obj.setHeight(float(m.group(5)))
+  obj.setAxis([float(i) for i in [m.group(6), m.group(7), m.group(8)]])
+  epsilon = m.group(10)
+  mu = m.group(11)
+  if epsilon is not None:
+    obj.setRelativePermittivity(float(epsilon))
+  if mu is not None:
+    obj.setRelativeConductivity(float(mu))
+  return obj
+
+def parseBlock(s):
+  n = '[-+.eE0-9]+'
+  v = f'\({n},\s*{n},\s*{n}\)'
+  # m = re.match(f'\s{{5}}block, center = \({n},{n},{n}\)\s+size \({n},{n},{n}\)\s+axes \({n},{n},{n}\), \({n},{n},{n}\), \({n},{n},{n}\)(\s+epsilon = {n}, mu = {n})?', s, re.DOTALL)
+  # m = re.match(f'\s{{5}}block, center = ', s, re.DOTALL)
+  m = re.match(f'\s{{5}}block, center = (?P<center>{v})\s+size (?P<size>{v})\s+axes (?P<e1>{v}), (?P<e2>{v}), (?P<e3>{v})(\s+epsilon = (?P<epsilon>{n}), mu = (?P<mu>{n}))?', s, re.DOTALL)
+  if m is None:
+    print(s)
+    raise
+  # print(m.groupdict())
+  obj = bfdtd.Parallelepiped()
+  obj.setLocation(parseVector(m.group('center')))
+  obj.setSize(parseVector(m.group('size')))
+  obj.setAxes( parseVector(m.group('e1')), parseVector(m.group('e2')), parseVector(m.group('e3')))
+
+  if m.group('epsilon') is not None:
+    obj.setRelativePermittivity(float(m.group('epsilon')))
+  if m.group('mu') is not None:
+    obj.setRelativeConductivity(float(m.group('mu')))
+  return obj
+
 if __name__ == '__main__':
+  # import bfdtd
+  # bfdtd.GeometryObjects.testPrinting()
+  # sys.exit()
   main()
   # obj = MPB_data()
   # obj = myfunc()
@@ -790,3 +939,20 @@ if __name__ == '__main__':
   # obj = parse_MPB(myfile)
   # # obj._k_points = [1,2,3,4,56,7]
   # print(obj[0])
+  # fname='py.example.out'
+  # fname='allgeometries.py.out'
+  # fname = 'allgeometries.ctl.out'
+  # f = open(fname)
+  # s = f.read()
+
+
+
+  # p = re.compile('Geometric objects:.*Geometric object tree', re.DOTALL)
+  # # print(p.search(s).group(0))
+  # s = p.search(s).group(0)
+
+  # print(80*'=')
+  # geo_obj_list = parseGeometryObjects(s)
+  # print(80*'=')
+  # for idx, obj in enumerate(geo_obj_list):
+  #   print(idx, ':', obj)
