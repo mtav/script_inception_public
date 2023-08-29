@@ -73,6 +73,7 @@ class GeometryObject(object):
     return(R)
 
   def __pre_str__(self):
+    '''Returns a string to print name, permittivity, conductivity and location. With a newline ending.'''
     ret  = 'name = '+self.name+'\n'
     ret += 'permittivity = '+str(self.permittivity)+'\n'
     ret += 'conductivity = '+str(self.conductivity)+'\n'
@@ -80,6 +81,7 @@ class GeometryObject(object):
     return(ret)
 
   def __post_str__(self):
+    '''Returns a string to print the rotation list. Without newline ending.'''
     ret = '--->object rotation_list'
     for i in range(len(self.rotation_list)):
       ret += '\n'
@@ -88,6 +90,7 @@ class GeometryObject(object):
     return(ret)
   
   def __str__(self):
+    ''' Returns a string object, so that print(object) prints useful information about the object instance. '''
     ret = self.__pre_str__() + self.__post_str__()
     return(ret)
       
@@ -181,13 +184,11 @@ class Sphere(GeometryObject):
     return([d, d, d])
 
   def __str__(self):
-    ret  = 'name = '+self.name+'\n'
-    ret += 'location = ' + str(self.location) + '\n' +\
-    'outer_radius = ' + str(self.outer_radius) + '\n' +\
-    'inner_radius = ' + str(self.inner_radius) + '\n' +\
-    'permittivity = ' + str(self.permittivity) + '\n' +\
-    'conductivity = ' + str(self.conductivity)+'\n'
-    ret += GeometryObject.__str__(self)
+    ''' Returns a string object, so that print(object) prints useful information about the object instance. '''
+    ret = self.__pre_str__() # includes name, location, material infos and ends with a newline
+    ret += 'inner_radius = ' + str(self.inner_radius) + '\n'
+    ret += 'outer_radius = ' + str(self.outer_radius) + '\n'
+    ret += self.__post_str__() # includes rotation list
     return ret
 
   def read_entry(self,entry):
@@ -244,14 +245,13 @@ class Block(GeometryObject):
     self.upper_relative = array([0.5,0.5,0.5])
 
   def __str__(self):
-    ret  = 'name = '+self.name+'\n'
+    ''' Returns a string object, so that print(object) prints useful information about the object instance. '''
+    ret = self.__pre_str__() # includes name, location, material infos and ends with a newline
     ret += 'lower_relative = '+str(self.lower_relative)+'\n'
     ret += 'upper_relative = '+str(self.upper_relative)+'\n'
     ret += 'lower_absolute = '+str(self.getLowerAbsolute())+'\n'
     ret += 'upper_absolute = '+str(self.getUpperAbsolute())+'\n'
-    ret += 'permittivity = '+str(self.permittivity)+'\n'
-    ret += 'conductivity = '+str(self.conductivity)+'\n'
-    ret += GeometryObject.__str__(self)
+    ret += self.__post_str__() # includes rotation list
     return ret
     
   def read_entry(self, entry):
@@ -473,12 +473,9 @@ class Distorted(GeometryObject):
   
   def __str__(self):
     ''' Returns a string object, so that print(object) prints useful information about the object instance. '''
-    #ret  = 'name = '+self.name+'\n'
-    #ret += 'permittivity = '+str(self.permittivity)+'\n'
-    #ret += 'conductivity = '+str(self.conductivity)+'\n'
-    ret = GeometryObject.__pre_str__(self)
+    ret = self.__pre_str__() # includes name, location, material infos and ends with a newline
     ret += 'vertices_relative = '+str(self.vertices_relative)+'\n'
-    ret += GeometryObject.__post_str__(self)
+    ret += self.__post_str__() # includes rotation list
     return ret
   
   def read_entry(self,entry):
@@ -571,12 +568,12 @@ class Parallelepiped(Distorted):
   
   def __str__(self):
     ''' Returns a string object, so that print(object) prints useful information about the object instance. '''
-    ret = GeometryObject.__pre_str__(self)
+    ret = self.__pre_str__() # includes name, location, material infos and ends with a newline
     ret += 'e0 = {}\n'.format(self.e0)
     ret += 'e1 = {}\n'.format(self.e1)
     ret += 'e2 = {}\n'.format(self.e2)
     ret += 'size = {}\n'.format(self.size)
-    ret += GeometryObject.__post_str__(self)
+    ret += self.__post_str__() # includes rotation list
     return ret
 
   def setSize(self, size):
@@ -759,16 +756,14 @@ class Cylinder(GeometryObject):
     return(A,B)
   
   def __str__(self):
-    ret  = 'name = '+self.name+'\n'
-    ret += 'centro = ' + str(self.location) + '\n' +\
-    'inner_radius = ' + str(self.inner_radius) + '\n' +\
-    'outer_radius = ' + str(self.outer_radius) + '\n' +\
-    'height = ' + str(self.height) + '\n' +\
-    'permittivity = ' + str(self.permittivity) + '\n' +\
-    'conductivity = ' + str(self.conductivity) + '\n' +\
-    'angle_deg = ' + str(self.angle_deg) + '\n' +\
-    'axis = ' + str(self.getAxis()) + '\n'
-    ret += GeometryObject.__str__(self)
+    ''' Returns a string object, so that print(object) prints useful information about the object instance. '''
+    ret = self.__pre_str__() # includes name, location, material infos and ends with a newline
+    ret += 'inner_radius = ' + str(self.inner_radius) + '\n'
+    ret += 'outer_radius = ' + str(self.outer_radius) + '\n'
+    ret += 'height = ' + str(self.height) + '\n'
+    ret += 'angle_deg = ' + str(self.angle_deg) + '\n'
+    ret += 'axis = ' + str(self.getAxis()) + '\n'
+    ret += self.__post_str__() # includes rotation list
     return ret
   
   def read_entry(self,entry):
@@ -1100,5 +1095,18 @@ class MeshBox(GeometryObject):
     ''' .. note:: Does nothing for the moment. Could eventually add a nice little comment to the .geo or .inp file. Or we bypass it in the writeGeoFile function. '''
     return
 
+def testPrinting():
+  geolist = [Sphere(),
+    Block(),
+    Distorted(),
+    Parallelepiped(),
+    Ellipsoid(),
+    Cylinder(),
+    Tube()]
+  for i in geolist:
+    print(f'==={type(i)}===')
+    print(i)
+  return
+
 if __name__ == '__main__':
-  pass
+  testPrinting()
