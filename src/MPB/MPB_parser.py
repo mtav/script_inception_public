@@ -907,13 +907,11 @@ def parseCylinder(s):
 def parseBlock(s):
   n = '[-+.eE0-9]+'
   v = f'\({n},\s*{n},\s*{n}\)'
-  # m = re.match(f'\s{{5}}block, center = \({n},{n},{n}\)\s+size \({n},{n},{n}\)\s+axes \({n},{n},{n}\), \({n},{n},{n}\), \({n},{n},{n}\)(\s+epsilon = {n}, mu = {n})?', s, re.DOTALL)
-  # m = re.match(f'\s{{5}}block, center = ', s, re.DOTALL)
   m = re.match(f'\s{{5}}block, center = (?P<center>{v})\s+size (?P<size>{v})\s+axes (?P<e1>{v}), (?P<e2>{v}), (?P<e3>{v})(\s+epsilon = (?P<epsilon>{n}), mu = (?P<mu>{n}))?', s, re.DOTALL)
   if m is None:
     print(s)
     raise
-  # print(m.groupdict())
+
   obj = bfdtd.Parallelepiped()
   obj.setLocation(parseVector(m.group('center')))
   obj.setSize(parseVector(m.group('size')))
@@ -926,33 +924,4 @@ def parseBlock(s):
   return obj
 
 if __name__ == '__main__':
-  # import bfdtd
-  # bfdtd.GeometryObjects.testPrinting()
-  # sys.exit()
   main()
-  # obj = MPB_data()
-  # obj = myfunc()
-  # myfile = 'ctl.example.out'
-  # print(os.getcwd())
-  # if not os.path.exists(myfile):
-  #   raise
-  # obj = parse_MPB(myfile)
-  # # obj._k_points = [1,2,3,4,56,7]
-  # print(obj[0])
-  # fname='py.example.out'
-  # fname='allgeometries.py.out'
-  # fname = 'allgeometries.ctl.out'
-  # f = open(fname)
-  # s = f.read()
-
-
-
-  # p = re.compile('Geometric objects:.*Geometric object tree', re.DOTALL)
-  # # print(p.search(s).group(0))
-  # s = p.search(s).group(0)
-
-  # print(80*'=')
-  # geo_obj_list = parseGeometryObjects(s)
-  # print(80*'=')
-  # for idx, obj in enumerate(geo_obj_list):
-  #   print(idx, ':', obj)
