@@ -21,6 +21,7 @@ import collections
 from bpy_extras import object_utils
 from numpy import pi, cos, sin
 from mathutils import Vector, Matrix, Color
+import warnings
 
 ###################
 def createBmeshFrompyData(verts_loc, edges, faces):
@@ -205,7 +206,7 @@ def duplicateObject(obj, linked=True, translation_vector = (0,0,0), context=bpy.
   duplicate = context.object
   return duplicate
 
-def createGroup(obj_list, active_object=None, context = bpy.context, group_name='Collection'):
+def createGroup(obj_list, active_object=None, context = bpy.context, group_name='Collection', include_children=True):
   '''
   Creates a group containing objects from *obj_list*.
   active_object : Object to make active if specified.
@@ -213,21 +214,30 @@ def createGroup(obj_list, active_object=None, context = bpy.context, group_name=
   group_name : optional group name
   
   For Blender >=2.8, Collections are created instead of groups.
+
+  TODO: Get rid of support for older Blender versions.
+  TODO: Refactor to createCollection. cf make_collection, etc functions.
   '''
-  
+
+  # warnings.simplefilter('always', DeprecationWarning)
+  # warnings.warn("createGroup is deprecated. Please use createCollection() instead.", DeprecationWarning)
+
   # Select objects:
-  selectObjects(obj_list, active_object=active_object, context = bpy.context)
-  
-  
+  obj_list = selectObjects(obj_list, active_object=active_object, context = bpy.context, include_children=include_children)
+
   if bpy.app.version >= (2, 80, 0):
+
         # Remove selected objects from all collections:
         bpy.ops.collection.objects_remove_all()
+
         # Create collection:
         myCol = bpy.data.collections.new(group_name)
         # Add objects to collection:
         bpy.context.scene.collection.children.link(myCol)
         for obj in obj_list:
             myCol.objects.link(obj)
+
+        return myCol
   else:
     if group_name:
       bpy.ops.group.create(name=group_name)
@@ -235,23 +245,39 @@ def createGroup(obj_list, active_object=None, context = bpy.context, group_name=
       bpy.ops.group.create()
   return
 
-def selectObjects(obj_list, active_object=None, context = bpy.context):
-
+def selectObjects(obj_list, active_object=None, context = bpy.context, include_children=False):
+  '''
+  Select objects in *obj_list* and return selected objects.
+  '''
   if not isinstance(obj_list, collections.abc.Iterable):
     obj_list = [obj_list]
-  
+
+  ##### recursively include children
+  if include_children:
+      children = []
+      for obj in obj_list:
+        children.extend(obj.children_recursive)
+      obj_list.extend(children)
+
+  ##### Check for any hidden objects
+  for obj in obj_list:
+      if obj.hide_get():
+          raise Exception(f'{obj} is hidden. Selection will fail.')
+
   bpy.ops.object.select_all(action = 'DESELECT')
   for obj in obj_list:
     if bpy.app.version >= (2, 80, 0):
       obj.select_set(True)
     else:
       obj.select = True
+
   if active_object:
     if bpy.app.version >= (2, 80, 0):
       context.view_layer.objects.active = active_object
     else:
       context.scene.objects.active = active_object
-  return
+
+  return bpy.context.selected_objects
 
 def setOrigin(obj, loc):
     # store cursor location
@@ -370,12 +396,18 @@ def add_array_modifier(obj, label, size, vec3):
 # new blender >=2.8 code:
 # source: https://devtalk.blender.org/t/what-are-the-python-codes-related-to-collection-actions-for-blender-2-8/4479/4
 def find_collection(context, item):
+    '''
+    Return one of the collections that item belongs to.
+    '''
     collections = item.users_collection
     if len(collections) > 0:
         return collections[0]
     return context.scene.collection
 
 def make_collection(collection_name, parent_collection = None, checkExisting=True):
+  '''
+  Create a new collection.
+  '''
   if bpy.app.version >= (2, 80, 0):
     if parent_collection is None:
       parent_collection = bpy.context.scene.collection
@@ -390,6 +422,10 @@ def make_collection(collection_name, parent_collection = None, checkExisting=Tru
     return current_group.name
 
 def setCollections(obj, collection_list, context=bpy.context):
+  '''
+  Remove obj from all collections, then add it to collections in collection_list.
+  '''
+
   # print(f'---->setCollections({obj}, {collection_list})')
   for idx, collection in enumerate(collection_list):
     if idx==0:
