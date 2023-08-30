@@ -127,7 +127,7 @@ class Importer():
   cone_radius = None # 1/20.0
   cylinder_radius = None # 1/40.0
   context = bpy.context
-  operator=None
+  operator = None
   
   def __init__(self):
     return
@@ -153,7 +153,8 @@ class Importer():
         # add lattice+reciprocal lattice basis vectors+cells
         (a0,a1,a2) = MPB_data_object.getLatticeVectors()
         (b0,b1,b2) = MPB_data_object.getReciprocalLatticeVectors()
-        
+
+        ##### Add lattice cells + vectors
         add_lattice_objects(self, a0, a1, a2, b0, b1, b2, name = name+'-lattice_objects',
                             cone_length=self.cone_length,
                             cone_radius=self.cone_radius,
@@ -199,6 +200,7 @@ class Importer():
           # add a constraint to it
           constraint = S.constraints.new('FOLLOW_PATH')
           constraint.target = k_points_path_object
+          bpy.ops.constraint.followpath_path_animate(constraint=constraint.name)
 
           #bpy.ops.object.constraint_add(type='FOLLOW_PATH')
           #C = S.constraints[-1]
@@ -206,8 +208,15 @@ class Importer():
           #selectObjects([S], active_object=S, context=self.context)
           #bpy.ops.constraint.followpath_path_animate(constraint="Follow Path", owner='OBJECT')
 
-          override = {'constraint':constraint}
-          bpy.ops.constraint.followpath_path_animate(override,constraint='Follow Path')
+          # https://devtalk.blender.org/t/deprecationwarning-passing-in-context-overrides-is-deprecated-in-favor-of-context-temp-override/27870
+          # https://docs.blender.org/api/current/bpy.ops.constraint.html
+          # https://blender.stackexchange.com/questions/285851/use-followpath-path-animate-in-python-script
+          # with bpy.context.temp_override(**kwargs):
+          # with bpy.context.temp_override(constraint=constraint):
+          #     bpy.ops.constraint.followpath_path_animate(override, constraint='Follow Path')
+
+          # override = {'constraint':constraint}
+          # bpy.ops.constraint.followpath_path_animate(override, constraint='Follow Path')
 
           selectObjects([k_points_path_object], active_object=k_points_path_object, context=self.context)
 
