@@ -181,41 +181,8 @@ class OBJECT_OT_add_arrow(Operator):
       if len(obj_list) > 1:
         createGroup(obj_list, active_object=None, context = bpy.context, group_name=group_name)
       return {'FINISHED'}
-      
-      ## piece of code to make presets remain until parameters are changed
-      #if self.preset != "Custom":
-        ##if preset, set preset
-        #if self.previousSetting != self.preset:
-          #self.vector = self.preset_vectors[self.preset]
-          #self.end_point = Vector(self.origin) + Vector(self.vector)
-        #else:
-          #if numpy.linalg.norm(self.vector - self.preset_vectors[self.preset]) != 0:
-            #self.preset = "Custom"
-      
-      #self.previousSetting = self.preset
-      
-      if self.preset == self.preset_labels[0]:
-        if self.method == 'start_and_end':
-          self.origin = self.start_point
-          self.vector = Vector(self.end_point) - Vector(self.start_point)
-        else:
-          self.start_point = self.origin
-          self.end_point = Vector(self.origin) + Vector(self.vector)
-        
-        add_arrow(self, self.start_point, self.end_point, cone_length=self.cone_length, cone_radius=self.cone_radius, cylinder_radius=self.cylinder_radius)
-      else:
-        # This is ugly, but let's do it like this for now.
-        # .. todo:: better designed addon, perhaps separate addons, reuse operators, etc. Sub-operators?
-        if isinstance(self.preset_vectors[self.preset][0], str):
-          print('str')
-          V_list = [self.preset_vectors[k] for k in self.preset_vectors[self.preset]]
-        else:
-          V_list = [self.preset_vectors[self.preset]]
-          
-      return {'FINISHED'}
 
 # Registration
-
 def add_arrow_button(self, context):
     self.layout.operator(
         OBJECT_OT_add_arrow.bl_idname,
