@@ -22,7 +22,7 @@ import sys
 import numpy
 import argparse
 from MPB.MPB_parser import parse_MPB
-from blender_scripts.modules.blender_utilities import selectObjects
+from blender_scripts.modules.blender_utilities import selectObjects, createGroup, make_collection
 
 import bpy
 import bmesh
@@ -144,7 +144,12 @@ class Importer():
     
     with open(self.filepath) as infile:
       MPB_data_list = parse_MPB(infile)
-      
+
+      # Create a new collection to which all new things will be added.
+      collection = make_collection(filepath_basename, parent_collection=None, checkExisting=False, make_active=True)
+      # layer_collection = bpy.context.view_layer.layer_collection.children[collection.name]
+      # bpy.context.view_layer.active_layer_collection = layer_collection
+
       for idx, MPB_data_object in enumerate(MPB_data_list):
         print('=== dataset {} ==='.format(idx))
         
@@ -159,7 +164,10 @@ class Importer():
                                                 cone_length=self.cone_length,
                                                 cone_radius=self.cone_radius,
                                                 cylinder_radius=self.cylinder_radius)
-        
+
+        ##### List of objects that will be grouped together by parenting it to an empty
+        obj_list = lattice_objects
+
         # add k-point path and sphere following it
         L = MPB_data_object.get_kpoints_in_cartesian_coordinates()
         if len(L)>0:
@@ -220,27 +228,31 @@ class Importer():
 
           selectObjects([k_points_path_object], active_object=k_points_path_object, context=self.context)
 
-          print('===== objects =====')
-          obj_list = lattice_objects + [S, k_points_path_object]
-          for obj in obj_list:
-              print(obj)
-          print('===================')
-
-          hide_settings = [obj.hide_get() for obj in obj_list]
-          for obj in obj_list:
-              obj.hide_set(False)
-
-          bpy.ops.object.add(type='EMPTY')
-          obj_empty = bpy.context.active_object
-          obj_empty.name = filepath_basename
-          selectObjects(obj_list, active_object=obj_empty, context=bpy.context)
-          bpy.ops.object.parent_set(type='OBJECT', keep_transform=True)
-
-          for h, obj in zip(hide_settings, obj_list):
-              obj.hide_set(h)
+          obj_list.extend([k_points_path_object]) # The sphere is already constrained by the "follow path" constraint.
 
         else:
           print('no k-points found')
+
+      ##### group objects together by parenting them to an empty
+
+      # L = selectObjects(obj_list, active_object=None, context=bpy.context, include_children=True)
+      # for idx, obj in L:
+      #     print(idx, obj)
+
+      hide_settings = [obj.hide_get() for obj in obj_list]
+      for obj in obj_list:
+          obj.hide_set(False)
+
+      bpy.ops.object.add(type='EMPTY')
+      obj_empty = bpy.context.active_object
+      obj_empty.name = filepath_basename
+      selectObjects(obj_list, active_object=obj_empty, context=bpy.context)
+      bpy.ops.object.parent_set(type='OBJECT', keep_transform=True)
+
+      # myCol = createGroup(obj_list, active_object=None, context=bpy.context, group_name=filepath_basename)
+
+      for h, obj in zip(hide_settings, obj_list):
+          obj.hide_set(h)
 
     print('FINISHED')
     return {'FINISHED'}

@@ -251,6 +251,8 @@ def createGroup(obj_list, active_object=None, context = bpy.context, group_name=
 def selectObjects(obj_list, active_object=None, context = bpy.context, include_children=False):
   '''
   Select objects in *obj_list* and return selected objects.
+
+  Unhiding and rehiding objects to select all objects, including hidden ones is not possible, because unhiding them deselects them too.
   '''
   if not isinstance(obj_list, collections.abc.Iterable):
     obj_list = [obj_list]
@@ -407,7 +409,7 @@ def find_collection(context, item):
         return collections[0]
     return context.scene.collection
 
-def make_collection(collection_name, parent_collection = None, checkExisting=True):
+def make_collection(collection_name, parent_collection = None, checkExisting=True, make_active=False):
   '''
   Create a new collection.
   '''
@@ -415,11 +417,18 @@ def make_collection(collection_name, parent_collection = None, checkExisting=Tru
     if parent_collection is None:
       parent_collection = bpy.context.scene.collection
     if checkExisting and (collection_name in bpy.data.collections): # Does the collection already exist?
-        return bpy.data.collections[collection_name]
+        new_collection = bpy.data.collections[collection_name]
     else:
         new_collection = bpy.data.collections.new(collection_name)
         parent_collection.children.link(new_collection) # Add the new collection under a parent
-        return new_collection
+
+    if make_active:
+        # https://blender.stackexchange.com/questions/127403/change-active-collection
+        layer_collection = bpy.context.view_layer.layer_collection.children[new_collection.name]
+        bpy.context.view_layer.active_layer_collection = layer_collection
+
+    return new_collection
+
   else:
     current_group = bpy.data.groups.new(name=collection_name) # blender<2.80
     return current_group.name
