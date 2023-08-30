@@ -29,7 +29,7 @@ import bmesh
 # ImportHelper is a helper class, defines filename and
 # invoke() function which calls the file selector.
 from bpy_extras.io_utils import ImportHelper
-from bpy.props import StringProperty, BoolProperty, EnumProperty, FloatProperty
+from bpy.props import StringProperty, BoolProperty, EnumProperty, FloatProperty, CollectionProperty
 from bpy.types import Operator
 from bpy_extras.object_utils import AddObjectHelper, object_data_add
 from blender_scripts.modules.GeometryObjects import add_arrow, add_lattice_vectors, add_lattice_cell, add_lattice_objects
@@ -48,22 +48,33 @@ class Import_MPB_data(Operator, ImportHelper, AddObjectHelper):
             options={'HIDDEN'},
             )
 
+    # necessary to support multi-file import
+    # https://stackoverflow.com/questions/63299327/importing-multiple-files-in-blender-import-plugin
+    files: CollectionProperty(
+        type=bpy.types.OperatorFileListElement,
+        options={'HIDDEN', 'SKIP_SAVE'},
+    )
+
+    directory: StringProperty(
+        subtype='DIR_PATH',
+    )
+
     bool_cone_length_automatic  : BoolProperty(name="Automatic cone length", default=True)
-    cone_length = FloatProperty(
+    cone_length : FloatProperty(
             name="cone_length",
             default=1/5.0,
             description="cone length",
             )
 
     bool_cone_radius_automatic : BoolProperty(name="Automatic cone radius", default=True)
-    cone_radius = FloatProperty(
+    cone_radius : FloatProperty(
             name="cone_radius",
             default=1/20.0,
             description="cone radius",
             )
 
     bool_cylinder_radius_automatic : BoolProperty(name="Automatic cylinder radius", default=True)
-    cylinder_radius = FloatProperty(
+    cylinder_radius : FloatProperty(
             name="cylinder_radius",
             default=1/40.0,
             description="cylinder radius",
@@ -85,28 +96,39 @@ class Import_MPB_data(Operator, ImportHelper, AddObjectHelper):
           box.prop(self, 'cylinder_radius')
 
     def execute(self, context):
-      importer = Importer()
-      importer.filepath = self.filepath
-      importer.context = context
-      importer.operator = self
-      
-      # set arrow parameters
-      if self.bool_cone_length_automatic:
-        importer.cone_length = None
-      else:
-        importer.cone_length = self.cone_length
-      
-      if self.bool_cone_radius_automatic:
-        importer.cone_radius = None
-      else:
-        importer.cone_radius = self.cone_radius
-      
-      if self.bool_cylinder_radius_automatic:
-        importer.cylinder_radius = None
-      else:
-        importer.cylinder_radius = self.cylinder_radius
-      
-      return importer.execute()
+
+      # loop through selected files
+      for current_file in self.files:
+          filepath = os.path.join(self.directory, current_file.name)
+          print('Importing MPB .out file:', filepath)
+
+          # create importer instance and set parameters
+          importer = Importer()
+          importer.filepath = filepath
+          importer.context = context
+          importer.operator = self
+
+          # set arrow parameters
+          if self.bool_cone_length_automatic:
+            importer.cone_length = None
+          else:
+            importer.cone_length = self.cone_length
+
+          if self.bool_cone_radius_automatic:
+            importer.cone_radius = None
+          else:
+            importer.cone_radius = self.cone_radius
+
+          if self.bool_cylinder_radius_automatic:
+            importer.cylinder_radius = None
+          else:
+            importer.cylinder_radius = self.cylinder_radius
+
+          # execute importer instance
+          importer.execute()
+
+      # return importer.execute()
+      return {'FINISHED'}
 
 # Only needed if you want to add into a dynamic menu
 def menu_func_import(self, context):
