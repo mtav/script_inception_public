@@ -206,7 +206,7 @@ def duplicateObject(obj, linked=True, translation_vector = (0,0,0), context=bpy.
   duplicate = context.object
   return duplicate
 
-def createGroup(obj_list, active_object=None, context = bpy.context, group_name='Collection', include_children=True):
+def createGroup(obj_list, active_object=None, context = bpy.context, group_name='Collection', include_children=True, parent_collection = None):
   '''
   Creates a group containing objects from *obj_list*.
   active_object : Object to make active if specified.
@@ -231,9 +231,12 @@ def createGroup(obj_list, active_object=None, context = bpy.context, group_name=
         bpy.ops.collection.objects_remove_all()
 
         # Create collection:
-        myCol = bpy.data.collections.new(group_name)
+        # myCol = bpy.data.collections.new(group_name)
+        # Add to scene
+        # bpy.context.scene.collection.children.link(myCol)
+        myCol = make_collection(group_name, parent_collection=parent_collection, checkExisting=False)
+
         # Add objects to collection:
-        bpy.context.scene.collection.children.link(myCol)
         for obj in obj_list:
             myCol.objects.link(obj)
 

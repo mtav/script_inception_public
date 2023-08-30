@@ -22,7 +22,7 @@ import bpy
 import numpy
 from mathutils import Vector, Matrix, Color
 from bpy_extras.object_utils import object_data_add
-from blender_scripts.modules.blender_utilities import Orthogonal, setOrigin, selectObjects, loadBasicMaterials
+from blender_scripts.modules.blender_utilities import Orthogonal, setOrigin, selectObjects, loadBasicMaterials, createGroup
 import utilities.common
 
 def add_tetra(self, location=[1/4,1/4,1/4], size=1/2, name='Tetra', cylinder_radius=None):
@@ -549,47 +549,74 @@ def add_lattice_cell(self, a0, a1, a2, name='lattice_cell', shift_origin=False, 
 def add_lattice_objects(self, a0, a1, a2, b0, b1, b2, name='lattice_objects', cone_length=None, cone_radius=None, cylinder_radius=None):
   
   loadBasicMaterials()
-  
+
+  # add non-shifted lattice cell
   shift_origin = False
   (obj_lat_empty, obj_lat_a0, obj_lat_a1, obj_lat_a2) = add_lattice_vectors(self, a0, a1, a2, name='lattice_vectors', shift_origin=shift_origin, cone_length=cone_length, cone_radius=cone_radius, cylinder_radius=cylinder_radius)
   obj_lat_cell = add_lattice_cell(self, a0, a1, a2, name='lattice_cell', shift_origin=shift_origin, wiremode=True)
+  # parent cell to empty
+  selectObjects([obj_lat_cell], active_object=obj_lat_empty, context = bpy.context)
+  bpy.ops.object.parent_set(type='OBJECT', keep_transform=True)
 
+  # add shifted lattice cell
   shift_origin = True
   (obj_lat_shifted_empty, obj_lat_shifted_a0, obj_lat_shifted_a1, obj_lat_shifted_a2) = add_lattice_vectors(self, a0, a1, a2, name='lattice_vectors-shifted', shift_origin=shift_origin, cone_length=cone_length, cone_radius=cone_radius, cylinder_radius=cylinder_radius)
   obj_lat_shifted_cell = add_lattice_cell(self, a0, a1, a2, name='lattice_cell-shifted', shift_origin=shift_origin, wiremode=True)
+  # parent cell to empty
+  selectObjects([obj_lat_shifted_cell], active_object=obj_lat_shifted_empty, context = bpy.context)
+  bpy.ops.object.parent_set(type='OBJECT', keep_transform=True)
 
+  # add non-shifted reciprocal lattice cell
   shift_origin = False
   (obj_rec_lat_empty, obj_rec_lat_b0, obj_rec_lat_b1, obj_rec_lat_b2) = add_lattice_vectors(self, b0, b1, b2, name='reciprocal_lattice_vectors', shift_origin=shift_origin, cone_length=cone_length, cone_radius=cone_radius, cylinder_radius=cylinder_radius)
   obj_rec_lat_cell = add_lattice_cell(self, b0, b1, b2, name='reciprocal_lattice_cell', shift_origin=shift_origin, wiremode=True)
   obj_rec_lat_b0.name = 'b0'
   obj_rec_lat_b1.name = 'b1'
   obj_rec_lat_b2.name = 'b2'
+  # parent cell to empty
+  selectObjects([obj_rec_lat_cell], active_object=obj_rec_lat_empty, context = bpy.context)
+  bpy.ops.object.parent_set(type='OBJECT', keep_transform=True)
 
+  # add shifted reciprocal lattice cell
   shift_origin = True
   (obj_rec_lat_shifted_empty, obj_rec_lat_shifted_b0, obj_rec_lat_shifted_b1, obj_rec_lat_shifted_b2) = add_lattice_vectors(self, b0, b1, b2, name='reciprocal_lattice_vectors-shifted', shift_origin=shift_origin, cone_length=cone_length, cone_radius=cone_radius, cylinder_radius=cylinder_radius)
   obj_rec_lat_shifted_cell = add_lattice_cell(self, b0, b1, b2, name='reciprocal_lattice_cell-shifted', shift_origin=shift_origin, wiremode=True)
   obj_rec_lat_shifted_b0.name = 'b0'
   obj_rec_lat_shifted_b1.name = 'b1'
   obj_rec_lat_shifted_b2.name = 'b2'
-  
-  for i in [obj_lat_empty, obj_lat_a0, obj_lat_a1, obj_lat_a2, obj_lat_cell]:
-    i.hide_set(True)
-    
-  for i in [obj_lat_shifted_empty, obj_lat_shifted_a0, obj_lat_shifted_a1, obj_lat_shifted_a2, obj_lat_shifted_cell]:
-    i.hide_set(True)
+  # parent cell to empty
+  selectObjects([obj_rec_lat_shifted_cell], active_object=obj_rec_lat_shifted_empty, context = bpy.context)
+  bpy.ops.object.parent_set(type='OBJECT', keep_transform=True)
 
-  for i in [obj_rec_lat_empty, obj_rec_lat_b0, obj_rec_lat_b1, obj_rec_lat_b2, obj_rec_lat_cell]:
-    i.hide_set(True)
-    
-  for i in [obj_rec_lat_shifted_empty, obj_rec_lat_shifted_b0, obj_rec_lat_shifted_b1, obj_rec_lat_shifted_b2, obj_rec_lat_shifted_cell]:
-    i.hide_set(True)
-  
-  obj_rec_lat_shifted_cell.hide_set(False)
-  obj_rec_lat_empty.hide_set(False)
-  obj_rec_lat_b0.hide_set(False)
-  obj_rec_lat_b1.hide_set(False)
-  obj_rec_lat_b2.hide_set(False)
-  
+  ##### Group objects into collections
+  obj_list = [obj_lat_empty,
+              obj_lat_shifted_empty,
+              obj_rec_lat_empty,
+              obj_rec_lat_shifted_empty]
+
+  # children = []
+  # for obj in obj_list:
+  #   children.extend(obj.children_recursive)
+  # obj_list.extend(children)
+
+  # hide_settings = [obj.hide_get() for obj in obj_list]
+  # for obj in obj_list:
+  #   obj.hide_set(False)
+
+  # print(100*'<')
+  # obj_list = selectObjects(obj_list, include_children=True)
+  # print('Selected objects:')
+  # for idx, obj in enumerate(bpy.context.selected_objects):
+  #     print(idx, obj)
+  # print(100*'>')
+
+  myCol = createGroup(obj_list, active_object=None, context=bpy.context, group_name="Lattice objects")
+
+  # myCollection = make_coll
+
+  # for h, obj in zip(hide_settings, obj_list):
+  #   obj.hide_set(h)
+
   # TODO: figure out why this fails with "incorrect context":
   #selectObjects([obj_lat_empty, obj_lat_a0, obj_lat_a1, obj_lat_a2, obj_lat_cell], context=bpy.context)
   #bpy.ops.object.hide_view_set(unselected=False)
@@ -602,6 +629,28 @@ def add_lattice_objects(self, a0, a1, a2, b0, b1, b2, name='lattice_objects', co
   # TODO: group or somehow organize all these objects...
   #selectObjects([obj_lat_cell, obj_lat_empty])
   #bpy.ops.object.group_link(group=group_name)
+
+  ##### Visibility settings.
+  # These must come after setting everything else up, as Blender does not allow selecting hidden objects.
+  # And hiding selected objects, deselects them.
+  for i in [obj_lat_empty, obj_lat_a0, obj_lat_a1, obj_lat_a2, obj_lat_cell]:
+    i.hide_set(True)
+
+  for i in [obj_lat_shifted_empty, obj_lat_shifted_a0, obj_lat_shifted_a1, obj_lat_shifted_a2, obj_lat_shifted_cell]:
+    i.hide_set(True)
+
+  for i in [obj_rec_lat_empty, obj_rec_lat_b0, obj_rec_lat_b1, obj_rec_lat_b2, obj_rec_lat_cell]:
+    i.hide_set(True)
+
+  for i in [obj_rec_lat_shifted_empty, obj_rec_lat_shifted_b0, obj_rec_lat_shifted_b1, obj_rec_lat_shifted_b2,
+            obj_rec_lat_shifted_cell]:
+    i.hide_set(True)
+
+  obj_rec_lat_shifted_cell.hide_set(False)
+  obj_rec_lat_empty.hide_set(False)
+  obj_rec_lat_b0.hide_set(False)
+  obj_rec_lat_b1.hide_set(False)
+  obj_rec_lat_b2.hide_set(False)
 
   return
 
