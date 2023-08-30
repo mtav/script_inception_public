@@ -155,10 +155,10 @@ class Importer():
         (b0,b1,b2) = MPB_data_object.getReciprocalLatticeVectors()
 
         ##### Add lattice cells + vectors
-        add_lattice_objects(self, a0, a1, a2, b0, b1, b2, name = name+'-lattice_objects',
-                            cone_length=self.cone_length,
-                            cone_radius=self.cone_radius,
-                            cylinder_radius=self.cylinder_radius)
+        lattice_objects = add_lattice_objects(self, a0, a1, a2, b0, b1, b2, name = name+'-lattice_objects',
+                                                cone_length=self.cone_length,
+                                                cone_radius=self.cone_radius,
+                                                cylinder_radius=self.cylinder_radius)
         
         # add k-point path and sphere following it
         L = MPB_data_object.get_kpoints_in_cartesian_coordinates()
@@ -219,6 +219,25 @@ class Importer():
           # bpy.ops.constraint.followpath_path_animate(override, constraint='Follow Path')
 
           selectObjects([k_points_path_object], active_object=k_points_path_object, context=self.context)
+
+          print('===== objects =====')
+          obj_list = lattice_objects + [S, k_points_path_object]
+          for obj in obj_list:
+              print(obj)
+          print('===================')
+
+          hide_settings = [obj.hide_get() for obj in obj_list]
+          for obj in obj_list:
+              obj.hide_set(False)
+
+          bpy.ops.object.add(type='EMPTY')
+          obj_empty = bpy.context.active_object
+          obj_empty.name = filepath_basename
+          selectObjects(obj_list, active_object=obj_empty, context=bpy.context)
+          bpy.ops.object.parent_set(type='OBJECT', keep_transform=True)
+
+          for h, obj in zip(hide_settings, obj_list):
+              obj.hide_set(h)
 
         else:
           print('no k-points found')

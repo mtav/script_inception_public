@@ -589,10 +589,11 @@ def add_lattice_objects(self, a0, a1, a2, b0, b1, b2, name='lattice_objects', co
   bpy.ops.object.parent_set(type='OBJECT', keep_transform=True)
 
   ##### Group objects into collections
-  obj_list = [obj_lat_empty,
-              obj_lat_shifted_empty,
-              obj_rec_lat_empty,
-              obj_rec_lat_shifted_empty]
+  lattice_objects = [obj_lat_empty,
+                      obj_lat_shifted_empty,
+                      obj_rec_lat_empty,
+                      obj_rec_lat_shifted_empty,
+                      ]
 
   # children = []
   # for obj in obj_list:
@@ -610,7 +611,7 @@ def add_lattice_objects(self, a0, a1, a2, b0, b1, b2, name='lattice_objects', co
   #     print(idx, obj)
   # print(100*'>')
 
-  myCol = createGroup(obj_list, active_object=None, context=bpy.context, group_name="Lattice objects")
+  # myCol = createGroup(obj_list, active_object=None, context=bpy.context, group_name="Lattice objects")
 
   # myCollection = make_coll
 
@@ -652,7 +653,7 @@ def add_lattice_objects(self, a0, a1, a2, b0, b1, b2, name='lattice_objects', co
   obj_rec_lat_b1.hide_set(False)
   obj_rec_lat_b2.hide_set(False)
 
-  return
+  return lattice_objects
 
 def addEllipsoid(self, location, size, e0=[1,0,0], e1=[0,1,0], e2=[0,0,1]):
   # add UV sphere
