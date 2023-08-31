@@ -365,7 +365,7 @@ def parse_MPB(infile_flexible, verbosity=0, merge_datasets=False):
         try:
           coord_match = re.match(coord_pattern, coord_line)
           if coord_match is None:
-            coord_match = re.match('\s*Vector3<([-+0-9.]+), ([-+0-9.]+), ([-+0-9.]+)>\s*', coord_line)
+            coord_match = re.match('\s*Vector3<([-+eE0-9.]+), ([-+eE0-9.]+), ([-+eE0-9.]+)>\s*', coord_line)
           k = [float(coord_match.group(1)), float(coord_match.group(2)), float(coord_match.group(3))]
           k_points.append(k)
         except:
