@@ -18,6 +18,13 @@ import rlcompleter
 import sys
 import warnings
 from glob import glob
+import matplotlib.pyplot as plt
+
+try:
+    import meep as mp
+    from meep import mpb
+except:
+    pass
 
 # change autocomplete to tab
 readline.parse_and_bind("tab: complete")
