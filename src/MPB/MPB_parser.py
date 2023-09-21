@@ -763,6 +763,7 @@ def main():
   parser_plot = subparsers.add_parser('plot', help='plot data')
   parser_plot.add_argument('--no-show', action='store_true')
   parser_plot.add_argument('--x-as-index', action='store_true', help='Use k index on the X axis instead of angle.')
+  # parser_plot.add_argument('-x', action='store_true', help='Use kx on the X axis') TODO: Implement.
   parser_plot.add_argument('--y-lambda', action='store_true', help='Use lambda on the Y axis instead of normalized frequency.')
   parser_plot.add_argument('--x-range-auto', action='store_true')
   parser_plot.add_argument('--y-range-auto', action='store_true')
