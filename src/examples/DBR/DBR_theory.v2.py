@@ -25,8 +25,8 @@ from scipy.io import savemat
 import os
 
 # https://blakeaw.github.io/2020-05-25-improve-matplotlib-notebook-inline-res/
-plt.rcParams['figure.dpi'] = 300
-plt.rcParams['savefig.dpi'] = 300
+# plt.rcParams['figure.dpi'] = 300
+# plt.rcParams['savefig.dpi'] = 300
 
 def get_c0():
     '''
@@ -1178,7 +1178,7 @@ def test_reference_DBR_4(mode):
     scale_factor = (2*np.pi*get_c0()/dbr.a)/dbr.getBraggFrequency()
 
     # get the bandstructure points
-    Xs,Ys,Xp,Yp = plotMPB_2D(dbr, pr, mode, Ny=2)
+    Xs,Ys,Xp,Yp = plotMPB_2D(dbr, pr, mode, Ny=10)
 
     fig_list = []
     for Spol in [True, False]:
@@ -2244,7 +2244,7 @@ def main():
     # mode = 'vs_angle'
     # test_reference_DBR_4('fixed_angle')
     test_reference_DBR_4('k_transverse')
-    # test_reference_DBR_4('vs_angle')
+    test_reference_DBR_4('vs_angle')
 
     # testPlot()
     # testTMM()
