@@ -1,4 +1,8 @@
 function s = MPB_load_data(infile)
+  %%%%% Designed to read data from .dat files generated using:
+  %% mpb CTLFILE > OUTFILE
+  %% grep freq OUTFILE > DATFILE
+  
   if ~exist('infile', 'var')
     [infile_name, infile_dir] = uigetfile('*.dat');
     infile = fullfile(infile_dir, infile_name);
