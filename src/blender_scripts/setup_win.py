@@ -57,6 +57,13 @@ def setupAddonsOnWindows(basedir):
     print('target_script_dir:', target_script_dir)
     print('link_script_dir:', link_script_dir)
 
+    # create dst directory if it does not exist
+    from pathlib import Path
+    path = Path(link_script_dir)
+    path.mkdir(parents=True, exist_ok=True)
+    # if not os.path.exists(link_script_dir):
+    #     if os.path.exsist
+
     for subdir in ['addons', 'modules', 'presets', 'STL-files']:
         target = os.path.join(target_script_dir, subdir)
         link_name = os.path.join(link_script_dir, subdir)
