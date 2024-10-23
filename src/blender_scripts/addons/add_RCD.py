@@ -17,8 +17,9 @@ import os
 import pathlib
 import numpy
 
-from io_mesh_stl import stl_utils
-from io_mesh_stl import blender_utils
+# TODO: In Blender 4.2 this changed to bpy.ops.wm.stl_import(filepath=r"%USERPROFILE%\AppData\Roaming\Blender Foundation\Blender\4.2\scripts\STL-files\RCD111_inverse.stl")
+# from io_mesh_stl import stl_utils
+# from io_mesh_stl import blender_utils
 
 from mathutils import Matrix
 from mathutils import Vector
@@ -155,19 +156,30 @@ class OBJECT_OT_add_RCD(Operator, AddObjectHelper):
         e2 = self.size*Vector([0,1,0])
         e3 = self.size*Vector([0,0,1])
       elif self.cell_type == 'RCD111_inverse':
+        script_dir = os.path.dirname(os.path.realpath(__file__))
+        STLdir = os.path.join(script_dir,'..','STL-files')
         if self.shift_cell:
-          STLfile = os.path.join(pathlib.Path.home(), 'Development/script_inception_public/src/blender_scripts/STL-files/RCD111_inverse_shifted_centred.stl')
+          # STLfile = os.path.join(pathlib.Path.home(), 'Development/script_inception_public/src/blender_scripts/STL-files/RCD111_inverse_shifted_centred.stl')
+          STLfile = os.path.join(STLdir, 'RCD111_inverse_shifted_centred.stl')
         else:
-          STLfile = os.path.join(pathlib.Path.home(), 'Development/script_inception_public/src/blender_scripts/STL-files/RCD111_inverse.stl')
+          # STLfile = os.path.join(pathlib.Path.home(), 'Development/script_inception_public/src/blender_scripts/STL-files/RCD111_inverse.stl')
+          STLfile = os.path.join(STLdir, 'RCD111_inverse.stl')
+        print(f'STLfile = {STLfile}')
         objName = bpy.path.display_name(os.path.basename(STLfile))
-        tris, tri_nors, pts = stl_utils.read_stl(STLfile)
-        tri_nors = None
-        axis_forward='Y'
-        axis_up='Z'
-        global_scale = self.size
-        global_matrix = axis_conversion(from_forward=axis_forward, from_up=axis_up).to_4x4() @ Matrix.Scale(global_scale, 4)
-        blender_utils.create_and_link_mesh(objName, tris, tri_nors, pts, global_matrix)
+
+        bpy.ops.wm.stl_import(filepath=STLfile)
+        bpy.ops.object.shade_flat()
+        # ##### old code
+        # tris, tri_nors, pts = stl_utils.read_stl(STLfile)
+        # tri_nors = None
+        # axis_forward='Y'
+        # axis_up='Z'
+        # global_scale = self.size
+        # global_matrix = axis_conversion(from_forward=axis_forward, from_up=axis_up).to_4x4() @ Matrix.Scale(global_scale, 4)
+        # blender_utils.create_and_link_mesh(objName, tris, tri_nors, pts, global_matrix)
+
         obj_blender = context.active_object
+        obj_blender.name = objName
         
         # get cursor location for placement
         if obj_blender:
