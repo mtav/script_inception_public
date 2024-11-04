@@ -1,0 +1,3 @@
+# ignore add-ons managed elsewhere (at least until a better system is found)
+tapsterite-standalone
+print3d_toolbox
