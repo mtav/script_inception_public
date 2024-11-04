@@ -3,6 +3,7 @@ from __future__ import division # allows floating point division from integers
 import Part
 from FreeCAD import Base
 
+import numpy as np
 from math import sqrt, pi, sin, cos, asin
 from numpy import array
 
@@ -11,10 +12,14 @@ FreeCAD.Console.PrintMessage("START...\n")
 doc = FreeCAD.activeDocument()
 
 #cubic_unit_cell_size = 50
-cubic_unit_cell_size = 5 # scaling messes up boolean ops sometimes :(
+#cubic_unit_cell_size = 5 # scaling messes up boolean ops sometimes :(
+cubic_unit_cell_size = 1 # scaling messes up boolean ops sometimes :(
 L = sqrt(3)/4 * cubic_unit_cell_size
 #R = 0.26 * cubic_unit_cell_size
-R = 0.5
+#R = 0.1
+Ropt = (2**(1/2)*3**(1/2))/(4*np.pi)
+R = Ropt
+
 #R = 0.05 * cubic_unit_cell_size + 0.1
 ball_radius = (0.1+0.05) * cubic_unit_cell_size
 a = cubic_unit_cell_size
