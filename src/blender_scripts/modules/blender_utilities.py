@@ -389,13 +389,18 @@ def joinObjects(obj_list, origin=None, name=None, context = bpy.context):
     setOrigin(obj, origin)
   return(obj)
 
-def add_array_modifier(obj, label, size, vec3):
-  ''' Simple function to simplify creating arrays. '''
-  array_mod = obj.modifiers.new(label, 'ARRAY')
-  array_mod.count = size
-  array_mod.use_constant_offset = True
-  array_mod.use_relative_offset = False
-  array_mod.constant_offset_displace = vec3
+def add_array_modifier(obj, label, size, vec3, use_relative_offset=False):
+    ''' Simple function to simplify creating arrays. '''
+    array_mod = obj.modifiers.new(label, 'ARRAY')
+    array_mod.count = size
+    if use_relative_offset:
+        array_mod.use_constant_offset = False
+        array_mod.use_relative_offset = True
+        array_mod.relative_offset_displace = vec3
+    else:
+        array_mod.use_constant_offset = True
+        array_mod.use_relative_offset = False
+        array_mod.constant_offset_displace = vec3
 
 ########################################################################
 # new blender >=2.8 code:
