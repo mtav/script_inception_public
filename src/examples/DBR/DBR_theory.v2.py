@@ -1188,6 +1188,27 @@ def test_reference_DBR_4(mode):
             pol = 'p'
         ret = getTMM_for_DBR(dbr, pr, Spol=Spol, Nperiods=Nperiods)
 
+        ###############
+        ##### DEBUG
+        debug_ref_data = {
+            'pr' : pr,
+            'ret': ret,
+            'scale_factor': scale_factor,
+            'Xs': Xs,
+            'Ys': Ys,
+            'Xp': Xp,
+            'Yp': Yp,
+            'pol': pol,
+            'Nperiods': Nperiods,
+            'dbr': dbr,
+        }
+        import pickle
+        with open(f'DBR_theory.v2.py.debug_ref_data.Spol.{Spol}.pickle', 'wb') as f:
+            # Pickle the 'data' dictionary using the highest protocol available.
+            pickle.dump(debug_ref_data, f, pickle.HIGHEST_PROTOCOL)
+
+        ###############
+
         fig = plot2D(pr.angle_deg_2D, pr.fn_2D*scale_factor, ret['T'])
         plt.xlabel("Angle (degrees)")
         plt.ylabel('$\omega/\omega_{Bragg}$')
@@ -1251,6 +1272,26 @@ def getTMM_for_DBR(dbr_instance, pr, Spol=False, Nperiods = 15):
     n_list = [pr.n_in] + Nperiods*[dbr_instance.n1, dbr_instance.n2] + [dbr_instance.n1] + [pr.n_in]
 
     ret = coh_tmm_for_arrays(pol, n_list, d_list, pr.angle_rad_2D, pr.wvl_2D)
+
+    ##############################
+    ##### DEBUG
+    import pickle
+    data = {
+        'n_list': n_list,
+        'd_list': d_list,
+        'dbr': dbr_instance,
+        'pr': pr,
+        'pol': pol,
+        'Spol': Spol,
+        'ret': ret,
+        'Nperiods': Nperiods
+    }
+    with open(f'DBR_theory.v2.py.getTMM_for_DBR.Spol-{Spol}.pickle', 'wb') as f:
+        # Pickle the 'data' dictionary using the highest protocol available.
+        pickle.dump(data, f, pickle.HIGHEST_PROTOCOL)
+
+    ##############################
+
     return ret
 
 def plotTMM(dbr_instance, pr, plot_wvl=True, plot_theory=True, Nperiods = 15):
@@ -1636,17 +1677,70 @@ def plotMPB_2D(dbr, pr, mode,
     Nbands = fn_custom_array.shape[1]
     print(Nkpoints, Nbands)
     angle_deg_new = np.ones_like(fn_custom_array)*np.nan
+
+    ##### Extra DEBUG values:
+    debug_omega = np.ones_like(fn_custom_array)*np.nan
+    debug_ky_val = np.ones_like(fn_custom_array)*np.nan
+    debug_theta_rad = np.ones_like(fn_custom_array)*np.nan
+
     print(angle_deg_new.shape)
     for ky_idx, ky_val in enumerate(ky):
       for band_idx in range(Nbands):
         fn_custom = fn_custom_array[ky_idx, band_idx]
         omega = fn_custom * dbr.getBraggFrequency()
-        theta_rad = np.arcsin(ky_val*get_c0()/(n_in*omega))
+        theta_rad = np.arcsin(ky_val*get_c0()/(n_in*omega)) # the critical conversion line
         theta_deg = np.rad2deg(theta_rad)
         angle_deg_new[ky_idx, band_idx] = theta_deg
-      
+
+        ##### Extra DEBUG values:
+        debug_omega[ky_idx, band_idx] = omega
+        debug_ky_val[ky_idx, band_idx] = ky_val
+        debug_theta_rad[ky_idx, band_idx] = theta_rad
+
     Xs = angle_deg_new
     Ys = fn_custom_array
+
+    ######################
+    ### DEBUGGING:
+    plt.figure()
+    plt.title('DEBUG: Xs,Ys')
+    plt.scatter(Xs,Ys)
+
+    plt.figure()
+    plt.title('DEBUG: Xs')
+    plt.plot(Xs)
+
+    plt.figure()
+    plt.title('DEBUG: Ys')
+    plt.plot(Ys)
+
+    plt.figure()
+    plt.title('DEBUG: debug_omega')
+    plt.plot(debug_omega)
+
+    plt.figure()
+    plt.title('DEBUG: debug_ky_val')
+    plt.plot(debug_ky_val)
+
+    plt.figure()
+    plt.title('DEBUG: debug_theta_rad')
+    plt.plot(debug_theta_rad)
+
+    import pickle
+    data = {
+        'Xs' : Xs,
+        'Ys' : Ys,
+        'debug_omega' : debug_omega,
+        'debug_ky_val' : debug_ky_val,
+        'debug_theta_rad' : debug_theta_rad,
+        'n_in' : n_in,
+        'BraggFrequency' : dbr.getBraggFrequency()
+    }
+    with open('DBR_theory.v2.py.debugdata.pickle', 'wb') as f:
+        # Pickle the 'data' dictionary using the highest protocol available.
+        pickle.dump(data, f, pickle.HIGHEST_PROTOCOL)
+    ######################
+
     #############
     
     #############
@@ -1663,7 +1757,7 @@ def plotMPB_2D(dbr, pr, mode,
       for band_idx in range(Nbands):
         fn_custom = fn_custom_array[ky_idx, band_idx]
         omega = fn_custom * dbr.getBraggFrequency()
-        theta_rad = np.arcsin(ky_val*get_c0()/(n_in*omega))
+        theta_rad = np.arcsin(ky_val*get_c0()/(n_in*omega)) # the critical conversion line
         theta_deg = np.rad2deg(theta_rad)
         angle_deg_new[ky_idx, band_idx] = theta_deg
       
@@ -2244,7 +2338,7 @@ def main():
     # mode = 'vs_angle'
     # test_reference_DBR_4('fixed_angle')
     test_reference_DBR_4('k_transverse')
-    test_reference_DBR_4('vs_angle')
+    # test_reference_DBR_4('vs_angle')
 
     # testPlot()
     # testTMM()
