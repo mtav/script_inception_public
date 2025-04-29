@@ -63,7 +63,10 @@ Blender setup:
 --------------
 #. Install Blender: https://www.blender.org/ (NOT available in Windows 10 Software centre)
 
-#. See the instructions here for the latest up to date installation instructions: `Blender setup instructions <../../src/blender_scripts/README.md>`_
+#. See the instructions here for the latest up to date installation instructions:
+
+  * `Blender setup instructions <src/blender_scripts/README.md>`_
+  * `Blender setup instructions (alternate link if above fails) <../../src/blender_scripts/README.md>`_
 
 Deprecated information:
 ~~~~~~~~~~~~~~~~~~~~~~~
