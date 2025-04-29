@@ -4,6 +4,8 @@
 '''
 Setup script for windows.
 
+TODO: WARNING: Does not yet create custompath.py!!!
+
 Possible future alternative options:
   -Bash
   -Windows .bat
