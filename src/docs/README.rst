@@ -63,6 +63,10 @@ Blender setup:
 --------------
 #. Install Blender: https://www.blender.org/ (NOT available in Windows 10 Software centre)
 
+#. See the instructions here for the latest up to date installation instructions: `Blender setup instructions <../../src/blender_scripts/README.md>`_
+
+Deprecated information:
+~~~~~~~~~~~~~~~~~~~~~~~
 #. In Blender:
 
   * File -> User preferences -> Addons ->Install from file...
@@ -70,13 +74,6 @@ Blender setup:
   * Select the script to install
   * Check box next to script
   * Save user settings
-
-Notes
-~~~~~
-* add custompath.py (cf github README)
-* unhide extensions on Windows to name the custompath.py file properly
-* Notepad++ installation
-* Blender download link
 
 Links
 -----
