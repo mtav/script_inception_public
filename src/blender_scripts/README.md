@@ -14,6 +14,8 @@ It will ask you to select your Blender APPDATA directory. Simply select the Blen
 
 It does the setup by creating junctions in the appropriate subdirectory, i.e.: `%APPDATA%\Blender Foundation\Blender\%VERSION%\scripts`
 
+TODO: custompath.py creation not yet supported by script.
+
 Old deprecated Blender 2.49 setup information:
 ----------------------------------------------
 
