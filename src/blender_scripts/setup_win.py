@@ -2,9 +2,7 @@
 # -*- coding: utf-8 -*-
 
 '''
-Setup script for windows.
-
-TODO: WARNING: Does not yet create custompath.py!!!
+Setup script for windows. Sets up junctions and creates custompath.py to add SIP to sys.path.
 
 Possible future alternative options:
   -Bash
@@ -39,6 +37,10 @@ import os
 import argparse
 import subprocess
 import shlex
+import textwrap
+import tkinter
+import tkinter.filedialog as fd
+from pathlib import Path
 
 def setupAddonsOnWindows(basedir):
     '''
@@ -60,7 +62,6 @@ def setupAddonsOnWindows(basedir):
     print('link_script_dir:', link_script_dir)
 
     # create dst directory if it does not exist
-    from pathlib import Path
     path = Path(link_script_dir)
     path.mkdir(parents=True, exist_ok=True)
     # if not os.path.exists(link_script_dir):
@@ -75,6 +76,58 @@ def setupAddonsOnWindows(basedir):
             subprocess.run(cmd, check=True)
         else:
             print(f'WARNING: {link_name} already exists. Skipping link creation.')
+
+    # Create custompath.py
+    return
+
+def proceedDialog(msg='Proceed?'):
+  root = tkinter.Tk()
+  root.withdraw()
+  proceed = tkinter.messagebox.askyesnocancel(title='findByAttributes', message=msg)
+  root.destroy()
+  return proceed
+
+def createStartupScriptWrapper(basedir):
+    outdir = Path(basedir)/'scripts'/'startup'
+    outfile = outdir/'custompath.py'
+    outdir.mkdir(parents=True, exist_ok=True)
+    SIP_PATH = os.path.realpath(os.path.expanduser(os.path.dirname(__file__)))
+    SIP_PATH = Path(SIP_PATH).parent
+    print(f'outfile: {outfile}')
+    print(f'SIP_PATH: {SIP_PATH}')
+    createStartupScript(SIP_PATH, outfile)
+
+def createStartupScript(path_to_add, outfile):
+    print(f'Creating custompath.py:')
+    print(f'  path_to_add: {path_to_add}')
+    print(f'  outfile: {outfile}')
+    # check if file exists
+    if os.path.exists(outfile):
+        msg = f'File already exists:\n{outfile}'
+        print(msg)
+        proceed = proceedDialog(msg=f'{msg}\nProceed?')
+        if not proceed:
+            print(f'Skipping creating: {outfile}')
+            return
+    # create file
+    script_txt = textwrap.dedent(f"""\
+        #!/usr/bin/env python3
+        # -*- coding: utf-8 -*-
+        
+        import sys
+        
+        def register():        
+          print('Adding script_inception_public path')
+          sys.path.append(r'{path_to_add}')
+                
+        if __name__ == '__main__':
+            register()
+        """)
+    print('==========')
+    print(script_txt)
+    print('==========')
+    with open(outfile, 'w') as f:
+        f.write(script_txt)
     return
 
 def main():
@@ -88,10 +141,7 @@ def main():
     print(args)
 
     if args.dir is None:
-        import tkinter as tk
-        import tkinter.filedialog as fd
-
-        root = tk.Tk()
+        root = tkinter.Tk()
         root.withdraw()
         args.dir = fd.askdirectory(parent=root, initialdir = os.path.join(os.getenv('APPDATA'),'Blender Foundation','Blender'))
         root.destroy()
@@ -103,6 +153,7 @@ def main():
         return
 
     setupAddonsOnWindows(args.dir)
+    createStartupScriptWrapper(args.dir)
 
 if __name__ == '__main__':
     main()
