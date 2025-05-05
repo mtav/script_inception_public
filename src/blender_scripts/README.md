@@ -12,9 +12,9 @@ script_inception_public\src\blender_scripts\setup_win.py
 
 It will ask you to select your Blender APPDATA directory. Simply select the Blender version for which you want to set up the addons.
 
-It does the setup by creating junctions in the appropriate subdirectory, i.e.: `%APPDATA%\Blender Foundation\Blender\%VERSION%\scripts`
-
-**TODO: custompath.py creation not yet supported by script.**
+It does the setup by:
+* creating junctions in the appropriate subdirectory, i.e.: `%APPDATA%\Blender Foundation\Blender\%VERSION%\scripts`,
+* and creating a **custompath.py** startup script in `%APPDATA%\Blender Foundation\Blender\%VERSION%\scripts\startup`
 
 Old deprecated Blender 2.49 setup information:
 ----------------------------------------------
