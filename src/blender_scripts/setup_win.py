@@ -105,7 +105,7 @@ def createStartupScript(path_to_add, outfile):
     if os.path.exists(outfile):
         msg = f'File already exists:\n{outfile}'
         print(msg)
-        proceed = proceedDialog(msg=f'{msg}\nProceed?')
+        proceed = proceedDialog(msg=f'{msg}\nOverwrite?')
         if not proceed:
             print(f'Skipping creating: {outfile}')
             return
