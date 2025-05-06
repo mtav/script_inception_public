@@ -43,7 +43,7 @@ import tkinter.filedialog as fd
 from pathlib import Path
 
 def setupAddonsOnWindows(basedir):
-    '''
+    r'''
     Sets up the addons for use in Blender on Windows by creating symlinks (junctions) from:
       %USERPROFILE%\AppData\Roaming\Blender Foundation\Blender\3.6\scripts
     to:
@@ -135,7 +135,7 @@ def main():
     Windows setup script. Main function.
     '''
     parser = argparse.ArgumentParser(description='Script to set up Blender addons on Windows.')
-    parser.add_argument('dir', nargs='?', help='Blender configuration directory. Usually of the form: %%APPDATA%%\Blender Foundation\Blender\<VERSION NUMBER>')
+    parser.add_argument('dir', nargs='?', help=r'Blender configuration directory. Usually of the form: %%APPDATA%%\Blender Foundation\Blender\<VERSION NUMBER>')
     args = parser.parse_args()
 
     print(args)
