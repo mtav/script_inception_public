@@ -1,0 +1,609 @@
+# -*- coding: utf-8 -*-
+
+# Macro Begin: C:\Development\script_inception_public\src\FreeCAD-macros\elliptical-rod-macro.FCMacro +++++++++++++++++++++++++++++++++++++++++++++++++
+import FreeCAD
+import PartDesign
+import PartDesignGui
+import Sketcher
+import Part
+
+# Gui.runCommand('Std_DlgMacroRecord',0)
+### Begin command Std_Workbench
+# Gui.activateWorkbench("SketcherWorkbench")
+### End command Std_Workbench
+### Begin command Std_Workbench
+# Gui.activateWorkbench("PartDesignWorkbench")
+### End command Std_Workbench
+### Begin command PartDesign_Body
+App.activeDocument().addObject('PartDesign::Body','Body')
+App.ActiveDocument.getObject('Body').Label = 'Body'
+# import PartDesignGui
+# Gui.activateView('Gui::View3DInventor', True)
+# Gui.activeView().setActiveObject('pdbody', App.activeDocument().Body)
+# Gui.Selection.clearSelection()
+# Gui.Selection.addSelection(App.ActiveDocument.Body)
+App.ActiveDocument.recompute()
+### End command PartDesign_Body
+# Gui.Selection.addSelection('Unnamed','Body')
+# Gui.runCommand('PartDesign_NewSketch',0)
+# Gui.Selection.clearSelection()
+# Gui.Selection.addSelection('Unnamed','Body','Origin.XZ_Plane.')
+App.getDocument('Unnamed').getObject('Body').newObject('Sketcher::SketchObject','Sketch')
+App.getDocument('Unnamed').getObject('Sketch').Support = (App.getDocument('Unnamed').getObject('XZ_Plane'),[''])
+App.getDocument('Unnamed').getObject('Sketch').MapMode = 'FlatFace'
+App.ActiveDocument.recompute()
+# Gui.getDocument('Unnamed').setEdit(App.getDocument('Unnamed').getObject('Body'), 0, 'Sketch.')
+# import Show
+# ActiveSketch = App.getDocument('Unnamed').getObject('Sketch')
+# tv = Show.TempoVis(App.ActiveDocument, tag= ActiveSketch.ViewObject.TypeId)
+# ActiveSketch.ViewObject.TempoVis = tv
+# if ActiveSketch.ViewObject.EditingWorkbench:
+#   tv.activateWorkbench(ActiveSketch.ViewObject.EditingWorkbench)
+# if ActiveSketch.ViewObject.HideDependent:
+#   tv.hide(tv.get_all_dependent(App.getDocument('Unnamed').getObject('Body'), 'Sketch.'))
+# if ActiveSketch.ViewObject.ShowSupport:
+#   tv.show([ref[0] for ref in ActiveSketch.Support if not ref[0].isDerivedFrom("PartDesign::Plane")])
+# if ActiveSketch.ViewObject.ShowLinks:
+#   tv.show([ref[0] for ref in ActiveSketch.ExternalGeometry])
+# tv.sketchClipPlane(ActiveSketch, ActiveSketch.ViewObject.SectionView)
+# tv.hide(ActiveSketch)
+# del(tv)
+# del(ActiveSketch)
+# 
+# ActiveSketch = App.getDocument('Unnamed').getObject('Sketch')
+# if ActiveSketch.ViewObject.RestoreCamera:
+#   ActiveSketch.ViewObject.TempoVis.saveCamera()
+#   if ActiveSketch.ViewObject.ForceOrtho:
+#     ActiveSketch.ViewObject.Document.ActiveView.setCameraType('Orthographic')
+# 
+# Gui.Selection.clearSelection()
+# Gui.runCommand('Sketcher_CompCreateCircle',0)
+# Gui.runCommand('Sketcher_CompCreateConic',0)
+# Gui.runCommand('Sketcher_CompCreateArc',0)
+# Gui.runCommand('Sketcher_CreateLine',0)
+### Begin command Std_Workbench
+# Gui.activateWorkbench("StartWorkbench")
+### End command Std_Workbench
+# Gui.getDocument('Unnamed').resetEdit()
+App.ActiveDocument.recompute()
+# ActiveSketch = App.getDocument('Unnamed').getObject('Sketch')
+# tv = ActiveSketch.ViewObject.TempoVis
+# if tv:
+#   tv.restore()
+# ActiveSketch.ViewObject.TempoVis = None
+# del(tv)
+# del(ActiveSketch)
+# 
+# Gui.Selection.addSelection('Unnamed','Body','Sketch.')
+App.getDocument('Unnamed').recompute()
+# Gui.Selection.clearSelection()
+# ActiveSketch = App.getDocument('Unnamed').getObject('Sketch')
+# tv = Show.TempoVis(App.ActiveDocument, tag= ActiveSketch.ViewObject.TypeId)
+# ActiveSketch.ViewObject.TempoVis = tv
+# if ActiveSketch.ViewObject.EditingWorkbench:
+#   tv.activateWorkbench(ActiveSketch.ViewObject.EditingWorkbench)
+# if ActiveSketch.ViewObject.HideDependent:
+#   tv.hide(tv.get_all_dependent(App.getDocument('Unnamed').getObject('Body'), 'Sketch.'))
+# if ActiveSketch.ViewObject.ShowSupport:
+#   tv.show([ref[0] for ref in ActiveSketch.Support if not ref[0].isDerivedFrom("PartDesign::Plane")])
+# if ActiveSketch.ViewObject.ShowLinks:
+#   tv.show([ref[0] for ref in ActiveSketch.ExternalGeometry])
+# tv.sketchClipPlane(ActiveSketch, ActiveSketch.ViewObject.SectionView)
+# tv.hide(ActiveSketch)
+# del(tv)
+# del(ActiveSketch)
+# 
+# ActiveSketch = App.getDocument('Unnamed').getObject('Sketch')
+# if ActiveSketch.ViewObject.RestoreCamera:
+#   ActiveSketch.ViewObject.TempoVis.saveCamera()
+#   if ActiveSketch.ViewObject.ForceOrtho:
+#     ActiveSketch.ViewObject.Document.ActiveView.setCameraType('Orthographic')
+# 
+# Gui.runCommand('Sketcher_CompCreateConic',0)
+App.getDocument('Unnamed').getObject('Sketch').addGeometry(Part.Ellipse(App.Vector(3.536969,26.848883,0),App.Vector(-12.284631,1.618330,0),App.Vector(0.000000,0.000000,0)),False)
+App.getDocument('Unnamed').getObject('Sketch').exposeInternalGeometry(0)
+App.getDocument('Unnamed').getObject('Sketch').addConstraint(Sketcher.Constraint('Coincident',0,3,-1,1)) 
+# Gui.runCommand('Sketcher_ConstrainCoincident',0)
+# Gui.Selection.addSelection('Unnamed','Body','Sketch.Vertex2',3.53697,26.8489,0)
+# Gui.Selection.clearSelection()
+# Gui.runCommand('Sketcher_ConstrainPointOnObject',0)
+# Gui.Selection.addSelection('Unnamed','Body','Sketch.Vertex2',3.53697,26.8489,0)
+# Gui.Selection.addSelection('Unnamed','Body','Sketch.V_Axis',0,30.3859,0)
+App.getDocument('Unnamed').getObject('Sketch').addConstraint(Sketcher.Constraint('PointOnObject',1,1,-2))
+# Gui.Selection.clearSelection()
+# Gui.runCommand('Sketcher_ConstrainDistanceX',0)
+# Gui.Selection.addSelection('Unnamed','Body','Sketch.Vertex4',-12.3437,6.56002e-21,0)
+# Gui.Selection.addSelection('Unnamed','Body','Sketch.Vertex5',12.3437,-6.56002e-21,0)
+App.getDocument('Unnamed').getObject('Sketch').addConstraint(Sketcher.Constraint('DistanceX',2,1,2,2,24.687409))
+App.getDocument('Unnamed').getObject('Sketch').setDatum(6,App.Units.Quantity('0.200000 mm'))
+# Gui.Selection.clearSelection()
+# Gui.runCommand('Sketcher_ConstrainDistanceY',0)
+# Gui.Selection.addSelection('Unnamed','Body','Sketch.Vertex2',0,23.9265,0)
+# Gui.Selection.addSelection('Unnamed','Body','Sketch.Vertex7',0,-23.9263,0)
+App.getDocument('Unnamed').getObject('Sketch').addConstraint(Sketcher.Constraint('DistanceY',4,1,1,1,47.852822))
+App.getDocument('Unnamed').getObject('Sketch').setDatum(7,App.Units.Quantity('0.600000 mm'))
+# Gui.Selection.clearSelection()
+### Begin command Std_ViewFitAll
+# Gui.SendMsgToActiveView("ViewFit")
+### End command Std_ViewFitAll
+# Gui.Selection.addSelection('Unnamed','Body','Sketch.',-2.23048,-0.00900078,-0.769715,False)
+### Begin command Std_ViewFitAll
+# Gui.SendMsgToActiveView("ViewFit")
+### End command Std_ViewFitAll
+# Gui.runCommand('Sketcher_ConstrainVertical',0)
+# Gui.runCommand('Sketcher_ConstrainSymmetric',0)
+### Begin command Std_ViewFitSelection
+# Gui.SendMsgToActiveView("ViewSelection")
+### End command Std_ViewFitSelection
+# Gui.Selection.clearSelection()
+### Begin command Std_ViewFitAll
+# Gui.SendMsgToActiveView("ViewFit")
+### End command Std_ViewFitAll
+# Gui.Selection.addSelection('Unnamed','Body','Sketch.Edge1')
+### Begin command Std_ViewFitSelection
+# Gui.SendMsgToActiveView("ViewSelection")
+### End command Std_ViewFitSelection
+# Gui.getDocument('Unnamed').resetEdit()
+App.ActiveDocument.recompute()
+# ActiveSketch = App.getDocument('Unnamed').getObject('Sketch')
+# tv = ActiveSketch.ViewObject.TempoVis
+# if tv:
+#   tv.restore()
+# ActiveSketch.ViewObject.TempoVis = None
+# del(tv)
+# del(ActiveSketch)
+# 
+# Gui.Selection.addSelection('Unnamed','Body','Sketch.')
+App.getDocument('Unnamed').recompute()
+### Begin command Std_ViewFitAll
+# Gui.SendMsgToActiveView("ViewFit")
+### End command Std_ViewFitAll
+### Begin command Std_ViewFitSelection
+# Gui.SendMsgToActiveView("ViewSelection")
+### End command Std_ViewFitSelection
+# Gui.Selection.clearSelection()
+### Begin command Std_ViewFront
+# Gui.activeDocument().activeView().viewFront()
+### End command Std_ViewFront
+# Gui.Selection.addSelection('Unnamed','Body','Sketch.')
+# Gui.Selection.clearSelection()
+# Gui.Selection.addSelection('Unnamed','Body')
+### Begin command Std_Workbench
+# Gui.activateWorkbench("PartDesignWorkbench")
+### End command Std_Workbench
+# Gui.Selection.clearSelection()
+# Gui.Selection.addSelection('Unnamed','Body','Sketch.')
+### Begin command PartDesign_Pad
+App.getDocument('Unnamed').getObject('Body').newObject('PartDesign::Pad','Pad')
+App.getDocument('Unnamed').getObject('Pad').Profile = App.getDocument('Unnamed').getObject('Sketch')
+App.getDocument('Unnamed').getObject('Pad').Length = 10
+App.ActiveDocument.recompute()
+App.getDocument('Unnamed').getObject('Pad').ReferenceAxis = (App.getDocument('Unnamed').getObject('Sketch'),['N_Axis'])
+App.getDocument('Unnamed').getObject('Sketch').Visibility = False
+App.ActiveDocument.recompute()
+# App.getDocument('Unnamed').getObject('Pad').ViewObject.ShapeColor=getattr(App.getDocument('Unnamed').getObject('Body').getLinkedObject(True).ViewObject,'ShapeColor',App.getDocument('Unnamed').getObject('Pad').ViewObject.ShapeColor)
+# App.getDocument('Unnamed').getObject('Pad').ViewObject.LineColor=getattr(App.getDocument('Unnamed').getObject('Body').getLinkedObject(True).ViewObject,'LineColor',App.getDocument('Unnamed').getObject('Pad').ViewObject.LineColor)
+# App.getDocument('Unnamed').getObject('Pad').ViewObject.PointColor=getattr(App.getDocument('Unnamed').getObject('Body').getLinkedObject(True).ViewObject,'PointColor',App.getDocument('Unnamed').getObject('Pad').ViewObject.PointColor)
+# App.getDocument('Unnamed').getObject('Pad').ViewObject.Transparency=getattr(App.getDocument('Unnamed').getObject('Body').getLinkedObject(True).ViewObject,'Transparency',App.getDocument('Unnamed').getObject('Pad').ViewObject.Transparency)
+# App.getDocument('Unnamed').getObject('Pad').ViewObject.DisplayMode=getattr(App.getDocument('Unnamed').getObject('Body').getLinkedObject(True).ViewObject,'DisplayMode',App.getDocument('Unnamed').getObject('Pad').ViewObject.DisplayMode)
+# Gui.getDocument('Unnamed').setEdit(App.getDocument('Unnamed').getObject('Body'), 0, 'Pad.')
+# Gui.Selection.clearSelection()
+### End command PartDesign_Pad
+# Gui.Selection.clearSelection()
+### Begin command Std_ViewFront
+# Gui.activeDocument().activeView().viewFront()
+### End command Std_ViewFront
+### Begin command Std_ViewFront
+# Gui.activeDocument().activeView().viewFront()
+### End command Std_ViewFront
+### Begin command Std_ViewRight
+# Gui.activeDocument().activeView().viewRight()
+### End command Std_ViewRight
+### Begin command Std_ViewFront
+# Gui.activeDocument().activeView().viewFront()
+### End command Std_ViewFront
+### Begin command Std_ViewTop
+# Gui.activeDocument().activeView().viewTop()
+### End command Std_ViewTop
+### Begin command Std_ViewRight
+# Gui.activeDocument().activeView().viewRight()
+### End command Std_ViewRight
+### Begin command Std_ViewRear
+# Gui.activeDocument().activeView().viewRear()
+### End command Std_ViewRear
+### Begin command Std_ViewBottom
+# Gui.activeDocument().activeView().viewBottom()
+### End command Std_ViewBottom
+### Begin command Std_ViewLeft
+# Gui.activeDocument().activeView().viewLeft()
+### End command Std_ViewLeft
+### Begin command Std_ViewFront
+# Gui.activeDocument().activeView().viewFront()
+### End command Std_ViewFront
+### Begin command Std_ViewFront
+# Gui.activeDocument().activeView().viewFront()
+### End command Std_ViewFront
+### Begin command Std_ViewTop
+# Gui.activeDocument().activeView().viewTop()
+### End command Std_ViewTop
+### Begin command Std_ViewRight
+# Gui.activeDocument().activeView().viewRight()
+### End command Std_ViewRight
+### Begin command Std_ViewRear
+# Gui.activeDocument().activeView().viewRear()
+### End command Std_ViewRear
+### Begin command Std_ViewTop
+# Gui.activeDocument().activeView().viewTop()
+### End command Std_ViewTop
+### Begin command Std_ViewFitAll
+# Gui.SendMsgToActiveView("ViewFit")
+### End command Std_ViewFitAll
+### Begin command Std_ViewRight
+# Gui.activeDocument().activeView().viewRight()
+### End command Std_ViewRight
+### Begin command Std_ViewFitAll
+# Gui.SendMsgToActiveView("ViewFit")
+### End command Std_ViewFitAll
+App.getDocument('Unnamed').Pad.setExpression('Length', u'sqrt(3) / 4')
+App.getDocument('Unnamed').getObject('Pad').TaperAngle = 0.000000
+App.getDocument('Unnamed').getObject('Pad').UseCustomVector = 1
+App.getDocument('Unnamed').getObject('Pad').Direction = (0, 1.41421, 1)
+App.getDocument('Unnamed').getObject('Pad').ReferenceAxis = (App.getDocument('Unnamed').getObject('Sketch'), ['N_Axis'])
+App.getDocument('Unnamed').getObject('Pad').AlongSketchNormal = 1
+App.getDocument('Unnamed').getObject('Pad').Type = 0
+App.getDocument('Unnamed').getObject('Pad').UpToFace = None
+App.getDocument('Unnamed').getObject('Pad').Reversed = 0
+App.getDocument('Unnamed').getObject('Pad').Midplane = 0
+App.getDocument('Unnamed').getObject('Pad').Offset = 0
+App.getDocument('Unnamed').recompute()
+# Gui.getDocument('Unnamed').resetEdit()
+App.getDocument('Unnamed').getObject('Sketch').Visibility = False
+### Begin command Std_ViewFront
+# Gui.activeDocument().activeView().viewFront()
+### End command Std_ViewFront
+### Begin command Std_ViewTop
+# Gui.activeDocument().activeView().viewTop()
+### End command Std_ViewTop
+### Begin command Std_ViewRight
+# Gui.activeDocument().activeView().viewRight()
+### End command Std_ViewRight
+### Begin command Std_ViewTop
+# Gui.activeDocument().activeView().viewTop()
+### End command Std_ViewTop
+# Gui.Selection.addSelection('Unnamed','Body')
+# Gui.Selection.clearSelection()
+# Gui.Selection.addSelection('Unnamed','Body')
+FreeCAD.getDocument('Unnamed').getObject('Body').Placement = App.Placement(App.Vector(0,0,0),App.Rotation(App.Vector(0,0,1),4))
+
+FreeCAD.getDocument('Unnamed').getObject('Body').Placement = App.Placement(App.Vector(0,0,0),App.Rotation(App.Vector(0,0,1),45))
+
+FreeCAD.getDocument('Unnamed').getObject('Body').Placement = App.Placement(App.Vector(0,0,0),App.Rotation(App.Vector(0,0,1),4))
+
+FreeCAD.getDocument('Unnamed').getObject('Body').Placement = App.Placement(App.Vector(0,0,0),App.Rotation(App.Vector(0,0,1),-4))
+
+FreeCAD.getDocument('Unnamed').getObject('Body').Placement = App.Placement(App.Vector(0,0,0),App.Rotation(App.Vector(0,0,1),-45))
+
+# Gui.Selection.clearSelection()
+### Begin command Std_ViewFront
+# Gui.activeDocument().activeView().viewFront()
+### End command Std_ViewFront
+### Begin command Std_ViewTop
+# Gui.activeDocument().activeView().viewTop()
+### End command Std_ViewTop
+### Begin command Std_ViewRight
+# Gui.activeDocument().activeView().viewRight()
+### End command Std_ViewRight
+### Begin command Std_ViewRear
+# Gui.activeDocument().activeView().viewRear()
+### End command Std_ViewRear
+### Begin command Std_ViewBottom
+# Gui.activeDocument().activeView().viewBottom()
+### End command Std_ViewBottom
+### Begin command Std_ViewHome
+# Gui.activeDocument().activeView().viewDefaultOrientation('Top',0)
+# Gui.SendMsgToActiveView("ViewFit")
+### End command Std_ViewHome
+### Begin command Std_ViewFront
+# Gui.activeDocument().activeView().viewFront()
+### End command Std_ViewFront
+### Begin command Std_Workbench
+# Gui.activateWorkbench("PartWorkbench")
+### End command Std_Workbench
+### Begin command Part_Box
+App.ActiveDocument.addObject("Part::Box","Box")
+App.ActiveDocument.ActiveObject.Label = "Cube"
+# Object created at document root.
+App.ActiveDocument.recompute()
+# Gui.SendMsgToActiveView("ViewFit")
+### End command Part_Box
+# Gui.Selection.addSelection('Unnamed','Box')
+### Begin command Std_Delete
+App.getDocument('Unnamed').removeObject('Box')
+App.getDocument('Unnamed').recompute()
+### End command Std_Delete
+# Gui.Selection.clearSelection()
+### Begin command Part_Box
+App.ActiveDocument.addObject("Part::Box","Box")
+App.ActiveDocument.ActiveObject.Label = "Cube"
+# Object created at document root.
+App.ActiveDocument.recompute()
+# Gui.SendMsgToActiveView("ViewFit")
+### End command Part_Box
+# Gui.Selection.addSelection('Unnamed','Box')
+FreeCAD.getDocument('Unnamed').getObject('Box').Length = '1 mm'
+
+FreeCAD.getDocument('Unnamed').getObject('Box').Width = '1 mm'
+
+FreeCAD.getDocument('Unnamed').getObject('Box').Height = '1 mm'
+
+### Begin command Std_ViewFitAll
+# Gui.SendMsgToActiveView("ViewFit")
+### End command Std_ViewFitAll
+FreeCADGui.getDocument('Unnamed').getObject('Box').DisplayMode = u"Wireframe"
+
+# Gui.Selection.clearSelection()
+### Begin command Std_ViewFront
+# Gui.activeDocument().activeView().viewFront()
+### End command Std_ViewFront
+### Begin command Std_ViewTop
+# Gui.activeDocument().activeView().viewTop()
+### End command Std_ViewTop
+### Begin command Std_ViewFront
+# Gui.activeDocument().activeView().viewFront()
+### End command Std_ViewFront
+### Begin command Std_ViewFront
+# Gui.activeDocument().activeView().viewFront()
+### End command Std_ViewFront
+# Gui.Selection.addSelection('Unnamed','Box')
+# Gui.Selection.clearSelection()
+# Gui.Selection.addSelection('Unnamed','Body')
+# Gui.Selection.clearSelection()
+# Gui.Selection.addSelection('Unnamed','Body','Pad.')
+# Gui.Selection.clearSelection()
+# Gui.activateWorkbench('PartDesignWorkbench')
+App.getDocument('Unnamed').Pad.setExpression('Length', u'sqrt(3)')
+App.getDocument('Unnamed').getObject('Pad').TaperAngle = 0.000000
+App.getDocument('Unnamed').getObject('Pad').UseCustomVector = 1
+App.getDocument('Unnamed').getObject('Pad').Direction = (0, 1.41421, 1)
+App.getDocument('Unnamed').getObject('Pad').ReferenceAxis = (App.getDocument('Unnamed').getObject('Sketch'), ['N_Axis'])
+App.getDocument('Unnamed').getObject('Pad').AlongSketchNormal = 1
+App.getDocument('Unnamed').getObject('Pad').Type = 0
+App.getDocument('Unnamed').getObject('Pad').UpToFace = None
+App.getDocument('Unnamed').getObject('Pad').Reversed = 0
+App.getDocument('Unnamed').getObject('Pad').Midplane = 0
+App.getDocument('Unnamed').getObject('Pad').Offset = 0
+App.getDocument('Unnamed').recompute()
+# Gui.getDocument('Unnamed').resetEdit()
+# Gui.activateWorkbench('PartWorkbench')
+App.getDocument('Unnamed').getObject('Sketch').Visibility = False
+# Gui.Selection.addSelection('Unnamed','Body','Pad.')
+# Gui.Selection.clearSelection()
+# Gui.Selection.addSelection('Unnamed','Box')
+# Gui.Selection.clearSelection()
+# Gui.Selection.addSelection('Unnamed','Body','Pad.')
+# Gui.Selection.clearSelection()
+### Begin command Std_ViewFront
+# Gui.activeDocument().activeView().viewFront()
+### End command Std_ViewFront
+### Begin command Std_ViewTop
+# Gui.activeDocument().activeView().viewTop()
+### End command Std_ViewTop
+### Begin command Std_ViewFront
+# Gui.activeDocument().activeView().viewFront()
+### End command Std_ViewFront
+### Begin command Std_ViewFront
+# Gui.activeDocument().activeView().viewFront()
+### End command Std_ViewFront
+### Begin command Std_ViewTop
+# Gui.activeDocument().activeView().viewTop()
+### End command Std_ViewTop
+### Begin command Std_ViewFront
+# Gui.activeDocument().activeView().viewFront()
+### End command Std_ViewFront
+### Begin command Std_ViewTop
+# Gui.activeDocument().activeView().viewTop()
+### End command Std_ViewTop
+### Begin command Std_ViewFront
+# Gui.activeDocument().activeView().viewFront()
+### End command Std_ViewFront
+### Begin command Std_ViewTop
+# Gui.activeDocument().activeView().viewTop()
+### End command Std_ViewTop
+# Gui.Selection.addSelection('Unnamed','Body','Pad.')
+# Gui.Selection.clearSelection()
+# Gui.activateWorkbench('PartDesignWorkbench')
+App.getDocument('Unnamed').Pad.setExpression('Length', u'sqrt(3)')
+App.getDocument('Unnamed').getObject('Pad').TaperAngle = 0.000000
+App.getDocument('Unnamed').getObject('Pad').UseCustomVector = 1
+App.getDocument('Unnamed').getObject('Pad').Direction = (0, 1.41421, 1)
+App.getDocument('Unnamed').getObject('Pad').ReferenceAxis = (App.getDocument('Unnamed').getObject('Sketch'), ['N_Axis'])
+App.getDocument('Unnamed').getObject('Pad').AlongSketchNormal = 0
+App.getDocument('Unnamed').getObject('Pad').Type = 0
+App.getDocument('Unnamed').getObject('Pad').UpToFace = None
+App.getDocument('Unnamed').getObject('Pad').Reversed = 0
+App.getDocument('Unnamed').getObject('Pad').Midplane = 0
+App.getDocument('Unnamed').getObject('Pad').Offset = 0
+App.getDocument('Unnamed').recompute()
+# Gui.getDocument('Unnamed').resetEdit()
+# Gui.activateWorkbench('PartWorkbench')
+App.getDocument('Unnamed').getObject('Sketch').Visibility = False
+### Begin command Std_ViewFront
+# Gui.activeDocument().activeView().viewFront()
+### End command Std_ViewFront
+### Begin command Std_ViewRight
+# Gui.activeDocument().activeView().viewRight()
+### End command Std_ViewRight
+### Begin command Std_ViewTop
+# Gui.activeDocument().activeView().viewTop()
+### End command Std_ViewTop
+### Begin command Std_ViewFront
+# Gui.activeDocument().activeView().viewFront()
+### End command Std_ViewFront
+### Begin command Std_ViewTop
+# Gui.activeDocument().activeView().viewTop()
+### End command Std_ViewTop
+### Begin command Std_ViewRight
+# Gui.activeDocument().activeView().viewRight()
+### End command Std_ViewRight
+### Begin command Std_ViewFront
+# Gui.activeDocument().activeView().viewFront()
+### End command Std_ViewFront
+### Begin command Std_ViewRight
+# Gui.activeDocument().activeView().viewRight()
+### End command Std_ViewRight
+### Begin command Std_ViewFront
+# Gui.activeDocument().activeView().viewFront()
+### End command Std_ViewFront
+### Begin command Std_ViewRight
+# Gui.activeDocument().activeView().viewRight()
+### End command Std_ViewRight
+### Begin command Std_ViewFront
+# Gui.activeDocument().activeView().viewFront()
+### End command Std_ViewFront
+### Begin command Std_ViewRight
+# Gui.activeDocument().activeView().viewRight()
+### End command Std_ViewRight
+### Begin command Std_ViewFront
+# Gui.activeDocument().activeView().viewFront()
+### End command Std_ViewFront
+### Begin command Std_ViewRight
+# Gui.activeDocument().activeView().viewRight()
+### End command Std_ViewRight
+### Begin command Std_ViewFront
+# Gui.activeDocument().activeView().viewFront()
+### End command Std_ViewFront
+### Begin command Std_ViewRight
+# Gui.activeDocument().activeView().viewRight()
+### End command Std_ViewRight
+### Begin command Std_ViewFront
+# Gui.activeDocument().activeView().viewFront()
+### End command Std_ViewFront
+### Begin command Std_ViewTop
+# Gui.activeDocument().activeView().viewTop()
+### End command Std_ViewTop
+# Gui.Selection.addSelection('Unnamed','Body','Pad.')
+# Gui.Selection.clearSelection()
+# Gui.activateWorkbench('PartDesignWorkbench')
+App.getDocument('Unnamed').Pad.setExpression('Length', u'sqrt(3) / 4')
+App.getDocument('Unnamed').getObject('Pad').TaperAngle = 0.000000
+App.getDocument('Unnamed').getObject('Pad').UseCustomVector = 1
+App.getDocument('Unnamed').getObject('Pad').Direction = (0, 1.41421, 1)
+App.getDocument('Unnamed').getObject('Pad').ReferenceAxis = (App.getDocument('Unnamed').getObject('Sketch'), ['N_Axis'])
+App.getDocument('Unnamed').getObject('Pad').AlongSketchNormal = 0
+App.getDocument('Unnamed').getObject('Pad').Type = 0
+App.getDocument('Unnamed').getObject('Pad').UpToFace = None
+App.getDocument('Unnamed').getObject('Pad').Reversed = 0
+App.getDocument('Unnamed').getObject('Pad').Midplane = 0
+App.getDocument('Unnamed').getObject('Pad').Offset = 0
+App.getDocument('Unnamed').recompute()
+# Gui.getDocument('Unnamed').resetEdit()
+# Gui.activateWorkbench('PartWorkbench')
+App.getDocument('Unnamed').getObject('Sketch').Visibility = False
+# Gui.Selection.addSelection('Unnamed','Box')
+# Gui.runCommand('Std_Copy',0)
+# Gui.runCommand('Std_Paste',0)
+# Gui.Selection.clearSelection()
+# Gui.Selection.addSelection('Unnamed','Box001')
+FreeCAD.getDocument('Unnamed').getObject('Box001').Length = '1 1/mm'
+
+FreeCAD.getDocument('Unnamed').getObject('Box001').Length = '0.25 mm'
+
+FreeCAD.getDocument('Unnamed').getObject('Box001').Width = '1 1/mm'
+
+FreeCAD.getDocument('Unnamed').getObject('Box001').Width = '0.25 mm'
+
+FreeCAD.getDocument('Unnamed').getObject('Box001').Height = '1 1/mm'
+
+FreeCAD.getDocument('Unnamed').getObject('Box001').Height = '0.25 mm'
+
+### Begin command Std_ViewFront
+# Gui.activeDocument().activeView().viewFront()
+### End command Std_ViewFront
+### Begin command Std_ViewTop
+# Gui.activeDocument().activeView().viewTop()
+### End command Std_ViewTop
+### Begin command Std_ViewRight
+# Gui.activeDocument().activeView().viewRight()
+### End command Std_ViewRight
+# Gui.Selection.clearSelection()
+# Gui.Selection.addSelection('Unnamed','Body','Pad.Sketch.')
+# Gui.Selection.clearSelection()
+# ActiveSketch = App.getDocument('Unnamed').getObject('Sketch')
+# tv = Show.TempoVis(App.ActiveDocument, tag= ActiveSketch.ViewObject.TypeId)
+# ActiveSketch.ViewObject.TempoVis = tv
+# if ActiveSketch.ViewObject.EditingWorkbench:
+#   tv.activateWorkbench(ActiveSketch.ViewObject.EditingWorkbench)
+# if ActiveSketch.ViewObject.HideDependent:
+#   tv.hide(tv.get_all_dependent(App.getDocument('Unnamed').getObject('Body'), 'Pad.Sketch.'))
+# if ActiveSketch.ViewObject.ShowSupport:
+#   tv.show([ref[0] for ref in ActiveSketch.Support if not ref[0].isDerivedFrom("PartDesign::Plane")])
+# if ActiveSketch.ViewObject.ShowLinks:
+#   tv.show([ref[0] for ref in ActiveSketch.ExternalGeometry])
+# tv.sketchClipPlane(ActiveSketch, ActiveSketch.ViewObject.SectionView)
+# tv.hide(ActiveSketch)
+# del(tv)
+# del(ActiveSketch)
+# 
+# ActiveSketch = App.getDocument('Unnamed').getObject('Sketch')
+# if ActiveSketch.ViewObject.RestoreCamera:
+#   ActiveSketch.ViewObject.TempoVis.saveCamera()
+#   if ActiveSketch.ViewObject.ForceOrtho:
+#     ActiveSketch.ViewObject.Document.ActiveView.setCameraType('Orthographic')
+# 
+# Gui.Selection.addSelection('Unnamed','Body','Pad.Sketch.Constraint7',-0.401277,0.388549,1.41164,False)
+App.getDocument('Unnamed').getObject('Sketch').setDatum(6,App.Units.Quantity('0.050000 mm'))
+# Gui.Selection.clearSelection()
+### Begin command Std_ViewFitAll
+# Gui.SendMsgToActiveView("ViewFit")
+### End command Std_ViewFitAll
+### Begin command Std_ViewFitSelection
+# Gui.SendMsgToActiveView("ViewSelection")
+### End command Std_ViewFitSelection
+# Gui.runCommand('Std_ViewBoxZoom',0)
+# Gui.Selection.addSelection('Unnamed','Body','Pad.Sketch.Vertex1',0,0,0,False)
+# Gui.Selection.addSelection('Unnamed','Body','Pad.Sketch.Edge1',0,0,0,False)
+# Gui.Selection.addSelection('Unnamed','Body','Pad.Sketch.Vertex2',0,0,0,False)
+# Gui.Selection.addSelection('Unnamed','Body','Pad.Sketch.Vertex3',0,0,0,False)
+# Gui.Selection.addSelection('Unnamed','Body','Pad.Sketch.Edge2',0,0,0,False)
+# Gui.Selection.addSelection('Unnamed','Body','Pad.Sketch.Vertex4',0,0,0,False)
+# Gui.Selection.addSelection('Unnamed','Body','Pad.Sketch.Vertex5',0,0,0,False)
+# Gui.Selection.addSelection('Unnamed','Body','Pad.Sketch.Edge3',0,0,0,False)
+# Gui.Selection.addSelection('Unnamed','Body','Pad.Sketch.Vertex6',0,0,0,False)
+# Gui.Selection.addSelection('Unnamed','Body','Pad.Sketch.Vertex7',0,0,0,False)
+# Gui.Selection.addSelection('Unnamed','Body','Pad.Sketch.RootPoint',0,0,0,False)
+# Gui.runCommand('Std_ViewBoxZoom',0)
+# Gui.runCommand('Std_ViewBoxZoom',0)
+# Gui.Selection.addSelection('Unnamed','Body','Pad.Sketch.Constraint8',-0.20507,0.192342,0.0583064,False)
+App.getDocument('Unnamed').getObject('Sketch').setDatum(7,App.Units.Quantity('0.150000 mm'))
+# Gui.Selection.clearSelection()
+# Gui.getDocument('Unnamed').resetEdit()
+App.ActiveDocument.recompute()
+# ActiveSketch = App.getDocument('Unnamed').getObject('Sketch')
+# tv = ActiveSketch.ViewObject.TempoVis
+# if tv:
+#   tv.restore()
+# ActiveSketch.ViewObject.TempoVis = None
+# del(tv)
+# del(ActiveSketch)
+# 
+# Gui.Selection.addSelection('Unnamed','Body','Pad.Sketch.')
+App.getDocument('Unnamed').recompute()
+# Gui.Selection.clearSelection()
+# Gui.Selection.addSelection('Unnamed','Body')
+# Gui.Selection.clearSelection()
+### Begin command Std_ViewFront
+# Gui.activeDocument().activeView().viewFront()
+### End command Std_ViewFront
+### Begin command Std_ViewTop
+# Gui.activeDocument().activeView().viewTop()
+### End command Std_ViewTop
+### Begin command Std_ViewRight
+# Gui.activeDocument().activeView().viewRight()
+### End command Std_ViewRight
+### Begin command Std_ViewRear
+# Gui.activeDocument().activeView().viewRear()
+### End command Std_ViewRear
+### Begin command Std_ViewFront
+# Gui.activeDocument().activeView().viewFront()
+### End command Std_ViewFront
+# Macro End: C:\Development\script_inception_public\src\FreeCAD-macros\elliptical-rod-macro.FCMacro +++++++++++++++++++++++++++++++++++++++++++++++++
