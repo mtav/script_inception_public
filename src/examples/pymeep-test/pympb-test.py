@@ -34,7 +34,7 @@ ms.run_te()
 import matplotlib.pyplot as plt
 plt.plot(ms.all_freqs)
 plt.xlabel('k index')
-plt.ylabel('$a/\lambda$')
+plt.ylabel(r'$a/\lambda$')
 plt.show()
 
 # output testing
