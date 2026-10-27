@@ -20,3 +20,6 @@ ruff check --select W605 --fix --unsafe-fixes src
 
 # References
 https://stackoverflow.com/questions/38048945/how-to-turn-warnings-into-errors-when-building-sphinx-documentation-with-setupto
+
+# TODO
+* Fix remaining sphinx build warnings.

@@ -4,7 +4,7 @@
 import os
 import argparse
 import tempfile
-from numpy import arange, cos, sin, floor, radians, isnan, NaN
+from numpy import arange, cos, sin, floor, radians, isnan, nan
 from GWL.GWL_parser import GWLobject
 from utilities.common import matlab_range
 from utilities.createGUI import createGUI

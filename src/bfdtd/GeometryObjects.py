@@ -922,18 +922,22 @@ class Tube(GeometryObject):
 
   def write_entry(self, FILE=sys.stdout):
     '''
-    TUBE
-    {
-      1-3 Coordinates of first end: X1, Y1, Z1
-      4 **a1** first radius of the elliptical cross-section of the first end
-      5 **b1** second radius of the elliptical cross-section of the first end
-      6-8 Coordinates of second end: X2, Y2, Z2
-      9 **a2** first radius of the elliptical cross-section of the second end
-      10 **b2** second radius of the elliptical cross-section of the second end
-      11 **face orientation** 1=x, 2=y or 3=z depending on which direction the tube is pointing
-      12 **relative permittivity -> n=sqrt(mu_r*epsilon_r)
-      13 **relative conductivity
-    }
+    Write a TUBE entry to a file object.
+
+    BFDTD format::
+
+      TUBE
+      {
+        1-3 Coordinates of first end: X1, Y1, Z1
+        4 **a1** first radius of the elliptical cross-section of the first end
+        5 **b1** second radius of the elliptical cross-section of the first end
+        6-8 Coordinates of second end: X2, Y2, Z2
+        9 **a2** first radius of the elliptical cross-section of the second end
+        10 **b2** second radius of the elliptical cross-section of the second end
+        11 **face orientation** 1=x, 2=y or 3=z depending on which direction the tube is pointing
+        12 **relative permittivity -> n=sqrt(mu_r*epsilon_r)
+        13 **relative conductivity
+      }
     '''
   
     FILE.write('CYLINDER **name='+self.name+'\n')

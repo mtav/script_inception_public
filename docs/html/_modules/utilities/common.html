@@ -282,8 +282,8 @@
   
   <span class="n">ret</span> <span class="o">=</span> <span class="p">[]</span>
   
-  <span class="n">listElements</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s2">&quot;([^\[,\]]+)&quot;</span><span class="p">)</span>
-  <span class="n">insideBrackets</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s2">&quot;(\[[^\[\]]+\])&quot;</span><span class="p">)</span>
+  <span class="n">listElements</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;([^\[,\]]+)&quot;</span><span class="p">)</span>
+  <span class="n">insideBrackets</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;(\[[^\[\]]+\])&quot;</span><span class="p">)</span>
 
   <span class="n">lists</span> <span class="o">=</span> <span class="p">[</span><span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">insideBrackets</span><span class="o">.</span><span class="n">finditer</span><span class="p">(</span><span class="n">instr</span><span class="p">)]</span>
   <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">lists</span><span class="p">:</span>

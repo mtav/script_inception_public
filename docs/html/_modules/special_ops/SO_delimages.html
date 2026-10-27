@@ -57,7 +57,7 @@
 <span class="k">class</span><span class="w"> </span><span class="nc">Foo</span><span class="p">:</span>
   <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">Filename</span> <span class="o">=</span> <span class="n">filename</span>
-    <span class="n">pattern</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s2">&quot;([xyz]).+id..\.E.mod\.max_([\d.]+)\.lambda\(nm\)_([\d.]+)\.freq\(Mhz\)_([\d.]+)\.pos\(mum\)_([\d.]+)\.png&quot;</span><span class="p">)</span>
+    <span class="n">pattern</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;([xyz]).+id..\.E.mod\.max_([\d.]+)\.lambda\(nm\)_([\d.]+)\.freq\(Mhz\)_([\d.]+)\.pos\(mum\)_([\d.]+)\.png&quot;</span><span class="p">)</span>
     <span class="n">m</span> <span class="o">=</span> <span class="n">pattern</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Filename</span><span class="p">)</span>
     <span class="c1">#print m</span>
     <span class="k">if</span> <span class="n">m</span><span class="p">:</span>

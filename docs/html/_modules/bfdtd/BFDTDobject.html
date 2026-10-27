@@ -1589,13 +1589,13 @@
   
       <span class="c1"># remove comments</span>
       <span class="c1"># TODO: Add more generic system for functional comments (to add layer, scene and group for example)</span>
-      <span class="n">pattern_stripcomments</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s2">&quot;\*\*(?!name=).*</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+      <span class="n">pattern_stripcomments</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\\</span><span class="s2">*</span><span class="se">\\</span><span class="s2">*(?!name=).*</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
       <span class="n">cleantext</span> <span class="o">=</span> <span class="n">pattern_stripcomments</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">fulltext</span><span class="p">)</span>
       <span class="c1">#print(cleantext)</span>
   
       <span class="c1"># pattern_objects = re.compile(&quot;^(?&lt;Type&gt;\w+).*?\{(?&lt;data&gt;[^\{\}]*?)\}&quot;)</span>
       <span class="c1">#pattern_objects = re.compile(&quot;(?P&lt;Type&gt;\w+)\s*(?P&lt;name&gt;(?&lt;=\*\*name=)[^{}]*)?{(?P&lt;data&gt;[^{}]*)}&quot;,re.DOTALL)</span>
-      <span class="n">pattern_objects</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s2">&quot;(?P&lt;Type&gt;\w+)\s*(?P&lt;nameblob&gt;[^</span><span class="si">{}</span><span class="s2">]+)?{(?P&lt;data&gt;[^</span><span class="si">{}</span><span class="s2">]*)}&quot;</span><span class="p">,</span><span class="n">re</span><span class="o">.</span><span class="n">DOTALL</span><span class="p">)</span>
+      <span class="n">pattern_objects</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;(?P&lt;Type&gt;\w+)\s*(?P&lt;nameblob&gt;[^</span><span class="si">{}</span><span class="s2">]+)?{(?P&lt;data&gt;[^</span><span class="si">{}</span><span class="s2">]*)}&quot;</span><span class="p">,</span><span class="n">re</span><span class="o">.</span><span class="n">DOTALL</span><span class="p">)</span>
       <span class="n">objects</span> <span class="o">=</span> <span class="p">[</span><span class="n">m</span><span class="o">.</span><span class="n">groupdict</span><span class="p">()</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">pattern_objects</span><span class="o">.</span><span class="n">finditer</span><span class="p">(</span><span class="n">cleantext</span><span class="p">)]</span>
     
       <span class="n">entries</span> <span class="o">=</span> <span class="p">[]</span>
@@ -1607,7 +1607,7 @@
             <span class="c1">#print objects[i][&#39;nameblob&#39;]</span>
             <span class="k">if</span> <span class="n">objects</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;nameblob&#39;</span><span class="p">]:</span>
               <span class="c1">#print &#39;OK&#39;</span>
-              <span class="n">pattern_nameblob</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s2">&quot;\*\*name=(.*)&quot;</span><span class="p">)</span>
+              <span class="n">pattern_nameblob</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\*\*name=(.*)&quot;</span><span class="p">)</span>
               <span class="n">m</span> <span class="o">=</span> <span class="n">pattern_nameblob</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">objects</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;nameblob&#39;</span><span class="p">])</span>
               <span class="k">if</span> <span class="n">m</span><span class="p">:</span>
                 <span class="n">name</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
@@ -1622,7 +1622,7 @@
           <span class="c1"># convert Type to upper case and strip it</span>
           <span class="n">Type</span> <span class="o">=</span> <span class="n">Type</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
           <span class="c1"># split data by spaces and new lines</span>
-          <span class="n">data</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;\s+&#39;</span><span class="p">,</span><span class="n">data</span><span class="p">)</span>
+          <span class="n">data</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\s+&#39;</span><span class="p">,</span><span class="n">data</span><span class="p">)</span>
           <span class="c1"># remove empty lines from data</span>
           <span class="c1">#data = filter(None, data)</span>
           <span class="n">data</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">data</span><span class="p">))</span>

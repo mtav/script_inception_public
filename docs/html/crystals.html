@@ -50,8 +50,338 @@
 <section id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading">¶</a></h2>
 </section>
-<section id="crystals-rcd-cubiclattice-module">
-<h2>crystals.RCD_CubicLattice module<a class="headerlink" href="#crystals-rcd-cubiclattice-module" title="Link to this heading">¶</a></h2>
+<section id="module-crystals.RCD_CubicLattice">
+<span id="crystals-rcd-cubiclattice-module"></span><h2>crystals.RCD_CubicLattice module<a class="headerlink" href="#module-crystals.RCD_CubicLattice" title="Link to this heading">¶</a></h2>
+<p>BFDTD+GWL class system + GUI:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">PhotonicCrystallineDiamond</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<span class="w">  </span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">  Also known as:</span>
+<span class="sd">  -Photonic Crystalline Diamond (PCD)</span>
+<span class="sd">  -ice crystal</span>
+<span class="sd">  -spin-ice</span>
+<span class="sd">  -diamond</span>
+<span class="sd">  &#39;&#39;&#39;</span>
+
+  <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+    <span class="n">mesh</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+    <span class="k">return</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">PhotonicCrystallineDiamond_F_RD</span><span class="p">(</span><span class="n">PhotonicCrystallineDiamond</span><span class="p">):</span>
+  <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+    <span class="n">mesh</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+    <span class="k">return</span>
+</pre></div>
+</div>
+<p>But then we will want defects… :/ There is no way out. We need GUIs (with script support and parameter based structure design (like in RSOFT))…</p>
+<dl class="simple">
+<dt>idea: The RCD class should use generic lines/cylinders (independent of FDTD or GWL usage). It could even define multiple different ones (ex: vertical and non-vertical lines).</dt><dd><p>These lines/cylinders could then be actually written using different classes: parallelepiped, spiral cylinder, flat lines, BFDTD cylinders, etc
+Depending on the chosen class (or maybe even class instance, which would then be copied over), different attributes like permittivity, writing direction, voxel distance, etc could then be defined.
+The generic crystal should store a list of lines to write with maybe an indication on whether or not to connect the current line to the next one ([a,b,c] instead of [[a,b],[b,c]]).
+(This mean it could be a GWLobject. The subclasses would just read the GWL object and replace A-B lines with some other random structure from A to B.)
+To optimize speed, it would be better to pass the “line function” to the writer process instead of first getting a list of lines and then looping through it again to write.</p>
+</dd>
+</dl>
+<p>attributes:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>output location (only used on writing, does not need to be an object attribute (except maybe for BFDTD or other classes writing multiple files)):</p>
+<ul>
+<li><p>outdir’, action=”store”, dest=”outdir”, default=tempfile.gettempdir(), help=’output directory’)</p></li>
+<li><p>basename’, action=”store”, dest=”basename”, default=’RCD’, help=’output basename’)</p></li>
+</ul>
+</li>
+<li><p>general RCD properties:</p>
+<ul>
+<li><p>cube_side”, help=”length of unit cube side”, type=float, default=2.8)</p></li>
+<li><p>Nx”, help=”number of periods in the X direction”, type=int, default=3)</p></li>
+<li><p>Ny”, help=”number of periods in the Y direction”, type=int, default=3)</p></li>
+<li><p>Nz”, help=”number of periods in the Z direction”, type=int, default=3)</p></li>
+<li><p>“–centro_X”, help=”Centre X position”, type=float, default=0)</p></li>
+<li><p>“–centro_Y”, help=”Centre Y position”, type=float, default=0)</p></li>
+<li><p>“–centro_Z”, help=”Centre Z position”, type=float, default=0)</p></li>
+</ul>
+</li>
+<li><p>GWL:</p>
+<ul>
+<li><p>special attributes (not sure where to put them):</p>
+<ul>
+<li><p>TopDownWriting/downwardWriting”, help=”Write from top to bottom”, action=”store_true”, default=True)</p></li>
+</ul>
+</li>
+<li><p>GWLobject properties:</p>
+<ul>
+<li><p>“–set-lower-to-origin”, help=’offset structure so that its “lower corner” is moved to the (0,0,0) coordinates. This will make all coordinates positive.’, action=”store_true”)</p></li>
+<li><p>GWL power compensation:</p>
+<ul>
+<li><p>“–write-power”, help=”Write power values using the power compensation (PC) parameters.”, action=”store_true”)</p></li>
+<li><p>“–PC_laser_power_at_z0”, help=”PC: laser power at z0”, type=float, default=100)</p></li>
+<li><p>“–PC_slope”, help=”PC: power compensation slope”, type=float, default=0)</p></li>
+<li><p>“–PC_interfaceAt”, help=”PC: interface position”, type=float, default=0)</p></li>
+<li><p>“–PC_bool_InverseWriting”, help=”PC: To write a file designed for use with the InvertZAxis command”, action=”store_true”, default=False)</p></li>
+<li><p>“–PC_float_height”, help=’PC: “substrate height”, in practice just a value added to the interfaceAt value’, type=float, default=0)</p></li>
+<li><p>“–PC_bool_LaserPowerCommand”, help=”PC: Use the LaserPower command instead of a 4th coordinate for power.”, action=”store_true”, default=False)</p></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>GWL Parallelepiped:</p>
+<ul>
+<li><p>rod_height”, help=”rod height”, type=float, default=0.375)</p></li>
+<li><p>rod_width”, help=”rod width”, type=float, default=0.25)</p></li>
+<li><p>connected”, help=”connect lines”, action=”store_true”)</p></li>
+<li><p>orthogonal”, help=’orthogonal “z-axis”’, action=”store_true”)</p></li>
+<li><p>axis0”, help=”index of axis 0”, choices=[0,1,2],  default=0, type=int)</p></li>
+<li><p>axis1”, help=”index of axis 1”, choices=[0,1,2],  default=1, type=int)</p></li>
+<li><p>axis2”, help=”index of axis 2”, choices=[0,1,2],  default=2, type=int)</p></li>
+<li><p>N0”, help=”number of lines along axis 0”, type=int, default=3)</p></li>
+<li><p>N1”, help=”number of lines along axis 1”, type=int, default=3)</p></li>
+<li><p>N2”, help=”number of lines along axis 2”, type=int, default=3)</p></li>
+</ul>
+</li>
+<li><p>GWL Cylinder/Tube:</p>
+<ul>
+<li><p>“–method”, help=”writing method”, type=str, choices=[‘spiral’, ‘vertical lines’, ‘horizontal disks’],  default=’spiral’)</p></li>
+<li><p>inner_radius</p></li>
+<li><p>outer_radius</p></li>
+<li><p>“–PointDistance_r”, help=”PointDistance_r”, type=float, default=0.2)</p></li>
+<li><p>“–PointDistance_theta”, help=”PointDistance_theta”, type=float, default=0.2)</p></li>
+<li><p>“–PointDistance_z”, help=”PointDistance_z”, type=float, default=0.2)</p></li>
+<li><p>“–zigzag”, help=”zigzag”, action=”store_true”)</p></li>
+<li><p>“–rotateSpirals”, help=”rotateSpirals”, action=”store_true”)</p></li>
+<li><p>“–add_flat_ends”, help=”add_flat_ends”, action=”store_true”)</p></li>
+<li><p>“–closed_loop”, help=”closed_loop”, action=”store_true”)</p></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>BFDTD:</p>
+<ul>
+<li><p>BFDTD RCD properties:</p>
+<ul>
+<li><p>cylinder_radius_normalized</p></li>
+<li><p>BFDTD refractive indices:</p>
+<ul>
+<li><p>n_defect</p></li>
+<li><p>n_crystal</p></li>
+<li><p>n_backfill</p></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>BFDTD .inp file:</p>
+<ul>
+<li><p>fmin_normalized</p></li>
+<li><p>fmax_normalized</p></li>
+</ul>
+</li>
+<li><p>BFDTD defect:</p>
+<ul>
+<li><p>i_sub_defect</p></li>
+<li><p>k_sub_defect</p></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div></blockquote>
+<dl class="py class">
+<dt class="sig sig-object py" id="crystals.RCD_CubicLattice.RCD_CubicLattice">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">crystals.RCD_CubicLattice.</span></span><span class="sig-name descname"><span class="pre">RCD_CubicLattice</span></span><a class="reference internal" href="_modules/crystals/RCD_CubicLattice.html#RCD_CubicLattice"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crystals.RCD_CubicLattice.RCD_CubicLattice" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Keeping thing independent from GWL and BFDTD here for the moment.</p>
+</div>
+<ul class="simple">
+<li><p>cube_side: length of unit cube side</p></li>
+<li><p>Nx: number of periods in the X direction</p></li>
+<li><p>Ny: number of periods in the Y direction</p></li>
+<li><p>Nz: number of periods in the Z direction</p></li>
+<li><p>location</p></li>
+<li><p>rotation (later)</p></li>
+</ul>
+<dl class="py method">
+<dt class="sig sig-object py" id="crystals.RCD_CubicLattice.RCD_CubicLattice.add_arguments">
+<span class="sig-name descname"><span class="pre">add_arguments</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parser</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/crystals/RCD_CubicLattice.html#RCD_CubicLattice.add_arguments"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crystals.RCD_CubicLattice.RCD_CubicLattice.add_arguments" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="crystals.RCD_CubicLattice.RCD_CubicLattice.createRCD">
+<span class="sig-name descname"><span class="pre">createRCD</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">line_structure_function</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/crystals/RCD_CubicLattice.html#RCD_CubicLattice.createRCD"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crystals.RCD_CubicLattice.RCD_CubicLattice.createRCD" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="crystals.RCD_CubicLattice.RCD_CubicLattice.location">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">location</span></span><a class="headerlink" href="#crystals.RCD_CubicLattice.RCD_CubicLattice.location" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="crystals.RCD_CubicLattice.RCD_CubicLattice.setAttributesFromParsedOptions">
+<span class="sig-name descname"><span class="pre">setAttributesFromParsedOptions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">options</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/crystals/RCD_CubicLattice.html#RCD_CubicLattice.setAttributesFromParsedOptions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crystals.RCD_CubicLattice.RCD_CubicLattice.setAttributesFromParsedOptions" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="crystals.RCD_CubicLattice.RCD_GWL_Cylinder">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">crystals.RCD_CubicLattice.</span></span><span class="sig-name descname"><span class="pre">RCD_GWL_Cylinder</span></span><a class="reference internal" href="_modules/crystals/RCD_CubicLattice.html#RCD_GWL_Cylinder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crystals.RCD_CubicLattice.RCD_GWL_Cylinder" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="GWL.html#GWL.GWL_parser.GWLobject" title="GWL.GWL_parser.GWLobject"><code class="xref py py-class docutils literal notranslate"><span class="pre">GWLobject</span></code></a>, <a class="reference internal" href="#crystals.RCD_CubicLattice.RCD_CubicLattice" title="crystals.RCD_CubicLattice.RCD_CubicLattice"><code class="xref py py-class docutils literal notranslate"><span class="pre">RCD_CubicLattice</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="crystals.RCD_CubicLattice.RCD_GWL_Cylinder.addTube">
+<span class="sig-name descname"><span class="pre">addTube</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">start_point</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_point</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/crystals/RCD_CubicLattice.html#RCD_GWL_Cylinder.addTube"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crystals.RCD_CubicLattice.RCD_GWL_Cylinder.addTube" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="crystals.RCD_CubicLattice.RCD_GWL_Cylinder.add_arguments">
+<span class="sig-name descname"><span class="pre">add_arguments</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parser</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/crystals/RCD_CubicLattice.html#RCD_GWL_Cylinder.add_arguments"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crystals.RCD_CubicLattice.RCD_GWL_Cylinder.add_arguments" title="Link to this definition">¶</a></dt>
+<dd><p>Adds GWLobject related arguments to the given <em>parser</em> (an argparse.ArgumentParser instance).</p>
+<p>See also: <a class="reference internal" href="#crystals.RCD_CubicLattice.RCD_GWL_Cylinder.setAttributesFromParsedOptions" title="crystals.RCD_CubicLattice.RCD_GWL_Cylinder.setAttributesFromParsedOptions"><code class="xref py py-func docutils literal notranslate"><span class="pre">setAttributesFromParsedOptions()</span></code></a></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="crystals.RCD_CubicLattice.RCD_GWL_Cylinder.computePoints">
+<span class="sig-name descname"><span class="pre">computePoints</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/crystals/RCD_CubicLattice.html#RCD_GWL_Cylinder.computePoints"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crystals.RCD_CubicLattice.RCD_GWL_Cylinder.computePoints" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="crystals.RCD_CubicLattice.RCD_GWL_Cylinder.get_argument_parser">
+<span class="sig-name descname"><span class="pre">get_argument_parser</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/crystals/RCD_CubicLattice.html#RCD_GWL_Cylinder.get_argument_parser"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crystals.RCD_CubicLattice.RCD_GWL_Cylinder.get_argument_parser" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="crystals.RCD_CubicLattice.RCD_GWL_Cylinder.method">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">method</span></span><a class="headerlink" href="#crystals.RCD_CubicLattice.RCD_GWL_Cylinder.method" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="crystals.RCD_CubicLattice.RCD_GWL_Cylinder.setAttributesFromParsedOptions">
+<span class="sig-name descname"><span class="pre">setAttributesFromParsedOptions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">options</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/crystals/RCD_CubicLattice.html#RCD_GWL_Cylinder.setAttributesFromParsedOptions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crystals.RCD_CubicLattice.RCD_GWL_Cylinder.setAttributesFromParsedOptions" title="Link to this definition">¶</a></dt>
+<dd><p>Sets the object’s attributes based on the ones from the <em>options</em> object (usually an argparse.ArgumentParser instance).</p>
+<p>See also: <a class="reference internal" href="#crystals.RCD_CubicLattice.RCD_GWL_Cylinder.add_arguments" title="crystals.RCD_CubicLattice.RCD_GWL_Cylinder.add_arguments"><code class="xref py py-func docutils literal notranslate"><span class="pre">add_arguments()</span></code></a></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="crystals.RCD_CubicLattice.RCD_GWL_Cylinder.writeFromParsedOptions">
+<span class="sig-name descname"><span class="pre">writeFromParsedOptions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">options</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/crystals/RCD_CubicLattice.html#RCD_GWL_Cylinder.writeFromParsedOptions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crystals.RCD_CubicLattice.RCD_GWL_Cylinder.writeFromParsedOptions" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="crystals.RCD_CubicLattice.RCD_GWL_Parallelepiped">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">crystals.RCD_CubicLattice.</span></span><span class="sig-name descname"><span class="pre">RCD_GWL_Parallelepiped</span></span><a class="reference internal" href="_modules/crystals/RCD_CubicLattice.html#RCD_GWL_Parallelepiped"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crystals.RCD_CubicLattice.RCD_GWL_Parallelepiped" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="GWL.html#GWL.GWL_parser.GWLobject" title="GWL.GWL_parser.GWLobject"><code class="xref py py-class docutils literal notranslate"><span class="pre">GWLobject</span></code></a>, <a class="reference internal" href="#crystals.RCD_CubicLattice.RCD_CubicLattice" title="crystals.RCD_CubicLattice.RCD_CubicLattice"><code class="xref py py-class docutils literal notranslate"><span class="pre">RCD_CubicLattice</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="crystals.RCD_CubicLattice.RCD_GWL_Parallelepiped.addParallelepiped">
+<span class="sig-name descname"><span class="pre">addParallelepiped</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">start_point</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_point</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/crystals/RCD_CubicLattice.html#RCD_GWL_Parallelepiped.addParallelepiped"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crystals.RCD_CubicLattice.RCD_GWL_Parallelepiped.addParallelepiped" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="crystals.RCD_CubicLattice.RCD_GWL_Parallelepiped.add_arguments">
+<span class="sig-name descname"><span class="pre">add_arguments</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parser</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/crystals/RCD_CubicLattice.html#RCD_GWL_Parallelepiped.add_arguments"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crystals.RCD_CubicLattice.RCD_GWL_Parallelepiped.add_arguments" title="Link to this definition">¶</a></dt>
+<dd><p>Adds GWLobject related arguments to the given <em>parser</em> (an argparse.ArgumentParser instance).</p>
+<p>See also: <a class="reference internal" href="#crystals.RCD_CubicLattice.RCD_GWL_Parallelepiped.setAttributesFromParsedOptions" title="crystals.RCD_CubicLattice.RCD_GWL_Parallelepiped.setAttributesFromParsedOptions"><code class="xref py py-func docutils literal notranslate"><span class="pre">setAttributesFromParsedOptions()</span></code></a></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="crystals.RCD_CubicLattice.RCD_GWL_Parallelepiped.computePoints">
+<span class="sig-name descname"><span class="pre">computePoints</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/crystals/RCD_CubicLattice.html#RCD_GWL_Parallelepiped.computePoints"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crystals.RCD_CubicLattice.RCD_GWL_Parallelepiped.computePoints" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="crystals.RCD_CubicLattice.RCD_GWL_Parallelepiped.get_argument_parser">
+<span class="sig-name descname"><span class="pre">get_argument_parser</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/crystals/RCD_CubicLattice.html#RCD_GWL_Parallelepiped.get_argument_parser"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crystals.RCD_CubicLattice.RCD_GWL_Parallelepiped.get_argument_parser" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="crystals.RCD_CubicLattice.RCD_GWL_Parallelepiped.setAttributesFromParsedOptions">
+<span class="sig-name descname"><span class="pre">setAttributesFromParsedOptions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">options</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/crystals/RCD_CubicLattice.html#RCD_GWL_Parallelepiped.setAttributesFromParsedOptions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crystals.RCD_CubicLattice.RCD_GWL_Parallelepiped.setAttributesFromParsedOptions" title="Link to this definition">¶</a></dt>
+<dd><p>Sets the object’s attributes based on the ones from the <em>options</em> object (usually an argparse.ArgumentParser instance).</p>
+<p>See also: <a class="reference internal" href="#crystals.RCD_CubicLattice.RCD_GWL_Parallelepiped.add_arguments" title="crystals.RCD_CubicLattice.RCD_GWL_Parallelepiped.add_arguments"><code class="xref py py-func docutils literal notranslate"><span class="pre">add_arguments()</span></code></a></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="crystals.RCD_CubicLattice.RCD_GWL_Parallelepiped.writeFromParsedOptions">
+<span class="sig-name descname"><span class="pre">writeFromParsedOptions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">options</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/crystals/RCD_CubicLattice.html#RCD_GWL_Parallelepiped.writeFromParsedOptions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crystals.RCD_CubicLattice.RCD_GWL_Parallelepiped.writeFromParsedOptions" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="crystals.RCD_CubicLattice.createIceCrystal_BFDTD">
+<span class="sig-prename descclassname"><span class="pre">crystals.RCD_CubicLattice.</span></span><span class="sig-name descname"><span class="pre">createIceCrystal_BFDTD</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">DSTDIR</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Nx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Ny</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Nz</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_defect</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_crystal</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_backfill</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cylinder_radius_normalized</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fmin_normalized</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fmax_normalized</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i_sub_defect</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k_sub_defect</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/crystals/RCD_CubicLattice.html#createIceCrystal_BFDTD"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crystals.RCD_CubicLattice.createIceCrystal_BFDTD" title="Link to this definition">¶</a></dt>
+<dd><p>To prepare a BFDTD simulation with an RCD/FRD structure.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>FRD currently broken! + 2 backfills are created in the case of FRD. DO NOT USE AS IS!!!</p>
+</div>
+<p>BFDTD export WIP</p>
+<ul class="simple">
+<li><p>a : unit cube size</p></li>
+<li><p>c0 : speed of light</p></li>
+<li><p>Nx : number of periods in the X direction</p></li>
+<li><p>Ny : number of periods in the Y direction</p></li>
+<li><p>Nz : number of periods in the Z direction</p></li>
+<li><p>n_defect : refractive index of the defect</p></li>
+<li><p>n_crystal : refractive index of the crystal</p></li>
+<li><p>n_backfill : refractive index of the backfill</p></li>
+<li><p>cylinder_radius_normalized : r/a</p></li>
+<li><p>excitation_frequency_normalized  : f/(c0/a)</p></li>
+<li><p>fmin_normalized  : fmin/(c0/a)</p></li>
+<li><p>fmax_normalized  : fmax/(c0/a)</p></li>
+</ul>
+<p>working in mm, ms, kHz</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="crystals.RCD_CubicLattice.createIceCrystal_GWL_TopDown">
+<span class="sig-prename descclassname"><span class="pre">crystals.RCD_CubicLattice.</span></span><span class="sig-name descname"><span class="pre">createIceCrystal_GWL_TopDown</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">DSTDIR</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/crystals/RCD_CubicLattice.html#createIceCrystal_GWL_TopDown"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crystals.RCD_CubicLattice.createIceCrystal_GWL_TopDown" title="Link to this definition">¶</a></dt>
+<dd><p>layer by layer</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="crystals.RCD_CubicLattice.createIceCrystal_GWL_TopDownFlatLines">
+<span class="sig-prename descclassname"><span class="pre">crystals.RCD_CubicLattice.</span></span><span class="sig-name descname"><span class="pre">createIceCrystal_GWL_TopDownFlatLines</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">DSTDIR</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/crystals/RCD_CubicLattice.html#createIceCrystal_GWL_TopDownFlatLines"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crystals.RCD_CubicLattice.createIceCrystal_GWL_TopDownFlatLines" title="Link to this definition">¶</a></dt>
+<dd><p>layer by layer</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="crystals.RCD_CubicLattice.createIceCrystal_GWL_WithCylinders">
+<span class="sig-prename descclassname"><span class="pre">crystals.RCD_CubicLattice.</span></span><span class="sig-name descname"><span class="pre">createIceCrystal_GWL_WithCylinders</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">DSTDIR</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/crystals/RCD_CubicLattice.html#createIceCrystal_GWL_WithCylinders"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crystals.RCD_CubicLattice.createIceCrystal_GWL_WithCylinders" title="Link to this definition">¶</a></dt>
+<dd><p>unit cell by unit cell</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="crystals.RCD_CubicLattice.createIceCrystal_GWL_singleLine_UnitcellByUnitcell">
+<span class="sig-prename descclassname"><span class="pre">crystals.RCD_CubicLattice.</span></span><span class="sig-name descname"><span class="pre">createIceCrystal_GWL_singleLine_UnitcellByUnitcell</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">DSTDIR</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/crystals/RCD_CubicLattice.html#createIceCrystal_GWL_singleLine_UnitcellByUnitcell"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crystals.RCD_CubicLattice.createIceCrystal_GWL_singleLine_UnitcellByUnitcell" title="Link to this definition">¶</a></dt>
+<dd><p>unit cell by unit cell</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="crystals.RCD_CubicLattice.test_RCD_BFDTD_0">
+<span class="sig-prename descclassname"><span class="pre">crystals.RCD_CubicLattice.</span></span><span class="sig-name descname"><span class="pre">test_RCD_BFDTD_0</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/crystals/RCD_CubicLattice.html#test_RCD_BFDTD_0"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crystals.RCD_CubicLattice.test_RCD_BFDTD_0" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="crystals.RCD_CubicLattice.test_RCD_BFDTD_1">
+<span class="sig-prename descclassname"><span class="pre">crystals.RCD_CubicLattice.</span></span><span class="sig-name descname"><span class="pre">test_RCD_BFDTD_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/crystals/RCD_CubicLattice.html#test_RCD_BFDTD_1"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crystals.RCD_CubicLattice.test_RCD_BFDTD_1" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="crystals.RCD_CubicLattice.test_RCD_BFDTD_2">
+<span class="sig-prename descclassname"><span class="pre">crystals.RCD_CubicLattice.</span></span><span class="sig-name descname"><span class="pre">test_RCD_BFDTD_2</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/crystals/RCD_CubicLattice.html#test_RCD_BFDTD_2"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crystals.RCD_CubicLattice.test_RCD_BFDTD_2" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="crystals.RCD_CubicLattice.test_RCD_BFDTD_unitcell">
+<span class="sig-prename descclassname"><span class="pre">crystals.RCD_CubicLattice.</span></span><span class="sig-name descname"><span class="pre">test_RCD_BFDTD_unitcell</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/crystals/RCD_CubicLattice.html#test_RCD_BFDTD_unitcell"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crystals.RCD_CubicLattice.test_RCD_BFDTD_unitcell" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="crystals.RCD_CubicLattice.test_RCD_GWL">
+<span class="sig-prename descclassname"><span class="pre">crystals.RCD_CubicLattice.</span></span><span class="sig-name descname"><span class="pre">test_RCD_GWL</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/crystals/RCD_CubicLattice.html#test_RCD_GWL"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#crystals.RCD_CubicLattice.test_RCD_GWL" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </section>
 <section id="module-crystals">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-crystals" title="Link to this heading">¶</a></h2>
@@ -70,7 +400,45 @@
     <ul>
 <li><a class="reference internal" href="#">crystals package</a><ul>
 <li><a class="reference internal" href="#submodules">Submodules</a></li>
-<li><a class="reference internal" href="#crystals-rcd-cubiclattice-module">crystals.RCD_CubicLattice module</a></li>
+<li><a class="reference internal" href="#module-crystals.RCD_CubicLattice">crystals.RCD_CubicLattice module</a><ul>
+<li><a class="reference internal" href="#crystals.RCD_CubicLattice.RCD_CubicLattice"><code class="docutils literal notranslate"><span class="pre">RCD_CubicLattice</span></code></a><ul>
+<li><a class="reference internal" href="#crystals.RCD_CubicLattice.RCD_CubicLattice.add_arguments"><code class="docutils literal notranslate"><span class="pre">RCD_CubicLattice.add_arguments()</span></code></a></li>
+<li><a class="reference internal" href="#crystals.RCD_CubicLattice.RCD_CubicLattice.createRCD"><code class="docutils literal notranslate"><span class="pre">RCD_CubicLattice.createRCD()</span></code></a></li>
+<li><a class="reference internal" href="#crystals.RCD_CubicLattice.RCD_CubicLattice.location"><code class="docutils literal notranslate"><span class="pre">RCD_CubicLattice.location</span></code></a></li>
+<li><a class="reference internal" href="#crystals.RCD_CubicLattice.RCD_CubicLattice.setAttributesFromParsedOptions"><code class="docutils literal notranslate"><span class="pre">RCD_CubicLattice.setAttributesFromParsedOptions()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#crystals.RCD_CubicLattice.RCD_GWL_Cylinder"><code class="docutils literal notranslate"><span class="pre">RCD_GWL_Cylinder</span></code></a><ul>
+<li><a class="reference internal" href="#crystals.RCD_CubicLattice.RCD_GWL_Cylinder.addTube"><code class="docutils literal notranslate"><span class="pre">RCD_GWL_Cylinder.addTube()</span></code></a></li>
+<li><a class="reference internal" href="#crystals.RCD_CubicLattice.RCD_GWL_Cylinder.add_arguments"><code class="docutils literal notranslate"><span class="pre">RCD_GWL_Cylinder.add_arguments()</span></code></a></li>
+<li><a class="reference internal" href="#crystals.RCD_CubicLattice.RCD_GWL_Cylinder.computePoints"><code class="docutils literal notranslate"><span class="pre">RCD_GWL_Cylinder.computePoints()</span></code></a></li>
+<li><a class="reference internal" href="#crystals.RCD_CubicLattice.RCD_GWL_Cylinder.get_argument_parser"><code class="docutils literal notranslate"><span class="pre">RCD_GWL_Cylinder.get_argument_parser()</span></code></a></li>
+<li><a class="reference internal" href="#crystals.RCD_CubicLattice.RCD_GWL_Cylinder.method"><code class="docutils literal notranslate"><span class="pre">RCD_GWL_Cylinder.method</span></code></a></li>
+<li><a class="reference internal" href="#crystals.RCD_CubicLattice.RCD_GWL_Cylinder.setAttributesFromParsedOptions"><code class="docutils literal notranslate"><span class="pre">RCD_GWL_Cylinder.setAttributesFromParsedOptions()</span></code></a></li>
+<li><a class="reference internal" href="#crystals.RCD_CubicLattice.RCD_GWL_Cylinder.writeFromParsedOptions"><code class="docutils literal notranslate"><span class="pre">RCD_GWL_Cylinder.writeFromParsedOptions()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#crystals.RCD_CubicLattice.RCD_GWL_Parallelepiped"><code class="docutils literal notranslate"><span class="pre">RCD_GWL_Parallelepiped</span></code></a><ul>
+<li><a class="reference internal" href="#crystals.RCD_CubicLattice.RCD_GWL_Parallelepiped.addParallelepiped"><code class="docutils literal notranslate"><span class="pre">RCD_GWL_Parallelepiped.addParallelepiped()</span></code></a></li>
+<li><a class="reference internal" href="#crystals.RCD_CubicLattice.RCD_GWL_Parallelepiped.add_arguments"><code class="docutils literal notranslate"><span class="pre">RCD_GWL_Parallelepiped.add_arguments()</span></code></a></li>
+<li><a class="reference internal" href="#crystals.RCD_CubicLattice.RCD_GWL_Parallelepiped.computePoints"><code class="docutils literal notranslate"><span class="pre">RCD_GWL_Parallelepiped.computePoints()</span></code></a></li>
+<li><a class="reference internal" href="#crystals.RCD_CubicLattice.RCD_GWL_Parallelepiped.get_argument_parser"><code class="docutils literal notranslate"><span class="pre">RCD_GWL_Parallelepiped.get_argument_parser()</span></code></a></li>
+<li><a class="reference internal" href="#crystals.RCD_CubicLattice.RCD_GWL_Parallelepiped.setAttributesFromParsedOptions"><code class="docutils literal notranslate"><span class="pre">RCD_GWL_Parallelepiped.setAttributesFromParsedOptions()</span></code></a></li>
+<li><a class="reference internal" href="#crystals.RCD_CubicLattice.RCD_GWL_Parallelepiped.writeFromParsedOptions"><code class="docutils literal notranslate"><span class="pre">RCD_GWL_Parallelepiped.writeFromParsedOptions()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#crystals.RCD_CubicLattice.createIceCrystal_BFDTD"><code class="docutils literal notranslate"><span class="pre">createIceCrystal_BFDTD()</span></code></a></li>
+<li><a class="reference internal" href="#crystals.RCD_CubicLattice.createIceCrystal_GWL_TopDown"><code class="docutils literal notranslate"><span class="pre">createIceCrystal_GWL_TopDown()</span></code></a></li>
+<li><a class="reference internal" href="#crystals.RCD_CubicLattice.createIceCrystal_GWL_TopDownFlatLines"><code class="docutils literal notranslate"><span class="pre">createIceCrystal_GWL_TopDownFlatLines()</span></code></a></li>
+<li><a class="reference internal" href="#crystals.RCD_CubicLattice.createIceCrystal_GWL_WithCylinders"><code class="docutils literal notranslate"><span class="pre">createIceCrystal_GWL_WithCylinders()</span></code></a></li>
+<li><a class="reference internal" href="#crystals.RCD_CubicLattice.createIceCrystal_GWL_singleLine_UnitcellByUnitcell"><code class="docutils literal notranslate"><span class="pre">createIceCrystal_GWL_singleLine_UnitcellByUnitcell()</span></code></a></li>
+<li><a class="reference internal" href="#crystals.RCD_CubicLattice.test_RCD_BFDTD_0"><code class="docutils literal notranslate"><span class="pre">test_RCD_BFDTD_0()</span></code></a></li>
+<li><a class="reference internal" href="#crystals.RCD_CubicLattice.test_RCD_BFDTD_1"><code class="docutils literal notranslate"><span class="pre">test_RCD_BFDTD_1()</span></code></a></li>
+<li><a class="reference internal" href="#crystals.RCD_CubicLattice.test_RCD_BFDTD_2"><code class="docutils literal notranslate"><span class="pre">test_RCD_BFDTD_2()</span></code></a></li>
+<li><a class="reference internal" href="#crystals.RCD_CubicLattice.test_RCD_BFDTD_unitcell"><code class="docutils literal notranslate"><span class="pre">test_RCD_BFDTD_unitcell()</span></code></a></li>
+<li><a class="reference internal" href="#crystals.RCD_CubicLattice.test_RCD_GWL"><code class="docutils literal notranslate"><span class="pre">test_RCD_GWL()</span></code></a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#module-crystals">Module contents</a></li>
 </ul>
 </li>

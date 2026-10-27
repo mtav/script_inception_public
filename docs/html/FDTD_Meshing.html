@@ -400,7 +400,7 @@ Other mesh types like a logarithmic mesh for example, could be added later.</p>
 <dl class="py class">
 <dt class="sig sig-object py">
 <em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">meshing.meshing.</span></span><span class="sig-name descname"><span class="pre">HeterogeneousMesh1D</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">coordinates</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#HeterogeneousMesh1D"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Bases: <a class="reference internal" href="meshing.html#meshing.meshing.Mesh1D" title="meshing.meshing.Mesh1D"><code class="xref py py-class docutils literal notranslate"><span class="pre">Mesh1D</span></code></a></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Mesh1D</span></code></p>
 <p>Very basic class storing parameters for a heterogeneous 1D mesh.</p>
 <dl class="py method">
 <dt class="sig sig-object py">
@@ -440,10 +440,10 @@ Other mesh types like a logarithmic mesh for example, could be added later.</p>
 <dl class="py class">
 <dt class="sig sig-object py">
 <em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">meshing.meshing.</span></span><span class="sig-name descname"><span class="pre">HomogeneousMesh1D</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pos_min</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pos_max</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spacing_max</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#HomogeneousMesh1D"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Bases: <a class="reference internal" href="meshing.html#meshing.meshing.Mesh1D" title="meshing.meshing.Mesh1D"><code class="xref py py-class docutils literal notranslate"><span class="pre">Mesh1D</span></code></a></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Mesh1D</span></code></p>
 <p>Class storing parameters for a homogeneous 1D mesh.</p>
 <p>This class uses <em>spacing_max</em> as main attribute instead of a given number of cells for more flexibility.
-This is useful when merging meshes (cf: <a class="reference internal" href="meshing.html#meshing.meshing.HomogeneousMeshParameters1D" title="meshing.meshing.HomogeneousMeshParameters1D"><code class="xref py py-class docutils literal notranslate"><span class="pre">HomogeneousMeshParameters1D</span></code></a>).
+This is useful when merging meshes (cf: <code class="xref py py-class docutils literal notranslate"><span class="pre">HomogeneousMeshParameters1D</span></code>).
 But when a thickness or position list is requested, we simply switch to “N” as main, i.e. we create a homogeneous mesh.</p>
 <p>In general, for FDTD, we want: <code class="docutils literal notranslate"><span class="pre">spacing_max</span> <span class="pre">&lt;</span> <span class="pre">F*lambda*1/n</span></code>, with <code class="docutils literal notranslate"><span class="pre">n=sqrt(epsilon_r)</span></code>.</p>
 <p>Since the factor <em>F</em> (usually around 1/15) and <em>lambda</em> are the only “geometry independent” settings, we bind them together into the <em>resolutionScalingFactor</em>.</p>
@@ -570,7 +570,7 @@ But when a thickness or position list is requested, we simply switch to “N” 
 <dl class="py class">
 <dt class="sig sig-object py">
 <em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">meshing.meshing.</span></span><span class="sig-name descname"><span class="pre">HomogeneousMeshParameters1D</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pos_min</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pos_max</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spacing_max</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#HomogeneousMeshParameters1D"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Bases: <a class="reference internal" href="meshing.html#meshing.meshing.HomogeneousMesh1D" title="meshing.meshing.HomogeneousMesh1D"><code class="xref py py-class docutils literal notranslate"><span class="pre">HomogeneousMesh1D</span></code></a></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">HomogeneousMesh1D</span></code></p>
 <p>A subclass of <em>HomogeneousMesh1D</em>, but for which the <em>MultiMesh1D::getLocalCoordinates()</em> function will take <em>spacing_max</em> into account to merge multiple <em>HomogeneousMeshParameters1D</em> in a smart way.</p>
 </dd></dl>
 

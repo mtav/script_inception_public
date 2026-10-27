@@ -340,3 +340,7 @@ epub_exclude_files = ['search.html']
 
 # If false, no index is generated.
 #epub_use_index = True
+
+# To allow documentation building even when not all required packages are present.
+# cf: https://www.sphinx-doc.org/en/master/usage/extensions/autodoc.html#ensuring-the-code-can-be-imported
+autodoc_mock_imports = ['argparseui']

@@ -120,6 +120,7 @@ bfdtd.snapshot module
     :members:
     :undoc-members:
     :show-inheritance:
+    :no-index:
 
 bfdtd.triangular_prism module
 -----------------------------------------------------

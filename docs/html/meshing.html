@@ -50,8 +50,8 @@
 <section id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading">¶</a></h2>
 </section>
-<section id="module-meshing.meshing">
-<span id="meshing-meshing-module"></span><h2>meshing.meshing module<a class="headerlink" href="#module-meshing.meshing" title="Link to this heading">¶</a></h2>
+<section id="meshing-meshing-module">
+<h2>meshing.meshing module<a class="headerlink" href="#meshing-meshing-module" title="Link to this heading">¶</a></h2>
 <p>This module handles the new meshing system.</p>
 <p>Currently only designed for BFDTD simulations, i.e. for a final heterogeneous rectilinear grid.
 But it is completely independent of BFDTDobject or any other FDTD related code.
@@ -86,25 +86,25 @@ edge [style=solid,color=black, dir=back];
 }" class="graphviz" /></div>
 <p>idea: Make various meshing algorithms available and allow user-created ones (ex: structure-specific meshing algorithms, tests of meshing on simulation results).</p>
 <dl class="py class">
-<dt class="sig sig-object py" id="meshing.meshing.HeterogeneousMesh1D">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">meshing.meshing.</span></span><span class="sig-name descname"><span class="pre">HeterogeneousMesh1D</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">coordinates</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#HeterogeneousMesh1D"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshing.meshing.HeterogeneousMesh1D" title="Link to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#meshing.meshing.Mesh1D" title="meshing.meshing.Mesh1D"><code class="xref py py-class docutils literal notranslate"><span class="pre">Mesh1D</span></code></a></p>
+<dt class="sig sig-object py">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">meshing.meshing.</span></span><span class="sig-name descname"><span class="pre">HeterogeneousMesh1D</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">coordinates</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#HeterogeneousMesh1D"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Mesh1D</span></code></p>
 <p>Very basic class storing parameters for a heterogeneous 1D mesh.</p>
 <dl class="py method">
-<dt class="sig sig-object py" id="meshing.meshing.HeterogeneousMesh1D.PrintSelf">
-<span class="sig-name descname"><span class="pre">PrintSelf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">indent</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#HeterogeneousMesh1D.PrintSelf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshing.meshing.HeterogeneousMesh1D.PrintSelf" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">PrintSelf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">indent</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#HeterogeneousMesh1D.PrintSelf"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>printing function with indent</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="meshing.meshing.HeterogeneousMesh1D.coordinates">
-<span class="sig-name descname"><span class="pre">coordinates</span></span><a class="headerlink" href="#meshing.meshing.HeterogeneousMesh1D.coordinates" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">coordinates</span></span></dt>
 <dd><p>list of the position of mesh lines. Type: List of floats. Default: [0, 1]</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="meshing.meshing.HeterogeneousMesh1D.createFromThicknessList">
-<span class="sig-name descname"><span class="pre">createFromThicknessList</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pos_min</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ThicknessList</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#HeterogeneousMesh1D.createFromThicknessList"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshing.meshing.HeterogeneousMesh1D.createFromThicknessList" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">createFromThicknessList</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pos_min</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ThicknessList</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#HeterogeneousMesh1D.createFromThicknessList"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Creates a list of coordinates of the form:</p>
 <ul class="simple">
 <li><p>pos_min</p></li>
@@ -115,20 +115,20 @@ edge [style=solid,color=black, dir=back];
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="meshing.meshing.HeterogeneousMesh1D.getLocalCoordinates">
-<span class="sig-name descname"><span class="pre">getLocalCoordinates</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#HeterogeneousMesh1D.getLocalCoordinates"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshing.meshing.HeterogeneousMesh1D.getLocalCoordinates" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">getLocalCoordinates</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#HeterogeneousMesh1D.getLocalCoordinates"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Returns the list of coordinates.</p>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
-<dt class="sig sig-object py" id="meshing.meshing.HomogeneousMesh1D">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">meshing.meshing.</span></span><span class="sig-name descname"><span class="pre">HomogeneousMesh1D</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pos_min</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pos_max</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spacing_max</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#HomogeneousMesh1D"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshing.meshing.HomogeneousMesh1D" title="Link to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#meshing.meshing.Mesh1D" title="meshing.meshing.Mesh1D"><code class="xref py py-class docutils literal notranslate"><span class="pre">Mesh1D</span></code></a></p>
+<dt class="sig sig-object py">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">meshing.meshing.</span></span><span class="sig-name descname"><span class="pre">HomogeneousMesh1D</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pos_min</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pos_max</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spacing_max</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#HomogeneousMesh1D"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Mesh1D</span></code></p>
 <p>Class storing parameters for a homogeneous 1D mesh.</p>
 <p>This class uses <em>spacing_max</em> as main attribute instead of a given number of cells for more flexibility.
-This is useful when merging meshes (cf: <a class="reference internal" href="#meshing.meshing.HomogeneousMeshParameters1D" title="meshing.meshing.HomogeneousMeshParameters1D"><code class="xref py py-class docutils literal notranslate"><span class="pre">HomogeneousMeshParameters1D</span></code></a>).
+This is useful when merging meshes (cf: <code class="xref py py-class docutils literal notranslate"><span class="pre">HomogeneousMeshParameters1D</span></code>).
 But when a thickness or position list is requested, we simply switch to “N” as main, i.e. we create a homogeneous mesh.</p>
 <p>In general, for FDTD, we want: <code class="docutils literal notranslate"><span class="pre">spacing_max</span> <span class="pre">&lt;</span> <span class="pre">F*lambda*1/n</span></code>, with <code class="docutils literal notranslate"><span class="pre">n=sqrt(epsilon_r)</span></code>.</p>
 <p>Since the factor <em>F</em> (usually around 1/15) and <em>lambda</em> are the only “geometry independent” settings, we bind them together into the <em>resolutionScalingFactor</em>.</p>
@@ -162,110 +162,110 @@ But when a thickness or position list is requested, we simply switch to “N” 
 </dd>
 </dl>
 <dl class="py method">
-<dt class="sig sig-object py" id="meshing.meshing.HomogeneousMesh1D.PrintSelf">
-<span class="sig-name descname"><span class="pre">PrintSelf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">indent</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#HomogeneousMesh1D.PrintSelf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshing.meshing.HomogeneousMesh1D.PrintSelf" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">PrintSelf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">indent</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#HomogeneousMesh1D.PrintSelf"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>printing function with indent</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="meshing.meshing.HomogeneousMesh1D.getLocalCoordinates">
-<span class="sig-name descname"><span class="pre">getLocalCoordinates</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#HomogeneousMesh1D.getLocalCoordinates"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshing.meshing.HomogeneousMesh1D.getLocalCoordinates" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">getLocalCoordinates</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#HomogeneousMesh1D.getLocalCoordinates"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Returns the list of coordinates. It takes into account <strong>Mesh1D::resolutionScalingFactor</strong>.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="meshing.meshing.HomogeneousMesh1D.getNcellsMin">
-<span class="sig-name descname"><span class="pre">getNcellsMin</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#HomogeneousMesh1D.getNcellsMin"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshing.meshing.HomogeneousMesh1D.getNcellsMin" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">getNcellsMin</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#HomogeneousMesh1D.getNcellsMin"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>get the minimum number of “cells” in the mesh (NOT the number of “positions”, which is <code class="docutils literal notranslate"><span class="pre">NcellsMin</span> <span class="pre">+</span> <span class="pre">1</span></code>)</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="meshing.meshing.HomogeneousMesh1D.getRefractiveIndexMin">
-<span class="sig-name descname"><span class="pre">getRefractiveIndexMin</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#HomogeneousMesh1D.getRefractiveIndexMin"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshing.meshing.HomogeneousMesh1D.getRefractiveIndexMin" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">getRefractiveIndexMin</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#HomogeneousMesh1D.getRefractiveIndexMin"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>get the minimum “refractive index” defined as <code class="docutils literal notranslate"><span class="pre">1/spacing_max</span></code></p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="meshing.meshing.HomogeneousMesh1D.getRelativePermittivityMin">
-<span class="sig-name descname"><span class="pre">getRelativePermittivityMin</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#HomogeneousMesh1D.getRelativePermittivityMin"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshing.meshing.HomogeneousMesh1D.getRelativePermittivityMin" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">getRelativePermittivityMin</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#HomogeneousMesh1D.getRelativePermittivityMin"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>get the minimum “relative permittivity” defined as <code class="docutils literal notranslate"><span class="pre">(1/spacing_max)^2</span></code></p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="meshing.meshing.HomogeneousMesh1D.getSpacingMax">
-<span class="sig-name descname"><span class="pre">getSpacingMax</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#HomogeneousMesh1D.getSpacingMax"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshing.meshing.HomogeneousMesh1D.getSpacingMax" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">getSpacingMax</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#HomogeneousMesh1D.getSpacingMax"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>get the maximum spacing</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="meshing.meshing.HomogeneousMesh1D.renderInBlender">
-<span class="sig-name descname"><span class="pre">renderInBlender</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">location</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">group</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'meshes'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#HomogeneousMesh1D.renderInBlender"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshing.meshing.HomogeneousMesh1D.renderInBlender" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">renderInBlender</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">location</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">group</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'meshes'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#HomogeneousMesh1D.renderInBlender"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="meshing.meshing.HomogeneousMesh1D.renderXMesh1D">
-<span class="sig-name descname"><span class="pre">renderXMesh1D</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">location</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">group</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'meshes'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#HomogeneousMesh1D.renderXMesh1D"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshing.meshing.HomogeneousMesh1D.renderXMesh1D" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">renderXMesh1D</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">location</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">group</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'meshes'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#HomogeneousMesh1D.renderXMesh1D"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="meshing.meshing.HomogeneousMesh1D.renderYMesh1D">
-<span class="sig-name descname"><span class="pre">renderYMesh1D</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">location</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">group</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'meshes'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#HomogeneousMesh1D.renderYMesh1D"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshing.meshing.HomogeneousMesh1D.renderYMesh1D" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">renderYMesh1D</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">location</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">group</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'meshes'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#HomogeneousMesh1D.renderYMesh1D"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="meshing.meshing.HomogeneousMesh1D.renderZMesh1D">
-<span class="sig-name descname"><span class="pre">renderZMesh1D</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">location</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">group</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'meshes'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#HomogeneousMesh1D.renderZMesh1D"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshing.meshing.HomogeneousMesh1D.renderZMesh1D" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">renderZMesh1D</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">location</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">group</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'meshes'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#HomogeneousMesh1D.renderZMesh1D"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="meshing.meshing.HomogeneousMesh1D.setExtension">
-<span class="sig-name descname"><span class="pre">setExtension</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pos_min</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pos_max</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#HomogeneousMesh1D.setExtension"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshing.meshing.HomogeneousMesh1D.setExtension" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">setExtension</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pos_min</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pos_max</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#HomogeneousMesh1D.setExtension"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>set the extension</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="meshing.meshing.HomogeneousMesh1D.setNcellsMin">
-<span class="sig-name descname"><span class="pre">setNcellsMin</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">NcellsMin</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#HomogeneousMesh1D.setNcellsMin"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshing.meshing.HomogeneousMesh1D.setNcellsMin" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">setNcellsMin</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">NcellsMin</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#HomogeneousMesh1D.setNcellsMin"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>set the minimum number of “cells” in the mesh (NOT the number of “positions”, which is <code class="docutils literal notranslate"><span class="pre">NcellsMin</span> <span class="pre">+</span> <span class="pre">1</span></code>)</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="meshing.meshing.HomogeneousMesh1D.setRefractiveIndexMin">
-<span class="sig-name descname"><span class="pre">setRefractiveIndexMin</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">RefractiveIndexMin</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#HomogeneousMesh1D.setRefractiveIndexMin"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshing.meshing.HomogeneousMesh1D.setRefractiveIndexMin" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">setRefractiveIndexMin</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">RefractiveIndexMin</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#HomogeneousMesh1D.setRefractiveIndexMin"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>set the minimum “refractive index” defined as <code class="docutils literal notranslate"><span class="pre">1/spacing_max</span></code></p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="meshing.meshing.HomogeneousMesh1D.setRelativePermittivityMin">
-<span class="sig-name descname"><span class="pre">setRelativePermittivityMin</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">epsilon_r</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#HomogeneousMesh1D.setRelativePermittivityMin"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshing.meshing.HomogeneousMesh1D.setRelativePermittivityMin" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">setRelativePermittivityMin</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">epsilon_r</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#HomogeneousMesh1D.setRelativePermittivityMin"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>set the minimum “relative permittivity” defined as <code class="docutils literal notranslate"><span class="pre">(1/spacing_max)^2</span></code></p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="meshing.meshing.HomogeneousMesh1D.setSpacingMax">
-<span class="sig-name descname"><span class="pre">setSpacingMax</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">spacing_max</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#HomogeneousMesh1D.setSpacingMax"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshing.meshing.HomogeneousMesh1D.setSpacingMax" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">setSpacingMax</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">spacing_max</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#HomogeneousMesh1D.setSpacingMax"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>set the maximum spacing</p>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
-<dt class="sig sig-object py" id="meshing.meshing.HomogeneousMeshParameters1D">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">meshing.meshing.</span></span><span class="sig-name descname"><span class="pre">HomogeneousMeshParameters1D</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pos_min</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pos_max</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spacing_max</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#HomogeneousMeshParameters1D"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshing.meshing.HomogeneousMeshParameters1D" title="Link to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#meshing.meshing.HomogeneousMesh1D" title="meshing.meshing.HomogeneousMesh1D"><code class="xref py py-class docutils literal notranslate"><span class="pre">HomogeneousMesh1D</span></code></a></p>
+<dt class="sig sig-object py">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">meshing.meshing.</span></span><span class="sig-name descname"><span class="pre">HomogeneousMeshParameters1D</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pos_min</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pos_max</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spacing_max</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#HomogeneousMeshParameters1D"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">HomogeneousMesh1D</span></code></p>
 <p>A subclass of <em>HomogeneousMesh1D</em>, but for which the <em>MultiMesh1D::getLocalCoordinates()</em> function will take <em>spacing_max</em> into account to merge multiple <em>HomogeneousMeshParameters1D</em> in a smart way.</p>
 </dd></dl>
 
 <dl class="py class">
-<dt class="sig sig-object py" id="meshing.meshing.LogMesh1D">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">meshing.meshing.</span></span><span class="sig-name descname"><span class="pre">LogMesh1D</span></span><a class="reference internal" href="_modules/meshing/meshing.html#LogMesh1D"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshing.meshing.LogMesh1D" title="Link to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#meshing.meshing.Mesh1D" title="meshing.meshing.Mesh1D"><code class="xref py py-class docutils literal notranslate"><span class="pre">Mesh1D</span></code></a></p>
+<dt class="sig sig-object py">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">meshing.meshing.</span></span><span class="sig-name descname"><span class="pre">LogMesh1D</span></span><a class="reference internal" href="_modules/meshing/meshing.html#LogMesh1D"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Mesh1D</span></code></p>
 <p>A logarithmic mesh.</p>
 </dd></dl>
 
 <dl class="py class">
-<dt class="sig sig-object py" id="meshing.meshing.Mesh1D">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">meshing.meshing.</span></span><span class="sig-name descname"><span class="pre">Mesh1D</span></span><a class="reference internal" href="_modules/meshing/meshing.html#Mesh1D"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshing.meshing.Mesh1D" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">meshing.meshing.</span></span><span class="sig-name descname"><span class="pre">Mesh1D</span></span><a class="reference internal" href="_modules/meshing/meshing.html#Mesh1D"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Generic parent class for 1D meshes.
 It is used for <em>HeterogeneousMesh1D</em> and <em>HomogeneousMesh1D</em>.
@@ -284,36 +284,36 @@ Other mesh types like a logarithmic mesh for example, could be added later.</p>
 </dd>
 </dl>
 <dl class="py method">
-<dt class="sig sig-object py" id="meshing.meshing.Mesh1D.PrintSelf">
-<span class="sig-name descname"><span class="pre">PrintSelf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">indent</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#Mesh1D.PrintSelf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshing.meshing.Mesh1D.PrintSelf" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">PrintSelf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">indent</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#Mesh1D.PrintSelf"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>printing function with indent</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="meshing.meshing.Mesh1D.allowResolutionScaling">
-<span class="sig-name descname"><span class="pre">allowResolutionScaling</span></span><a class="headerlink" href="#meshing.meshing.Mesh1D.allowResolutionScaling" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">allowResolutionScaling</span></span></dt>
 <dd><p>If true, changing the resolution settings to increase or decrease the number of cells will be allowed. Default: True.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="meshing.meshing.Mesh1D.getBounds">
-<span class="sig-name descname"><span class="pre">getBounds</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#Mesh1D.getBounds"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshing.meshing.Mesh1D.getBounds" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">getBounds</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#Mesh1D.getBounds"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Returns the minimum and maximum values of the coordinates in the form (pos_min, pos_max).</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="meshing.meshing.Mesh1D.getGlobalCoordinates">
-<span class="sig-name descname"><span class="pre">getGlobalCoordinates</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#Mesh1D.getGlobalCoordinates"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshing.meshing.Mesh1D.getGlobalCoordinates" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">getGlobalCoordinates</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#Mesh1D.getGlobalCoordinates"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="meshing.meshing.Mesh1D.getGlobalLocation">
-<span class="sig-name descname"><span class="pre">getGlobalLocation</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#Mesh1D.getGlobalLocation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshing.meshing.Mesh1D.getGlobalLocation" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">getGlobalLocation</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#Mesh1D.getGlobalLocation"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="meshing.meshing.Mesh1D.getLocalCoordinates">
-<span class="sig-name descname"><span class="pre">getLocalCoordinates</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#Mesh1D.getLocalCoordinates"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshing.meshing.Mesh1D.getLocalCoordinates" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">getLocalCoordinates</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#Mesh1D.getLocalCoordinates"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Returns the list of coordinates. <strong>Must be re-implemented.</strong></p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
@@ -322,130 +322,130 @@ Other mesh types like a logarithmic mesh for example, could be added later.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="meshing.meshing.Mesh1D.getThicknessList">
-<span class="sig-name descname"><span class="pre">getThicknessList</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#Mesh1D.getThicknessList"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshing.meshing.Mesh1D.getThicknessList" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">getThicknessList</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#Mesh1D.getThicknessList"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Returns a list of the thicknesses of each section.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="meshing.meshing.Mesh1D.name">
-<span class="sig-name descname"><span class="pre">name</span></span><a class="headerlink" href="#meshing.meshing.Mesh1D.name" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">name</span></span></dt>
 <dd><p>a name for easier debugging</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="meshing.meshing.Mesh1D.resolutionScalingFactor">
-<span class="sig-name descname"><span class="pre">resolutionScalingFactor</span></span><a class="headerlink" href="#meshing.meshing.Mesh1D.resolutionScalingFactor" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">resolutionScalingFactor</span></span></dt>
 <dd><p>Allows increasing or decreasing the number of total cells in the mesh (if the mesh class supports it). Default: 1.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="meshing.meshing.Mesh1D.setAllowResolutionScaling">
-<span class="sig-name descname"><span class="pre">setAllowResolutionScaling</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bool_value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#Mesh1D.setAllowResolutionScaling"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshing.meshing.Mesh1D.setAllowResolutionScaling" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">setAllowResolutionScaling</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bool_value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#Mesh1D.setAllowResolutionScaling"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Set the <em>allowResolutionScaling</em> attribute to <em>bool_value</em>.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="meshing.meshing.Mesh1D.setResolutionScalingFactor">
-<span class="sig-name descname"><span class="pre">setResolutionScalingFactor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">float_value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#Mesh1D.setResolutionScalingFactor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshing.meshing.Mesh1D.setResolutionScalingFactor" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">setResolutionScalingFactor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">float_value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#Mesh1D.setResolutionScalingFactor"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Set the <em>resolutionScalingFactor</em> attribute to <em>float_value</em>.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="meshing.meshing.Mesh1D.setUseForMeshing">
-<span class="sig-name descname"><span class="pre">setUseForMeshing</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bool_value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#Mesh1D.setUseForMeshing"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshing.meshing.Mesh1D.setUseForMeshing" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">setUseForMeshing</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bool_value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#Mesh1D.setUseForMeshing"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Set the <em>useForMeshing</em> attribute to <em>bool_value</em>.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="meshing.meshing.Mesh1D.useForMeshing">
-<span class="sig-name descname"><span class="pre">useForMeshing</span></span><a class="headerlink" href="#meshing.meshing.Mesh1D.useForMeshing" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">useForMeshing</span></span></dt>
 <dd><p>If true, it will be used to create the final mesh. Default: True.</p>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
-<dt class="sig sig-object py" id="meshing.meshing.Mesh3D">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">meshing.meshing.</span></span><span class="sig-name descname"><span class="pre">Mesh3D</span></span><a class="reference internal" href="_modules/meshing/meshing.html#Mesh3D"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshing.meshing.Mesh3D" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">meshing.meshing.</span></span><span class="sig-name descname"><span class="pre">Mesh3D</span></span><a class="reference internal" href="_modules/meshing/meshing.html#Mesh3D"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>A rectilinear structured 3D mesh/grid.</p>
 <dl class="py method">
-<dt class="sig sig-object py" id="meshing.meshing.Mesh3D.PrintSelf">
-<span class="sig-name descname"><span class="pre">PrintSelf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">indent</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#Mesh3D.PrintSelf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshing.meshing.Mesh3D.PrintSelf" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">PrintSelf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">indent</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#Mesh3D.PrintSelf"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>printing function with indent</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="meshing.meshing.Mesh3D.getGlobalLocation">
-<span class="sig-name descname"><span class="pre">getGlobalLocation</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#Mesh3D.getGlobalLocation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshing.meshing.Mesh3D.getGlobalLocation" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">getGlobalLocation</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#Mesh3D.getGlobalLocation"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="meshing.meshing.Mesh3D.getGlobalXCoordinates">
-<span class="sig-name descname"><span class="pre">getGlobalXCoordinates</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#Mesh3D.getGlobalXCoordinates"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshing.meshing.Mesh3D.getGlobalXCoordinates" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">getGlobalXCoordinates</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#Mesh3D.getGlobalXCoordinates"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>get the grid coordinates in the x-direction.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="meshing.meshing.Mesh3D.getGlobalYCoordinates">
-<span class="sig-name descname"><span class="pre">getGlobalYCoordinates</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#Mesh3D.getGlobalYCoordinates"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshing.meshing.Mesh3D.getGlobalYCoordinates" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">getGlobalYCoordinates</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#Mesh3D.getGlobalYCoordinates"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>get the grid coordinates in the y-direction.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="meshing.meshing.Mesh3D.getGlobalZCoordinates">
-<span class="sig-name descname"><span class="pre">getGlobalZCoordinates</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#Mesh3D.getGlobalZCoordinates"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshing.meshing.Mesh3D.getGlobalZCoordinates" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">getGlobalZCoordinates</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#Mesh3D.getGlobalZCoordinates"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>get the grid coordinates in the z-direction.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="meshing.meshing.Mesh3D.name">
-<span class="sig-name descname"><span class="pre">name</span></span><a class="headerlink" href="#meshing.meshing.Mesh3D.name" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">name</span></span></dt>
 <dd><p>a name for easier debugging</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="meshing.meshing.Mesh3D.setAllowResolutionScaling">
-<span class="sig-name descname"><span class="pre">setAllowResolutionScaling</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bool_value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#Mesh3D.setAllowResolutionScaling"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshing.meshing.Mesh3D.setAllowResolutionScaling" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">setAllowResolutionScaling</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bool_value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#Mesh3D.setAllowResolutionScaling"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Set the <em>allowResolutionScaling</em> attribute to <em>bool_value</em> for xmesh, ymesh and zmesh.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="meshing.meshing.Mesh3D.setResolutionScalingFactor">
-<span class="sig-name descname"><span class="pre">setResolutionScalingFactor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">float_value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#Mesh3D.setResolutionScalingFactor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshing.meshing.Mesh3D.setResolutionScalingFactor" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">setResolutionScalingFactor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">float_value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#Mesh3D.setResolutionScalingFactor"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Set the <em>resolutionScalingFactor</em> attribute to <em>bool_value</em> for xmesh, ymesh and zmesh.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="meshing.meshing.Mesh3D.setUseForMeshing">
-<span class="sig-name descname"><span class="pre">setUseForMeshing</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bool_value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#Mesh3D.setUseForMeshing"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshing.meshing.Mesh3D.setUseForMeshing" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">setUseForMeshing</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bool_value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#Mesh3D.setUseForMeshing"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Set the <em>useForMeshing</em> attribute to <em>bool_value</em> for xmesh, ymesh and zmesh.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="meshing.meshing.Mesh3D.xmesh">
-<span class="sig-name descname"><span class="pre">xmesh</span></span><a class="headerlink" href="#meshing.meshing.Mesh3D.xmesh" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">xmesh</span></span></dt>
 <dd><p>the 1D mesh in the X direction</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="meshing.meshing.Mesh3D.ymesh">
-<span class="sig-name descname"><span class="pre">ymesh</span></span><a class="headerlink" href="#meshing.meshing.Mesh3D.ymesh" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">ymesh</span></span></dt>
 <dd><p>the 1D mesh in the Y direction</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="meshing.meshing.Mesh3D.zmesh">
-<span class="sig-name descname"><span class="pre">zmesh</span></span><a class="headerlink" href="#meshing.meshing.Mesh3D.zmesh" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">zmesh</span></span></dt>
 <dd><p>the 1D mesh in the Z direction</p>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
-<dt class="sig sig-object py" id="meshing.meshing.MultiMesh1D">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">meshing.meshing.</span></span><span class="sig-name descname"><span class="pre">MultiMesh1D</span></span><a class="reference internal" href="_modules/meshing/meshing.html#MultiMesh1D"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshing.meshing.MultiMesh1D" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">meshing.meshing.</span></span><span class="sig-name descname"><span class="pre">MultiMesh1D</span></span><a class="reference internal" href="_modules/meshing/meshing.html#MultiMesh1D"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>An object consisting of multiple <strong>Mesh1D</strong> or <strong>MultiMesh1D</strong> objects.</p>
 <p>The idea is to for example create one main mesh for the FDTD simulation consisiting of multiple submeshes for each FDTD object in the simulation.
@@ -453,29 +453,29 @@ Each of these object submeshes can then also consist of multiple submeshes, agai
 <p><em>getLocalCoordinates()</em> will go through all those meshes recursively and return a single merged one.</p>
 <p>The extension of that system to 3 or more or less dimensions is then straightforward and done via the <strong>Mesh3D</strong> class.</p>
 <dl class="py method">
-<dt class="sig sig-object py" id="meshing.meshing.MultiMesh1D.PrintSelf">
-<span class="sig-name descname"><span class="pre">PrintSelf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">indent</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#MultiMesh1D.PrintSelf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshing.meshing.MultiMesh1D.PrintSelf" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">PrintSelf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">indent</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#MultiMesh1D.PrintSelf"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>printing function with indent</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="meshing.meshing.MultiMesh1D.addChild">
-<span class="sig-name descname"><span class="pre">addChild</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">m</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#MultiMesh1D.addChild"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshing.meshing.MultiMesh1D.addChild" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">addChild</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">m</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#MultiMesh1D.addChild"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="meshing.meshing.MultiMesh1D.getGlobalCoordinates">
-<span class="sig-name descname"><span class="pre">getGlobalCoordinates</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#MultiMesh1D.getGlobalCoordinates"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshing.meshing.MultiMesh1D.getGlobalCoordinates" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">getGlobalCoordinates</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#MultiMesh1D.getGlobalCoordinates"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="meshing.meshing.MultiMesh1D.getGlobalLocation">
-<span class="sig-name descname"><span class="pre">getGlobalLocation</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#MultiMesh1D.getGlobalLocation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshing.meshing.MultiMesh1D.getGlobalLocation" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">getGlobalLocation</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#MultiMesh1D.getGlobalLocation"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="meshing.meshing.MultiMesh1D.getLocalCoordinates">
-<span class="sig-name descname"><span class="pre">getLocalCoordinates</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#MultiMesh1D.getLocalCoordinates"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshing.meshing.MultiMesh1D.getLocalCoordinates" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">getLocalCoordinates</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#MultiMesh1D.getLocalCoordinates"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Returns the list of merged and sorted coordinates from all submeshes.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
@@ -484,106 +484,106 @@ Each of these object submeshes can then also consist of multiple submeshes, agai
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="meshing.meshing.MultiMesh1D.getMesh1DList">
-<span class="sig-name descname"><span class="pre">getMesh1DList</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#MultiMesh1D.getMesh1DList"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshing.meshing.MultiMesh1D.getMesh1DList" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">getMesh1DList</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#MultiMesh1D.getMesh1DList"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Converts the submesh list into one containing only Mesh1D objects by iterating through the submeshes recursively.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="meshing.meshing.MultiMesh1D.makeAllSubMeshesChildren">
-<span class="sig-name descname"><span class="pre">makeAllSubMeshesChildren</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#MultiMesh1D.makeAllSubMeshesChildren"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshing.meshing.MultiMesh1D.makeAllSubMeshesChildren" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">makeAllSubMeshesChildren</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#MultiMesh1D.makeAllSubMeshesChildren"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="meshing.meshing.MultiMesh1D.maximum_mesh_delta_ratio">
-<span class="sig-name descname"><span class="pre">maximum_mesh_delta_ratio</span></span><a class="headerlink" href="#meshing.meshing.MultiMesh1D.maximum_mesh_delta_ratio" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">maximum_mesh_delta_ratio</span></span></dt>
 <dd><p>For creating a smooth mesh. Neighboring cell sizes should not exceed a factor of <em>maximum_mesh_delta_ratio</em>. Default: 2. Set to <code class="docutils literal notranslate"><span class="pre">None</span></code> to disable.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="meshing.meshing.MultiMesh1D.maximum_mesh_delta_vacuum">
-<span class="sig-name descname"><span class="pre">maximum_mesh_delta_vacuum</span></span><a class="headerlink" href="#meshing.meshing.MultiMesh1D.maximum_mesh_delta_vacuum" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">maximum_mesh_delta_vacuum</span></span></dt>
 <dd><p>If set, the mesh will be checked for any cells larger than <code class="docutils literal notranslate"><span class="pre">maximum_mesh_delta_vacuum</span> <span class="pre">*</span> <span class="pre">spacing_max</span></code> (<em>spacing_max</em> set to 1 if the <em>Mesh1D</em> object does not provide it). Default: None. Set to <code class="docutils literal notranslate"><span class="pre">None</span></code> to disable.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="meshing.meshing.MultiMesh1D.mesh_list">
-<span class="sig-name descname"><span class="pre">mesh_list</span></span><a class="headerlink" href="#meshing.meshing.MultiMesh1D.mesh_list" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">mesh_list</span></span></dt>
 <dd><p>The list of <strong>Mesh1D</strong> or <strong>MultiMesh1D</strong> objects.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="meshing.meshing.MultiMesh1D.minimum_mesh_delta">
-<span class="sig-name descname"><span class="pre">minimum_mesh_delta</span></span><a class="headerlink" href="#meshing.meshing.MultiMesh1D.minimum_mesh_delta" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">minimum_mesh_delta</span></span></dt>
 <dd><p>The minimum cell size allowed. This is used when merging the various submeshes. Default: 1e-3. Set to <code class="docutils literal notranslate"><span class="pre">None</span></code> to disable.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="meshing.meshing.MultiMesh1D.name">
-<span class="sig-name descname"><span class="pre">name</span></span><a class="headerlink" href="#meshing.meshing.MultiMesh1D.name" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">name</span></span></dt>
 <dd><p>a name for easier debugging</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="meshing.meshing.MultiMesh1D.renderInBlender">
-<span class="sig-name descname"><span class="pre">renderInBlender</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">location</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">group</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'meshes'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#MultiMesh1D.renderInBlender"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshing.meshing.MultiMesh1D.renderInBlender" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">renderInBlender</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">location</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">group</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'meshes'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#MultiMesh1D.renderInBlender"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="meshing.meshing.MultiMesh1D.renderXMesh1D">
-<span class="sig-name descname"><span class="pre">renderXMesh1D</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">location</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">group</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'meshes'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#MultiMesh1D.renderXMesh1D"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshing.meshing.MultiMesh1D.renderXMesh1D" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">renderXMesh1D</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">location</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">group</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'meshes'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#MultiMesh1D.renderXMesh1D"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="meshing.meshing.MultiMesh1D.renderYMesh1D">
-<span class="sig-name descname"><span class="pre">renderYMesh1D</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">location</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">group</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'meshes'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#MultiMesh1D.renderYMesh1D"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshing.meshing.MultiMesh1D.renderYMesh1D" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">renderYMesh1D</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">location</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">group</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'meshes'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#MultiMesh1D.renderYMesh1D"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="meshing.meshing.MultiMesh1D.renderZMesh1D">
-<span class="sig-name descname"><span class="pre">renderZMesh1D</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">location</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">group</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'meshes'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#MultiMesh1D.renderZMesh1D"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshing.meshing.MultiMesh1D.renderZMesh1D" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">renderZMesh1D</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">location</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">group</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'meshes'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#MultiMesh1D.renderZMesh1D"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="meshing.meshing.MultiMesh1D.setAllowResolutionScaling">
-<span class="sig-name descname"><span class="pre">setAllowResolutionScaling</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bool_value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#MultiMesh1D.setAllowResolutionScaling"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshing.meshing.MultiMesh1D.setAllowResolutionScaling" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">setAllowResolutionScaling</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bool_value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#MultiMesh1D.setAllowResolutionScaling"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Set the <em>allowResolutionScaling</em> attribute to <em>bool_value</em> for all submeshes.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="meshing.meshing.MultiMesh1D.setResolutionScalingFactor">
-<span class="sig-name descname"><span class="pre">setResolutionScalingFactor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">float_value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#MultiMesh1D.setResolutionScalingFactor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshing.meshing.MultiMesh1D.setResolutionScalingFactor" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">setResolutionScalingFactor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">float_value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#MultiMesh1D.setResolutionScalingFactor"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Set the <em>resolutionScalingFactor</em> attribute to <em>float_value</em> for all submeshes.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="meshing.meshing.MultiMesh1D.setUseForMeshing">
-<span class="sig-name descname"><span class="pre">setUseForMeshing</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bool_value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#MultiMesh1D.setUseForMeshing"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshing.meshing.MultiMesh1D.setUseForMeshing" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">setUseForMeshing</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bool_value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#MultiMesh1D.setUseForMeshing"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Set the <em>useForMeshing</em> attribute to <em>bool_value</em> for all submeshes.</p>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="meshing.meshing.checkMesh">
-<span class="sig-prename descclassname"><span class="pre">meshing.meshing.</span></span><span class="sig-name descname"><span class="pre">checkMesh</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mesh</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">minimum_mesh_delta</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maximum_mesh_delta_ratio</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#checkMesh"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshing.meshing.checkMesh" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">meshing.meshing.</span></span><span class="sig-name descname"><span class="pre">checkMesh</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mesh</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">minimum_mesh_delta</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maximum_mesh_delta_ratio</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#checkMesh"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="meshing.meshing.hackMesh">
-<span class="sig-prename descclassname"><span class="pre">meshing.meshing.</span></span><span class="sig-name descname"><span class="pre">hackMesh</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">meshing_parameters_list</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#hackMesh"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshing.meshing.hackMesh" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">meshing.meshing.</span></span><span class="sig-name descname"><span class="pre">hackMesh</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">meshing_parameters_list</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#hackMesh"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="meshing.meshing.increaseResolution">
-<span class="sig-prename descclassname"><span class="pre">meshing.meshing.</span></span><span class="sig-name descname"><span class="pre">increaseResolution</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mesh_orig</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">N</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#increaseResolution"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshing.meshing.increaseResolution" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">meshing.meshing.</span></span><span class="sig-name descname"><span class="pre">increaseResolution</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mesh_orig</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">N</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#increaseResolution"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Increase the resolution of a mesh by dividing each cell into N equal cells.
 This means that a mesh with C cells and P = C+1 points will turn into a mesh with C’ = N*C cells and P’ = N*C+1 = P+(P-1)*(N-1) = P*N-(N-1) points.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="meshing.meshing.linspaces">
-<span class="sig-prename descclassname"><span class="pre">meshing.meshing.</span></span><span class="sig-name descname"><span class="pre">linspaces</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">part_limits</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Ncells_per_part</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#linspaces"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshing.meshing.linspaces" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">meshing.meshing.</span></span><span class="sig-name descname"><span class="pre">linspaces</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">part_limits</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Ncells_per_part</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#linspaces"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Return evenly spaced numbers over specified intervals.</p>
 <p>Example:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">linspaces</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">],</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">])</span>
@@ -597,8 +597,8 @@ This means that a mesh with C cells and P = C+1 points will turn into a mesh wit
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="meshing.meshing.mergeMeshingParameters">
-<span class="sig-prename descclassname"><span class="pre">meshing.meshing.</span></span><span class="sig-name descname"><span class="pre">mergeMeshingParameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">MeshParamsList</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">minimum_mesh_delta</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.001</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#mergeMeshingParameters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshing.meshing.mergeMeshingParameters" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">meshing.meshing.</span></span><span class="sig-name descname"><span class="pre">mergeMeshingParameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">MeshParamsList</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">minimum_mesh_delta</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.001</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#mergeMeshingParameters"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Returns a mesh based on a list of <em>MeshParams</em> objects.</p>
 <p>Original plan:</p>
 <ul class="simple">
@@ -608,8 +608,8 @@ This means that a mesh with C cells and P = C+1 points will turn into a mesh wit
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="meshing.meshing.subGridMultiLayer">
-<span class="sig-prename descclassname"><span class="pre">meshing.meshing.</span></span><span class="sig-name descname"><span class="pre">subGridMultiLayer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Section_MaxDeltaVector_in</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[1.76,</span> <span class="pre">2.1385,</span> <span class="pre">2.3535,</span> <span class="pre">1]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Section_ThicknessVector_in</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[1,</span> <span class="pre">0.5,</span> <span class="pre">1,</span> <span class="pre">1]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#subGridMultiLayer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshing.meshing.subGridMultiLayer" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">meshing.meshing.</span></span><span class="sig-name descname"><span class="pre">subGridMultiLayer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Section_MaxDeltaVector_in</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[1.76,</span> <span class="pre">2.1385,</span> <span class="pre">2.3535,</span> <span class="pre">1]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Section_ThicknessVector_in</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[1,</span> <span class="pre">0.5,</span> <span class="pre">1,</span> <span class="pre">1]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#subGridMultiLayer"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Create a list of thicknesses for meshing</p>
 <p>Usage:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">Mesh_ThicknessVector</span><span class="p">,</span> <span class="n">Section_FinalDeltaVector</span><span class="p">]</span> <span class="o">=</span> <span class="n">subGridMultiLayer</span><span class="p">(</span><span class="n">Section_MaxDeltaVector_in</span><span class="p">,</span> <span class="n">Section_ThicknessVector_in</span><span class="p">)</span>
@@ -650,56 +650,56 @@ This means that a mesh with C cells and P = C+1 points will turn into a mesh wit
 </dd></dl>
 
 <dl class="py class">
-<dt class="sig sig-object py" id="meshing.meshing.test_Meshing">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">meshing.meshing.</span></span><span class="sig-name descname"><span class="pre">test_Meshing</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">methodName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'runTest'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#test_Meshing"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshing.meshing.test_Meshing" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">meshing.meshing.</span></span><span class="sig-name descname"><span class="pre">test_Meshing</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">methodName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'runTest'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#test_Meshing"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">TestCase</span></code></p>
 <dl class="py method">
-<dt class="sig sig-object py" id="meshing.meshing.test_Meshing.setUp">
-<span class="sig-name descname"><span class="pre">setUp</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#test_Meshing.setUp"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshing.meshing.test_Meshing.setUp" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">setUp</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#test_Meshing.setUp"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Hook method for setting up the test fixture before exercising it.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="meshing.meshing.test_Meshing.test_MeshPostprocessing">
-<span class="sig-name descname"><span class="pre">test_MeshPostprocessing</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#test_Meshing.test_MeshPostprocessing"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshing.meshing.test_Meshing.test_MeshPostprocessing" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">test_MeshPostprocessing</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#test_Meshing.test_MeshPostprocessing"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="meshing.meshing.test_Meshing.test_linspaces">
-<span class="sig-name descname"><span class="pre">test_linspaces</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#test_Meshing.test_linspaces"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshing.meshing.test_Meshing.test_linspaces" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">test_linspaces</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#test_Meshing.test_linspaces"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="meshing.meshing.test_Meshing.test_mergeMeshingParameters">
-<span class="sig-name descname"><span class="pre">test_mergeMeshingParameters</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#test_Meshing.test_mergeMeshingParameters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshing.meshing.test_Meshing.test_mergeMeshingParameters" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">test_mergeMeshingParameters</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#test_Meshing.test_mergeMeshingParameters"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="meshing.meshing.test_Meshing.test_nuke">
-<span class="sig-name descname"><span class="pre">test_nuke</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#test_Meshing.test_nuke"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshing.meshing.test_Meshing.test_nuke" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">test_nuke</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#test_Meshing.test_nuke"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="meshing.meshing.test_Meshing.test_parenting">
-<span class="sig-name descname"><span class="pre">test_parenting</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#test_Meshing.test_parenting"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshing.meshing.test_Meshing.test_parenting" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">test_parenting</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#test_Meshing.test_parenting"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="meshing.meshing.test_Meshing.test_printing">
-<span class="sig-name descname"><span class="pre">test_printing</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#test_Meshing.test_printing"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshing.meshing.test_Meshing.test_printing" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">test_printing</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#test_Meshing.test_printing"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>test and example of the meshing system</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="meshing.meshing.test_Meshing.test_subGridMultiLayer">
-<span class="sig-name descname"><span class="pre">test_subGridMultiLayer</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#test_Meshing.test_subGridMultiLayer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshing.meshing.test_Meshing.test_subGridMultiLayer" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">test_subGridMultiLayer</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#test_Meshing.test_subGridMultiLayer"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="meshing.meshing.truncateMeshList">
-<span class="sig-prename descclassname"><span class="pre">meshing.meshing.</span></span><span class="sig-name descname"><span class="pre">truncateMeshList</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mesh_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lower</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">upper</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#truncateMeshList"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshing.meshing.truncateMeshList" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">meshing.meshing.</span></span><span class="sig-name descname"><span class="pre">truncateMeshList</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mesh_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lower</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">upper</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/meshing/meshing.html#truncateMeshList"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>remove all submeshes where pos_min or pos_max are outside of [lower, upper]</p>
 </dd></dl>
 
@@ -721,107 +721,7 @@ This means that a mesh with C cells and P = C+1 points will turn into a mesh wit
     <ul>
 <li><a class="reference internal" href="#">meshing package</a><ul>
 <li><a class="reference internal" href="#submodules">Submodules</a></li>
-<li><a class="reference internal" href="#module-meshing.meshing">meshing.meshing module</a><ul>
-<li><a class="reference internal" href="#meshing.meshing.HeterogeneousMesh1D"><code class="docutils literal notranslate"><span class="pre">HeterogeneousMesh1D</span></code></a><ul>
-<li><a class="reference internal" href="#meshing.meshing.HeterogeneousMesh1D.PrintSelf"><code class="docutils literal notranslate"><span class="pre">HeterogeneousMesh1D.PrintSelf()</span></code></a></li>
-<li><a class="reference internal" href="#meshing.meshing.HeterogeneousMesh1D.coordinates"><code class="docutils literal notranslate"><span class="pre">HeterogeneousMesh1D.coordinates</span></code></a></li>
-<li><a class="reference internal" href="#meshing.meshing.HeterogeneousMesh1D.createFromThicknessList"><code class="docutils literal notranslate"><span class="pre">HeterogeneousMesh1D.createFromThicknessList()</span></code></a></li>
-<li><a class="reference internal" href="#meshing.meshing.HeterogeneousMesh1D.getLocalCoordinates"><code class="docutils literal notranslate"><span class="pre">HeterogeneousMesh1D.getLocalCoordinates()</span></code></a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#meshing.meshing.HomogeneousMesh1D"><code class="docutils literal notranslate"><span class="pre">HomogeneousMesh1D</span></code></a><ul>
-<li><a class="reference internal" href="#meshing.meshing.HomogeneousMesh1D.PrintSelf"><code class="docutils literal notranslate"><span class="pre">HomogeneousMesh1D.PrintSelf()</span></code></a></li>
-<li><a class="reference internal" href="#meshing.meshing.HomogeneousMesh1D.getLocalCoordinates"><code class="docutils literal notranslate"><span class="pre">HomogeneousMesh1D.getLocalCoordinates()</span></code></a></li>
-<li><a class="reference internal" href="#meshing.meshing.HomogeneousMesh1D.getNcellsMin"><code class="docutils literal notranslate"><span class="pre">HomogeneousMesh1D.getNcellsMin()</span></code></a></li>
-<li><a class="reference internal" href="#meshing.meshing.HomogeneousMesh1D.getRefractiveIndexMin"><code class="docutils literal notranslate"><span class="pre">HomogeneousMesh1D.getRefractiveIndexMin()</span></code></a></li>
-<li><a class="reference internal" href="#meshing.meshing.HomogeneousMesh1D.getRelativePermittivityMin"><code class="docutils literal notranslate"><span class="pre">HomogeneousMesh1D.getRelativePermittivityMin()</span></code></a></li>
-<li><a class="reference internal" href="#meshing.meshing.HomogeneousMesh1D.getSpacingMax"><code class="docutils literal notranslate"><span class="pre">HomogeneousMesh1D.getSpacingMax()</span></code></a></li>
-<li><a class="reference internal" href="#meshing.meshing.HomogeneousMesh1D.renderInBlender"><code class="docutils literal notranslate"><span class="pre">HomogeneousMesh1D.renderInBlender()</span></code></a></li>
-<li><a class="reference internal" href="#meshing.meshing.HomogeneousMesh1D.renderXMesh1D"><code class="docutils literal notranslate"><span class="pre">HomogeneousMesh1D.renderXMesh1D()</span></code></a></li>
-<li><a class="reference internal" href="#meshing.meshing.HomogeneousMesh1D.renderYMesh1D"><code class="docutils literal notranslate"><span class="pre">HomogeneousMesh1D.renderYMesh1D()</span></code></a></li>
-<li><a class="reference internal" href="#meshing.meshing.HomogeneousMesh1D.renderZMesh1D"><code class="docutils literal notranslate"><span class="pre">HomogeneousMesh1D.renderZMesh1D()</span></code></a></li>
-<li><a class="reference internal" href="#meshing.meshing.HomogeneousMesh1D.setExtension"><code class="docutils literal notranslate"><span class="pre">HomogeneousMesh1D.setExtension()</span></code></a></li>
-<li><a class="reference internal" href="#meshing.meshing.HomogeneousMesh1D.setNcellsMin"><code class="docutils literal notranslate"><span class="pre">HomogeneousMesh1D.setNcellsMin()</span></code></a></li>
-<li><a class="reference internal" href="#meshing.meshing.HomogeneousMesh1D.setRefractiveIndexMin"><code class="docutils literal notranslate"><span class="pre">HomogeneousMesh1D.setRefractiveIndexMin()</span></code></a></li>
-<li><a class="reference internal" href="#meshing.meshing.HomogeneousMesh1D.setRelativePermittivityMin"><code class="docutils literal notranslate"><span class="pre">HomogeneousMesh1D.setRelativePermittivityMin()</span></code></a></li>
-<li><a class="reference internal" href="#meshing.meshing.HomogeneousMesh1D.setSpacingMax"><code class="docutils literal notranslate"><span class="pre">HomogeneousMesh1D.setSpacingMax()</span></code></a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#meshing.meshing.HomogeneousMeshParameters1D"><code class="docutils literal notranslate"><span class="pre">HomogeneousMeshParameters1D</span></code></a></li>
-<li><a class="reference internal" href="#meshing.meshing.LogMesh1D"><code class="docutils literal notranslate"><span class="pre">LogMesh1D</span></code></a></li>
-<li><a class="reference internal" href="#meshing.meshing.Mesh1D"><code class="docutils literal notranslate"><span class="pre">Mesh1D</span></code></a><ul>
-<li><a class="reference internal" href="#meshing.meshing.Mesh1D.PrintSelf"><code class="docutils literal notranslate"><span class="pre">Mesh1D.PrintSelf()</span></code></a></li>
-<li><a class="reference internal" href="#meshing.meshing.Mesh1D.allowResolutionScaling"><code class="docutils literal notranslate"><span class="pre">Mesh1D.allowResolutionScaling</span></code></a></li>
-<li><a class="reference internal" href="#meshing.meshing.Mesh1D.getBounds"><code class="docutils literal notranslate"><span class="pre">Mesh1D.getBounds()</span></code></a></li>
-<li><a class="reference internal" href="#meshing.meshing.Mesh1D.getGlobalCoordinates"><code class="docutils literal notranslate"><span class="pre">Mesh1D.getGlobalCoordinates()</span></code></a></li>
-<li><a class="reference internal" href="#meshing.meshing.Mesh1D.getGlobalLocation"><code class="docutils literal notranslate"><span class="pre">Mesh1D.getGlobalLocation()</span></code></a></li>
-<li><a class="reference internal" href="#meshing.meshing.Mesh1D.getLocalCoordinates"><code class="docutils literal notranslate"><span class="pre">Mesh1D.getLocalCoordinates()</span></code></a></li>
-<li><a class="reference internal" href="#meshing.meshing.Mesh1D.getThicknessList"><code class="docutils literal notranslate"><span class="pre">Mesh1D.getThicknessList()</span></code></a></li>
-<li><a class="reference internal" href="#meshing.meshing.Mesh1D.name"><code class="docutils literal notranslate"><span class="pre">Mesh1D.name</span></code></a></li>
-<li><a class="reference internal" href="#meshing.meshing.Mesh1D.resolutionScalingFactor"><code class="docutils literal notranslate"><span class="pre">Mesh1D.resolutionScalingFactor</span></code></a></li>
-<li><a class="reference internal" href="#meshing.meshing.Mesh1D.setAllowResolutionScaling"><code class="docutils literal notranslate"><span class="pre">Mesh1D.setAllowResolutionScaling()</span></code></a></li>
-<li><a class="reference internal" href="#meshing.meshing.Mesh1D.setResolutionScalingFactor"><code class="docutils literal notranslate"><span class="pre">Mesh1D.setResolutionScalingFactor()</span></code></a></li>
-<li><a class="reference internal" href="#meshing.meshing.Mesh1D.setUseForMeshing"><code class="docutils literal notranslate"><span class="pre">Mesh1D.setUseForMeshing()</span></code></a></li>
-<li><a class="reference internal" href="#meshing.meshing.Mesh1D.useForMeshing"><code class="docutils literal notranslate"><span class="pre">Mesh1D.useForMeshing</span></code></a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#meshing.meshing.Mesh3D"><code class="docutils literal notranslate"><span class="pre">Mesh3D</span></code></a><ul>
-<li><a class="reference internal" href="#meshing.meshing.Mesh3D.PrintSelf"><code class="docutils literal notranslate"><span class="pre">Mesh3D.PrintSelf()</span></code></a></li>
-<li><a class="reference internal" href="#meshing.meshing.Mesh3D.getGlobalLocation"><code class="docutils literal notranslate"><span class="pre">Mesh3D.getGlobalLocation()</span></code></a></li>
-<li><a class="reference internal" href="#meshing.meshing.Mesh3D.getGlobalXCoordinates"><code class="docutils literal notranslate"><span class="pre">Mesh3D.getGlobalXCoordinates()</span></code></a></li>
-<li><a class="reference internal" href="#meshing.meshing.Mesh3D.getGlobalYCoordinates"><code class="docutils literal notranslate"><span class="pre">Mesh3D.getGlobalYCoordinates()</span></code></a></li>
-<li><a class="reference internal" href="#meshing.meshing.Mesh3D.getGlobalZCoordinates"><code class="docutils literal notranslate"><span class="pre">Mesh3D.getGlobalZCoordinates()</span></code></a></li>
-<li><a class="reference internal" href="#meshing.meshing.Mesh3D.name"><code class="docutils literal notranslate"><span class="pre">Mesh3D.name</span></code></a></li>
-<li><a class="reference internal" href="#meshing.meshing.Mesh3D.setAllowResolutionScaling"><code class="docutils literal notranslate"><span class="pre">Mesh3D.setAllowResolutionScaling()</span></code></a></li>
-<li><a class="reference internal" href="#meshing.meshing.Mesh3D.setResolutionScalingFactor"><code class="docutils literal notranslate"><span class="pre">Mesh3D.setResolutionScalingFactor()</span></code></a></li>
-<li><a class="reference internal" href="#meshing.meshing.Mesh3D.setUseForMeshing"><code class="docutils literal notranslate"><span class="pre">Mesh3D.setUseForMeshing()</span></code></a></li>
-<li><a class="reference internal" href="#meshing.meshing.Mesh3D.xmesh"><code class="docutils literal notranslate"><span class="pre">Mesh3D.xmesh</span></code></a></li>
-<li><a class="reference internal" href="#meshing.meshing.Mesh3D.ymesh"><code class="docutils literal notranslate"><span class="pre">Mesh3D.ymesh</span></code></a></li>
-<li><a class="reference internal" href="#meshing.meshing.Mesh3D.zmesh"><code class="docutils literal notranslate"><span class="pre">Mesh3D.zmesh</span></code></a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#meshing.meshing.MultiMesh1D"><code class="docutils literal notranslate"><span class="pre">MultiMesh1D</span></code></a><ul>
-<li><a class="reference internal" href="#meshing.meshing.MultiMesh1D.PrintSelf"><code class="docutils literal notranslate"><span class="pre">MultiMesh1D.PrintSelf()</span></code></a></li>
-<li><a class="reference internal" href="#meshing.meshing.MultiMesh1D.addChild"><code class="docutils literal notranslate"><span class="pre">MultiMesh1D.addChild()</span></code></a></li>
-<li><a class="reference internal" href="#meshing.meshing.MultiMesh1D.getGlobalCoordinates"><code class="docutils literal notranslate"><span class="pre">MultiMesh1D.getGlobalCoordinates()</span></code></a></li>
-<li><a class="reference internal" href="#meshing.meshing.MultiMesh1D.getGlobalLocation"><code class="docutils literal notranslate"><span class="pre">MultiMesh1D.getGlobalLocation()</span></code></a></li>
-<li><a class="reference internal" href="#meshing.meshing.MultiMesh1D.getLocalCoordinates"><code class="docutils literal notranslate"><span class="pre">MultiMesh1D.getLocalCoordinates()</span></code></a></li>
-<li><a class="reference internal" href="#meshing.meshing.MultiMesh1D.getMesh1DList"><code class="docutils literal notranslate"><span class="pre">MultiMesh1D.getMesh1DList()</span></code></a></li>
-<li><a class="reference internal" href="#meshing.meshing.MultiMesh1D.makeAllSubMeshesChildren"><code class="docutils literal notranslate"><span class="pre">MultiMesh1D.makeAllSubMeshesChildren()</span></code></a></li>
-<li><a class="reference internal" href="#meshing.meshing.MultiMesh1D.maximum_mesh_delta_ratio"><code class="docutils literal notranslate"><span class="pre">MultiMesh1D.maximum_mesh_delta_ratio</span></code></a></li>
-<li><a class="reference internal" href="#meshing.meshing.MultiMesh1D.maximum_mesh_delta_vacuum"><code class="docutils literal notranslate"><span class="pre">MultiMesh1D.maximum_mesh_delta_vacuum</span></code></a></li>
-<li><a class="reference internal" href="#meshing.meshing.MultiMesh1D.mesh_list"><code class="docutils literal notranslate"><span class="pre">MultiMesh1D.mesh_list</span></code></a></li>
-<li><a class="reference internal" href="#meshing.meshing.MultiMesh1D.minimum_mesh_delta"><code class="docutils literal notranslate"><span class="pre">MultiMesh1D.minimum_mesh_delta</span></code></a></li>
-<li><a class="reference internal" href="#meshing.meshing.MultiMesh1D.name"><code class="docutils literal notranslate"><span class="pre">MultiMesh1D.name</span></code></a></li>
-<li><a class="reference internal" href="#meshing.meshing.MultiMesh1D.renderInBlender"><code class="docutils literal notranslate"><span class="pre">MultiMesh1D.renderInBlender()</span></code></a></li>
-<li><a class="reference internal" href="#meshing.meshing.MultiMesh1D.renderXMesh1D"><code class="docutils literal notranslate"><span class="pre">MultiMesh1D.renderXMesh1D()</span></code></a></li>
-<li><a class="reference internal" href="#meshing.meshing.MultiMesh1D.renderYMesh1D"><code class="docutils literal notranslate"><span class="pre">MultiMesh1D.renderYMesh1D()</span></code></a></li>
-<li><a class="reference internal" href="#meshing.meshing.MultiMesh1D.renderZMesh1D"><code class="docutils literal notranslate"><span class="pre">MultiMesh1D.renderZMesh1D()</span></code></a></li>
-<li><a class="reference internal" href="#meshing.meshing.MultiMesh1D.setAllowResolutionScaling"><code class="docutils literal notranslate"><span class="pre">MultiMesh1D.setAllowResolutionScaling()</span></code></a></li>
-<li><a class="reference internal" href="#meshing.meshing.MultiMesh1D.setResolutionScalingFactor"><code class="docutils literal notranslate"><span class="pre">MultiMesh1D.setResolutionScalingFactor()</span></code></a></li>
-<li><a class="reference internal" href="#meshing.meshing.MultiMesh1D.setUseForMeshing"><code class="docutils literal notranslate"><span class="pre">MultiMesh1D.setUseForMeshing()</span></code></a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#meshing.meshing.checkMesh"><code class="docutils literal notranslate"><span class="pre">checkMesh()</span></code></a></li>
-<li><a class="reference internal" href="#meshing.meshing.hackMesh"><code class="docutils literal notranslate"><span class="pre">hackMesh()</span></code></a></li>
-<li><a class="reference internal" href="#meshing.meshing.increaseResolution"><code class="docutils literal notranslate"><span class="pre">increaseResolution()</span></code></a></li>
-<li><a class="reference internal" href="#meshing.meshing.linspaces"><code class="docutils literal notranslate"><span class="pre">linspaces()</span></code></a></li>
-<li><a class="reference internal" href="#meshing.meshing.mergeMeshingParameters"><code class="docutils literal notranslate"><span class="pre">mergeMeshingParameters()</span></code></a></li>
-<li><a class="reference internal" href="#meshing.meshing.subGridMultiLayer"><code class="docutils literal notranslate"><span class="pre">subGridMultiLayer()</span></code></a></li>
-<li><a class="reference internal" href="#meshing.meshing.test_Meshing"><code class="docutils literal notranslate"><span class="pre">test_Meshing</span></code></a><ul>
-<li><a class="reference internal" href="#meshing.meshing.test_Meshing.setUp"><code class="docutils literal notranslate"><span class="pre">test_Meshing.setUp()</span></code></a></li>
-<li><a class="reference internal" href="#meshing.meshing.test_Meshing.test_MeshPostprocessing"><code class="docutils literal notranslate"><span class="pre">test_Meshing.test_MeshPostprocessing()</span></code></a></li>
-<li><a class="reference internal" href="#meshing.meshing.test_Meshing.test_linspaces"><code class="docutils literal notranslate"><span class="pre">test_Meshing.test_linspaces()</span></code></a></li>
-<li><a class="reference internal" href="#meshing.meshing.test_Meshing.test_mergeMeshingParameters"><code class="docutils literal notranslate"><span class="pre">test_Meshing.test_mergeMeshingParameters()</span></code></a></li>
-<li><a class="reference internal" href="#meshing.meshing.test_Meshing.test_nuke"><code class="docutils literal notranslate"><span class="pre">test_Meshing.test_nuke()</span></code></a></li>
-<li><a class="reference internal" href="#meshing.meshing.test_Meshing.test_parenting"><code class="docutils literal notranslate"><span class="pre">test_Meshing.test_parenting()</span></code></a></li>
-<li><a class="reference internal" href="#meshing.meshing.test_Meshing.test_printing"><code class="docutils literal notranslate"><span class="pre">test_Meshing.test_printing()</span></code></a></li>
-<li><a class="reference internal" href="#meshing.meshing.test_Meshing.test_subGridMultiLayer"><code class="docutils literal notranslate"><span class="pre">test_Meshing.test_subGridMultiLayer()</span></code></a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#meshing.meshing.truncateMeshList"><code class="docutils literal notranslate"><span class="pre">truncateMeshList()</span></code></a></li>
-</ul>
-</li>
+<li><a class="reference internal" href="#meshing-meshing-module">meshing.meshing module</a></li>
 <li><a class="reference internal" href="#module-meshing">Module contents</a></li>
 </ul>
 </li>

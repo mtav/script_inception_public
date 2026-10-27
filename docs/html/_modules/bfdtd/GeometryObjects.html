@@ -1262,18 +1262,22 @@
 <a class="viewcode-back" href="../../bfdtd.html#bfdtd.GeometryObjects.Tube.write_entry">[docs]</a>
   <span class="k">def</span><span class="w"> </span><span class="nf">write_entry</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">FILE</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">    TUBE</span>
-<span class="sd">    {</span>
-<span class="sd">      1-3 Coordinates of first end: X1, Y1, Z1</span>
-<span class="sd">      4 **a1** first radius of the elliptical cross-section of the first end</span>
-<span class="sd">      5 **b1** second radius of the elliptical cross-section of the first end</span>
-<span class="sd">      6-8 Coordinates of second end: X2, Y2, Z2</span>
-<span class="sd">      9 **a2** first radius of the elliptical cross-section of the second end</span>
-<span class="sd">      10 **b2** second radius of the elliptical cross-section of the second end</span>
-<span class="sd">      11 **face orientation** 1=x, 2=y or 3=z depending on which direction the tube is pointing</span>
-<span class="sd">      12 **relative permittivity -&gt; n=sqrt(mu_r*epsilon_r)</span>
-<span class="sd">      13 **relative conductivity</span>
-<span class="sd">    }</span>
+<span class="sd">    Write a TUBE entry to a file object.</span>
+
+<span class="sd">    BFDTD format::</span>
+
+<span class="sd">      TUBE</span>
+<span class="sd">      {</span>
+<span class="sd">        1-3 Coordinates of first end: X1, Y1, Z1</span>
+<span class="sd">        4 **a1** first radius of the elliptical cross-section of the first end</span>
+<span class="sd">        5 **b1** second radius of the elliptical cross-section of the first end</span>
+<span class="sd">        6-8 Coordinates of second end: X2, Y2, Z2</span>
+<span class="sd">        9 **a2** first radius of the elliptical cross-section of the second end</span>
+<span class="sd">        10 **b2** second radius of the elliptical cross-section of the second end</span>
+<span class="sd">        11 **face orientation** 1=x, 2=y or 3=z depending on which direction the tube is pointing</span>
+<span class="sd">        12 **relative permittivity -&gt; n=sqrt(mu_r*epsilon_r)</span>
+<span class="sd">        13 **relative conductivity</span>
+<span class="sd">      }</span>
 <span class="sd">    &#39;&#39;&#39;</span>
   
     <span class="n">FILE</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;CYLINDER **name=&#39;</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="o">+</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>

@@ -162,7 +162,7 @@ explained by an example:</p>
    <span class="p">:</span><span class="n">param</span> <span class="nb">str</span> <span class="n">recipient</span><span class="p">:</span> <span class="n">The</span> <span class="n">recipient</span> <span class="n">of</span> <span class="n">the</span> <span class="n">message</span>
    <span class="p">:</span><span class="n">param</span> <span class="nb">str</span> <span class="n">message_body</span><span class="p">:</span> <span class="n">The</span> <span class="n">body</span> <span class="n">of</span> <span class="n">the</span> <span class="n">message</span>
    <span class="p">:</span><span class="n">param</span> <span class="n">priority</span><span class="p">:</span> <span class="n">The</span> <span class="n">priority</span> <span class="n">of</span> <span class="n">the</span> <span class="n">message</span><span class="p">,</span> <span class="n">can</span> <span class="n">be</span> <span class="n">a</span> <span class="n">number</span> <span class="mi">1</span><span class="o">-</span><span class="mi">5</span>
-   <span class="p">:</span><span class="nb">type</span> <span class="n">priority</span><span class="p">:</span> <span class="n">integer</span> <span class="ow">or</span> <span class="kc">None</span>
+   <span class="p">:</span><span class="nb">type</span> <span class="n">priority</span><span class="p">:</span> <span class="nb">int</span> <span class="ow">or</span> <span class="kc">None</span>
    <span class="p">:</span><span class="k">return</span><span class="p">:</span> <span class="n">the</span> <span class="n">message</span> <span class="nb">id</span>
    <span class="p">:</span><span class="n">rtype</span><span class="p">:</span> <span class="nb">int</span>
    <span class="p">:</span><span class="n">raises</span> <span class="ne">ValueError</span><span class="p">:</span> <span class="k">if</span> <span class="n">the</span> <span class="n">message_body</span> <span class="n">exceeds</span> <span class="mi">160</span> <span class="n">characters</span>
@@ -181,7 +181,7 @@ explained by an example:</p>
 <li><p><strong>sender</strong> (<em>str</em>) – The person sending the message</p></li>
 <li><p><strong>recipient</strong> (<em>str</em>) – The recipient of the message</p></li>
 <li><p><strong>message_body</strong> (<em>str</em>) – The body of the message</p></li>
-<li><p><strong>priority</strong> (<em>integer</em><em> or </em><em>None</em>) – The priority of the message, can be a number 1-5</p></li>
+<li><p><strong>priority</strong> (<em>int</em><em> or </em><em>None</em>) – The priority of the message, can be a number 1-5</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>

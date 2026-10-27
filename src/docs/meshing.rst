@@ -11,6 +11,7 @@ meshing.meshing module
     :members:
     :undoc-members:
     :show-inheritance:
+    :no-index:
 
 Module contents
 ---------------
