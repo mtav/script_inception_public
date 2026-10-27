@@ -296,7 +296,7 @@ def parse_MPB(infile_flexible, verbosity=0, merge_datasets=False):
   header = []
   data = []
 
-  coord_pattern = '\s*\((.+),(.+),(.+)\)\s*'
+  coord_pattern = r'\s*\((.+),(.+),(.+)\)\s*'
 
   # default values
   eps_low = None
@@ -365,7 +365,7 @@ def parse_MPB(infile_flexible, verbosity=0, merge_datasets=False):
         try:
           coord_match = re.match(coord_pattern, coord_line)
           if coord_match is None:
-            coord_match = re.match('\s*Vector3<([-+eE0-9.]+), ([-+eE0-9.]+), ([-+eE0-9.]+)>\s*', coord_line)
+            coord_match = re.match(r'\s*Vector3<([-+eE0-9.]+), ([-+eE0-9.]+), ([-+eE0-9.]+)>\s*', coord_line)
           k = [float(coord_match.group(1)), float(coord_match.group(2)), float(coord_match.group(3))]
           k_points.append(k)
         except:
@@ -839,7 +839,7 @@ def parseGeometryObjects(s):
   # print(p.findall(s))
 
   # re.search('     [a-z]+,.*\n', s)
-  geo_str_list = re.findall('\s{5}[a-z]+,.*\n(?:\s{10}.*\n)+', s)
+  geo_str_list = re.findall('\\s{5}[a-z]+,.*\n(?:\\s{10}.*\n)+', s)
   # print(geo_str_list)
   # print(len(geo_str_list))
 
@@ -847,7 +847,7 @@ def parseGeometryObjects(s):
 
   geo_obj_list = []
   for s in geo_str_list:
-    m = re.match('\s{5}([a-z]+),', s)
+    m = re.match(r'\s{5}([a-z]+),', s)
     obj_type = m.groups()[0]
     # print(obj_type)
     if obj_type == 'sphere':
@@ -863,7 +863,7 @@ def parseGeometryObjects(s):
 
 def parseVector(s):
   n = '[-+.eE0-9]+'
-  v = f'\(({n}),\s*({n}),\s*({n})\)'
+  v = rf'\(({n}),\s*({n}),\s*({n})\)'
   m = re.match(v,s)
   # print(m.groups())
   vec = [float(i) for i in m.groups()]
@@ -871,7 +871,7 @@ def parseVector(s):
 
 def parseSphere(s):
   n = '([-+.eE0-9]+)'
-  m = re.match(f'\s{{5}}sphere, center = \({n},{n},{n}\)\s+radius {n}(\s+epsilon = {n}, mu = {n})?', s, re.DOTALL)
+  m = re.match(rf'\s{{5}}sphere, center = \({n},{n},{n}\)\s+radius {n}(\s+epsilon = {n}, mu = {n})?', s, re.DOTALL)
   if m is None:
     print(s)
     raise
@@ -888,7 +888,7 @@ def parseSphere(s):
 
 def parseCylinder(s):
   n = '([-+.eE0-9]+)'
-  m = re.match(f'\s{{5}}cylinder, center = \({n},{n},{n}\)\s+radius {n}, height {n}, axis \({n}, {n}, {n}\)(\s+epsilon = {n}, mu = {n})?', s, re.DOTALL)
+  m = re.match(rf'\s{{5}}cylinder, center = \({n},{n},{n}\)\s+radius {n}, height {n}, axis \({n}, {n}, {n}\)(\s+epsilon = {n}, mu = {n})?', s, re.DOTALL)
   if m is None:
     print(s)
     raise
@@ -907,8 +907,8 @@ def parseCylinder(s):
 
 def parseBlock(s):
   n = '[-+.eE0-9]+'
-  v = f'\({n},\s*{n},\s*{n}\)'
-  m = re.match(f'\s{{5}}block, center = (?P<center>{v})\s+size (?P<size>{v})\s+axes (?P<e1>{v}), (?P<e2>{v}), (?P<e3>{v})(\s+epsilon = (?P<epsilon>{n}), mu = (?P<mu>{n}))?', s, re.DOTALL)
+  v = rf'\({n},\s*{n},\s*{n}\)'
+  m = re.match(rf'\s{{5}}block, center = (?P<center>{v})\s+size (?P<size>{v})\s+axes (?P<e1>{v}), (?P<e2>{v}), (?P<e3>{v})(\s+epsilon = (?P<epsilon>{n}), mu = (?P<mu>{n}))?', s, re.DOTALL)
   if m is None:
     print(s)
     raise

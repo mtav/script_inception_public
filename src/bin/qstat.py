@@ -55,7 +55,7 @@ def parseQstatFullOutput(qstat_full_output):
     
     job_details = job_details.replace('\n\t','')
     
-    pattern_jobitems = re.compile("\s*(?P<key>.*?)\s*=\s*(?P<value>.*)\s*")
+    pattern_jobitems = re.compile(r"\s*(?P<key>.*?)\s*=\s*(?P<value>.*)\s*")
     for job_item in pattern_jobitems.finditer(job_details):
       key = job_item.groupdict()['key']
       value = job_item.groupdict()['value']

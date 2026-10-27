@@ -43,3 +43,6 @@ sim.in
 sim.inp
 
 *.blend1
+
+# jupyter notebook checkpoints
+.ipynb_checkpoints/

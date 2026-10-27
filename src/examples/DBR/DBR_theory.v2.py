@@ -440,14 +440,14 @@ def plotDBR(dbr_instance = DBR()):
     
     K_Spol = dbr_instance.getK(omega=Y, beta=X, Spol=True)
     plot2D(XN, YN, np.isreal(K_Spol))
-    plt.xlabel("Wave vector $k_y a/(2\pi)$")
-    plt.ylabel("Frequency $\omega a / (2 \pi c)$")
+    plt.xlabel(r"Wave vector $k_y a/(2\pi)$")
+    plt.ylabel(r"Frequency $\omega a / (2 \pi c)$")
     plt.title("S polarization")
 
     K_Ppol = dbr_instance.getK(omega=Y, beta=X, Spol=False)
     plot2D(XN, YN, np.isreal(K_Ppol))
-    plt.xlabel("Wave vector $k_y a/(2\pi)$")
-    plt.ylabel("Frequency $\omega a / (2 \pi c)$")
+    plt.xlabel(r"Wave vector $k_y a/(2\pi)$")
+    plt.ylabel(r"Frequency $\omega a / (2 \pi c)$")
     plt.title("P polarization")
     
     (thetaB_1_rad, thetaB_2_rad) = dbr_instance.getBrewsterAngles(degrees=False)
@@ -543,7 +543,7 @@ def findBandEdgesAnalysis(dbr_instance=DBR(), Spol=True, n_in = DBR.n1, vs_angle
         # plot_X = beta_normalized
         # plot_X = beta
         plot_X = beta_normalized
-        plot_X_label = "Wave vector $k_y a/(2\pi)$"
+        plot_X_label = r"Wave vector $k_y a/(2\pi)$"
         # plot_X = angle_deg
         # plot_X_label = r"Incident angle $\theta_{in}$ (degrees)"
         ##############################################################
@@ -569,7 +569,7 @@ def findBandEdgesAnalysis(dbr_instance=DBR(), Spol=True, n_in = DBR.n1, vs_angle
         omega = omega_normalized * (2*np.pi*get_c0()/dbr_instance.getPeriod())
         beta = beta_normalized * (2*np.pi/dbr_instance.getPeriod())
         plot_X = beta_normalized
-        plot_X_label = "Wave vector $k_y a/(2\pi)$"
+        plot_X_label = r"Wave vector $k_y a/(2\pi)$"
         
         angle_rad = np.arcsin( (beta*get_c0())/(n_in*omega) )
         angle_deg = np.rad2deg(angle_rad)
@@ -581,7 +581,7 @@ def findBandEdgesAnalysis(dbr_instance=DBR(), Spol=True, n_in = DBR.n1, vs_angle
 
     f1 = plot2D(plot_X, omega_normalized, np.isreal(K_Spol)) # plot bands for reference
     plt.xlabel(plot_X_label)
-    plt.ylabel("Frequency $\omega a / (2 \pi c)$")
+    plt.ylabel(r"Frequency $\omega a / (2 \pi c)$")
     plt.title(fr"{title_base}: isreal(K)")
 
     # f2 = plot2D(plot_X, omega_normalized, np.abs(K_Spol)) # plot bands for reference
@@ -810,14 +810,14 @@ def findBandEdges(dbr_instance=DBR(), Spol=False, n_in = DBR.n1, vs_angle=None, 
     else:
         ##### vs ky
         plot_X = beta_normalized
-        plot_X_label = "Wave vector $k_y a/(2\pi)$"
+        plot_X_label = r"Wave vector $k_y a/(2\pi)$"
 
     if vs_wavelength:        
         plot_Y = pr.wvl_2D*1e9
-        plot_Y_label = "Wavelength $\lambda_0$ (nm)"
+        plot_Y_label = r"Wavelength $\lambda_0$ (nm)"
     else:
         plot_Y = pr.fn_2D
-        plot_Y_label = "Frequency $\omega a / (2 \pi c)$"
+        plot_Y_label = r"Frequency $\omega a / (2 \pi c)$"
     
     ##### compute values
     K_normal = dbr_instance.getK(omega=omega, beta=beta, Spol=Spol)
@@ -860,7 +860,7 @@ def findBandEdges(dbr_instance=DBR(), Spol=False, n_in = DBR.n1, vs_angle=None, 
                 y.append( plot_Y[idx] )
         plt.figure()
         plt.scatter(x, y, marker='.', s=1)
-        plt.xlabel("Wave vector $k_{normal}$ $a/(2\pi)$")
+        plt.xlabel(r"Wave vector $k_{normal}$ $a/(2\pi)$")
         plt.ylabel(plot_Y_label)
         plt.title(title_base)
         # plt.figure()
@@ -1211,7 +1211,7 @@ def test_reference_DBR_4(mode):
 
         fig = plot2D(pr.angle_deg_2D, pr.fn_2D*scale_factor, ret['T'])
         plt.xlabel("Angle (degrees)")
-        plt.ylabel('$\omega/\omega_{Bragg}$')
+        plt.ylabel(r'$\omega/\omega_{Bragg}$')
         plt.title(f'pol={pol}, Nperiods={Nperiods}+0.5')
         fig.tight_layout()
         fig_list.append(fig)
@@ -1330,13 +1330,13 @@ def plotTMM(dbr_instance, pr, plot_wvl=True, plot_theory=True, Nperiods = 15):
         if plot_wvl:
             fig1 = plot2D(pr.angle_deg_2D, pr.wvl_2D*1e9, ret['T'], yhack=True)
             plt.xlabel("Angle (degrees)")
-            plt.ylabel("$\lambda (nm)$")
+            plt.ylabel(r"$\lambda (nm)$")
             plt.title(f'pol={pol}, Nperiods={Nperiods}+0.5')
             fig1.tight_layout()
     
         fig2 = plot2D(pr.angle_deg_2D, pr.fn_2D, ret['T'])
         plt.xlabel("Angle (degrees)")
-        plt.ylabel("$a/\lambda$")
+        plt.ylabel(r"$a/\lambda$")
         plt.title(f'pol={pol}, Nperiods={Nperiods}+0.5')
         fig2.tight_layout()
     
@@ -1488,7 +1488,7 @@ def plotMPB_1D(dbr, pr):
     plt.plot(x, te_freqs*scale_factor )
     plt.ylim([0,2.5])
     plt.xlabel('$k_N^x$')
-    plt.ylabel('$\omega/\omega_{Bragg}$')
+    plt.ylabel(r'$\omega/\omega_{Bragg}$')
     # Plot gaps
     ax=plt.gca()
     for gap in te_gaps:
@@ -1639,7 +1639,7 @@ def plotMPB_2D(dbr, pr, mode,
         plt.ylim([0,2.5])
         plt.grid()
         plt.xlabel(xlabel)
-        plt.ylabel('$\omega/\omega_{Bragg}$')
+        plt.ylabel(r'$\omega/\omega_{Bragg}$')
         
         # Plots straight lines corresponding to angles in an omega/omega_Bragg vs ky/g plot.
         plotAngles(dbr, g, n_in)
@@ -1657,7 +1657,7 @@ def plotMPB_2D(dbr, pr, mode,
         plt.ylim([0,2.5])
         plt.grid()
         plt.xlabel(xlabel)
-        plt.ylabel('$\omega/\omega_{Bragg}$')
+        plt.ylabel(r'$\omega/\omega_{Bragg}$')
     
         # Plots straight lines corresponding to angles in an omega/omega_Bragg vs ky/g plot.
         plotAngles(dbr, g, n_in)
@@ -1774,7 +1774,7 @@ def plotMPB_2D(dbr, pr, mode,
         plt.ylim([0,2.5])
         plt.grid()
         plt.xlabel('angle (degrees)')
-        plt.ylabel('$\omega/\omega_{Bragg}$')
+        plt.ylabel(r'$\omega/\omega_{Bragg}$')
         # Plot gaps
         ax = plt.gca()
         for gap in te_gaps:
@@ -1788,7 +1788,7 @@ def plotMPB_2D(dbr, pr, mode,
         plt.ylim([0,2.5])
         plt.grid()
         plt.xlabel('angle (degrees)')
-        plt.ylabel('$\omega/\omega_{Bragg}$')
+        plt.ylabel(r'$\omega/\omega_{Bragg}$')
         # Plot gaps
         ax = plt.gca()
         for gap in te_gaps:
@@ -1882,11 +1882,11 @@ def plotMPB_2D_vs_angle(dbr, pr, theta_deg):
         te_gaps = ms_2D.gap_list
         
         plt.figure()
-        plt.title(f'$2D-TE, theta={theta_deg}\degree$')
+        plt.title(rf'$2D-TE, theta={theta_deg}\degree$')
         plt.plot(x, te_freqs*scale_factor, '.')
         plt.ylim([0,2.5])
         plt.xlabel(xlabel)
-        plt.ylabel('$\omega/\omega_{Bragg}$')
+        plt.ylabel(r'$\omega/\omega_{Bragg}$')
         # Plot gaps
         ax = plt.gca()
         for gap in te_gaps:
@@ -1900,11 +1900,11 @@ def plotMPB_2D_vs_angle(dbr, pr, theta_deg):
         tm_gaps = ms_2D.gap_list
         
         plt.figure()
-        plt.title(f'$2D-TM, theta={theta_deg}\degree$')
+        plt.title(rf'$2D-TM, theta={theta_deg}\degree$')
         plt.plot(x, tm_freqs*scale_factor, '.')
         plt.ylim([0,2.5])
         plt.xlabel(xlabel)
-        plt.ylabel('$\omega/\omega_{Bragg}$')
+        plt.ylabel(r'$\omega/\omega_{Bragg}$')
         # Plot gaps
         ax = plt.gca()
         for gap in tm_gaps:
@@ -1919,7 +1919,7 @@ def plotMPB_2D_vs_angle(dbr, pr, theta_deg):
     print('kmax_x_n', kmax_x_n)
     print('kmax_y_n', kmax_y_n)
     visualize_k_points(k_points, geometry_lattice_2D, [theta_deg])
-    plt.title(f'k-points, $theta={theta_deg}\degree$')
+    plt.title(rf'k-points, $theta={theta_deg}\degree$')
 
 def plotOmegaVsAngle(kx, ky, omega_over_omegaBragg, title_str):
     plt.figure()
@@ -1931,7 +1931,7 @@ def plotOmegaVsAngle(kx, ky, omega_over_omegaBragg, title_str):
     plt.ylim([0,2.5])
     plt.grid()
     plt.xlabel('angle (degrees)')
-    plt.ylabel('$\omega/\omega_{Bragg}$')
+    plt.ylabel(r'$\omega/\omega_{Bragg}$')
     # Plot gaps
     ax = plt.gca()
     for gap in te_gaps:
@@ -2163,7 +2163,7 @@ def plotMPB_hack(dbr, pr):
     plt.plot(x, tm_freqs*scale_factor, '.')
     plt.ylim([0,2.5])
     plt.xlabel(xlabel)
-    plt.ylabel('$\omega/\omega_{Bragg}$')
+    plt.ylabel(r'$\omega/\omega_{Bragg}$')
     # Plot gaps
     ax = plt.gca()
     for gap in tm_gaps:
@@ -2175,7 +2175,7 @@ def plotMPB_hack(dbr, pr):
     plt.plot(x, te_freqs*scale_factor, '.')
     plt.ylim([0,2.5])
     plt.xlabel(xlabel)
-    plt.ylabel('$\omega/\omega_{Bragg}$')
+    plt.ylabel(r'$\omega/\omega_{Bragg}$')
     # Plot gaps
     ax = plt.gca()
     for gap in te_gaps:

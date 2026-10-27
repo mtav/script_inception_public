@@ -28,7 +28,7 @@ def get_argument_parser():
   # parser for rename
   parser_rename = subparsers.add_parser('rename', help='Rename directories based on parameters from some BFDTD files within them.',
     formatter_class=argparse.RawDescriptionHelpFormatter,
-    description=textwrap.dedent('''
+    description=textwrap.dedent(r'''
     The renaming works as follows:
     
       newdir_subbed = re.sub(arguments.pattern, arguments.repl, orig_dir)

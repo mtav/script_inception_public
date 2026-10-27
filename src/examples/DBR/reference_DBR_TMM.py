@@ -75,11 +75,11 @@ def quarterwavestack():
     # wavelength in nm
     plot2D(X,Y,R)
     plt.xlabel("Angle (degrees)")
-    plt.ylabel("\lambda (nm)")
+    plt.ylabel(r"\lambda (nm)")
     # normalized frequency
     plot2D(X, a/Y, R)
     plt.xlabel("Angle (degrees)")
-    plt.ylabel("a/\lambda")
+    plt.ylabel(r"a/\lambda")
     return
 
 def reference_DBR(pol='p',
@@ -142,7 +142,7 @@ def reference_DBR(pol='p',
     # wavelength in nm
     fig = plot2D(X,Y,R)
     plt.xlabel("Angle (degrees)")
-    plt.ylabel("$\lambda (nm)$")
+    plt.ylabel(r"$\lambda (nm)$")
     plt.title(f'pol={pol}')
     fig.tight_layout()
     # plt.show()
@@ -150,7 +150,7 @@ def reference_DBR(pol='p',
     # normalized frequency
     fig = plot2D(X, a/Y, R)
     plt.xlabel("Angle (degrees)")
-    plt.ylabel("$a/\lambda$")
+    plt.ylabel(r"$a/\lambda$")
     plt.title(f'pol={pol}')
     fig.tight_layout()
     # plt.show()

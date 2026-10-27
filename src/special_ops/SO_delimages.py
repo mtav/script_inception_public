@@ -16,7 +16,7 @@ from special_ops.SO_reportGenerator import reportGenerator
 class Foo:
   def __init__(self, filename):
     self.Filename = filename
-    pattern = re.compile("([xyz]).+id..\.E.mod\.max_([\d.]+)\.lambda\(nm\)_([\d.]+)\.freq\(Mhz\)_([\d.]+)\.pos\(mum\)_([\d.]+)\.png")
+    pattern = re.compile(r"([xyz]).+id..\.E.mod\.max_([\d.]+)\.lambda\(nm\)_([\d.]+)\.freq\(Mhz\)_([\d.]+)\.pos\(mum\)_([\d.]+)\.png")
     m = pattern.match(self.Filename)
     #print m
     if m:

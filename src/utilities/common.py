@@ -205,8 +205,8 @@ def str2list(instr, numeric=True, array=True):
   
   ret = []
   
-  listElements = re.compile("([^\[,\]]+)")
-  insideBrackets = re.compile("(\[[^\[\]]+\])")
+  listElements = re.compile(r"([^\[,\]]+)")
+  insideBrackets = re.compile(r"(\[[^\[\]]+\])")
 
   lists = [m.group(1) for m in insideBrackets.finditer(instr)]
   for i in lists:

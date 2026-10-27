@@ -59,8 +59,8 @@ def analyzeTimeLog(timelog_filename, verbosity=0):
     print('Processing {}'.format(timelog_filename))
   with open(timelog_filename) as timelog_fid:
     
-    pattern_start = re.compile('starting program (\d\d):(\d\d):(\d\d)')
-    pattern_iteration = re.compile('(\d+) iterations (\d\d):(\d\d):(\d\d)')
+    pattern_start = re.compile(r'starting program (\d\d):(\d\d):(\d\d)')
+    pattern_iteration = re.compile(r'(\d+) iterations (\d\d):(\d\d):(\d\d)')
     
     L = timelog_fid.readline()
     if not L:

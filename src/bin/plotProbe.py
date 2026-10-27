@@ -16,7 +16,7 @@ def plotProbe(filename):
   component, index = pick.pick(h, 'Select component to plot:')
   print(component, index)
   plt.plot(d['time_mus'], d[component])
-  plt.xlabel('Time ($\mu s$)')
+  plt.xlabel(r'Time ($\mu s$)')
   plt.ylabel('{} (arbitrary units)'.format(component))
   plt.title('{} - {}'.format(filename, component))
   plt.show()

@@ -16,7 +16,7 @@ import tempfile
 
 def reportGenerator(texfile, title_list, picture_list):
   with open(texfile, 'w') as f:
-    f.write('\documentclass{beamer}\n')
+    f.write('\\documentclass{beamer}\n')
     f.write('\\usetheme{Copenhagen}\n')
     f.write('\n')
     f.write('\\usepackage{grffile}\n')
@@ -29,13 +29,13 @@ def reportGenerator(texfile, title_list, picture_list):
       title = title_list[i]
       title = textwrap.fill(title, width=51)
       title = title.replace('\n','\\\\')
-      title = title.replace('_','\_')
+      title = title.replace('_',r'\_')
       
-      f.write('\\begin{frame}{'+title+'}\\begin{center}\includegraphics[height=70mm,width=110mm,keepaspectratio]{'+picture_list[i]+'}\end{center}\end{frame}\n')
+      f.write('\\begin{frame}{'+title+'}\\begin{center}\\includegraphics[height=70mm,width=110mm,keepaspectratio]{'+picture_list[i]+'}\\end{center}\\end{frame}\n')
       #f.write('\\begin{frame}{'+title+'}\\begin{center}\includegraphics[totalwidth=\linewidth,height=\\textheight,keepaspectratio]{'+picture_list[i]+'}\end{center}\end{frame}\n')
       #f.write('\\begin{frame}{'+title+'}\\begin{center}Hello\end{center}\end{frame}\n')
     f.write('\n')
-    f.write('\end{document}\n')
+    f.write('\\end{document}\n')
   
   cmd=['cat', texfile]
   print(cmd)

@@ -97,7 +97,7 @@ def parseQstatFullOutput(qstat_full_output, section_type='Queue'):
     section_items = section_items.replace('\n\t','')
     
     # convert to dictionary
-    item_pattern = re.compile("\s*(?P<key>.*?)\s*=\s*(?P<value>.*)\s*")
+    item_pattern = re.compile(r"\s*(?P<key>.*?)\s*=\s*(?P<value>.*)\s*")
     for item in item_pattern.finditer(section_items):
       key = item.groupdict()['key']
       value = item.groupdict()['value']
@@ -311,7 +311,7 @@ def main():
     pass
     #print("stdin is terminal")
   
-  parser = argparse.ArgumentParser(description='For batch submissions, use qsub.py $(find . -name "*.sh") for example. Argument piping is not yet supported due to the interactive nature of the script. Or: find ./resolution\=256/ -name "*.sh" -execdir qsub.py {} \;')
+  parser = argparse.ArgumentParser(description=r'For batch submissions, use qsub.py $(find . -name "*.sh") for example. Argument piping is not yet supported due to the interactive nature of the script. Or: find ./resolution\=256/ -name "*.sh" -execdir qsub.py {} \;')
   parser.add_argument('script_list', metavar='script', nargs='+')
   parser.add_argument('-n', '--dry-run', action='store_true', help='print submission commands, but do not submit')
   parser.add_argument('-v', '--verbose', action="count", dest="verbosity", default=0, help='verbosity level')

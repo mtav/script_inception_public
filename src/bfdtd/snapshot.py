@@ -495,7 +495,7 @@ class Snapshot(object):
     return
 
 class FrequencySnapshot(Snapshot):
-  '''
+  r'''
   Simple base class for all single-entry BFDTD snapshots written as *FREQUENCY_SNAPSHOT* in .inp files.
 
   Attributes:
@@ -991,7 +991,7 @@ class TimeSnapshot(Snapshot):
     return(self.eps)
 
   def getTypeBasedOnAttributes(self):
-    '''
+    r'''
     Returns the "type" of the snapshot based on the selected output columns (E, H, J, power and epsilon).
     
     * If all output columns are disabled: ModeFilteredProbe

@@ -2,7 +2,7 @@
 #
 
 # You can set these variables from the command line.
-SPHINXOPTS    = -w warnings.log
+SPHINXOPTS    = --fail-on-warning --nitpicky --warning-file warnings.log
 # cf https://stackoverflow.com/questions/8015225/how-to-force-sphinx-to-use-python-3-x-interpreter
 SPHINXBUILD   = sphinx-build
 # SPHINXBUILD   = sphinx3-build.py

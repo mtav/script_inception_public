@@ -103,7 +103,7 @@ def main():
   if not os.path.isdir(args.dstdir):
     os.mkdir(args.dstdir)
   
-  pat = re.compile('(.*)(\d\d)(\d\d)(\.jpg)')
+  pat = re.compile(r'(.*)(\d\d)(\d\d)(\.jpg)')
   # pat = re.compile('(\d\d\d\d)(\d\d)(\d\d)_(\d\d)(\d\d)(\d\d)(\.jpg)') # SUNFLOWER HACK
   
   outfile_list = []

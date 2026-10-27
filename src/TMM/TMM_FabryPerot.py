@@ -242,9 +242,9 @@ def test_DBR_felipe(args):
   plt.axvline(lam_mid, linestyle='--', color='g')
   #plt.axvline(lam_top, linestyle='--', color='g')
   
-  plt.xlabel('$\lambda$ (nm)')
+  plt.xlabel(r'$\lambda$ (nm)')
   plt.ylabel('reflectance, transmittance')
-  plt.title('reflectance (red), transmittance (blue) of unpolarized light at 0$^\circ$ incidence')
+  plt.title(r'reflectance (red), transmittance (blue) of unpolarized light at 0$^\circ$ incidence')
   plt.show()
   
   if args.csvfile:
@@ -351,9 +351,9 @@ def test_DBR(args):
   plt.axvline(lam_mid, linestyle='--', color='g')
   #plt.axvline(lam_top, linestyle='--', color='g')
   
-  plt.xlabel('$\lambda$ (nm)')
+  plt.xlabel(r'$\lambda$ (nm)')
   plt.ylabel('reflectance, transmittance')
-  plt.title('reflectance (red), transmittance (blue) of unpolarized light at 0$^\circ$ incidence')
+  plt.title(r'reflectance (red), transmittance (blue) of unpolarized light at 0$^\circ$ incidence')
   plt.show()
   
   if args.csvfile:
@@ -394,8 +394,8 @@ def test_sample1():
   plt.plot(kcm,Rnorm,'blue',kcm,R45,'purple')
   plt.xlabel('k (cm$^{-1}$)')
   plt.ylabel('Fraction reflected')
-  plt.title('Reflection of unpolarized light at 0$^\circ$ incidence (blue), '
-              '45$^\circ$ (purple)')
+  plt.title(r'Reflection of unpolarized light at 0$^\circ$ incidence (blue), '
+              r'45$^\circ$ (purple)')
   plt.show()
   
   return 0

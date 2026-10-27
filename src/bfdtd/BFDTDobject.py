@@ -1219,13 +1219,13 @@ class BFDTDobject(object):
   
       # remove comments
       # TODO: Add more generic system for functional comments (to add layer, scene and group for example)
-      pattern_stripcomments = re.compile("\*\*(?!name=).*\n")
+      pattern_stripcomments = re.compile("\\*\\*(?!name=).*\n")
       cleantext = pattern_stripcomments.sub("\n", fulltext)
       #print(cleantext)
   
       # pattern_objects = re.compile("^(?<Type>\w+).*?\{(?<data>[^\{\}]*?)\}")
       #pattern_objects = re.compile("(?P<Type>\w+)\s*(?P<name>(?<=\*\*name=)[^{}]*)?{(?P<data>[^{}]*)}",re.DOTALL)
-      pattern_objects = re.compile("(?P<Type>\w+)\s*(?P<nameblob>[^{}]+)?{(?P<data>[^{}]*)}",re.DOTALL)
+      pattern_objects = re.compile(r"(?P<Type>\w+)\s*(?P<nameblob>[^{}]+)?{(?P<data>[^{}]*)}",re.DOTALL)
       objects = [m.groupdict() for m in pattern_objects.finditer(cleantext)]
     
       entries = []
@@ -1237,7 +1237,7 @@ class BFDTDobject(object):
             #print objects[i]['nameblob']
             if objects[i]['nameblob']:
               #print 'OK'
-              pattern_nameblob = re.compile("\*\*name=(.*)")
+              pattern_nameblob = re.compile(r"\*\*name=(.*)")
               m = pattern_nameblob.match(objects[i]['nameblob'])
               if m:
                 name = m.group(1).strip()
@@ -1252,7 +1252,7 @@ class BFDTDobject(object):
           # convert Type to upper case and strip it
           Type = Type.upper().strip()
           # split data by spaces and new lines
-          data = re.split('\s+',data)
+          data = re.split(r'\s+',data)
           # remove empty lines from data
           #data = filter(None, data)
           data = list(filter(None, data))

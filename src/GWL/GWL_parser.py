@@ -965,7 +965,7 @@ class GWLobject(object):
               #cmd = re.split('[^a-zA-Z0-9_+-.]+',line_stripped)
               #cmd = re.split('[^a-zA-Z0-9_+-.:\\/]+',line_stripped)
               #cmd = re.split('[ \t]',line_stripped)
-              cmd = re.split('\s+',line_stripped)
+              cmd = re.split(r'\s+',line_stripped)
               #cmd = [ i.lower() for i in cmd ]
               #print 'post-split: ', cmd
               stopRepeat = True
@@ -987,7 +987,7 @@ class GWLobject(object):
                       self.maxDistanceBetweenLines = self.ScanSpeed*1e-3*self.DwellTime
                     elif cmd[0].lower()=='include':
                       print(('line_stripped = ' + line_stripped))
-                      file_to_include = re.split('\s+',line_stripped,1)[1]
+                      file_to_include = re.split(r'\s+',line_stripped,1)[1]
                       print(('including file_to_include = ' + file_to_include))
                       print('Fixing file separators')
                       file_to_include = file_to_include.replace('\\',os.path.sep).replace('/',os.path.sep)

@@ -47,7 +47,7 @@ import matplotlib.pyplot as plt
 kx = [k[0] for k in ms.k_points]
 plt.plot(kx, ms.all_freqs)
 plt.xlabel('k index')
-plt.ylabel('$a/\lambda$')
+plt.ylabel(r'$a/\lambda$')
 plt.xlim([-0.5,0.5])
 plt.ylim([0,0.30])
 plt.show()

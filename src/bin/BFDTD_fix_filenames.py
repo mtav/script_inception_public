@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-'''
+r'''
 .. todo:: Add option to fix only NTFS/FAT32 incompatible filenames or create/look for script to make filenames NTFS/FAT32 compatible
 
           ex: recode, convmv, detox

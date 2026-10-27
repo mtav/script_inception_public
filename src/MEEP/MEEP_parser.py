@@ -17,8 +17,8 @@ from MPB.MPB_parser import MPB_data
 
 import bfdtd.GeometryObjects
 
-float_pattern = '\s*((?:[\de.-]|\+)+)\s*'
-vector_pattern = '\({},{},{}\)'.format(float_pattern, float_pattern, float_pattern)
+float_pattern = r'\s*((?:[\de.-]|\+)+)\s*'
+vector_pattern = r'\({},{},{}\)'.format(float_pattern, float_pattern, float_pattern)
 
 # TODO: nicer print format
 # TODO: store lattices in transposed form for easier access to vectors?
@@ -74,7 +74,7 @@ def parse_MEEP(infile, verbosity=0):
   header = []
   data = []
 
-  coord_pattern = '\s*\((.+),(.+),(.+)\)\s*'
+  coord_pattern = r'\s*\((.+),(.+),(.+)\)\s*'
 
   for idx, line in enumerate(infile):
     
@@ -248,7 +248,7 @@ def parseGeometryObject(txt, verbosity=0):
     print('---------')
   #generic_pattern = re.compile('\s*([a-z]+), center = \(([\d.]+),([\d.]+),([\d.]+)\)\s*?(.*?)\s*?dielectric constant epsilon diagonal = \(([\d.]+),([\d.]+),([\d.]+)\)\s*', re.DOTALL)
   #generic_pattern = re.compile('\s*([a-z]+), center = \(([\d.]+),([\d.]+),([\d.]+)\)\s*?(.*?)\s*?dielectric constant epsilon diagonal = \(([\d.]+),([\d.]+),([\d.]+)\)\s*', re.DOTALL)
-  generic_pattern = re.compile('\s*(?P<type>[a-z]+), center = \((?P<centre_x>[\de.-]+),(?P<centre_y>[\de.-]+),(?P<centre_z>[\de.-]+)\)\s*?(?P<type_specific>.*?)\s*?(?P<diel_text>dielectric constant epsilon diagonal|dielectric constant epsilon) = (?P<diel_value>[\d.,()-]+)\s*', re.DOTALL)
+  generic_pattern = re.compile(r'\s*(?P<type>[a-z]+), center = \((?P<centre_x>[\de.-]+),(?P<centre_y>[\de.-]+),(?P<centre_z>[\de.-]+)\)\s*?(?P<type_specific>.*?)\s*?(?P<diel_text>dielectric constant epsilon diagonal|dielectric constant epsilon) = (?P<diel_value>[\d.,()-]+)\s*', re.DOTALL)
   m = generic_pattern.search(txt)
 #  print(m)
 #  print(m.group(0))
@@ -291,19 +291,19 @@ def parseGeometryObject(txt, verbosity=0):
   
   if obj_type == 'sphere':
     obj = bfdtd.GeometryObjects.Sphere()
-    type_specific_pattern = re.compile('radius ([\d.]+)')
+    type_specific_pattern = re.compile(r'radius ([\d.]+)')
     type_specific_match = type_specific_pattern.match(type_specific_txt)
     obj.setOuterRadius(float(type_specific_match.group(1)))
   elif obj_type == 'cylinder':
     obj = bfdtd.Cylinder()
-    type_specific_pattern = re.compile('radius (?P<radius>[\d.]+), height (?P<height>[\d.]+), axis (?P<axis>{vector_pattern})'.format(vector_pattern=vector_pattern))
+    type_specific_pattern = re.compile(r'radius (?P<radius>[\d.]+), height (?P<height>[\d.]+), axis (?P<axis>{vector_pattern})'.format(vector_pattern=vector_pattern))
     type_specific_match = type_specific_pattern.match(type_specific_txt)
     obj.setOuterRadius(float(type_specific_match.group('radius')))
     obj.setHeight(float(type_specific_match.group('height')))
     obj.setAxis(vectorstr2float(type_specific_match.group('axis')))
   elif obj_type == 'cone':
     obj = bfdtd.Cone()
-    type_specific_pattern = re.compile('radius (?P<radius1>[\d.]+), height (?P<height>[\d.]+), axis (?P<axis>{vector_pattern})\s+radius2 (?P<radius2>[\d.]+)'.format(vector_pattern=vector_pattern))
+    type_specific_pattern = re.compile(r'radius (?P<radius1>[\d.]+), height (?P<height>[\d.]+), axis (?P<axis>{vector_pattern})\s+radius2 (?P<radius2>[\d.]+)'.format(vector_pattern=vector_pattern))
     type_specific_match = type_specific_pattern.match(type_specific_txt)
     obj.setOuterRadius(float(type_specific_match.group('radius1')))
     obj.setOuterRadius2(float(type_specific_match.group('radius2')))
@@ -314,7 +314,7 @@ def parseGeometryObject(txt, verbosity=0):
       obj = bfdtd.Parallelepiped()
     else:
       obj = bfdtd.Ellipsoid()
-    type_specific_pattern = re.compile('size (?P<size>{vector_pattern})\s+axes (?P<e0>{vector_pattern}), (?P<e1>{vector_pattern}), (?P<e2>{vector_pattern})'.format(vector_pattern=vector_pattern))
+    type_specific_pattern = re.compile(r'size (?P<size>{vector_pattern})\s+axes (?P<e0>{vector_pattern}), (?P<e1>{vector_pattern}), (?P<e2>{vector_pattern})'.format(vector_pattern=vector_pattern))
     type_specific_match = type_specific_pattern.match(type_specific_txt)
     if type_specific_match is None:
       raise Exception('Failed to match: {}'.format(type_specific_txt))

@@ -36,7 +36,7 @@ def plotProbe(filename, component=None, title=None, plot_list=None, normalize=Fa
   probe_signal, = plt.plot(d['time_mus'], y, label='probe data')
   plot_list.append(probe_signal)
   
-  plt.xlabel('Time ($\mu s$)')
+  plt.xlabel(r'Time ($\mu s$)')
   plt.ylabel('{} (arbitrary units)'.format(component))
   extra_title = '{} - {}'.format(filename, component)
   if title is None:
@@ -91,7 +91,7 @@ def main():
   theoretical_signal, = plt.plot(t, u, label='theoretical signal')
   plot_list.append(theoretical_signal)
   
-  plt.xlabel('Time ($\mu s$)')
+  plt.xlabel(r'Time ($\mu s$)')
   plt.ylabel('amplitude (arbitrary units)')
   title = 'fix_simulation = {}, Excited components: {}'.format(args.fix_simulation, E.getExcitedComponentNames())
   plt.title(title)
