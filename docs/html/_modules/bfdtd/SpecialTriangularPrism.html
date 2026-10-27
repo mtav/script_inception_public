@@ -1,23 +1,22 @@
+<!DOCTYPE html>
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en" data-content_root="../../">
   <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>bfdtd.SpecialTriangularPrism &#8212; script_inception_public  documentation</title>
-    <link rel="stylesheet" href="../../_static/classic.css" type="text/css" />
-    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
-    <script type="text/javascript" src="../../_static/jquery.js"></script>
-    <script type="text/javascript" src="../../_static/underscore.js"></script>
-    <script type="text/javascript" src="../../_static/doctools.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../../_static/classic.css?v=2bf1fcf8" />
+    <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+    
+    <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
   </head><body>
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related" role="navigation" aria-label="Related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -27,7 +26,8 @@
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="nav-item nav-item-0"><a href="../../index.html">script_inception_public  documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li> 
+          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">bfdtd.SpecialTriangularPrism</a></li> 
       </ul>
     </div>  
 
@@ -40,15 +40,17 @@
 <span></span><span class="ch">#!/usr/bin/env python3</span>
 <span class="c1"># -*- coding: utf-8 -*-</span>
 
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">division</span>
-<span class="kn">import</span> <span class="nn">copy</span>
-<span class="kn">import</span> <span class="nn">numpy</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">division</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">copy</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span>
 
-<span class="kn">from</span> <span class="nn">.BFDTDobject</span> <span class="k">import</span> <span class="n">BFDTDobject</span>
-<span class="kn">from</span> <span class="nn">.GeometryObjects</span> <span class="k">import</span> <span class="n">GeometryObject</span><span class="p">,</span> <span class="n">Sphere</span><span class="p">,</span> <span class="n">Block</span><span class="p">,</span> <span class="n">Distorted</span><span class="p">,</span> <span class="n">Parallelepiped</span><span class="p">,</span> <span class="n">Cylinder</span><span class="p">,</span> <span class="n">Rotation</span><span class="p">,</span> <span class="n">MeshBox</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.BFDTDobject</span><span class="w"> </span><span class="kn">import</span> <span class="n">BFDTDobject</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.GeometryObjects</span><span class="w"> </span><span class="kn">import</span> <span class="n">GeometryObject</span><span class="p">,</span> <span class="n">Sphere</span><span class="p">,</span> <span class="n">Block</span><span class="p">,</span> <span class="n">Distorted</span><span class="p">,</span> <span class="n">Parallelepiped</span><span class="p">,</span> <span class="n">Cylinder</span><span class="p">,</span> <span class="n">Rotation</span><span class="p">,</span> <span class="n">MeshBox</span>
 
-<div class="viewcode-block" id="SpecialTriangularPrism"><a class="viewcode-back" href="../../bfdtd.html#bfdtd.SpecialTriangularPrism.SpecialTriangularPrism">[docs]</a><span class="k">class</span> <span class="nc">SpecialTriangularPrism</span><span class="p">(</span><span class="n">GeometryObject</span><span class="p">):</span>
-  <span class="sd">&#39;&#39;&#39;</span>
+<div class="viewcode-block" id="SpecialTriangularPrism">
+<a class="viewcode-back" href="../../bfdtd.html#bfdtd.SpecialTriangularPrism.SpecialTriangularPrism">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">SpecialTriangularPrism</span><span class="p">(</span><span class="n">GeometryObject</span><span class="p">):</span>
+<span class="w">  </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">  Creates prism with 45 degree mirrors. Should have support for arbitrarily angled mirrors at some point.</span>
 <span class="sd">  </span>
 <span class="sd">  .. todo:: non 45 degree faces, i.e. generic version which would also allow creation of parallel-sided prism</span>
@@ -56,7 +58,7 @@
 <span class="sd">  .. todo:: Should support same things as other geometry objects, in particular: rotation, bounding box... -&gt; Find easy+flexible+extensible way to do this for compound objects like this one.</span>
 <span class="sd">  &#39;&#39;&#39;</span>
   
-  <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+  <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
     <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;SpecialTriangularPrism&#39;</span><span class="p">,</span>
     <span class="n">layer</span> <span class="o">=</span> <span class="s1">&#39;SpecialTriangularPrism&#39;</span><span class="p">,</span>
     <span class="n">group</span> <span class="o">=</span> <span class="s1">&#39;SpecialTriangularPrism&#39;</span><span class="p">,</span>
@@ -69,7 +71,7 @@
     <span class="n">NvoxelsZ</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
     <span class="n">orientation</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">]):</span>
 
-    <span class="sd">&#39;&#39;&#39;</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Constructor</span>
 <span class="sd">    &#39;&#39;&#39;</span>
 
@@ -89,9 +91,9 @@
     
     <span class="bp">self</span><span class="o">.</span><span class="n">mirror1</span> <span class="o">=</span> <span class="kc">True</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">mirror2</span> <span class="o">=</span> <span class="kc">True</span>
-    
-  <span class="sd">&#39;&#39;&#39;printer function&#39;&#39;&#39;</span>
-  <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">    </span>
+<span class="w">  </span><span class="sd">&#39;&#39;&#39;printer function&#39;&#39;&#39;</span>
+  <span class="k">def</span><span class="w"> </span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="n">ret</span>  <span class="o">=</span> <span class="s1">&#39;name = &#39;</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="o">+</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span>
     <span class="n">ret</span> <span class="o">+=</span> <span class="s1">&#39;lower = &#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lower</span><span class="p">)</span><span class="o">+</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span>
     <span class="n">ret</span> <span class="o">+=</span> <span class="s1">&#39;upper = &#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">upper</span><span class="p">)</span><span class="o">+</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span>
@@ -111,9 +113,11 @@
     <span class="c1">#self.upper = float_array(entry.data[3:6])</span>
     <span class="c1">#self.permittivity = float(entry.data[6])</span>
     <span class="c1">#self.conductivity = float(entry.data[7])</span>
-    
-  <span class="sd">&#39;&#39;&#39;returns voxels&#39;&#39;&#39;</span>
-<div class="viewcode-block" id="SpecialTriangularPrism.getVoxels"><a class="viewcode-back" href="../../bfdtd.html#bfdtd.SpecialTriangularPrism.SpecialTriangularPrism.getVoxels">[docs]</a>  <span class="k">def</span> <span class="nf">getVoxels</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">    </span>
+<span class="w">  </span><span class="sd">&#39;&#39;&#39;returns voxels&#39;&#39;&#39;</span>
+<div class="viewcode-block" id="SpecialTriangularPrism.getVoxels">
+<a class="viewcode-back" href="../../bfdtd.html#bfdtd.SpecialTriangularPrism.SpecialTriangularPrism.getVoxels">[docs]</a>
+  <span class="k">def</span><span class="w"> </span><span class="nf">getVoxels</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="c1">#meshing_parameters = MeshingParameters()</span>
     <span class="n">voxel_list</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="c1">####################################</span>
@@ -201,28 +205,40 @@
     <span class="c1">#return (voxel_list, meshing_parameters)</span>
     <span class="k">return</span> <span class="n">voxel_list</span></div>
 
-<div class="viewcode-block" id="SpecialTriangularPrism.write_entry"><a class="viewcode-back" href="../../bfdtd.html#bfdtd.SpecialTriangularPrism.SpecialTriangularPrism.write_entry">[docs]</a>  <span class="k">def</span> <span class="nf">write_entry</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">FILE</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+
+<div class="viewcode-block" id="SpecialTriangularPrism.write_entry">
+<a class="viewcode-back" href="../../bfdtd.html#bfdtd.SpecialTriangularPrism.SpecialTriangularPrism.write_entry">[docs]</a>
+  <span class="k">def</span><span class="w"> </span><span class="nf">write_entry</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">FILE</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    writes the voxels to the file corresponding to the FILE handle</span>
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="n">voxels</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getVoxels</span><span class="p">()</span>
     <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">voxels</span><span class="p">:</span>
       <span class="n">v</span><span class="o">.</span><span class="n">write_entry</span><span class="p">(</span><span class="n">FILE</span><span class="p">)</span></div>
-  
-  <span class="sd">&#39;&#39;&#39;returns the centre of the bounding box of the prism&#39;&#39;&#39;</span>
-<div class="viewcode-block" id="SpecialTriangularPrism.getBoundingBoxCentre"><a class="viewcode-back" href="../../bfdtd.html#bfdtd.SpecialTriangularPrism.SpecialTriangularPrism.getBoundingBoxCentre">[docs]</a>  <span class="k">def</span> <span class="nf">getBoundingBoxCentre</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<span class="w">  </span>
+<span class="w">  </span><span class="sd">&#39;&#39;&#39;returns the centre of the bounding box of the prism&#39;&#39;&#39;</span>
+<div class="viewcode-block" id="SpecialTriangularPrism.getBoundingBoxCentre">
+<a class="viewcode-back" href="../../bfdtd.html#bfdtd.SpecialTriangularPrism.SpecialTriangularPrism.getBoundingBoxCentre">[docs]</a>
+  <span class="k">def</span><span class="w"> </span><span class="nf">getBoundingBoxCentre</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="n">C</span> <span class="o">=</span> <span class="p">[</span> <span class="mf">0.5</span><span class="o">*</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lower</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">upper</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="mf">0.5</span><span class="o">*</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lower</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">upper</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="mf">0.5</span><span class="o">*</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lower</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">upper</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="p">]</span>
     <span class="k">return</span><span class="p">(</span><span class="n">C</span><span class="p">)</span></div>
 
-  <span class="sd">&#39;&#39;&#39;returns the barycentre of the prism&#39;&#39;&#39;</span>
-<div class="viewcode-block" id="SpecialTriangularPrism.getGeoCentre"><a class="viewcode-back" href="../../bfdtd.html#bfdtd.SpecialTriangularPrism.SpecialTriangularPrism.getGeoCentre">[docs]</a>  <span class="k">def</span> <span class="nf">getGeoCentre</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<span class="w">  </span><span class="sd">&#39;&#39;&#39;returns the barycentre of the prism&#39;&#39;&#39;</span>
+<div class="viewcode-block" id="SpecialTriangularPrism.getGeoCentre">
+<a class="viewcode-back" href="../../bfdtd.html#bfdtd.SpecialTriangularPrism.SpecialTriangularPrism.getGeoCentre">[docs]</a>
+  <span class="k">def</span><span class="w"> </span><span class="nf">getGeoCentre</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="p">(</span><span class="n">A1</span><span class="p">,</span><span class="n">B1</span><span class="p">,</span><span class="n">C1</span><span class="p">,</span><span class="n">A2</span><span class="p">,</span><span class="n">B2</span><span class="p">,</span><span class="n">C2</span><span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getLocalEnvelopPoints</span><span class="p">()</span>
     <span class="n">G</span> <span class="o">=</span> <span class="p">(</span><span class="n">A1</span><span class="o">+</span><span class="n">B1</span><span class="o">+</span><span class="n">C1</span><span class="o">+</span><span class="n">A2</span><span class="o">+</span><span class="n">B2</span><span class="o">+</span><span class="n">C2</span><span class="p">)</span><span class="o">/</span><span class="mf">6.0</span>
     <span class="n">GG</span> <span class="o">=</span> <span class="p">[</span> <span class="n">G</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">orientation</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span><span class="n">G</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">orientation</span><span class="p">[</span><span class="mi">1</span><span class="p">]],</span><span class="n">G</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">orientation</span><span class="p">[</span><span class="mi">2</span><span class="p">]]</span> <span class="p">]</span>
     <span class="k">return</span><span class="p">(</span><span class="n">GG</span><span class="p">)</span></div>
 
-  <span class="sd">&#39;&#39;&#39;returns the envelop points (A1,B1,C1,A2,B2,C2) in global coordinates&#39;&#39;&#39;</span>
-<div class="viewcode-block" id="SpecialTriangularPrism.getGlobalEnvelopPoints"><a class="viewcode-back" href="../../bfdtd.html#bfdtd.SpecialTriangularPrism.SpecialTriangularPrism.getGlobalEnvelopPoints">[docs]</a>  <span class="k">def</span> <span class="nf">getGlobalEnvelopPoints</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<span class="w">  </span><span class="sd">&#39;&#39;&#39;returns the envelop points (A1,B1,C1,A2,B2,C2) in global coordinates&#39;&#39;&#39;</span>
+<div class="viewcode-block" id="SpecialTriangularPrism.getGlobalEnvelopPoints">
+<a class="viewcode-back" href="../../bfdtd.html#bfdtd.SpecialTriangularPrism.SpecialTriangularPrism.getGlobalEnvelopPoints">[docs]</a>
+  <span class="k">def</span><span class="w"> </span><span class="nf">getGlobalEnvelopPoints</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="p">(</span><span class="n">A1_local</span><span class="p">,</span><span class="n">B1_local</span><span class="p">,</span><span class="n">C1_local</span><span class="p">,</span><span class="n">A2_local</span><span class="p">,</span><span class="n">B2_local</span><span class="p">,</span><span class="n">C2_local</span><span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getLocalEnvelopPoints</span><span class="p">()</span>
     <span class="n">A1_global</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">local2global</span><span class="p">(</span><span class="n">A1_local</span><span class="p">)</span>
     <span class="n">B1_global</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">local2global</span><span class="p">(</span><span class="n">B1_local</span><span class="p">)</span>
@@ -231,9 +247,12 @@
     <span class="n">B2_global</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">local2global</span><span class="p">(</span><span class="n">B2_local</span><span class="p">)</span>
     <span class="n">C2_global</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">local2global</span><span class="p">(</span><span class="n">C2_local</span><span class="p">)</span>
     <span class="k">return</span><span class="p">(</span><span class="n">A1_global</span><span class="p">,</span><span class="n">B1_global</span><span class="p">,</span><span class="n">C1_global</span><span class="p">,</span><span class="n">A2_global</span><span class="p">,</span><span class="n">B2_global</span><span class="p">,</span><span class="n">C2_global</span><span class="p">)</span></div>
-  
-  <span class="sd">&#39;&#39;&#39;returns the envelop points (A1,B1,C1,A2,B2,C2) in local coordinates&#39;&#39;&#39;</span>
-<div class="viewcode-block" id="SpecialTriangularPrism.getLocalEnvelopPoints"><a class="viewcode-back" href="../../bfdtd.html#bfdtd.SpecialTriangularPrism.SpecialTriangularPrism.getLocalEnvelopPoints">[docs]</a>  <span class="k">def</span> <span class="nf">getLocalEnvelopPoints</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<span class="w">  </span>
+<span class="w">  </span><span class="sd">&#39;&#39;&#39;returns the envelop points (A1,B1,C1,A2,B2,C2) in local coordinates&#39;&#39;&#39;</span>
+<div class="viewcode-block" id="SpecialTriangularPrism.getLocalEnvelopPoints">
+<a class="viewcode-back" href="../../bfdtd.html#bfdtd.SpecialTriangularPrism.SpecialTriangularPrism.getLocalEnvelopPoints">[docs]</a>
+  <span class="k">def</span><span class="w"> </span><span class="nf">getLocalEnvelopPoints</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="c1">####################################</span>
     <span class="c1"># X = triangle size</span>
     <span class="c1"># Y = triangle peak</span>
@@ -276,19 +295,28 @@
     <span class="n">C2</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">maxi</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">mini</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="n">maxi</span><span class="p">[</span><span class="mi">2</span><span class="p">]])</span>
 
     <span class="k">return</span><span class="p">(</span><span class="n">A1</span><span class="p">,</span><span class="n">B1</span><span class="p">,</span><span class="n">C1</span><span class="p">,</span><span class="n">A2</span><span class="p">,</span><span class="n">B2</span><span class="p">,</span><span class="n">C2</span><span class="p">)</span></div>
-  
-  <span class="sd">&#39;&#39;&#39;convert from global to local coordinates&#39;&#39;&#39;</span>
-<div class="viewcode-block" id="SpecialTriangularPrism.global2local"><a class="viewcode-back" href="../../bfdtd.html#bfdtd.SpecialTriangularPrism.SpecialTriangularPrism.global2local">[docs]</a>  <span class="k">def</span> <span class="nf">global2local</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">P_global</span><span class="p">):</span>
+
+<span class="w">  </span>
+<span class="w">  </span><span class="sd">&#39;&#39;&#39;convert from global to local coordinates&#39;&#39;&#39;</span>
+<div class="viewcode-block" id="SpecialTriangularPrism.global2local">
+<a class="viewcode-back" href="../../bfdtd.html#bfdtd.SpecialTriangularPrism.SpecialTriangularPrism.global2local">[docs]</a>
+  <span class="k">def</span><span class="w"> </span><span class="nf">global2local</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">P_global</span><span class="p">):</span>
     <span class="n">P_local</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">([</span> <span class="n">P_global</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">orientation</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="mi">0</span><span class="p">)],</span> <span class="n">P_global</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">orientation</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="mi">1</span><span class="p">)],</span> <span class="n">P_global</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">orientation</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="mi">2</span><span class="p">)]</span> <span class="p">])</span>
     <span class="k">return</span> <span class="n">P_local</span></div>
-    
-  <span class="sd">&#39;&#39;&#39;convert from local to global coordinates&#39;&#39;&#39;</span>
-<div class="viewcode-block" id="SpecialTriangularPrism.local2global"><a class="viewcode-back" href="../../bfdtd.html#bfdtd.SpecialTriangularPrism.SpecialTriangularPrism.local2global">[docs]</a>  <span class="k">def</span> <span class="nf">local2global</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">P_local</span><span class="p">):</span>
+
+<span class="w">    </span>
+<span class="w">  </span><span class="sd">&#39;&#39;&#39;convert from local to global coordinates&#39;&#39;&#39;</span>
+<div class="viewcode-block" id="SpecialTriangularPrism.local2global">
+<a class="viewcode-back" href="../../bfdtd.html#bfdtd.SpecialTriangularPrism.SpecialTriangularPrism.local2global">[docs]</a>
+  <span class="k">def</span><span class="w"> </span><span class="nf">local2global</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">P_local</span><span class="p">):</span>
     <span class="n">P_global</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">([</span> <span class="n">P_local</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">orientation</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span><span class="n">P_local</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">orientation</span><span class="p">[</span><span class="mi">1</span><span class="p">]],</span><span class="n">P_local</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">orientation</span><span class="p">[</span><span class="mi">2</span><span class="p">]]</span> <span class="p">])</span>
     <span class="k">return</span> <span class="n">P_global</span></div>
-    
-  <span class="sd">&#39;&#39;&#39;returns the radius (i.e. sidelength/2) of a square inscribed inside the prism cross-section&#39;&#39;&#39;</span>
-<div class="viewcode-block" id="SpecialTriangularPrism.getInscribedSquarePlaneRadius"><a class="viewcode-back" href="../../bfdtd.html#bfdtd.SpecialTriangularPrism.SpecialTriangularPrism.getInscribedSquarePlaneRadius">[docs]</a>  <span class="k">def</span> <span class="nf">getInscribedSquarePlaneRadius</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">G_global</span><span class="p">):</span>
+
+<span class="w">    </span>
+<span class="w">  </span><span class="sd">&#39;&#39;&#39;returns the radius (i.e. sidelength/2) of a square inscribed inside the prism cross-section&#39;&#39;&#39;</span>
+<div class="viewcode-block" id="SpecialTriangularPrism.getInscribedSquarePlaneRadius">
+<a class="viewcode-back" href="../../bfdtd.html#bfdtd.SpecialTriangularPrism.SpecialTriangularPrism.getInscribedSquarePlaneRadius">[docs]</a>
+  <span class="k">def</span><span class="w"> </span><span class="nf">getInscribedSquarePlaneRadius</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">G_global</span><span class="p">):</span>
     <span class="n">G_local</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">global2local</span><span class="p">(</span><span class="n">G_global</span><span class="p">)</span>
     <span class="n">G</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">matrix</span><span class="p">([</span> <span class="p">[</span><span class="n">G_local</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span> <span class="p">[</span><span class="n">G_local</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span> <span class="p">])</span>
     <span class="p">(</span><span class="n">A1</span><span class="p">,</span><span class="n">B1</span><span class="p">,</span><span class="n">C1</span><span class="p">,</span><span class="n">A2</span><span class="p">,</span><span class="n">B2</span><span class="p">,</span><span class="n">C2</span><span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getLocalEnvelopPoints</span><span class="p">()</span>
@@ -308,8 +336,11 @@
     <span class="n">radius</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">k</span><span class="p">)</span>
     <span class="k">return</span><span class="p">(</span><span class="n">radius</span><span class="p">)</span></div>
 
-  <span class="sd">&#39;&#39;&#39;returns the meshing parameters for the prism&#39;&#39;&#39;</span>
-<div class="viewcode-block" id="SpecialTriangularPrism.getMeshingParameters"><a class="viewcode-back" href="../../bfdtd.html#bfdtd.SpecialTriangularPrism.SpecialTriangularPrism.getMeshingParameters">[docs]</a>  <span class="k">def</span> <span class="nf">getMeshingParameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">xvec</span><span class="p">,</span><span class="n">yvec</span><span class="p">,</span><span class="n">zvec</span><span class="p">,</span><span class="n">epsx</span><span class="p">,</span><span class="n">epsy</span><span class="p">,</span><span class="n">epsz</span><span class="p">):</span>
+
+<span class="w">  </span><span class="sd">&#39;&#39;&#39;returns the meshing parameters for the prism&#39;&#39;&#39;</span>
+<div class="viewcode-block" id="SpecialTriangularPrism.getMeshingParameters">
+<a class="viewcode-back" href="../../bfdtd.html#bfdtd.SpecialTriangularPrism.SpecialTriangularPrism.getMeshingParameters">[docs]</a>
+  <span class="k">def</span><span class="w"> </span><span class="nf">getMeshingParameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">xvec</span><span class="p">,</span><span class="n">yvec</span><span class="p">,</span><span class="n">zvec</span><span class="p">,</span><span class="n">epsx</span><span class="p">,</span><span class="n">epsy</span><span class="p">,</span><span class="n">epsz</span><span class="p">):</span>
     <span class="c1">#meshing_parameters = MeshingParameters()</span>
     <span class="n">voxel_list</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getVoxels</span><span class="p">()</span>
     <span class="c1">#voxel_list, meshing_parameters = self.getVoxels()</span>
@@ -321,8 +352,11 @@
     <span class="n">epsz</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">vstack</span><span class="p">([</span><span class="n">epsz</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">meshing_parameters</span><span class="o">.</span><span class="n">maxPermittivityVector_Z</span><span class="p">])</span>
     <span class="k">return</span> <span class="n">xvec</span><span class="p">,</span><span class="n">yvec</span><span class="p">,</span><span class="n">zvec</span><span class="p">,</span><span class="n">epsx</span><span class="p">,</span><span class="n">epsy</span><span class="p">,</span><span class="n">epsz</span></div>
 
-  <span class="sd">&#39;&#39;&#39;returns the dimension of a single voxel in global coordinates as [dX,dY,dZ]&#39;&#39;&#39;</span>
-<div class="viewcode-block" id="SpecialTriangularPrism.getVoxelDimensions"><a class="viewcode-back" href="../../bfdtd.html#bfdtd.SpecialTriangularPrism.SpecialTriangularPrism.getVoxelDimensions">[docs]</a>  <span class="k">def</span> <span class="nf">getVoxelDimensions</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<span class="w">  </span><span class="sd">&#39;&#39;&#39;returns the dimension of a single voxel in global coordinates as [dX,dY,dZ]&#39;&#39;&#39;</span>
+<div class="viewcode-block" id="SpecialTriangularPrism.getVoxelDimensions">
+<a class="viewcode-back" href="../../bfdtd.html#bfdtd.SpecialTriangularPrism.SpecialTriangularPrism.getVoxelDimensions">[docs]</a>
+  <span class="k">def</span><span class="w"> </span><span class="nf">getVoxelDimensions</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="c1">#dX = self.meshing_parameters.limits_X[1]-self.meshing_parameters.limits_X[0]</span>
     <span class="c1">#dY = self.meshing_parameters.limits_Y[1]-self.meshing_parameters.limits_Y[0]</span>
     <span class="c1">#dZ = self.meshing_parameters.limits_Z[1]-self.meshing_parameters.limits_Z[0]</span>
@@ -359,13 +393,18 @@
     <span class="n">voxeldim_local</span> <span class="o">=</span> <span class="p">[</span><span class="n">dX</span><span class="p">,</span><span class="n">dY</span><span class="p">,</span><span class="n">dZ</span><span class="p">]</span>
     <span class="n">voxeldim_global</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">local2global</span><span class="p">(</span><span class="n">voxeldim_local</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">voxeldim_global</span></div>
-    
-  <span class="sd">&#39;&#39;&#39;moves the prism so that its barycentre is at position P&#39;&#39;&#39;</span>
-<div class="viewcode-block" id="SpecialTriangularPrism.setGeoCentre"><a class="viewcode-back" href="../../bfdtd.html#bfdtd.SpecialTriangularPrism.SpecialTriangularPrism.setGeoCentre">[docs]</a>  <span class="k">def</span> <span class="nf">setGeoCentre</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">P</span><span class="p">):</span>
+
+<span class="w">    </span>
+<span class="w">  </span><span class="sd">&#39;&#39;&#39;moves the prism so that its barycentre is at position P&#39;&#39;&#39;</span>
+<div class="viewcode-block" id="SpecialTriangularPrism.setGeoCentre">
+<a class="viewcode-back" href="../../bfdtd.html#bfdtd.SpecialTriangularPrism.SpecialTriangularPrism.setGeoCentre">[docs]</a>
+  <span class="k">def</span><span class="w"> </span><span class="nf">setGeoCentre</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">P</span><span class="p">):</span>
     <span class="n">current</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getGeoCentre</span><span class="p">()</span>
     <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;self.getGeoCentre() = &#39;</span><span class="p">,</span><span class="n">current</span><span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">lower</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lower</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">P</span><span class="p">)</span> <span class="o">-</span> <span class="n">current</span><span class="p">)</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">upper</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">upper</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">P</span><span class="p">)</span> <span class="o">-</span> <span class="n">current</span><span class="p">)</span></div></div>
+    <span class="bp">self</span><span class="o">.</span><span class="n">upper</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">upper</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">P</span><span class="p">)</span> <span class="o">-</span> <span class="n">current</span><span class="p">)</span></div>
+</div>
+
 
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
   <span class="n">foo</span> <span class="o">=</span> <span class="n">TriangularPrism</span><span class="p">()</span>
@@ -373,28 +412,27 @@
   <span class="c1">#foo.write_entry()</span>
 </pre></div>
 
+            <div class="clearer"></div>
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
         <div class="sphinxsidebarwrapper">
-<div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../../search.html" method="get">
-      <input type="text" name="q" />
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
       <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
     </form>
     </div>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related" role="navigation" aria-label="Related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -404,12 +442,13 @@
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="nav-item nav-item-0"><a href="../../index.html">script_inception_public  documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li> 
+          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">bfdtd.SpecialTriangularPrism</a></li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2014, Mike Taverne.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.9.
+    &#169; Copyright 2014, Mike Taverne.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
     </div>
   </body>
 </html>

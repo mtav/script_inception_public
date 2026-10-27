@@ -1,23 +1,22 @@
+<!DOCTYPE html>
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en" data-content_root="../../">
   <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>utilities.brisFDTD_ID_info &#8212; script_inception_public  documentation</title>
-    <link rel="stylesheet" href="../../_static/classic.css" type="text/css" />
-    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
-    <script type="text/javascript" src="../../_static/jquery.js"></script>
-    <script type="text/javascript" src="../../_static/underscore.js"></script>
-    <script type="text/javascript" src="../../_static/doctools.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../../_static/classic.css?v=2bf1fcf8" />
+    <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+    
+    <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
   </head><body>
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related" role="navigation" aria-label="Related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -27,7 +26,8 @@
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="nav-item nav-item-0"><a href="../../index.html">script_inception_public  documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li> 
+          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">utilities.brisFDTD_ID_info</a></li> 
       </ul>
     </div>  
 
@@ -65,11 +65,11 @@
 <span class="sd">.. todo:: Replace test functions with proper python module test system.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">import</span> <span class="nn">sys</span>
-<span class="kn">import</span> <span class="nn">math</span>
-<span class="kn">import</span> <span class="nn">re</span>
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">unittest</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">unittest</span>
 
 <span class="n">FREQUENCYSNAPSHOT_MAX_PRE_2008_VERSION</span> <span class="o">=</span> <span class="mi">836</span>
 <span class="n">FREQUENCYSNAPSHOT_MAX_POST_2008_VERSION</span> <span class="o">=</span> <span class="mi">806</span>
@@ -83,8 +83,10 @@
 <span class="c1">#MODEFILTEREDPROBE_MAX = 43 # old max, probably related to BFDTD 2003...</span>
 <span class="c1">#MODEFILTEREDPROBE_MAX = 118 # old max, probably related to BFDTD 2003...</span>
 
-<div class="viewcode-block" id="numID_to_alphaID_FrequencySnapshot"><a class="viewcode-back" href="../../utilities.html#utilities.brisFDTD_ID_info.numID_to_alphaID_FrequencySnapshot">[docs]</a><span class="k">def</span> <span class="nf">numID_to_alphaID_FrequencySnapshot</span><span class="p">(</span><span class="n">numID</span><span class="p">,</span> <span class="n">snap_plane</span> <span class="o">=</span> <span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">probe_ident</span> <span class="o">=</span> <span class="s1">&#39;_id_&#39;</span><span class="p">,</span> <span class="n">snap_time_number</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">pre_2008_BFDTD_version</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
-  <span class="sd">&#39;&#39;&#39;</span>
+<div class="viewcode-block" id="numID_to_alphaID_FrequencySnapshot">
+<a class="viewcode-back" href="../../utilities.html#utilities.brisFDTD_ID_info.numID_to_alphaID_FrequencySnapshot">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">numID_to_alphaID_FrequencySnapshot</span><span class="p">(</span><span class="n">numID</span><span class="p">,</span> <span class="n">snap_plane</span> <span class="o">=</span> <span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">probe_ident</span> <span class="o">=</span> <span class="s1">&#39;_id_&#39;</span><span class="p">,</span> <span class="n">snap_time_number</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">pre_2008_BFDTD_version</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+<span class="w">  </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">  Converts numeric IDs to alpha IDs used by Bristol FDTD for frequency snapshots.</span>
 
 <span class="sd">  :param bool update_limits: If true, updateLimits() will be called.</span>
@@ -148,8 +150,11 @@
   
   <span class="k">return</span> <span class="n">filename</span><span class="p">,</span> <span class="n">alphaID</span><span class="p">,</span> <span class="n">pair</span></div>
 
-<div class="viewcode-block" id="numID_to_alphaID_TimeSnapshot"><a class="viewcode-back" href="../../utilities.html#utilities.brisFDTD_ID_info.numID_to_alphaID_TimeSnapshot">[docs]</a><span class="k">def</span> <span class="nf">numID_to_alphaID_TimeSnapshot</span><span class="p">(</span><span class="n">numID</span><span class="p">,</span> <span class="n">snap_plane</span> <span class="o">=</span> <span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">probe_ident</span> <span class="o">=</span> <span class="s1">&#39;_id_&#39;</span><span class="p">,</span> <span class="n">snap_time_number</span> <span class="o">=</span> <span class="mi">1</span><span class="p">):</span>
-  <span class="sd">&#39;&#39;&#39;</span>
+
+<div class="viewcode-block" id="numID_to_alphaID_TimeSnapshot">
+<a class="viewcode-back" href="../../utilities.html#utilities.brisFDTD_ID_info.numID_to_alphaID_TimeSnapshot">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">numID_to_alphaID_TimeSnapshot</span><span class="p">(</span><span class="n">numID</span><span class="p">,</span> <span class="n">snap_plane</span> <span class="o">=</span> <span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">probe_ident</span> <span class="o">=</span> <span class="s1">&#39;_id_&#39;</span><span class="p">,</span> <span class="n">snap_time_number</span> <span class="o">=</span> <span class="mi">1</span><span class="p">):</span>
+<span class="w">  </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">  Converts numeric IDs to alpha IDs used by Bristol FDTD for time snapshots.</span>
 <span class="sd">  </span>
 <span class="sd">  .. note:: This function can also be used for epsilon snapshots, since they are just a subclass of time snapshots.</span>
@@ -189,8 +194,11 @@
   
   <span class="k">return</span> <span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">alphaID</span><span class="p">,</span> <span class="n">pair</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="numID_to_alphaID_Probe"><a class="viewcode-back" href="../../utilities.html#utilities.brisFDTD_ID_info.numID_to_alphaID_Probe">[docs]</a><span class="k">def</span> <span class="nf">numID_to_alphaID_Probe</span><span class="p">(</span><span class="n">numID</span><span class="p">,</span> <span class="n">probe_ident</span> <span class="o">=</span> <span class="s1">&#39;_id_&#39;</span><span class="p">):</span>
-  <span class="sd">&#39;&#39;&#39;</span>
+
+<div class="viewcode-block" id="numID_to_alphaID_Probe">
+<a class="viewcode-back" href="../../utilities.html#utilities.brisFDTD_ID_info.numID_to_alphaID_Probe">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">numID_to_alphaID_Probe</span><span class="p">(</span><span class="n">numID</span><span class="p">,</span> <span class="n">probe_ident</span> <span class="o">=</span> <span class="s1">&#39;_id_&#39;</span><span class="p">):</span>
+<span class="w">  </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">  Converts numeric IDs to alpha IDs used by Bristol FDTD for probes.</span>
 
 <span class="sd">  :return: (filename, alphaID, pair)</span>
@@ -213,8 +221,11 @@
   
   <span class="k">return</span> <span class="n">filename</span><span class="p">,</span> <span class="n">alphaID</span><span class="p">,</span> <span class="n">pair</span></div>
 
-<div class="viewcode-block" id="numID_to_alphaID_ModeFilteredProbe"><a class="viewcode-back" href="../../utilities.html#utilities.brisFDTD_ID_info.numID_to_alphaID_ModeFilteredProbe">[docs]</a><span class="k">def</span> <span class="nf">numID_to_alphaID_ModeFilteredProbe</span><span class="p">(</span><span class="n">numID</span><span class="p">,</span> <span class="n">probe_ident</span> <span class="o">=</span> <span class="s1">&#39;_id_&#39;</span><span class="p">,</span> <span class="n">snap_time_number</span> <span class="o">=</span> <span class="mi">1</span><span class="p">):</span>
-  <span class="sd">&#39;&#39;&#39;</span>
+
+<div class="viewcode-block" id="numID_to_alphaID_ModeFilteredProbe">
+<a class="viewcode-back" href="../../utilities.html#utilities.brisFDTD_ID_info.numID_to_alphaID_ModeFilteredProbe">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">numID_to_alphaID_ModeFilteredProbe</span><span class="p">(</span><span class="n">numID</span><span class="p">,</span> <span class="n">probe_ident</span> <span class="o">=</span> <span class="s1">&#39;_id_&#39;</span><span class="p">,</span> <span class="n">snap_time_number</span> <span class="o">=</span> <span class="mi">1</span><span class="p">):</span>
+<span class="w">  </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">  Converts numeric IDs to alpha IDs used by Bristol FDTD for mode filtered probes.</span>
 
 <span class="sd">  :return: (filename, alphaID, pair)</span>
@@ -237,8 +248,11 @@
   
   <span class="k">return</span> <span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">alphaID</span><span class="p">,</span> <span class="n">pair</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="alphaID_to_numID"><a class="viewcode-back" href="../../utilities.html#utilities.brisFDTD_ID_info.alphaID_to_numID">[docs]</a><span class="k">def</span> <span class="nf">alphaID_to_numID</span><span class="p">(</span><span class="n">alphaID_or_filename</span><span class="p">,</span> <span class="n">expected_object_type</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">probe_ident</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">pre_2008_BFDTD_version</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-  <span class="sd">&#39;&#39;&#39;</span>
+
+<div class="viewcode-block" id="alphaID_to_numID">
+<a class="viewcode-back" href="../../utilities.html#utilities.brisFDTD_ID_info.alphaID_to_numID">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">alphaID_to_numID</span><span class="p">(</span><span class="n">alphaID_or_filename</span><span class="p">,</span> <span class="n">expected_object_type</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">probe_ident</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">pre_2008_BFDTD_version</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">  </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">  Converts alpha IDs used by Bristol FDTD to numeric IDs.</span>
 <span class="sd">  </span>
 <span class="sd">  :return: (numID, snap_plane, probe_ident, snap_time_number, fixed_filename, object_type)</span>
@@ -384,10 +398,15 @@
     <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;ERROR: alphaID not found for basename = </span><span class="si">{}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">basename</span><span class="p">))</span>
       
   <span class="k">return</span> <span class="p">(</span><span class="n">numID</span><span class="p">,</span> <span class="n">snap_plane</span><span class="p">,</span> <span class="n">probe_ident</span><span class="p">,</span> <span class="n">snap_time_number</span><span class="p">,</span> <span class="n">fixed_filename</span><span class="p">,</span> <span class="n">object_type</span><span class="p">)</span></div>
-  
-<div class="viewcode-block" id="Test_brisFDTD_ID_info_Functions"><a class="viewcode-back" href="../../utilities.html#utilities.brisFDTD_ID_info.Test_brisFDTD_ID_info_Functions">[docs]</a><span class="k">class</span> <span class="nc">Test_brisFDTD_ID_info_Functions</span><span class="p">(</span><span class="n">unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="p">):</span>
 
-<div class="viewcode-block" id="Test_brisFDTD_ID_info_Functions.FrequencySnapshotID_ViceVersa"><a class="viewcode-back" href="../../utilities.html#utilities.brisFDTD_ID_info.Test_brisFDTD_ID_info_Functions.FrequencySnapshotID_ViceVersa">[docs]</a>  <span class="k">def</span> <span class="nf">FrequencySnapshotID_ViceVersa</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pre_2008_BFDTD_version</span><span class="p">):</span>
+  
+<div class="viewcode-block" id="Test_brisFDTD_ID_info_Functions">
+<a class="viewcode-back" href="../../utilities.html#utilities.brisFDTD_ID_info.Test_brisFDTD_ID_info_Functions">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Test_brisFDTD_ID_info_Functions</span><span class="p">(</span><span class="n">unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="p">):</span>
+
+<div class="viewcode-block" id="Test_brisFDTD_ID_info_Functions.FrequencySnapshotID_ViceVersa">
+<a class="viewcode-back" href="../../utilities.html#utilities.brisFDTD_ID_info.Test_brisFDTD_ID_info_Functions.FrequencySnapshotID_ViceVersa">[docs]</a>
+  <span class="k">def</span><span class="w"> </span><span class="nf">FrequencySnapshotID_ViceVersa</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pre_2008_BFDTD_version</span><span class="p">):</span>
     
     <span class="k">if</span> <span class="n">pre_2008_BFDTD_version</span><span class="p">:</span>
       <span class="n">FREQUENCYSNAPSHOT_MAX</span> <span class="o">=</span> <span class="n">FREQUENCYSNAPSHOT_MAX_PRE_2008_VERSION</span>
@@ -416,7 +435,10 @@
         <span class="k">raise</span>
     <span class="k">return</span></div>
 
-<div class="viewcode-block" id="Test_brisFDTD_ID_info_Functions.FrequencySnapshotID_List"><a class="viewcode-back" href="../../utilities.html#utilities.brisFDTD_ID_info.Test_brisFDTD_ID_info_Functions.FrequencySnapshotID_List">[docs]</a>  <span class="k">def</span> <span class="nf">FrequencySnapshotID_List</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pre_2008_BFDTD_version</span><span class="p">):</span>
+
+<div class="viewcode-block" id="Test_brisFDTD_ID_info_Functions.FrequencySnapshotID_List">
+<a class="viewcode-back" href="../../utilities.html#utilities.brisFDTD_ID_info.Test_brisFDTD_ID_info_Functions.FrequencySnapshotID_List">[docs]</a>
+  <span class="k">def</span><span class="w"> </span><span class="nf">FrequencySnapshotID_List</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pre_2008_BFDTD_version</span><span class="p">):</span>
     <span class="k">if</span> <span class="n">pre_2008_BFDTD_version</span><span class="p">:</span>
       <span class="n">FREQUENCYSNAPSHOT_MAX</span> <span class="o">=</span> <span class="n">FREQUENCYSNAPSHOT_MAX_PRE_2008_VERSION</span>
     <span class="k">else</span><span class="p">:</span>
@@ -429,23 +451,38 @@
       <span class="nb">print</span><span class="p">(</span><span class="n">pair</span><span class="p">)</span>
     <span class="k">return</span></div>
 
-<div class="viewcode-block" id="Test_brisFDTD_ID_info_Functions.test_FrequencySnapshotID_ViceVersa_pre_2008_BFDTD_version"><a class="viewcode-back" href="../../utilities.html#utilities.brisFDTD_ID_info.Test_brisFDTD_ID_info_Functions.test_FrequencySnapshotID_ViceVersa_pre_2008_BFDTD_version">[docs]</a>  <span class="k">def</span> <span class="nf">test_FrequencySnapshotID_ViceVersa_pre_2008_BFDTD_version</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<div class="viewcode-block" id="Test_brisFDTD_ID_info_Functions.test_FrequencySnapshotID_ViceVersa_pre_2008_BFDTD_version">
+<a class="viewcode-back" href="../../utilities.html#utilities.brisFDTD_ID_info.Test_brisFDTD_ID_info_Functions.test_FrequencySnapshotID_ViceVersa_pre_2008_BFDTD_version">[docs]</a>
+  <span class="k">def</span><span class="w"> </span><span class="nf">test_FrequencySnapshotID_ViceVersa_pre_2008_BFDTD_version</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">FrequencySnapshotID_ViceVersa</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
     <span class="k">return</span></div>
+
     
-<div class="viewcode-block" id="Test_brisFDTD_ID_info_Functions.test_FrequencySnapshotID_ViceVersa_post_2008_BFDTD_version"><a class="viewcode-back" href="../../utilities.html#utilities.brisFDTD_ID_info.Test_brisFDTD_ID_info_Functions.test_FrequencySnapshotID_ViceVersa_post_2008_BFDTD_version">[docs]</a>  <span class="k">def</span> <span class="nf">test_FrequencySnapshotID_ViceVersa_post_2008_BFDTD_version</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Test_brisFDTD_ID_info_Functions.test_FrequencySnapshotID_ViceVersa_post_2008_BFDTD_version">
+<a class="viewcode-back" href="../../utilities.html#utilities.brisFDTD_ID_info.Test_brisFDTD_ID_info_Functions.test_FrequencySnapshotID_ViceVersa_post_2008_BFDTD_version">[docs]</a>
+  <span class="k">def</span><span class="w"> </span><span class="nf">test_FrequencySnapshotID_ViceVersa_post_2008_BFDTD_version</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">FrequencySnapshotID_ViceVersa</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
     <span class="k">return</span></div>
 
-<div class="viewcode-block" id="Test_brisFDTD_ID_info_Functions.test_FrequencySnapshotID_List_pre_2008_BFDTD_version"><a class="viewcode-back" href="../../utilities.html#utilities.brisFDTD_ID_info.Test_brisFDTD_ID_info_Functions.test_FrequencySnapshotID_List_pre_2008_BFDTD_version">[docs]</a>  <span class="k">def</span> <span class="nf">test_FrequencySnapshotID_List_pre_2008_BFDTD_version</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<div class="viewcode-block" id="Test_brisFDTD_ID_info_Functions.test_FrequencySnapshotID_List_pre_2008_BFDTD_version">
+<a class="viewcode-back" href="../../utilities.html#utilities.brisFDTD_ID_info.Test_brisFDTD_ID_info_Functions.test_FrequencySnapshotID_List_pre_2008_BFDTD_version">[docs]</a>
+  <span class="k">def</span><span class="w"> </span><span class="nf">test_FrequencySnapshotID_List_pre_2008_BFDTD_version</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">FrequencySnapshotID_List</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
     <span class="k">return</span></div>
 
-<div class="viewcode-block" id="Test_brisFDTD_ID_info_Functions.test_FrequencySnapshotID_List_post_2008_BFDTD_version"><a class="viewcode-back" href="../../utilities.html#utilities.brisFDTD_ID_info.Test_brisFDTD_ID_info_Functions.test_FrequencySnapshotID_List_post_2008_BFDTD_version">[docs]</a>  <span class="k">def</span> <span class="nf">test_FrequencySnapshotID_List_post_2008_BFDTD_version</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<div class="viewcode-block" id="Test_brisFDTD_ID_info_Functions.test_FrequencySnapshotID_List_post_2008_BFDTD_version">
+<a class="viewcode-back" href="../../utilities.html#utilities.brisFDTD_ID_info.Test_brisFDTD_ID_info_Functions.test_FrequencySnapshotID_List_post_2008_BFDTD_version">[docs]</a>
+  <span class="k">def</span><span class="w"> </span><span class="nf">test_FrequencySnapshotID_List_post_2008_BFDTD_version</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">FrequencySnapshotID_List</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
     <span class="k">return</span></div>
+
     
-<div class="viewcode-block" id="Test_brisFDTD_ID_info_Functions.test_TimeSnapshotID_ViceVersa"><a class="viewcode-back" href="../../utilities.html#utilities.brisFDTD_ID_info.Test_brisFDTD_ID_info_Functions.test_TimeSnapshotID_ViceVersa">[docs]</a>  <span class="k">def</span> <span class="nf">test_TimeSnapshotID_ViceVersa</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Test_brisFDTD_ID_info_Functions.test_TimeSnapshotID_ViceVersa">
+<a class="viewcode-back" href="../../utilities.html#utilities.brisFDTD_ID_info.Test_brisFDTD_ID_info_Functions.test_TimeSnapshotID_ViceVersa">[docs]</a>
+  <span class="k">def</span><span class="w"> </span><span class="nf">test_TimeSnapshotID_ViceVersa</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="n">N</span> <span class="o">=</span> <span class="n">TIMESNAPSHOT_MAX</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
       <span class="n">numID_in</span> <span class="o">=</span> <span class="n">i</span><span class="o">+</span><span class="mi">1</span>
@@ -466,8 +503,11 @@
       <span class="k">if</span> <span class="n">numID_out</span> <span class="o">!=</span> <span class="n">numID_in</span><span class="p">:</span>
         <span class="k">raise</span>
     <span class="k">return</span></div>
+
     
-<div class="viewcode-block" id="Test_brisFDTD_ID_info_Functions.test_ProbeID_ViceVersa"><a class="viewcode-back" href="../../utilities.html#utilities.brisFDTD_ID_info.Test_brisFDTD_ID_info_Functions.test_ProbeID_ViceVersa">[docs]</a>  <span class="k">def</span> <span class="nf">test_ProbeID_ViceVersa</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Test_brisFDTD_ID_info_Functions.test_ProbeID_ViceVersa">
+<a class="viewcode-back" href="../../utilities.html#utilities.brisFDTD_ID_info.Test_brisFDTD_ID_info_Functions.test_ProbeID_ViceVersa">[docs]</a>
+  <span class="k">def</span><span class="w"> </span><span class="nf">test_ProbeID_ViceVersa</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="n">N</span> <span class="o">=</span> <span class="n">PROBE_MAX</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
       <span class="n">numID_in</span> <span class="o">=</span> <span class="n">i</span><span class="o">+</span><span class="mi">1</span>
@@ -489,7 +529,10 @@
         <span class="k">raise</span>
     <span class="k">return</span></div>
 
-<div class="viewcode-block" id="Test_brisFDTD_ID_info_Functions.test_ModeFilteredProbeID_ViceVersa"><a class="viewcode-back" href="../../utilities.html#utilities.brisFDTD_ID_info.Test_brisFDTD_ID_info_Functions.test_ModeFilteredProbeID_ViceVersa">[docs]</a>  <span class="k">def</span> <span class="nf">test_ModeFilteredProbeID_ViceVersa</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<div class="viewcode-block" id="Test_brisFDTD_ID_info_Functions.test_ModeFilteredProbeID_ViceVersa">
+<a class="viewcode-back" href="../../utilities.html#utilities.brisFDTD_ID_info.Test_brisFDTD_ID_info_Functions.test_ModeFilteredProbeID_ViceVersa">[docs]</a>
+  <span class="k">def</span><span class="w"> </span><span class="nf">test_ModeFilteredProbeID_ViceVersa</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="c1">#print(&#39;CACCACACACACACA&#39;)</span>
     <span class="c1">#raise Exception(&#39;CACACCACCCCCCC&#39;)</span>
     
@@ -517,15 +560,21 @@
         <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;numID_out=</span><span class="si">{}</span><span class="s1"> numID_in=</span><span class="si">{}</span><span class="s1"> filename_in=</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">numID_out</span><span class="p">,</span> <span class="n">numID_in</span><span class="p">,</span> <span class="n">filename_in</span><span class="p">))</span>
     <span class="k">return</span></div>
 
-<div class="viewcode-block" id="Test_brisFDTD_ID_info_Functions.test_TimeSnapshotID_List"><a class="viewcode-back" href="../../utilities.html#utilities.brisFDTD_ID_info.Test_brisFDTD_ID_info_Functions.test_TimeSnapshotID_List">[docs]</a>  <span class="k">def</span> <span class="nf">test_TimeSnapshotID_List</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<div class="viewcode-block" id="Test_brisFDTD_ID_info_Functions.test_TimeSnapshotID_List">
+<a class="viewcode-back" href="../../utilities.html#utilities.brisFDTD_ID_info.Test_brisFDTD_ID_info_Functions.test_TimeSnapshotID_List">[docs]</a>
+  <span class="k">def</span><span class="w"> </span><span class="nf">test_TimeSnapshotID_List</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="n">N</span> <span class="o">=</span> <span class="n">TIMESNAPSHOT_MAX</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
       <span class="n">numID_in</span> <span class="o">=</span> <span class="n">i</span><span class="o">+</span><span class="mi">1</span>
       <span class="n">filename_in</span><span class="p">,</span> <span class="n">alphaID</span><span class="p">,</span> <span class="n">pair</span> <span class="o">=</span> <span class="n">numID_to_alphaID_TimeSnapshot</span><span class="p">(</span><span class="n">numID_in</span><span class="p">)</span>
       <span class="nb">print</span><span class="p">(</span><span class="n">pair</span><span class="p">)</span>
     <span class="k">return</span></div>
+
     
-<div class="viewcode-block" id="Test_brisFDTD_ID_info_Functions.test_ProbeID_List"><a class="viewcode-back" href="../../utilities.html#utilities.brisFDTD_ID_info.Test_brisFDTD_ID_info_Functions.test_ProbeID_List">[docs]</a>  <span class="k">def</span> <span class="nf">test_ProbeID_List</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Test_brisFDTD_ID_info_Functions.test_ProbeID_List">
+<a class="viewcode-back" href="../../utilities.html#utilities.brisFDTD_ID_info.Test_brisFDTD_ID_info_Functions.test_ProbeID_List">[docs]</a>
+  <span class="k">def</span><span class="w"> </span><span class="nf">test_ProbeID_List</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="n">N</span> <span class="o">=</span> <span class="n">PROBE_MAX</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
       <span class="n">numID_in</span> <span class="o">=</span> <span class="n">i</span><span class="o">+</span><span class="mi">1</span>
@@ -533,40 +582,44 @@
       <span class="nb">print</span><span class="p">(</span><span class="n">pair</span><span class="p">)</span>
     <span class="k">return</span></div>
 
-<div class="viewcode-block" id="Test_brisFDTD_ID_info_Functions.test_ModeFilteredProbeID_List"><a class="viewcode-back" href="../../utilities.html#utilities.brisFDTD_ID_info.Test_brisFDTD_ID_info_Functions.test_ModeFilteredProbeID_List">[docs]</a>  <span class="k">def</span> <span class="nf">test_ModeFilteredProbeID_List</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<div class="viewcode-block" id="Test_brisFDTD_ID_info_Functions.test_ModeFilteredProbeID_List">
+<a class="viewcode-back" href="../../utilities.html#utilities.brisFDTD_ID_info.Test_brisFDTD_ID_info_Functions.test_ModeFilteredProbeID_List">[docs]</a>
+  <span class="k">def</span><span class="w"> </span><span class="nf">test_ModeFilteredProbeID_List</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="n">N</span> <span class="o">=</span> <span class="n">MODEFILTEREDPROBE_MAX</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
       <span class="n">numID_in</span> <span class="o">=</span> <span class="n">i</span><span class="o">+</span><span class="mi">1</span>
       <span class="n">filename_in</span><span class="p">,</span> <span class="n">alphaID</span><span class="p">,</span> <span class="n">pair</span> <span class="o">=</span> <span class="n">numID_to_alphaID_ModeFilteredProbe</span><span class="p">(</span><span class="n">numID_in</span><span class="p">)</span>
       <span class="nb">print</span><span class="p">(</span><span class="n">pair</span><span class="p">)</span>
-    <span class="k">return</span></div></div>
+    <span class="k">return</span></div>
+</div>
+
 
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
   <span class="n">unittest</span><span class="o">.</span><span class="n">main</span><span class="p">()</span>
 </pre></div>
 
+            <div class="clearer"></div>
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
         <div class="sphinxsidebarwrapper">
-<div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../../search.html" method="get">
-      <input type="text" name="q" />
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
       <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
     </form>
     </div>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related" role="navigation" aria-label="Related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -576,12 +629,13 @@
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="nav-item nav-item-0"><a href="../../index.html">script_inception_public  documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li> 
+          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">utilities.brisFDTD_ID_info</a></li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2014, Mike Taverne.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.9.
+    &#169; Copyright 2014, Mike Taverne.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
     </div>
   </body>
 </html>

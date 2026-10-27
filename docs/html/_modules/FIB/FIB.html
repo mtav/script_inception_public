@@ -1,23 +1,22 @@
+<!DOCTYPE html>
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en" data-content_root="../../">
   <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>FIB.FIB &#8212; script_inception_public  documentation</title>
-    <link rel="stylesheet" href="../../_static/classic.css" type="text/css" />
-    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
-    <script type="text/javascript" src="../../_static/jquery.js"></script>
-    <script type="text/javascript" src="../../_static/underscore.js"></script>
-    <script type="text/javascript" src="../../_static/doctools.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../../_static/classic.css?v=2bf1fcf8" />
+    <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+    
+    <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
   </head><body>
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related" role="navigation" aria-label="Related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -27,7 +26,8 @@
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="nav-item nav-item-0"><a href="../../index.html">script_inception_public  documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li> 
+          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">FIB.FIB</a></li> 
       </ul>
     </div>  
 
@@ -50,8 +50,10 @@
 <span class="n">HFW_at_mag1_mum</span> <span class="o">=</span> <span class="mi">304000</span>
 <span class="n">ScreenWidth_pxl</span> <span class="o">=</span> <span class="mi">4096</span>
 
-<div class="viewcode-block" id="getResolution"><a class="viewcode-back" href="../../FIB.html#FIB.FIB.getResolution">[docs]</a><span class="k">def</span> <span class="nf">getResolution</span><span class="p">(</span><span class="n">mag</span><span class="p">):</span>
-  <span class="sd">&#39;&#39;&#39;</span>
+<div class="viewcode-block" id="getResolution">
+<a class="viewcode-back" href="../../FIB.html#FIB.FIB.getResolution">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">getResolution</span><span class="p">(</span><span class="n">mag</span><span class="p">):</span>
+<span class="w">  </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">  returns (res_mum_per_pxl, HFW_mum) where:</span>
 <span class="sd">  res_mum_per_pxl : resolution in micrometers per pixel</span>
 <span class="sd">  HFW_mum : size in micrometers of the area of the sample visible on the screen.</span>
@@ -60,22 +62,31 @@
   <span class="n">res_mum_per_pxl</span> <span class="o">=</span> <span class="n">HFW_mum</span> <span class="o">/</span> <span class="n">ScreenWidth_pxl</span> <span class="c1"># size of each pixel (mum/pxl).</span>
   <span class="k">return</span><span class="p">(</span><span class="n">res_mum_per_pxl</span><span class="p">,</span> <span class="n">HFW_mum</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="getPixelsPerMicron"><a class="viewcode-back" href="../../FIB.html#FIB.FIB.getPixelsPerMicron">[docs]</a><span class="k">def</span> <span class="nf">getPixelsPerMicron</span><span class="p">(</span><span class="n">mag</span><span class="p">):</span>
-  <span class="sd">&#39;&#39;&#39;</span>
+
+<div class="viewcode-block" id="getPixelsPerMicron">
+<a class="viewcode-back" href="../../FIB.html#FIB.FIB.getPixelsPerMicron">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">getPixelsPerMicron</span><span class="p">(</span><span class="n">mag</span><span class="p">):</span>
+<span class="w">  </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">  returns the number of pixels per micrometer for the given magnification &quot;mag&quot;.</span>
 <span class="sd">  &#39;&#39;&#39;</span>
   <span class="p">(</span><span class="n">res_mum_per_pxl</span><span class="p">,</span> <span class="n">HFW_mum</span><span class="p">)</span> <span class="o">=</span> <span class="n">getResolution</span><span class="p">(</span><span class="n">mag</span><span class="p">)</span>
   <span class="k">return</span><span class="p">(</span><span class="mf">1.</span><span class="o">/</span><span class="n">res_mum_per_pxl</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="getMagFromScreenSizeInMicrons"><a class="viewcode-back" href="../../FIB.html#FIB.FIB.getMagFromScreenSizeInMicrons">[docs]</a><span class="k">def</span> <span class="nf">getMagFromScreenSizeInMicrons</span><span class="p">(</span><span class="n">HFW_mum</span><span class="p">):</span>
-  <span class="sd">&#39;&#39;&#39;</span>
+
+<div class="viewcode-block" id="getMagFromScreenSizeInMicrons">
+<a class="viewcode-back" href="../../FIB.html#FIB.FIB.getMagFromScreenSizeInMicrons">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">getMagFromScreenSizeInMicrons</span><span class="p">(</span><span class="n">HFW_mum</span><span class="p">):</span>
+<span class="w">  </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">  HFW_mum : size in micrometers of the area of the sample visible on the screen.</span>
 <span class="sd">  &#39;&#39;&#39;</span>
   <span class="n">mag</span> <span class="o">=</span> <span class="n">HFW_at_mag1_mum</span> <span class="o">/</span> <span class="n">HFW_mum</span>
   <span class="k">return</span><span class="p">(</span><span class="n">mag</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="getSpotSize"><a class="viewcode-back" href="../../FIB.html#FIB.FIB.getSpotSize">[docs]</a><span class="k">def</span> <span class="nf">getSpotSize</span><span class="p">(</span><span class="n">beamCurrent</span><span class="p">):</span>
-  <span class="sd">&#39;&#39;&#39; function spotSize_mum = getSpotSize(beamCurrent) &#39;&#39;&#39;</span>
+
+<div class="viewcode-block" id="getSpotSize">
+<a class="viewcode-back" href="../../FIB.html#FIB.FIB.getSpotSize">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">getSpotSize</span><span class="p">(</span><span class="n">beamCurrent</span><span class="p">):</span>
+<span class="w">  </span><span class="sd">&#39;&#39;&#39; function spotSize_mum = getSpotSize(beamCurrent) &#39;&#39;&#39;</span>
   
   <span class="c1"># size of circles in nm (1e-9m) as a function of the beamcurrent in pA (1e-12 A)</span>
   <span class="n">spotSizes_nm</span> <span class="o">=</span> <span class="p">{</span><span class="mi">1</span> <span class="p">:</span> <span class="mi">8</span><span class="p">,</span>
@@ -98,12 +109,15 @@
   
   <span class="k">return</span><span class="p">(</span><span class="n">spotSize_mum</span><span class="p">)</span></div>
 
+
 <span class="c1"># FIB distance estimation functions. Might be used in FIB picture postprocessing program eventually. Or in Gimp through a plugin...</span>
 <span class="c1"># TODO: At the moment those formulas are only for distances in the Y (vertical) direction of the picture. Need to add support for any sort of line on the picture.</span>
 <span class="c1"># Functions could be tested against FIB measurement tool. Method: Project (X,Y) points along Z axis onto arbitrary plane and corresponding normal.</span>
 
-<div class="viewcode-block" id="FIBdistanceHorizontal"><a class="viewcode-back" href="../../FIB.html#FIB.FIB.FIBdistanceHorizontal">[docs]</a><span class="k">def</span> <span class="nf">FIBdistanceHorizontal</span><span class="p">(</span><span class="n">tilt_deg</span><span class="p">,</span> <span class="n">magnification</span><span class="p">,</span> <span class="n">distance_on_picture_pxl</span><span class="p">,</span> <span class="n">angle_to_horizontal_deg</span> <span class="o">=</span> <span class="mi">90</span><span class="p">,</span> <span class="n">horizontal_width_of_picture_pxl</span> <span class="o">=</span> <span class="mi">1024</span><span class="p">):</span>
-  <span class="sd">&#39;&#39;&#39;</span>
+<div class="viewcode-block" id="FIBdistanceHorizontal">
+<a class="viewcode-back" href="../../FIB.html#FIB.FIB.FIBdistanceHorizontal">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">FIBdistanceHorizontal</span><span class="p">(</span><span class="n">tilt_deg</span><span class="p">,</span> <span class="n">magnification</span><span class="p">,</span> <span class="n">distance_on_picture_pxl</span><span class="p">,</span> <span class="n">angle_to_horizontal_deg</span> <span class="o">=</span> <span class="mi">90</span><span class="p">,</span> <span class="n">horizontal_width_of_picture_pxl</span> <span class="o">=</span> <span class="mi">1024</span><span class="p">):</span>
+<span class="w">  </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">  Returns the horizontal distance in mum based on the visible distance in pixels on the picture.</span>
 <span class="sd">  Warning: formula for angled segments hasn&#39;t been fully verified yet.</span>
 <span class="sd">  distance_on_picture_pxl, angle_to_horizontal_deg : Properties of the segment to measure on the picture, as given by the Gimp measurement tool for example.</span>
@@ -121,8 +135,11 @@
   <span class="n">L_sample_mum</span> <span class="o">=</span> <span class="n">L_sample_pxl</span><span class="o">*</span><span class="n">resolution</span>
   <span class="k">return</span> <span class="n">L_sample_mum</span></div>
 
-<div class="viewcode-block" id="FIBdistanceVertical"><a class="viewcode-back" href="../../FIB.html#FIB.FIB.FIBdistanceVertical">[docs]</a><span class="k">def</span> <span class="nf">FIBdistanceVertical</span><span class="p">(</span><span class="n">tilt_deg</span><span class="p">,</span> <span class="n">magnification</span><span class="p">,</span> <span class="n">distance_on_picture_pxl</span><span class="p">,</span> <span class="n">horizontal_width_of_picture_pxl</span> <span class="o">=</span> <span class="mi">1024</span><span class="p">):</span>
-  <span class="sd">&#39;&#39;&#39;</span>
+
+<div class="viewcode-block" id="FIBdistanceVertical">
+<a class="viewcode-back" href="../../FIB.html#FIB.FIB.FIBdistanceVertical">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">FIBdistanceVertical</span><span class="p">(</span><span class="n">tilt_deg</span><span class="p">,</span> <span class="n">magnification</span><span class="p">,</span> <span class="n">distance_on_picture_pxl</span><span class="p">,</span> <span class="n">horizontal_width_of_picture_pxl</span> <span class="o">=</span> <span class="mi">1024</span><span class="p">):</span>
+<span class="w">  </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">  Returns the vertical distance in mum based on the visible distance in pixels on the picture. </span>
 <span class="sd">  Warning: Always assumes a vertical pixel distance measurement (because it&#39;s the only thing making sense assuming an orthographic projection)</span>
 <span class="sd">  tilt_deg : Tilt of the sample relative to the FIB. Can be read from the picture legend.</span>
@@ -133,6 +150,7 @@
   
   <span class="n">L_sample_mum</span> <span class="o">=</span> <span class="p">(</span><span class="n">distance_on_picture_pxl</span><span class="o">*</span><span class="n">resolution</span><span class="p">)</span><span class="o">/</span><span class="n">numpy</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="n">tilt_deg</span><span class="p">))</span>
   <span class="k">return</span> <span class="n">L_sample_mum</span></div>
+
 
 <span class="c1"># The stream file format:</span>
 <span class="c1">#  s</span>
@@ -147,7 +165,9 @@
     <span class="c1">#self.verbosity = 0</span>
     <span class="c1">#self.GWL_voxels = []</span>
 
-<div class="viewcode-block" id="readStrFile"><a class="viewcode-back" href="../../FIB.html#FIB.FIB.readStrFile">[docs]</a><span class="k">def</span> <span class="nf">readStrFile</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+<div class="viewcode-block" id="readStrFile">
+<a class="viewcode-back" href="../../FIB.html#FIB.FIB.readStrFile">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">readStrFile</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
   <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
     <span class="n">f</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span>
     <span class="n">repetitions</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">readline</span><span class="p">())</span>
@@ -161,6 +181,7 @@
       <span class="n">pointlist</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">dwell</span><span class="p">,</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">)</span>
   <span class="k">return</span> <span class="p">(</span><span class="n">repetitions</span><span class="p">,</span> <span class="n">pointlist</span><span class="p">)</span></div>
 
+
     <span class="c1">#read_data = f.read()</span>
 <span class="c1">#s\n</span>
 
@@ -173,28 +194,27 @@
 
 </pre></div>
 
+            <div class="clearer"></div>
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
         <div class="sphinxsidebarwrapper">
-<div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../../search.html" method="get">
-      <input type="text" name="q" />
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
       <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
     </form>
     </div>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related" role="navigation" aria-label="Related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -204,12 +224,13 @@
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="nav-item nav-item-0"><a href="../../index.html">script_inception_public  documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li> 
+          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">FIB.FIB</a></li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2014, Mike Taverne.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.9.
+    &#169; Copyright 2014, Mike Taverne.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
     </div>
   </body>
 </html>

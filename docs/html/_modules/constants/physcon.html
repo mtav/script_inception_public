@@ -1,23 +1,22 @@
+<!DOCTYPE html>
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en" data-content_root="../../">
   <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>constants.physcon &#8212; script_inception_public  documentation</title>
-    <link rel="stylesheet" href="../../_static/classic.css" type="text/css" />
-    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
-    <script type="text/javascript" src="../../_static/jquery.js"></script>
-    <script type="text/javascript" src="../../_static/underscore.js"></script>
-    <script type="text/javascript" src="../../_static/doctools.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../../_static/classic.css?v=2bf1fcf8" />
+    <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+    
+    <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
   </head><body>
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related" role="navigation" aria-label="Related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -27,7 +26,8 @@
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="nav-item nav-item-0"><a href="../../index.html">script_inception_public  documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li> 
+          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">constants.physcon</a></li> 
       </ul>
     </div>  
 
@@ -58,7 +58,7 @@
 <span class="c1"># GNU General Public License for more details.</span>
 
 
-<span class="kn">from</span> <span class="nn">math</span> <span class="k">import</span> <span class="n">pi</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">math</span><span class="w"> </span><span class="kn">import</span> <span class="n">pi</span>
 
 <span class="c1"># define light velocity, because we need it in calculations</span>
 <span class="n">cloc</span> <span class="o">=</span><span class="mf">299792458.</span>
@@ -139,7 +139,9 @@
 <span class="n">u</span> <span class="o">=</span>  <span class="nb">all</span><span class="p">[</span><span class="s1">&#39;amu&#39;</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span>
 
 
-<div class="viewcode-block" id="help"><a class="viewcode-back" href="../../constants.html#constants.physcon.help">[docs]</a><span class="k">def</span> <span class="nf">help</span><span class="p">():</span>
+<div class="viewcode-block" id="help">
+<a class="viewcode-back" href="../../constants.html#constants.physcon.help">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">help</span><span class="p">():</span>
     <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Available functions:&#39;</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;[note: key must be a string, within quotes!]&#39;</span><span class="p">)</span> 
     <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;  value(key) returns value (float)&#39;</span><span class="p">)</span>
@@ -154,16 +156,28 @@
     <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Available keys:&#39;</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="n">allkeys</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="value"><a class="viewcode-back" href="../../constants.html#constants.physcon.value">[docs]</a><span class="k">def</span> <span class="nf">value</span><span class="p">(</span><span class="n">key</span><span class="p">):</span>
+
+<div class="viewcode-block" id="value">
+<a class="viewcode-back" href="../../constants.html#constants.physcon.value">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">value</span><span class="p">(</span><span class="n">key</span><span class="p">):</span>
     <span class="k">return</span> <span class="nb">all</span><span class="p">[</span><span class="n">key</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span></div>
 
-<div class="viewcode-block" id="sd"><a class="viewcode-back" href="../../constants.html#constants.physcon.sd">[docs]</a><span class="k">def</span> <span class="nf">sd</span><span class="p">(</span><span class="n">key</span><span class="p">):</span>
+
+<div class="viewcode-block" id="sd">
+<a class="viewcode-back" href="../../constants.html#constants.physcon.sd">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">sd</span><span class="p">(</span><span class="n">key</span><span class="p">):</span>
     <span class="k">return</span> <span class="nb">all</span><span class="p">[</span><span class="n">key</span><span class="p">][</span><span class="mi">3</span><span class="p">]</span></div>
 
-<div class="viewcode-block" id="relsd"><a class="viewcode-back" href="../../constants.html#constants.physcon.relsd">[docs]</a><span class="k">def</span> <span class="nf">relsd</span><span class="p">(</span><span class="n">key</span><span class="p">):</span>
+
+<div class="viewcode-block" id="relsd">
+<a class="viewcode-back" href="../../constants.html#constants.physcon.relsd">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">relsd</span><span class="p">(</span><span class="n">key</span><span class="p">):</span>
     <span class="k">return</span> <span class="nb">all</span><span class="p">[</span><span class="n">key</span><span class="p">][</span><span class="mi">4</span><span class="p">]</span></div>
 
-<div class="viewcode-block" id="descr"><a class="viewcode-back" href="../../constants.html#constants.physcon.descr">[docs]</a><span class="k">def</span> <span class="nf">descr</span><span class="p">(</span><span class="n">key</span><span class="p">):</span>
+
+<div class="viewcode-block" id="descr">
+<a class="viewcode-back" href="../../constants.html#constants.physcon.descr">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">descr</span><span class="p">(</span><span class="n">key</span><span class="p">):</span>
     <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Description of &#39;</span><span class="p">,</span><span class="n">key</span><span class="p">,</span><span class="s1">&#39;:&#39;</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;  Name:               &#39;</span><span class="p">,</span><span class="nb">all</span><span class="p">[</span><span class="n">key</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
     <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;  Symbol (if avail.): &#39;</span><span class="p">,</span><span class="nb">all</span><span class="p">[</span><span class="n">key</span><span class="p">][</span><span class="mi">1</span><span class="p">])</span>
@@ -173,60 +187,87 @@
     <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;  value(sd) unit:     &#39;</span><span class="p">,</span><span class="nb">all</span><span class="p">[</span><span class="n">key</span><span class="p">][</span><span class="mi">5</span><span class="p">])</span>
     <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;  Source:             &#39;</span><span class="p">,</span><span class="nb">all</span><span class="p">[</span><span class="n">key</span><span class="p">][</span><span class="mi">6</span><span class="p">],</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span></div>
 
+
 <span class="c1"># Accessors based on naming system originally used in Matlab scripts (and Maple?)</span>
-<div class="viewcode-block" id="get_c0"><a class="viewcode-back" href="../../constants.html#constants.physcon.get_c0">[docs]</a><span class="k">def</span> <span class="nf">get_c0</span><span class="p">():</span>
+<div class="viewcode-block" id="get_c0">
+<a class="viewcode-back" href="../../constants.html#constants.physcon.get_c0">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_c0</span><span class="p">():</span>
   <span class="k">return</span> <span class="n">value</span><span class="p">(</span><span class="s1">&#39;lightvel&#39;</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="get_e"><a class="viewcode-back" href="../../constants.html#constants.physcon.get_e">[docs]</a><span class="k">def</span> <span class="nf">get_e</span><span class="p">():</span>
+
+<div class="viewcode-block" id="get_e">
+<a class="viewcode-back" href="../../constants.html#constants.physcon.get_e">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_e</span><span class="p">():</span>
   <span class="k">return</span> <span class="n">value</span><span class="p">(</span><span class="s1">&#39;charge-e&#39;</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="get_eV"><a class="viewcode-back" href="../../constants.html#constants.physcon.get_eV">[docs]</a><span class="k">def</span> <span class="nf">get_eV</span><span class="p">():</span>
+
+<div class="viewcode-block" id="get_eV">
+<a class="viewcode-back" href="../../constants.html#constants.physcon.get_eV">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_eV</span><span class="p">():</span>
   <span class="k">return</span> <span class="n">get_e</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="get_epsilon0"><a class="viewcode-back" href="../../constants.html#constants.physcon.get_epsilon0">[docs]</a><span class="k">def</span> <span class="nf">get_epsilon0</span><span class="p">():</span>
+
+<div class="viewcode-block" id="get_epsilon0">
+<a class="viewcode-back" href="../../constants.html#constants.physcon.get_epsilon0">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_epsilon0</span><span class="p">():</span>
   <span class="k">return</span> <span class="n">value</span><span class="p">(</span><span class="s1">&#39;elec-const&#39;</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="get_mu0"><a class="viewcode-back" href="../../constants.html#constants.physcon.get_mu0">[docs]</a><span class="k">def</span> <span class="nf">get_mu0</span><span class="p">():</span>
+
+<div class="viewcode-block" id="get_mu0">
+<a class="viewcode-back" href="../../constants.html#constants.physcon.get_mu0">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_mu0</span><span class="p">():</span>
   <span class="k">return</span> <span class="n">value</span><span class="p">(</span><span class="s1">&#39;magn-const&#39;</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="get_h"><a class="viewcode-back" href="../../constants.html#constants.physcon.get_h">[docs]</a><span class="k">def</span> <span class="nf">get_h</span><span class="p">():</span>
+
+<div class="viewcode-block" id="get_h">
+<a class="viewcode-back" href="../../constants.html#constants.physcon.get_h">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_h</span><span class="p">():</span>
   <span class="k">return</span> <span class="n">value</span><span class="p">(</span><span class="s1">&#39;planck&#39;</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="get_h_eVs"><a class="viewcode-back" href="../../constants.html#constants.physcon.get_h_eVs">[docs]</a><span class="k">def</span> <span class="nf">get_h_eVs</span><span class="p">():</span>
+
+<div class="viewcode-block" id="get_h_eVs">
+<a class="viewcode-back" href="../../constants.html#constants.physcon.get_h_eVs">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_h_eVs</span><span class="p">():</span>
   <span class="k">return</span> <span class="n">get_h</span><span class="p">()</span><span class="o">/</span><span class="n">get_e</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="get_hb"><a class="viewcode-back" href="../../constants.html#constants.physcon.get_hb">[docs]</a><span class="k">def</span> <span class="nf">get_hb</span><span class="p">():</span>
+
+<div class="viewcode-block" id="get_hb">
+<a class="viewcode-back" href="../../constants.html#constants.physcon.get_hb">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_hb</span><span class="p">():</span>
   <span class="k">return</span> <span class="n">value</span><span class="p">(</span><span class="s1">&#39;dirac&#39;</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="get_me"><a class="viewcode-back" href="../../constants.html#constants.physcon.get_me">[docs]</a><span class="k">def</span> <span class="nf">get_me</span><span class="p">():</span>
+
+<div class="viewcode-block" id="get_me">
+<a class="viewcode-back" href="../../constants.html#constants.physcon.get_me">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_me</span><span class="p">():</span>
   <span class="k">return</span> <span class="n">value</span><span class="p">(</span><span class="s1">&#39;mass-e&#39;</span><span class="p">)</span></div>
+
 
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
   <span class="k">pass</span>
 </pre></div>
 
+            <div class="clearer"></div>
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
         <div class="sphinxsidebarwrapper">
-<div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../../search.html" method="get">
-      <input type="text" name="q" />
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
       <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
     </form>
     </div>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related" role="navigation" aria-label="Related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -236,12 +277,13 @@
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="nav-item nav-item-0"><a href="../../index.html">script_inception_public  documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li> 
+          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">constants.physcon</a></li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2014, Mike Taverne.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.9.
+    &#169; Copyright 2014, Mike Taverne.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
     </div>
   </body>
 </html>

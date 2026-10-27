@@ -1,23 +1,22 @@
+<!DOCTYPE html>
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en" data-content_root="../../">
   <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>GWL.GWL_parser &#8212; script_inception_public  documentation</title>
-    <link rel="stylesheet" href="../../_static/classic.css" type="text/css" />
-    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
-    <script type="text/javascript" src="../../_static/jquery.js"></script>
-    <script type="text/javascript" src="../../_static/underscore.js"></script>
-    <script type="text/javascript" src="../../_static/doctools.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../../_static/classic.css?v=2bf1fcf8" />
+    <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+    
+    <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
   </head><body>
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related" role="navigation" aria-label="Related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -27,7 +26,8 @@
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="nav-item nav-item-0"><a href="../../index.html">script_inception_public  documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li> 
+          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">GWL.GWL_parser</a></li> 
       </ul>
     </div>  
 
@@ -40,17 +40,17 @@
 <span></span><span class="ch">#!/usr/bin/env python3</span>
 <span class="c1"># -*- coding: utf-8 -*-</span>
 
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">re</span>
-<span class="kn">import</span> <span class="nn">sys</span>
-<span class="kn">import</span> <span class="nn">numpy</span>
-<span class="kn">import</span> <span class="nn">argparse</span>
-<span class="kn">import</span> <span class="nn">tempfile</span>
-<span class="kn">import</span> <span class="nn">warnings</span>
-<span class="kn">from</span> <span class="nn">numpy</span> <span class="k">import</span> <span class="n">floor</span><span class="p">,</span> <span class="n">ceil</span>
-<span class="kn">from</span> <span class="nn">numpy.linalg</span> <span class="k">import</span> <span class="n">norm</span>
-<span class="kn">from</span> <span class="nn">utilities.common</span> <span class="k">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">utilities</span> <span class="k">import</span> <span class="n">TransformationMatrix</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">argparse</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">tempfile</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="kn">import</span> <span class="n">floor</span><span class="p">,</span> <span class="n">ceil</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">numpy.linalg</span><span class="w"> </span><span class="kn">import</span> <span class="n">norm</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">utilities.common</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">utilities</span><span class="w"> </span><span class="kn">import</span> <span class="n">TransformationMatrix</span>
 
 <span class="c1"># TODO: get voxelsize in any direction based on a 3D ellipsoid...</span>
 
@@ -65,8 +65,10 @@
 <span class="c1"># TODO: Add options or new functions to allow other desired systems like extremity points always separated by length, or always fill so that it touches the extremities, etc</span>
 <span class="c1"># TODO: Document with pictures. Check how to do that with doxygen or similar.</span>
 <span class="c1"># TODO: Start generating code documentation.</span>
-<div class="viewcode-block" id="calculateNvoxelsAndInterVoxelDistance"><a class="viewcode-back" href="../../GWL.html#GWL.GWL_parser.calculateNvoxelsAndInterVoxelDistance">[docs]</a><span class="k">def</span> <span class="nf">calculateNvoxelsAndInterVoxelDistance</span><span class="p">(</span><span class="n">Length</span><span class="p">,</span> <span class="n">Voxelsize</span><span class="p">,</span> <span class="n">Overlap</span><span class="p">):</span>
-  <span class="sd">&#39;&#39;&#39;</span>
+<div class="viewcode-block" id="calculateNvoxelsAndInterVoxelDistance">
+<a class="viewcode-back" href="../../GWL.html#GWL.GWL_parser.calculateNvoxelsAndInterVoxelDistance">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">calculateNvoxelsAndInterVoxelDistance</span><span class="p">(</span><span class="n">Length</span><span class="p">,</span> <span class="n">Voxelsize</span><span class="p">,</span> <span class="n">Overlap</span><span class="p">):</span>
+<span class="w">  </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">  Calulates the number of voxels and the distance between them so that they fit into length &quot;Length&quot; with an overlap &quot;Overlap&quot;, i.e. so that:</span>
 <span class="sd">  </span>
 <span class="sd">  * InterVoxelDistance = (1-Overlap)*Voxelsize</span>
@@ -91,8 +93,11 @@
 
   <span class="k">return</span> <span class="p">(</span><span class="n">Nvoxels</span><span class="p">,</span> <span class="n">InterVoxelDistance</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="GWLobject"><a class="viewcode-back" href="../../GWL.html#GWL.GWL_parser.GWLobject">[docs]</a><span class="k">class</span> <span class="nc">GWLobject</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-  <span class="sd">&#39;&#39;&#39;This is the main class used to read/write/create GWL files for the Nanoscribe.</span>
+
+<div class="viewcode-block" id="GWLobject">
+<a class="viewcode-back" href="../../GWL.html#GWL.GWL_parser.GWLobject">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">GWLobject</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<span class="w">  </span><span class="sd">&#39;&#39;&#39;This is the main class used to read/write/create GWL files for the Nanoscribe.</span>
 <span class="sd">  </span>
 <span class="sd">  Basic usage example::</span>
 <span class="sd">  </span>
@@ -161,8 +166,8 @@
 <span class="sd">  .. todo:: Maybe add a vtk-like Update() function which would do all the things which are currently done during writing? Writing would then call update before doing a very basic write call. Issues: Speed... Doing everything in VTK, using filters, etc, might speed up the process.</span>
 <span class="sd">  &#39;&#39;&#39;</span>
   
-  <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;Constructor&#39;&#39;&#39;</span>
+  <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;Constructor&#39;&#39;&#39;</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">verbosity</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">GWL_voxels</span> <span class="o">=</span> <span class="p">[]</span> <span class="c1">#: &quot;List of lists of voxels&quot;.</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">voxel_offset</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span>
@@ -206,25 +211,39 @@
     <span class="bp">self</span><span class="o">.</span><span class="n">PC_bool_InverseWriting</span> <span class="o">=</span> <span class="kc">False</span> <span class="c1">#: PC_bool_InverseWriting</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">PC_bool_LaserPowerCommand</span> <span class="o">=</span> <span class="kc">False</span> <span class="c1">#: PC_bool_LaserPowerCommand</span>
   
-<div class="viewcode-block" id="GWLobject.setVoxels"><a class="viewcode-back" href="../../GWL.html#GWL.GWL_parser.GWLobject.setVoxels">[docs]</a>  <span class="k">def</span> <span class="nf">setVoxels</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">L</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39; Set the voxels as a list of the form [[v0,v1,...], [vA,vB,...], ...] where v* are voxel coordinates, i.e. [X,Y,Z] or [X,Y,Z,power]. &#39;&#39;&#39;</span>
+<div class="viewcode-block" id="GWLobject.setVoxels">
+<a class="viewcode-back" href="../../GWL.html#GWL.GWL_parser.GWLobject.setVoxels">[docs]</a>
+  <span class="k">def</span><span class="w"> </span><span class="nf">setVoxels</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">L</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39; Set the voxels as a list of the form [[v0,v1,...], [vA,vB,...], ...] where v* are voxel coordinates, i.e. [X,Y,Z] or [X,Y,Z,power]. &#39;&#39;&#39;</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">GWL_voxels</span> <span class="o">=</span> <span class="n">L</span>
     <span class="k">return</span></div>
+
     
-<div class="viewcode-block" id="GWLobject.getVoxels"><a class="viewcode-back" href="../../GWL.html#GWL.GWL_parser.GWLobject.getVoxels">[docs]</a>  <span class="k">def</span> <span class="nf">getVoxels</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">L</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39; Returns a list of the voxels in the form specified in :py:func:`setVoxels`. &#39;&#39;&#39;</span>
+<div class="viewcode-block" id="GWLobject.getVoxels">
+<a class="viewcode-back" href="../../GWL.html#GWL.GWL_parser.GWLobject.getVoxels">[docs]</a>
+  <span class="k">def</span><span class="w"> </span><span class="nf">getVoxels</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">L</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39; Returns a list of the voxels in the form specified in :py:func:`setVoxels`. &#39;&#39;&#39;</span>
     <span class="k">return</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">GWL_voxels</span><span class="p">)</span></div>
+
   
-<div class="viewcode-block" id="GWLobject.appendVoxels"><a class="viewcode-back" href="../../GWL.html#GWL.GWL_parser.GWLobject.appendVoxels">[docs]</a>  <span class="k">def</span> <span class="nf">appendVoxels</span><span class="p">(</span><span class="n">L</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39; &quot;append&quot; a &quot;line of voxels&quot; &#39;&#39;&#39;</span>
+<div class="viewcode-block" id="GWLobject.appendVoxels">
+<a class="viewcode-back" href="../../GWL.html#GWL.GWL_parser.GWLobject.appendVoxels">[docs]</a>
+  <span class="k">def</span><span class="w"> </span><span class="nf">appendVoxels</span><span class="p">(</span><span class="n">L</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39; &quot;append&quot; a &quot;line of voxels&quot; &#39;&#39;&#39;</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">GWL_voxels</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">L</span><span class="p">)</span></div>
+
     
-<div class="viewcode-block" id="GWLobject.extendVoxels"><a class="viewcode-back" href="../../GWL.html#GWL.GWL_parser.GWLobject.extendVoxels">[docs]</a>  <span class="k">def</span> <span class="nf">extendVoxels</span><span class="p">(</span><span class="n">L</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39; &quot;extend&quot; with multiple &quot;lines of voxels&quot; &#39;&#39;&#39;</span>
+<div class="viewcode-block" id="GWLobject.extendVoxels">
+<a class="viewcode-back" href="../../GWL.html#GWL.GWL_parser.GWLobject.extendVoxels">[docs]</a>
+  <span class="k">def</span><span class="w"> </span><span class="nf">extendVoxels</span><span class="p">(</span><span class="n">L</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39; &quot;extend&quot; with multiple &quot;lines of voxels&quot; &#39;&#39;&#39;</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">GWL_voxels</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">L</span><span class="p">)</span></div>
+
   
-<div class="viewcode-block" id="GWLobject.reverse"><a class="viewcode-back" href="../../GWL.html#GWL.GWL_parser.GWLobject.reverse">[docs]</a>  <span class="k">def</span> <span class="nf">reverse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">reverse_line_order</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">reverse_voxel_order_per_line</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;Reverse the order of the voxels. Unlike  :py:attr:`reverse_line_order_on_write` and :py:attr:`reverse_voxel_order_per_line_on_write`, this applies directly.</span>
+<div class="viewcode-block" id="GWLobject.reverse">
+<a class="viewcode-back" href="../../GWL.html#GWL.GWL_parser.GWLobject.reverse">[docs]</a>
+  <span class="k">def</span><span class="w"> </span><span class="nf">reverse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">reverse_line_order</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">reverse_voxel_order_per_line</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;Reverse the order of the voxels. Unlike  :py:attr:`reverse_line_order_on_write` and :py:attr:`reverse_voxel_order_per_line_on_write`, this applies directly.</span>
 <span class="sd">    </span>
 <span class="sd">    :param reverse_line_order: If True, the order of the lines will be reversed, i.e.::</span>
 <span class="sd">    </span>
@@ -280,9 +299,12 @@
         <span class="n">write_sequence</span><span class="o">.</span><span class="n">reverse</span><span class="p">()</span>
     
     <span class="k">return</span></div>
+
   
-<div class="viewcode-block" id="GWLobject.add_arguments"><a class="viewcode-back" href="../../GWL.html#GWL.GWL_parser.GWLobject.add_arguments">[docs]</a>  <span class="k">def</span> <span class="nf">add_arguments</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parser</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;Adds GWLobject related arguments to the given *parser* (an argparse.ArgumentParser instance).</span>
+<div class="viewcode-block" id="GWLobject.add_arguments">
+<a class="viewcode-back" href="../../GWL.html#GWL.GWL_parser.GWLobject.add_arguments">[docs]</a>
+  <span class="k">def</span><span class="w"> </span><span class="nf">add_arguments</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parser</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;Adds GWLobject related arguments to the given *parser* (an argparse.ArgumentParser instance).</span>
 <span class="sd">    </span>
 <span class="sd">    See also: :py:func:`setAttributesFromParsedOptions`</span>
 <span class="sd">    </span>
@@ -305,15 +327,21 @@
 
     <span class="k">return</span></div>
 
-<div class="viewcode-block" id="GWLobject.get_argument_parser"><a class="viewcode-back" href="../../GWL.html#GWL.GWL_parser.GWLobject.get_argument_parser">[docs]</a>  <span class="k">def</span> <span class="nf">get_argument_parser</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<div class="viewcode-block" id="GWLobject.get_argument_parser">
+<a class="viewcode-back" href="../../GWL.html#GWL.GWL_parser.GWLobject.get_argument_parser">[docs]</a>
+  <span class="k">def</span><span class="w"> </span><span class="nf">get_argument_parser</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span><span class="n">description</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__doc__</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span> <span class="n">fromfile_prefix_chars</span><span class="o">=</span><span class="s1">&#39;@&#39;</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-d&#39;</span><span class="p">,</span><span class="s1">&#39;--outdir&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;outdir&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">tempfile</span><span class="o">.</span><span class="n">gettempdir</span><span class="p">(),</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;output directory&#39;</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-b&#39;</span><span class="p">,</span><span class="s1">&#39;--basename&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;basename&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;output basename&#39;</span><span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">add_arguments</span><span class="p">(</span><span class="n">parser</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">parser</span></div>
 
-<div class="viewcode-block" id="GWLobject.setAttributesFromParsedOptions"><a class="viewcode-back" href="../../GWL.html#GWL.GWL_parser.GWLobject.setAttributesFromParsedOptions">[docs]</a>  <span class="k">def</span> <span class="nf">setAttributesFromParsedOptions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">options</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;Sets the object&#39;s attributes based on the ones from the *options* object (usually an argparse.ArgumentParser instance).</span>
+
+<div class="viewcode-block" id="GWLobject.setAttributesFromParsedOptions">
+<a class="viewcode-back" href="../../GWL.html#GWL.GWL_parser.GWLobject.setAttributesFromParsedOptions">[docs]</a>
+  <span class="k">def</span><span class="w"> </span><span class="nf">setAttributesFromParsedOptions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">options</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;Sets the object&#39;s attributes based on the ones from the *options* object (usually an argparse.ArgumentParser instance).</span>
 <span class="sd">    </span>
 <span class="sd">    See also: :py:func:`add_arguments`</span>
 <span class="sd">    &#39;&#39;&#39;</span>
@@ -329,14 +357,20 @@
     <span class="bp">self</span><span class="o">.</span><span class="n">PC_bool_LaserPowerCommand</span> <span class="o">=</span> <span class="n">options</span><span class="o">.</span><span class="n">PC_bool_LaserPowerCommand</span>
     <span class="k">return</span></div>
 
-<div class="viewcode-block" id="GWLobject.getMinDistanceBetweenVoxels"><a class="viewcode-back" href="../../GWL.html#GWL.GWL_parser.GWLobject.getMinDistanceBetweenVoxels">[docs]</a>  <span class="k">def</span> <span class="nf">getMinDistanceBetweenVoxels</span><span class="p">():</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+
+<div class="viewcode-block" id="GWLobject.getMinDistanceBetweenVoxels">
+<a class="viewcode-back" href="../../GWL.html#GWL.GWL_parser.GWLobject.getMinDistanceBetweenVoxels">[docs]</a>
+  <span class="k">def</span><span class="w"> </span><span class="nf">getMinDistanceBetweenVoxels</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    .. todo:: finish implementing...</span>
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="k">return</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="GWLobject.updateLimits"><a class="viewcode-back" href="../../GWL.html#GWL.GWL_parser.GWLobject.updateLimits">[docs]</a>  <span class="k">def</span> <span class="nf">updateLimits</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39; Updates the PositionMinimum and PositionMaximum attributes.</span>
+
+<div class="viewcode-block" id="GWLobject.updateLimits">
+<a class="viewcode-back" href="../../GWL.html#GWL.GWL_parser.GWLobject.updateLimits">[docs]</a>
+  <span class="k">def</span><span class="w"> </span><span class="nf">updateLimits</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39; Updates the PositionMinimum and PositionMaximum attributes.</span>
 
 <span class="sd">    See also getLimits().</span>
 <span class="sd">    </span>
@@ -361,8 +395,11 @@
 
     <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">PositionMinimum</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">PositionMaximum</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="GWLobject.getLimits"><a class="viewcode-back" href="../../GWL.html#GWL.GWL_parser.GWLobject.getLimits">[docs]</a>  <span class="k">def</span> <span class="nf">getLimits</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">update_limits</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39; This function returns the minimum and maximum x,y,z coordinates.</span>
+
+<div class="viewcode-block" id="GWLobject.getLimits">
+<a class="viewcode-back" href="../../GWL.html#GWL.GWL_parser.GWLobject.getLimits">[docs]</a>
+  <span class="k">def</span><span class="w"> </span><span class="nf">getLimits</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">update_limits</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39; This function returns the minimum and maximum x,y,z coordinates.</span>
 
 <span class="sd">    To optimize speed, it only returns the currently stored limits, which should be computed while adding voxels.</span>
 <span class="sd">    To update the limits, call updateLimits().</span>
@@ -374,8 +411,11 @@
     <span class="k">if</span> <span class="n">update_limits</span><span class="p">:</span>
       <span class="bp">self</span><span class="o">.</span><span class="n">updateLimits</span><span class="p">()</span>
     <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">PositionMinimum</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">PositionMaximum</span><span class="p">)</span></div>
+
     
-<div class="viewcode-block" id="GWLobject.getMeshData"><a class="viewcode-back" href="../../GWL.html#GWL.GWL_parser.GWLobject.getMeshData">[docs]</a>  <span class="k">def</span> <span class="nf">getMeshData</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">position</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]):</span>
+<div class="viewcode-block" id="GWLobject.getMeshData">
+<a class="viewcode-back" href="../../GWL.html#GWL.GWL_parser.GWLobject.getMeshData">[docs]</a>
+  <span class="k">def</span><span class="w"> </span><span class="nf">getMeshData</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">position</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]):</span>
     <span class="n">verts_loc</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">edges</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">faces</span> <span class="o">=</span> <span class="p">[]</span>
@@ -394,8 +434,11 @@
         <span class="n">last_voxel_index</span> <span class="o">=</span> <span class="n">last_voxel_index</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">write_sequence</span><span class="p">)</span>
     <span class="k">return</span><span class="p">((</span><span class="n">verts_loc</span><span class="p">,</span> <span class="n">edges</span><span class="p">,</span> <span class="n">faces</span><span class="p">))</span></div>
 
+
   <span class="c1"># TODO: maybe create an iterator for voxels, to make operations on all voxels as easy as for v in voxels: ...</span>
-<div class="viewcode-block" id="GWLobject.applyOffset"><a class="viewcode-back" href="../../GWL.html#GWL.GWL_parser.GWLobject.applyOffset">[docs]</a>  <span class="k">def</span> <span class="nf">applyOffset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">offset</span><span class="p">):</span>
+<div class="viewcode-block" id="GWLobject.applyOffset">
+<a class="viewcode-back" href="../../GWL.html#GWL.GWL_parser.GWLobject.applyOffset">[docs]</a>
+  <span class="k">def</span><span class="w"> </span><span class="nf">applyOffset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">offset</span><span class="p">):</span>
     <span class="k">for</span> <span class="n">write_sequence</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">GWL_voxels</span><span class="p">:</span>
       <span class="k">for</span> <span class="n">voxel</span> <span class="ow">in</span> <span class="n">write_sequence</span><span class="p">:</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">offset</span><span class="p">)):</span>
@@ -406,8 +449,11 @@
             <span class="n">voxel</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">offset</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
     <span class="k">return</span></div>
 
-<div class="viewcode-block" id="GWLobject.getPower"><a class="viewcode-back" href="../../GWL.html#GWL.GWL_parser.GWLobject.getPower">[docs]</a>  <span class="k">def</span> <span class="nf">getPower</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">PC_laser_power_at_z0</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">PC_slope</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">PC_interfaceAt</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">PC_bool_InverseWriting</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">PC_float_height</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;calculate power for a given z position&#39;&#39;&#39;</span>
+
+<div class="viewcode-block" id="GWLobject.getPower">
+<a class="viewcode-back" href="../../GWL.html#GWL.GWL_parser.GWLobject.getPower">[docs]</a>
+  <span class="k">def</span><span class="w"> </span><span class="nf">getPower</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">PC_laser_power_at_z0</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">PC_slope</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">PC_interfaceAt</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">PC_bool_InverseWriting</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">PC_float_height</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;calculate power for a given z position&#39;&#39;&#39;</span>
     
     <span class="k">if</span> <span class="n">PC_laser_power_at_z0</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span> <span class="n">PC_laser_power_at_z0</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">PC_laser_power_at_z0</span>
     <span class="k">if</span> <span class="n">PC_slope</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span> <span class="n">PC_slope</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">PC_slope</span>
@@ -425,8 +471,11 @@
     
     <span class="k">return</span> <span class="n">power</span>    </div>
 
-<div class="viewcode-block" id="GWLobject.addPowerCompensation"><a class="viewcode-back" href="../../GWL.html#GWL.GWL_parser.GWLobject.addPowerCompensation">[docs]</a>  <span class="k">def</span> <span class="nf">addPowerCompensation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">laser_power_at_z0</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">interfaceAt</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">bool_InverseWriting</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">float_height</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+
+<div class="viewcode-block" id="GWLobject.addPowerCompensation">
+<a class="viewcode-back" href="../../GWL.html#GWL.GWL_parser.GWLobject.addPowerCompensation">[docs]</a>
+  <span class="k">def</span><span class="w"> </span><span class="nf">addPowerCompensation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">laser_power_at_z0</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">interfaceAt</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">bool_InverseWriting</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">float_height</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Add a 4th power component to voxels based on the formula:</span>
 <span class="sd">    </span>
 <span class="sd">    * LP(Z) = (1+K*(Z-interfaceAt))*LP(0) if bool_InverseWriting=False</span>
@@ -456,7 +505,10 @@
 
     <span class="k">return</span></div>
 
-<div class="viewcode-block" id="GWLobject.getLastVoxel"><a class="viewcode-back" href="../../GWL.html#GWL.GWL_parser.GWLobject.getLastVoxel">[docs]</a>  <span class="k">def</span> <span class="nf">getLastVoxel</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<div class="viewcode-block" id="GWLobject.getLastVoxel">
+<a class="viewcode-back" href="../../GWL.html#GWL.GWL_parser.GWLobject.getLastVoxel">[docs]</a>
+  <span class="k">def</span><span class="w"> </span><span class="nf">getLastVoxel</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="n">found</span> <span class="o">=</span> <span class="kc">False</span>
     <span class="n">voxel</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">GWL_voxels</span><span class="p">)):</span>
@@ -467,19 +519,31 @@
             <span class="k">break</span>
     <span class="k">return</span> <span class="p">(</span><span class="n">voxel</span><span class="p">,</span><span class="n">found</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="GWLobject.getNvoxels"><a class="viewcode-back" href="../../GWL.html#GWL.GWL_parser.GWLobject.getNvoxels">[docs]</a>  <span class="k">def</span> <span class="nf">getNvoxels</span><span class="p">():</span>
+
+<div class="viewcode-block" id="GWLobject.getNvoxels">
+<a class="viewcode-back" href="../../GWL.html#GWL.GWL_parser.GWLobject.getNvoxels">[docs]</a>
+  <span class="k">def</span><span class="w"> </span><span class="nf">getNvoxels</span><span class="p">():</span>
     <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;ok&#39;</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="GWLobject.clear"><a class="viewcode-back" href="../../GWL.html#GWL.GWL_parser.GWLobject.clear">[docs]</a>  <span class="k">def</span> <span class="nf">clear</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<div class="viewcode-block" id="GWLobject.clear">
+<a class="viewcode-back" href="../../GWL.html#GWL.GWL_parser.GWLobject.clear">[docs]</a>
+  <span class="k">def</span><span class="w"> </span><span class="nf">clear</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">GWL_voxels</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">voxel_offset</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span></div>
 
-<div class="viewcode-block" id="GWLobject.addLine"><a class="viewcode-back" href="../../GWL.html#GWL.GWL_parser.GWLobject.addLine">[docs]</a>  <span class="k">def</span> <span class="nf">addLine</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">P1</span><span class="p">,</span> <span class="n">P2</span><span class="p">,</span> <span class="n">power</span><span class="o">=-</span><span class="mi">1</span><span class="p">):</span>
+
+<div class="viewcode-block" id="GWLobject.addLine">
+<a class="viewcode-back" href="../../GWL.html#GWL.GWL_parser.GWLobject.addLine">[docs]</a>
+  <span class="k">def</span><span class="w"> </span><span class="nf">addLine</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">P1</span><span class="p">,</span> <span class="n">P2</span><span class="p">,</span> <span class="n">power</span><span class="o">=-</span><span class="mi">1</span><span class="p">):</span>
     <span class="n">write_sequence</span> <span class="o">=</span> <span class="p">[</span><span class="n">P1</span><span class="p">,</span><span class="n">P2</span><span class="p">]</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">GWL_voxels</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">write_sequence</span><span class="p">)</span></div>
 
+
   <span class="c1"># HACK: quick hack to create &quot;flat lines&quot;</span>
-<div class="viewcode-block" id="GWLobject.addFlatLine"><a class="viewcode-back" href="../../GWL.html#GWL.GWL_parser.GWLobject.addFlatLine">[docs]</a>  <span class="k">def</span> <span class="nf">addFlatLine</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">P1</span><span class="p">,</span> <span class="n">P2</span><span class="p">,</span> <span class="n">line_distance</span><span class="p">,</span> <span class="n">line_number</span><span class="p">,</span> <span class="n">power</span><span class="o">=-</span><span class="mi">1</span><span class="p">):</span>
+<div class="viewcode-block" id="GWLobject.addFlatLine">
+<a class="viewcode-back" href="../../GWL.html#GWL.GWL_parser.GWLobject.addFlatLine">[docs]</a>
+  <span class="k">def</span><span class="w"> </span><span class="nf">addFlatLine</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">P1</span><span class="p">,</span> <span class="n">P2</span><span class="p">,</span> <span class="n">line_distance</span><span class="p">,</span> <span class="n">line_number</span><span class="p">,</span> <span class="n">power</span><span class="o">=-</span><span class="mi">1</span><span class="p">):</span>
     <span class="n">z</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
     <span class="c1">#print(&#39;===============AD&#39;,P1)</span>
     <span class="n">P1</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">P1</span><span class="p">)</span>
@@ -505,7 +569,10 @@
       <span class="n">write_sequence</span> <span class="o">=</span> <span class="p">[</span><span class="n">A</span><span class="p">,</span><span class="n">B</span><span class="p">]</span>
       <span class="bp">self</span><span class="o">.</span><span class="n">GWL_voxels</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">write_sequence</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="GWLobject.addLineCylinder"><a class="viewcode-back" href="../../GWL.html#GWL.GWL_parser.GWLobject.addLineCylinder">[docs]</a>  <span class="k">def</span> <span class="nf">addLineCylinder</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">P1</span><span class="p">,</span> <span class="n">P2</span><span class="p">,</span> <span class="n">power</span><span class="p">,</span> <span class="n">inner_radius</span><span class="p">,</span> <span class="n">outer_radius</span><span class="p">,</span> <span class="n">PointDistance_r</span><span class="p">,</span> <span class="n">PointDistance_theta</span><span class="p">):</span>
+
+<div class="viewcode-block" id="GWLobject.addLineCylinder">
+<a class="viewcode-back" href="../../GWL.html#GWL.GWL_parser.GWLobject.addLineCylinder">[docs]</a>
+  <span class="k">def</span><span class="w"> </span><span class="nf">addLineCylinder</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">P1</span><span class="p">,</span> <span class="n">P2</span><span class="p">,</span> <span class="n">power</span><span class="p">,</span> <span class="n">inner_radius</span><span class="p">,</span> <span class="n">outer_radius</span><span class="p">,</span> <span class="n">PointDistance_r</span><span class="p">,</span> <span class="n">PointDistance_theta</span><span class="p">):</span>
     <span class="c1"># prepare some variables</span>
     <span class="n">v</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">P2</span><span class="p">)</span><span class="o">-</span><span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">P1</span><span class="p">)</span> <span class="c1"># vector to rotate</span>
     <span class="c1">#print((&#39;v=&#39;,v))</span>
@@ -590,8 +657,12 @@
     <span class="c1">#self.addGWLobject(tube)</span>
     <span class="k">return</span></div>
 
-<div class="viewcode-block" id="GWLobject.addGWLobject"><a class="viewcode-back" href="../../GWL.html#GWL.GWL_parser.GWLobject.addGWLobject">[docs]</a>  <span class="k">def</span> <span class="nf">addGWLobject</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
+
+<div class="viewcode-block" id="GWLobject.addGWLobject">
+<a class="viewcode-back" href="../../GWL.html#GWL.GWL_parser.GWLobject.addGWLobject">[docs]</a>
+  <span class="k">def</span><span class="w"> </span><span class="nf">addGWLobject</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">GWL_voxels</span> <span class="o">+=</span> <span class="n">obj</span><span class="o">.</span><span class="n">GWL_voxels</span></div>
+
     <span class="c1">#for write_sequence in tube.GWL_voxels:</span>
           <span class="c1">#self.GWL_voxels.append(write_sequence)</span>
 
@@ -628,7 +699,9 @@
         <span class="c1">#write_sequence[i] = [location[0],location[1],location[2],power]</span>
 
 
-<div class="viewcode-block" id="GWLobject.addTubeWithVerticalLines"><a class="viewcode-back" href="../../GWL.html#GWL.GWL_parser.GWLobject.addTubeWithVerticalLines">[docs]</a>  <span class="k">def</span> <span class="nf">addTubeWithVerticalLines</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">centro</span><span class="p">,</span> <span class="n">inner_radius</span><span class="p">,</span> <span class="n">outer_radius</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">power</span><span class="p">,</span> <span class="n">PointDistance_r</span><span class="p">,</span> <span class="n">PointDistance_theta</span><span class="p">,</span> <span class="n">downwardWriting</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">zigzag</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<div class="viewcode-block" id="GWLobject.addTubeWithVerticalLines">
+<a class="viewcode-back" href="../../GWL.html#GWL.GWL_parser.GWLobject.addTubeWithVerticalLines">[docs]</a>
+  <span class="k">def</span><span class="w"> </span><span class="nf">addTubeWithVerticalLines</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">centro</span><span class="p">,</span> <span class="n">inner_radius</span><span class="p">,</span> <span class="n">outer_radius</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">power</span><span class="p">,</span> <span class="n">PointDistance_r</span><span class="p">,</span> <span class="n">PointDistance_theta</span><span class="p">,</span> <span class="n">downwardWriting</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">zigzag</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
     <span class="c1"># counter value used to determine the writing direction: 0=down-&gt;top 1=top-&gt;down</span>
     <span class="n">counter</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">downwardWriting</span><span class="p">)</span>
 
@@ -654,7 +727,10 @@
           <span class="k">if</span> <span class="n">zigzag</span><span class="p">:</span> <span class="n">counter</span><span class="o">+=</span><span class="mi">1</span>
     <span class="k">return</span></div>
 
-<div class="viewcode-block" id="GWLobject.rotate"><a class="viewcode-back" href="../../GWL.html#GWL.GWL_parser.GWLobject.rotate">[docs]</a>  <span class="k">def</span> <span class="nf">rotate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">axis_point</span><span class="p">,</span> <span class="n">axis_direction</span><span class="p">,</span> <span class="n">angle_degrees</span><span class="p">):</span>
+
+<div class="viewcode-block" id="GWLobject.rotate">
+<a class="viewcode-back" href="../../GWL.html#GWL.GWL_parser.GWLobject.rotate">[docs]</a>
+  <span class="k">def</span><span class="w"> </span><span class="nf">rotate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">axis_point</span><span class="p">,</span> <span class="n">axis_direction</span><span class="p">,</span> <span class="n">angle_degrees</span><span class="p">):</span>
     <span class="c1">#print(&#39;@@@@@@@@@@@@@@@@@@@@@@&#39;)</span>
     <span class="n">M</span> <span class="o">=</span> <span class="n">TransformationMatrix</span><span class="o">.</span><span class="n">rotationMatrix</span><span class="p">(</span><span class="n">axis_point</span><span class="p">,</span> <span class="n">axis_direction</span><span class="p">,</span> <span class="n">angle_degrees</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">write_sequence</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">GWL_voxels</span><span class="p">:</span>
@@ -663,8 +739,11 @@
         <span class="n">write_sequence</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">TransformationMatrix</span><span class="o">.</span><span class="n">applyTransformation</span><span class="p">(</span><span class="n">M</span><span class="p">,</span><span class="n">write_sequence</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
     <span class="k">return</span></div>
 
+
   <span class="c1"># TODO: Use better names/transformation system to implement translations</span>
-<div class="viewcode-block" id="GWLobject.applyTransformationMatrix"><a class="viewcode-back" href="../../GWL.html#GWL.GWL_parser.GWLobject.applyTransformationMatrix">[docs]</a>  <span class="k">def</span> <span class="nf">applyTransformationMatrix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">centro</span><span class="p">):</span>
+<div class="viewcode-block" id="GWLobject.applyTransformationMatrix">
+<a class="viewcode-back" href="../../GWL.html#GWL.GWL_parser.GWLobject.applyTransformationMatrix">[docs]</a>
+  <span class="k">def</span><span class="w"> </span><span class="nf">applyTransformationMatrix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">centro</span><span class="p">):</span>
     <span class="k">for</span> <span class="n">write_sequence</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">GWL_voxels</span><span class="p">:</span>
       <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">write_sequence</span><span class="p">)):</span>
         <span class="n">voxel</span> <span class="o">=</span> <span class="n">write_sequence</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
@@ -682,7 +761,10 @@
         <span class="n">write_sequence</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">location</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">location</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="n">location</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span><span class="n">power</span><span class="p">]</span>
     <span class="k">return</span></div>
 
-<div class="viewcode-block" id="GWLobject.addHorizontalGrating"><a class="viewcode-back" href="../../GWL.html#GWL.GWL_parser.GWLobject.addHorizontalGrating">[docs]</a>  <span class="k">def</span> <span class="nf">addHorizontalGrating</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">P1</span><span class="p">,</span> <span class="n">P2</span><span class="p">,</span> <span class="n">LineNumber</span><span class="p">,</span> <span class="n">LineDistance</span><span class="p">):</span>
+
+<div class="viewcode-block" id="GWLobject.addHorizontalGrating">
+<a class="viewcode-back" href="../../GWL.html#GWL.GWL_parser.GWLobject.addHorizontalGrating">[docs]</a>
+  <span class="k">def</span><span class="w"> </span><span class="nf">addHorizontalGrating</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">P1</span><span class="p">,</span> <span class="n">P2</span><span class="p">,</span> <span class="n">LineNumber</span><span class="p">,</span> <span class="n">LineDistance</span><span class="p">):</span>
     <span class="n">u</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">P2</span><span class="p">)</span><span class="o">-</span><span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">P1</span><span class="p">)</span>
     <span class="n">u</span> <span class="o">=</span> <span class="n">u</span><span class="o">*</span><span class="mf">1.0</span><span class="o">/</span><span class="n">numpy</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="nb">pow</span><span class="p">(</span><span class="n">u</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="mi">2</span><span class="p">)</span><span class="o">+</span><span class="nb">pow</span><span class="p">(</span><span class="n">u</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="mi">2</span><span class="p">)</span><span class="o">+</span><span class="nb">pow</span><span class="p">(</span><span class="n">u</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span><span class="mi">2</span><span class="p">))</span>
     <span class="n">v</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="o">-</span><span class="n">u</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="n">u</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="mi">0</span><span class="p">])</span>
@@ -703,7 +785,10 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">GWL_voxels</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">B</span><span class="p">,</span><span class="n">A</span><span class="p">])</span>
       <span class="n">counter</span> <span class="o">=</span> <span class="n">counter</span> <span class="o">+</span> <span class="mi">1</span></div>
 
-<div class="viewcode-block" id="GWLobject.addZGrating"><a class="viewcode-back" href="../../GWL.html#GWL.GWL_parser.GWLobject.addZGrating">[docs]</a>  <span class="k">def</span> <span class="nf">addZGrating</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">P1</span><span class="p">,</span> <span class="n">P2</span><span class="p">,</span> <span class="n">LineNumber</span><span class="p">,</span> <span class="n">LineDistance</span><span class="p">,</span> <span class="n">BottomToTop</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+
+<div class="viewcode-block" id="GWLobject.addZGrating">
+<a class="viewcode-back" href="../../GWL.html#GWL.GWL_parser.GWLobject.addZGrating">[docs]</a>
+  <span class="k">def</span><span class="w"> </span><span class="nf">addZGrating</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">P1</span><span class="p">,</span> <span class="n">P2</span><span class="p">,</span> <span class="n">LineNumber</span><span class="p">,</span> <span class="n">LineDistance</span><span class="p">,</span> <span class="n">BottomToTop</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
     <span class="n">Zcenter</span> <span class="o">=</span> <span class="mf">0.5</span><span class="o">*</span><span class="p">(</span><span class="n">P1</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="n">P2</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
     <span class="n">zlist</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">L</span> <span class="o">=</span> <span class="p">(</span><span class="n">LineNumber</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="n">LineDistance</span>
@@ -725,15 +810,21 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">GWL_voxels</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">B</span><span class="p">,</span><span class="n">A</span><span class="p">])</span>
       <span class="n">counter</span> <span class="o">=</span> <span class="n">counter</span> <span class="o">+</span> <span class="mi">1</span></div>
 
-<div class="viewcode-block" id="GWLobject.addBlockCentroSize"><a class="viewcode-back" href="../../GWL.html#GWL.GWL_parser.GWLobject.addBlockCentroSize">[docs]</a>  <span class="k">def</span> <span class="nf">addBlockCentroSize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">centro</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">LineDistance_Horizontal</span><span class="o">=</span><span class="n">DEFAULT_VOXEL_WIDTH</span><span class="p">,</span> <span class="n">LineDistance_Vertical</span><span class="o">=</span><span class="n">DEFAULT_VOXEL_HEIGHT</span><span class="p">,</span> <span class="n">BottomToTop</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">direction</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+<div class="viewcode-block" id="GWLobject.addBlockCentroSize">
+<a class="viewcode-back" href="../../GWL.html#GWL.GWL_parser.GWLobject.addBlockCentroSize">[docs]</a>
+  <span class="k">def</span><span class="w"> </span><span class="nf">addBlockCentroSize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">centro</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">LineDistance_Horizontal</span><span class="o">=</span><span class="n">DEFAULT_VOXEL_WIDTH</span><span class="p">,</span> <span class="n">LineDistance_Vertical</span><span class="o">=</span><span class="n">DEFAULT_VOXEL_HEIGHT</span><span class="p">,</span> <span class="n">BottomToTop</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">direction</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="n">centro</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">centro</span><span class="p">)</span>
     <span class="n">size</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">size</span><span class="p">)</span>
     <span class="n">lower</span> <span class="o">=</span> <span class="n">centro</span> <span class="o">-</span> <span class="mf">0.5</span><span class="o">*</span><span class="n">size</span>
     <span class="n">upper</span> <span class="o">=</span> <span class="n">centro</span> <span class="o">+</span> <span class="mf">0.5</span><span class="o">*</span><span class="n">size</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">addBlockLowerUpper</span><span class="p">(</span><span class="n">lower</span><span class="p">,</span> <span class="n">upper</span><span class="p">,</span> <span class="n">LineDistance_Horizontal</span><span class="p">,</span> <span class="n">LineDistance_Vertical</span><span class="p">,</span> <span class="n">BottomToTop</span><span class="p">,</span> <span class="n">direction</span><span class="p">)</span></div>
 
+
   <span class="c1">## TODO: API: Was it a good idea to specify the other blocks in terms of LineNumber* in the first place?</span>
-<div class="viewcode-block" id="GWLobject.addBlockLowerUpper"><a class="viewcode-back" href="../../GWL.html#GWL.GWL_parser.GWLobject.addBlockLowerUpper">[docs]</a>  <span class="k">def</span> <span class="nf">addBlockLowerUpper</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lower</span><span class="p">,</span> <span class="n">upper</span><span class="p">,</span> <span class="n">LineDistance_Horizontal</span><span class="o">=</span><span class="n">DEFAULT_VOXEL_WIDTH</span><span class="p">,</span> <span class="n">LineDistance_Vertical</span><span class="o">=</span><span class="n">DEFAULT_VOXEL_HEIGHT</span><span class="p">,</span> <span class="n">BottomToTop</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">direction</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="GWLobject.addBlockLowerUpper">
+<a class="viewcode-back" href="../../GWL.html#GWL.GWL_parser.GWLobject.addBlockLowerUpper">[docs]</a>
+  <span class="k">def</span><span class="w"> </span><span class="nf">addBlockLowerUpper</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lower</span><span class="p">,</span> <span class="n">upper</span><span class="p">,</span> <span class="n">LineDistance_Horizontal</span><span class="o">=</span><span class="n">DEFAULT_VOXEL_WIDTH</span><span class="p">,</span> <span class="n">LineDistance_Vertical</span><span class="o">=</span><span class="n">DEFAULT_VOXEL_HEIGHT</span><span class="p">,</span> <span class="n">BottomToTop</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">direction</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="p">(</span><span class="n">lower</span><span class="p">,</span><span class="n">upper</span><span class="p">)</span> <span class="o">=</span> <span class="n">fixLowerUpper</span><span class="p">(</span><span class="n">lower</span><span class="p">,</span><span class="n">upper</span><span class="p">)</span>
     <span class="c1">#print(lower)</span>
     <span class="c1">#print(upper)</span>
@@ -760,7 +851,10 @@
     <span class="k">else</span><span class="p">:</span>
       <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;ERROR: Invalid direction. Should be &#39;X&#39;,&#39;Y&#39; or &#39;Z&#39;&quot;</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="GWLobject.addXblock"><a class="viewcode-back" href="../../GWL.html#GWL.GWL_parser.GWLobject.addXblock">[docs]</a>  <span class="k">def</span> <span class="nf">addXblock</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">P1</span><span class="p">,</span> <span class="n">P2</span><span class="p">,</span> <span class="n">LineNumber_Horizontal</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">LineDistance_Horizontal</span> <span class="o">=</span> <span class="n">DEFAULT_VOXEL_WIDTH</span><span class="p">,</span> <span class="n">LineNumber_Vertical</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">LineDistance_Vertical</span> <span class="o">=</span> <span class="n">DEFAULT_VOXEL_HEIGHT</span><span class="p">,</span> <span class="n">BottomToTop</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+
+<div class="viewcode-block" id="GWLobject.addXblock">
+<a class="viewcode-back" href="../../GWL.html#GWL.GWL_parser.GWLobject.addXblock">[docs]</a>
+  <span class="k">def</span><span class="w"> </span><span class="nf">addXblock</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">P1</span><span class="p">,</span> <span class="n">P2</span><span class="p">,</span> <span class="n">LineNumber_Horizontal</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">LineDistance_Horizontal</span> <span class="o">=</span> <span class="n">DEFAULT_VOXEL_WIDTH</span><span class="p">,</span> <span class="n">LineNumber_Vertical</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">LineDistance_Vertical</span> <span class="o">=</span> <span class="n">DEFAULT_VOXEL_HEIGHT</span><span class="p">,</span> <span class="n">BottomToTop</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
 
     <span class="c1"># TODO: Should use calculateNvoxelsAndInterVoxelDistance()? And overlap? -&gt; Other block functions should require overlap/linenumber args?</span>
     <span class="k">if</span> <span class="n">LineNumber_Horizontal</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span> <span class="n">LineNumber_Horizontal</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span> <span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">P2</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">P1</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span><span class="o">/</span><span class="n">LineDistance_Horizontal</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span> <span class="p">)</span>
@@ -794,7 +888,10 @@
           <span class="bp">self</span><span class="o">.</span><span class="n">GWL_voxels</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">B</span><span class="p">,</span><span class="n">A</span><span class="p">])</span>
         <span class="n">counter</span> <span class="o">=</span> <span class="n">counter</span> <span class="o">+</span> <span class="mi">1</span></div>
 
-<div class="viewcode-block" id="GWLobject.addYblock"><a class="viewcode-back" href="../../GWL.html#GWL.GWL_parser.GWLobject.addYblock">[docs]</a>  <span class="k">def</span> <span class="nf">addYblock</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">P1</span><span class="p">,</span> <span class="n">P2</span><span class="p">,</span> <span class="n">LineNumber_Horizontal</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">LineDistance_Horizontal</span> <span class="o">=</span> <span class="n">DEFAULT_VOXEL_WIDTH</span><span class="p">,</span> <span class="n">LineNumber_Vertical</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">LineDistance_Vertical</span> <span class="o">=</span> <span class="n">DEFAULT_VOXEL_HEIGHT</span><span class="p">,</span> <span class="n">BottomToTop</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+
+<div class="viewcode-block" id="GWLobject.addYblock">
+<a class="viewcode-back" href="../../GWL.html#GWL.GWL_parser.GWLobject.addYblock">[docs]</a>
+  <span class="k">def</span><span class="w"> </span><span class="nf">addYblock</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">P1</span><span class="p">,</span> <span class="n">P2</span><span class="p">,</span> <span class="n">LineNumber_Horizontal</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">LineDistance_Horizontal</span> <span class="o">=</span> <span class="n">DEFAULT_VOXEL_WIDTH</span><span class="p">,</span> <span class="n">LineNumber_Vertical</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">LineDistance_Vertical</span> <span class="o">=</span> <span class="n">DEFAULT_VOXEL_HEIGHT</span><span class="p">,</span> <span class="n">BottomToTop</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
 
     <span class="k">if</span> <span class="n">LineNumber_Horizontal</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span> <span class="n">LineNumber_Horizontal</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span> <span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">P2</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="n">P1</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">/</span><span class="n">LineDistance_Horizontal</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span> <span class="p">)</span>
     <span class="k">if</span> <span class="n">LineNumber_Vertical</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span> <span class="n">LineNumber_Vertical</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span> <span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">P2</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">-</span><span class="n">P1</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span><span class="o">/</span><span class="n">LineDistance_Vertical</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span> <span class="p">)</span>
@@ -825,8 +922,11 @@
           <span class="bp">self</span><span class="o">.</span><span class="n">GWL_voxels</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">B</span><span class="p">,</span><span class="n">A</span><span class="p">])</span>
         <span class="n">counter</span> <span class="o">=</span> <span class="n">counter</span> <span class="o">+</span> <span class="mi">1</span></div>
 
+
   <span class="c1"># TODO: API improvement: use P1,P2 to specify BottomToTop? Leave in BottomToTop? Pass just x, y or z coordinates instead of [x,y,z]? X,Y,Z functions should be more or less the same if possible.</span>
-<div class="viewcode-block" id="GWLobject.addZblock"><a class="viewcode-back" href="../../GWL.html#GWL.GWL_parser.GWLobject.addZblock">[docs]</a>  <span class="k">def</span> <span class="nf">addZblock</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">P1</span><span class="p">,</span> <span class="n">P2</span><span class="p">,</span> <span class="n">LineNumber_X</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">LineDistance_X</span> <span class="o">=</span> <span class="n">DEFAULT_VOXEL_WIDTH</span><span class="p">,</span> <span class="n">LineNumber_Y</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">LineDistance_Y</span> <span class="o">=</span> <span class="n">DEFAULT_VOXEL_WIDTH</span><span class="p">):</span>
+<div class="viewcode-block" id="GWLobject.addZblock">
+<a class="viewcode-back" href="../../GWL.html#GWL.GWL_parser.GWLobject.addZblock">[docs]</a>
+  <span class="k">def</span><span class="w"> </span><span class="nf">addZblock</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">P1</span><span class="p">,</span> <span class="n">P2</span><span class="p">,</span> <span class="n">LineNumber_X</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">LineDistance_X</span> <span class="o">=</span> <span class="n">DEFAULT_VOXEL_WIDTH</span><span class="p">,</span> <span class="n">LineNumber_Y</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">LineDistance_Y</span> <span class="o">=</span> <span class="n">DEFAULT_VOXEL_WIDTH</span><span class="p">):</span>
 
     <span class="k">if</span> <span class="n">LineNumber_X</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span> <span class="n">LineNumber_X</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span> <span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">P2</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="n">P1</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">/</span><span class="n">LineDistance_X</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span> <span class="p">)</span>
     <span class="k">if</span> <span class="n">LineNumber_Y</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span> <span class="n">LineNumber_Y</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span> <span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">P2</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">P1</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span><span class="o">/</span><span class="n">LineDistance_Y</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span> <span class="p">)</span>
@@ -854,9 +954,12 @@
           <span class="bp">self</span><span class="o">.</span><span class="n">GWL_voxels</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">B</span><span class="p">,</span><span class="n">A</span><span class="p">])</span>
         <span class="n">counter</span> <span class="o">=</span> <span class="n">counter</span> <span class="o">+</span> <span class="mi">1</span></div>
 
+
   <span class="c1"># TODO: Improve by just passing a min/max PointDistance and choosing the distance so that it gives a nice integer number of points to fit the desired circle arc?</span>
   <span class="c1"># TODO: different functions for this? func options?</span>
-<div class="viewcode-block" id="GWLobject.addHorizontalCircle"><a class="viewcode-back" href="../../GWL.html#GWL.GWL_parser.GWLobject.addHorizontalCircle">[docs]</a>  <span class="k">def</span> <span class="nf">addHorizontalCircle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">center</span><span class="p">,</span> <span class="n">radius</span><span class="p">,</span> <span class="n">power</span><span class="p">,</span> <span class="n">PointDistance_max</span><span class="p">,</span> <span class="n">startAngle</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">endAngle</span><span class="o">=</span><span class="mi">2</span><span class="o">*</span><span class="n">numpy</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="n">closed_loop</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="GWLobject.addHorizontalCircle">
+<a class="viewcode-back" href="../../GWL.html#GWL.GWL_parser.GWLobject.addHorizontalCircle">[docs]</a>
+  <span class="k">def</span><span class="w"> </span><span class="nf">addHorizontalCircle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">center</span><span class="p">,</span> <span class="n">radius</span><span class="p">,</span> <span class="n">power</span><span class="p">,</span> <span class="n">PointDistance_max</span><span class="p">,</span> <span class="n">startAngle</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">endAngle</span><span class="o">=</span><span class="mi">2</span><span class="o">*</span><span class="n">numpy</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="n">closed_loop</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="n">write_sequence</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">if</span> <span class="n">radius</span> <span class="o">&lt;</span> <span class="mf">0.5</span><span class="o">*</span><span class="n">PointDistance_max</span><span class="p">:</span>
       <span class="n">write_sequence</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">center</span><span class="p">)</span>
@@ -878,7 +981,10 @@
         <span class="n">write_sequence</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">P</span><span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">GWL_voxels</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">write_sequence</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="GWLobject.addHorizontalDisk"><a class="viewcode-back" href="../../GWL.html#GWL.GWL_parser.GWLobject.addHorizontalDisk">[docs]</a>  <span class="k">def</span> <span class="nf">addHorizontalDisk</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">center</span><span class="p">,</span> <span class="n">radius</span><span class="p">,</span> <span class="n">power</span><span class="p">,</span> <span class="n">PointDistance</span><span class="p">):</span>
+
+<div class="viewcode-block" id="GWLobject.addHorizontalDisk">
+<a class="viewcode-back" href="../../GWL.html#GWL.GWL_parser.GWLobject.addHorizontalDisk">[docs]</a>
+  <span class="k">def</span><span class="w"> </span><span class="nf">addHorizontalDisk</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">center</span><span class="p">,</span> <span class="n">radius</span><span class="p">,</span> <span class="n">power</span><span class="p">,</span> <span class="n">PointDistance</span><span class="p">):</span>
     <span class="n">N</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">radius</span><span class="o">/</span><span class="nb">float</span><span class="p">(</span><span class="n">PointDistance</span><span class="p">))</span>
     <span class="c1">#print((&#39;N = &#39;,N))</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
@@ -889,7 +995,10 @@
       <span class="k">else</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">addHorizontalCircle</span><span class="p">(</span><span class="n">center</span><span class="p">,</span> <span class="n">i</span><span class="o">*</span><span class="n">radius</span><span class="o">/</span><span class="nb">float</span><span class="p">(</span><span class="n">N</span><span class="p">),</span> <span class="n">power</span><span class="p">,</span> <span class="n">PointDistance</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="GWLobject.addSphere"><a class="viewcode-back" href="../../GWL.html#GWL.GWL_parser.GWLobject.addSphere">[docs]</a>  <span class="k">def</span> <span class="nf">addSphere</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">center</span><span class="p">,</span> <span class="n">radius</span><span class="p">,</span> <span class="n">power</span><span class="p">,</span> <span class="n">HorizontalPointDistance</span><span class="p">,</span> <span class="n">VerticalPointDistance</span><span class="p">,</span> <span class="n">solid</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+
+<div class="viewcode-block" id="GWLobject.addSphere">
+<a class="viewcode-back" href="../../GWL.html#GWL.GWL_parser.GWLobject.addSphere">[docs]</a>
+  <span class="k">def</span><span class="w"> </span><span class="nf">addSphere</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">center</span><span class="p">,</span> <span class="n">radius</span><span class="p">,</span> <span class="n">power</span><span class="p">,</span> <span class="n">HorizontalPointDistance</span><span class="p">,</span> <span class="n">VerticalPointDistance</span><span class="p">,</span> <span class="n">solid</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
 
     <span class="n">PointDistance</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="nb">pow</span><span class="p">(</span><span class="n">HorizontalPointDistance</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span><span class="o">+</span><span class="nb">pow</span><span class="p">(</span><span class="n">VerticalPointDistance</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span>
     <span class="c1">#print PointDistance</span>
@@ -917,6 +1026,7 @@
         <span class="k">else</span><span class="p">:</span>
           <span class="bp">self</span><span class="o">.</span><span class="n">addHorizontalCircle</span><span class="p">([</span><span class="n">center</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">center</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="n">center</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">+</span><span class="n">z</span><span class="p">],</span> <span class="n">local_radius</span><span class="p">,</span> <span class="n">power</span><span class="p">,</span> <span class="n">HorizontalPointDistance</span><span class="p">)</span></div>
 
+
     <span class="c1">#N = int(radius/float(VerticalPointDistance))</span>
     <span class="c1">#for i in range(-N,N+1):</span>
       <span class="c1">#z = i*radius/float(N)</span>
@@ -927,13 +1037,16 @@
       <span class="c1">#else:</span>
         <span class="c1">#self.addHorizontalCircle([center[0],center[1],center[2]+z], local_radius, power, HorizontalPointDistance)</span>
 
-<div class="viewcode-block" id="GWLobject.startNewVoxelSequence"><a class="viewcode-back" href="../../GWL.html#GWL.GWL_parser.GWLobject.startNewVoxelSequence">[docs]</a>  <span class="k">def</span> <span class="nf">startNewVoxelSequence</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+<div class="viewcode-block" id="GWLobject.startNewVoxelSequence">
+<a class="viewcode-back" href="../../GWL.html#GWL.GWL_parser.GWLobject.startNewVoxelSequence">[docs]</a>
+  <span class="k">def</span><span class="w"> </span><span class="nf">startNewVoxelSequence</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Starts a new voxel sequence, i.e. &quot;adds a Write command&quot; if you already had a &quot;voxel sequence&quot; before it when creating the .gwl file.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="n">write_sequence</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">GWL_voxels</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">write_sequence</span><span class="p">)</span>
     <span class="k">return</span></div>
+
 
   <span class="c1"># Completely disabling deprecated function, but leaving warning syntax as example.</span>
   <span class="c1">#def addWrite(self):</span>
@@ -944,8 +1057,10 @@
     <span class="c1">#raise</span>
     <span class="c1">#return</span>
 
-<div class="viewcode-block" id="GWLobject.addVoxel"><a class="viewcode-back" href="../../GWL.html#GWL.GWL_parser.GWLobject.addVoxel">[docs]</a>  <span class="k">def</span> <span class="nf">addVoxel</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">voxel</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+<div class="viewcode-block" id="GWLobject.addVoxel">
+<a class="viewcode-back" href="../../GWL.html#GWL.GWL_parser.GWLobject.addVoxel">[docs]</a>
+  <span class="k">def</span><span class="w"> </span><span class="nf">addVoxel</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">voxel</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Adds a voxel to the last &quot;writing sequence&quot;. If there is none, a new one will be created.</span>
 <span class="sd">    Equivalent to adding a line of the form &quot;x y z [power]&quot; in your .gwl file.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
@@ -964,7 +1079,10 @@
     
     <span class="k">return</span></div>
 
-<div class="viewcode-block" id="GWLobject.readSubstitutes"><a class="viewcode-back" href="../../GWL.html#GWL.GWL_parser.GWLobject.readSubstitutes">[docs]</a>  <span class="k">def</span> <span class="nf">readSubstitutes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subsFile</span><span class="p">):</span>
+
+<div class="viewcode-block" id="GWLobject.readSubstitutes">
+<a class="viewcode-back" href="../../GWL.html#GWL.GWL_parser.GWLobject.readSubstitutes">[docs]</a>
+  <span class="k">def</span><span class="w"> </span><span class="nf">readSubstitutes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subsFile</span><span class="p">):</span>
     <span class="nb">print</span><span class="p">((</span><span class="s1">&#39;Reading substitution pairs from &#39;</span><span class="o">+</span><span class="n">subsFile</span><span class="p">))</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">path_substitutes</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">try</span><span class="p">:</span>
@@ -989,7 +1107,10 @@
 
     <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">path_substitutes</span></div>
 
-<div class="viewcode-block" id="GWLobject.readGWL"><a class="viewcode-back" href="../../GWL.html#GWL.GWL_parser.GWLobject.readGWL">[docs]</a>  <span class="k">def</span> <span class="nf">readGWL</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
+
+<div class="viewcode-block" id="GWLobject.readGWL">
+<a class="viewcode-back" href="../../GWL.html#GWL.GWL_parser.GWLobject.readGWL">[docs]</a>
+  <span class="k">def</span><span class="w"> </span><span class="nf">readGWL</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
     <span class="n">Nvoxels</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="n">write_sequence</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">try</span><span class="p">:</span>
@@ -1184,8 +1305,11 @@
     <span class="c1">#return GWL_voxels</span>
     <span class="k">return</span></div>
 
-<div class="viewcode-block" id="GWLobject.writeGWL"><a class="viewcode-back" href="../../GWL.html#GWL.GWL_parser.GWLobject.writeGWL">[docs]</a>  <span class="k">def</span> <span class="nf">writeGWL</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">writingOffset</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="n">bool_LaserPowerCommand</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+
+<div class="viewcode-block" id="GWLobject.writeGWL">
+<a class="viewcode-back" href="../../GWL.html#GWL.GWL_parser.GWLobject.writeGWL">[docs]</a>
+  <span class="k">def</span><span class="w"> </span><span class="nf">writeGWL</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">writingOffset</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="n">bool_LaserPowerCommand</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Writes out the GWL file.</span>
 <span class="sd">    This function is old and does not use the new power compensation attributes.</span>
 <span class="sd">    </span>
@@ -1250,8 +1374,11 @@
 
         <span class="n">file_object</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;Write</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="GWLobject.writeGWLWithPowerCompensation"><a class="viewcode-back" href="../../GWL.html#GWL.GWL_parser.GWLobject.writeGWLWithPowerCompensation">[docs]</a>  <span class="k">def</span> <span class="nf">writeGWLWithPowerCompensation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+
+<div class="viewcode-block" id="GWLobject.writeGWLWithPowerCompensation">
+<a class="viewcode-back" href="../../GWL.html#GWL.GWL_parser.GWLobject.writeGWLWithPowerCompensation">[docs]</a>
+  <span class="k">def</span><span class="w"> </span><span class="nf">writeGWLWithPowerCompensation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Writes out the GWL file, but using the GWLobject&#39;s attributes related to power compensation.</span>
 <span class="sd">    </span>
 <span class="sd">    .. note:: The latest Nanowrite software supports new commands allowing easy changes to the power compensation (power slope, etc).</span>
@@ -1328,9 +1455,13 @@
             <span class="n">last_power</span> <span class="o">=</span> <span class="n">power</span>
 
         <span class="n">file_object</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;Write</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
-    <span class="k">return</span></div></div>
+    <span class="k">return</span></div>
+</div>
 
-<div class="viewcode-block" id="test1"><a class="viewcode-back" href="../../GWL.html#GWL.GWL_parser.test1">[docs]</a><span class="k">def</span> <span class="nf">test1</span><span class="p">():</span>
+
+<div class="viewcode-block" id="test1">
+<a class="viewcode-back" href="../../GWL.html#GWL.GWL_parser.test1">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">test1</span><span class="p">():</span>
   <span class="c1">#GWL_obj = GWLobject()</span>
   <span class="c1">#GWL_obj.readGWL(sys.argv[1])</span>
   <span class="c1">##print GWL_obj.GWL_voxels</span>
@@ -1428,7 +1559,10 @@
   <span class="n">GWL_obj</span><span class="o">.</span><span class="n">addYblock</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mf">2.75</span><span class="p">],[</span><span class="mi">1</span><span class="p">,</span><span class="mi">20</span><span class="p">,</span><span class="mf">2.75</span><span class="p">],</span><span class="mi">5</span><span class="p">,</span><span class="mf">0.050</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span><span class="mf">0.100</span><span class="p">)</span>
   <span class="n">GWL_obj</span><span class="o">.</span><span class="n">writeGWL</span><span class="p">(</span><span class="s1">&#39;xblock2.gwl&#39;</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="test2"><a class="viewcode-back" href="../../GWL.html#GWL.GWL_parser.test2">[docs]</a><span class="k">def</span> <span class="nf">test2</span><span class="p">():</span>
+
+<div class="viewcode-block" id="test2">
+<a class="viewcode-back" href="../../GWL.html#GWL.GWL_parser.test2">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">test2</span><span class="p">():</span>
   <span class="n">obj</span> <span class="o">=</span> <span class="n">GWLobject</span><span class="p">()</span>
 
   <span class="n">N</span><span class="o">=</span><span class="mi">5</span>
@@ -1470,7 +1604,10 @@
   <span class="n">obj</span><span class="o">.</span><span class="n">writeGWLWithPowerCompensation</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tempfile</span><span class="o">.</span><span class="n">gettempdir</span><span class="p">(),</span> <span class="s1">&#39;test2.gwl&#39;</span><span class="p">))</span>
   <span class="k">return</span></div>
 
-<div class="viewcode-block" id="main"><a class="viewcode-back" href="../../GWL.html#GWL.GWL_parser.main">[docs]</a><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+
+<div class="viewcode-block" id="main">
+<a class="viewcode-back" href="../../GWL.html#GWL.GWL_parser.main">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
   <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">()</span>
   <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;infile&#39;</span><span class="p">)</span>
   <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-W&#39;</span><span class="p">,</span> <span class="s1">&#39;--just-warn&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Continue in case of warnings. (The default is to raise it as an error.)&#39;</span><span class="p">)</span>
@@ -1489,6 +1626,7 @@
   <span class="k">return</span> <span class="mi">0</span></div>
 
 
+
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
   <span class="c1"># .. todo:: Add tests to test suite</span>
   <span class="c1"># test1()</span>
@@ -1496,28 +1634,27 @@
   <span class="n">main</span><span class="p">()</span>
 </pre></div>
 
+            <div class="clearer"></div>
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
         <div class="sphinxsidebarwrapper">
-<div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../../search.html" method="get">
-      <input type="text" name="q" />
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
       <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
     </form>
     </div>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related" role="navigation" aria-label="Related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -1527,12 +1664,13 @@
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="nav-item nav-item-0"><a href="../../index.html">script_inception_public  documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li> 
+          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">GWL.GWL_parser</a></li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2014, Mike Taverne.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.9.
+    &#169; Copyright 2014, Mike Taverne.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
     </div>
   </body>
 </html>

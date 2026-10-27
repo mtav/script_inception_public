@@ -1,23 +1,22 @@
+<!DOCTYPE html>
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en" data-content_root="../../">
   <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>bin.harminv_wrapper &#8212; script_inception_public  documentation</title>
-    <link rel="stylesheet" href="../../_static/classic.css" type="text/css" />
-    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
-    <script type="text/javascript" src="../../_static/jquery.js"></script>
-    <script type="text/javascript" src="../../_static/underscore.js"></script>
-    <script type="text/javascript" src="../../_static/doctools.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../../_static/classic.css?v=2bf1fcf8" />
+    <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+    
+    <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
   </head><body>
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related" role="navigation" aria-label="Related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -27,7 +26,8 @@
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="nav-item nav-item-0"><a href="../../index.html">script_inception_public  documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li> 
+          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">bin.harminv_wrapper</a></li> 
       </ul>
     </div>  
 
@@ -41,10 +41,10 @@
 <span class="c1"># -*- coding: utf-8 -*-</span>
 
 
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">re</span>
-<span class="kn">import</span> <span class="nn">sys</span>
-<span class="kn">import</span> <span class="nn">argparse</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">argparse</span>
 
 <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">Intended to become a harmiv wrapper for Python.</span>
@@ -55,7 +55,9 @@
 <span class="sd">.. todo:: probe list input + more modularization (separate harminv log generation and file comparison)</span>
 <span class="sd">&#39;&#39;&#39;</span>
 
-<div class="viewcode-block" id="getPeaks"><a class="viewcode-back" href="../../bin.html#bin.harminv_wrapper.getPeaks">[docs]</a><span class="k">def</span> <span class="nf">getPeaks</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+<div class="viewcode-block" id="getPeaks">
+<a class="viewcode-back" href="../../bin.html#bin.harminv_wrapper.getPeaks">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">getPeaks</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
   <span class="n">peak_list</span> <span class="o">=</span> <span class="p">[]</span>
   <span class="n">file</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span><span class="s1">&#39;r&#39;</span><span class="p">)</span>
   <span class="n">file</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span>
@@ -71,7 +73,10 @@
   <span class="n">file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
   <span class="k">return</span> <span class="n">peak_list</span></div>
 
-<div class="viewcode-block" id="comparePeaks"><a class="viewcode-back" href="../../bin.html#bin.harminv_wrapper.comparePeaks">[docs]</a><span class="k">def</span> <span class="nf">comparePeaks</span><span class="p">(</span><span class="n">harminv_filename</span><span class="p">,</span> <span class="n">matlab_filename</span><span class="p">,</span> <span class="n">out_filename</span><span class="p">):</span>
+
+<div class="viewcode-block" id="comparePeaks">
+<a class="viewcode-back" href="../../bin.html#bin.harminv_wrapper.comparePeaks">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">comparePeaks</span><span class="p">(</span><span class="n">harminv_filename</span><span class="p">,</span> <span class="n">matlab_filename</span><span class="p">,</span> <span class="n">out_filename</span><span class="p">):</span>
   <span class="n">harminv_peak_list</span> <span class="o">=</span> <span class="n">getPeaks</span><span class="p">(</span><span class="n">harminv_filename</span><span class="p">)</span>
   <span class="n">matlab_peak_list</span> <span class="o">=</span> <span class="n">getPeaks</span><span class="p">(</span><span class="n">matlab_filename</span><span class="p">)</span>
 
@@ -111,7 +116,10 @@
   <span class="c1">#print &quot;SUCCESS&quot;</span>
   <span class="k">return</span> <span class="n">resonance_peak</span></div>
 
-<div class="viewcode-block" id="harminv"><a class="viewcode-back" href="../../bin.html#bin.harminv_wrapper.harminv">[docs]</a><span class="k">def</span> <span class="nf">harminv</span><span class="p">(</span><span class="n">infile</span><span class="p">,</span> <span class="n">outfile</span><span class="p">,</span> <span class="n">parameterFile</span><span class="p">):</span>
+
+<div class="viewcode-block" id="harminv">
+<a class="viewcode-back" href="../../bin.html#bin.harminv_wrapper.harminv">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">harminv</span><span class="p">(</span><span class="n">infile</span><span class="p">,</span> <span class="n">outfile</span><span class="p">,</span> <span class="n">parameterFile</span><span class="p">):</span>
   <span class="n">pattern</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s2">&quot;final: dt=(.*) fmin=(.*) fmax=(.*)&quot;</span><span class="p">)</span>
   
   <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">parameterFile</span><span class="p">):</span>
@@ -146,7 +154,10 @@
       <span class="c1">#~ return comparePeaks(harminv_filename, matlab_filename, out_filename)</span>
       <span class="k">return</span></div>
 
-<div class="viewcode-block" id="harminv_top_probes"><a class="viewcode-back" href="../../bin.html#bin.harminv_wrapper.harminv_top_probes">[docs]</a><span class="k">def</span> <span class="nf">harminv_top_probes</span><span class="p">(</span><span class="nb">dir</span><span class="p">):</span>
+
+<div class="viewcode-block" id="harminv_top_probes">
+<a class="viewcode-back" href="../../bin.html#bin.harminv_wrapper.harminv_top_probes">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">harminv_top_probes</span><span class="p">(</span><span class="nb">dir</span><span class="p">):</span>
   <span class="n">pattern</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s2">&quot;final: dt=(.*) fmin=(.*) fmax=(.*)&quot;</span><span class="p">)</span>
 
   <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Processing &#39;</span><span class="o">+</span><span class="nb">dir</span><span class="p">)</span>
@@ -202,7 +213,10 @@
   <span class="n">out_file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
   <span class="k">return</span> <span class="n">best_peak</span></div>
 
-<div class="viewcode-block" id="batch_harminv"><a class="viewcode-back" href="../../bin.html#bin.harminv_wrapper.batch_harminv">[docs]</a><span class="k">def</span> <span class="nf">batch_harminv</span><span class="p">(</span><span class="n">topdir</span><span class="p">):</span>
+
+<div class="viewcode-block" id="batch_harminv">
+<a class="viewcode-back" href="../../bin.html#bin.harminv_wrapper.batch_harminv">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">batch_harminv</span><span class="p">(</span><span class="n">topdir</span><span class="p">):</span>
   <span class="nb">print</span><span class="p">(</span><span class="n">topdir</span><span class="o">+</span><span class="s1">&#39;resonance_peaks.csv&#39;</span><span class="p">)</span>
   <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">topdir</span><span class="o">+</span><span class="s1">&#39;/&#39;</span><span class="o">+</span><span class="s1">&#39;resonance_peaks.csv&#39;</span><span class="p">,</span><span class="s1">&#39;w&#39;</span><span class="p">)</span>
   <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;pillar</span><span class="se">\t</span><span class="s1">frequency(MHz)</span><span class="se">\t</span><span class="s1">decay_constant</span><span class="se">\t</span><span class="s1">Q</span><span class="se">\t</span><span class="s1">amplitude</span><span class="se">\t</span><span class="s1">phase</span><span class="se">\t</span><span class="s1">error</span><span class="se">\t</span><span class="s1">wavelength(nm)</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
@@ -214,8 +228,11 @@
         <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">n</span><span class="p">))</span>
       <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
   <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+
   
-<div class="viewcode-block" id="main"><a class="viewcode-back" href="../../bin.html#bin.harminv_wrapper.main">[docs]</a><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+<div class="viewcode-block" id="main">
+<a class="viewcode-back" href="../../bin.html#bin.harminv_wrapper.main">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
   <span class="c1"># quick frequency list parser, to check format</span>
   <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">()</span>
   <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;infile&#39;</span><span class="p">)</span>
@@ -246,32 +263,32 @@
     <span class="n">harminv</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">args</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="n">args</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
     <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;SUCCESS&#39;</span><span class="p">)</span></div>
 
+
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
   <span class="n">main</span><span class="p">()</span>
 </pre></div>
 
+            <div class="clearer"></div>
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
         <div class="sphinxsidebarwrapper">
-<div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../../search.html" method="get">
-      <input type="text" name="q" />
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
       <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
     </form>
     </div>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related" role="navigation" aria-label="Related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -281,12 +298,13 @@
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="nav-item nav-item-0"><a href="../../index.html">script_inception_public  documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li> 
+          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">bin.harminv_wrapper</a></li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2014, Mike Taverne.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.9.
+    &#169; Copyright 2014, Mike Taverne.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
     </div>
   </body>
 </html>

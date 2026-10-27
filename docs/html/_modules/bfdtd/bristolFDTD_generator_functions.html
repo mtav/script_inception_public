@@ -1,23 +1,22 @@
+<!DOCTYPE html>
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en" data-content_root="../../">
   <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>bfdtd.bristolFDTD_generator_functions &#8212; script_inception_public  documentation</title>
-    <link rel="stylesheet" href="../../_static/classic.css" type="text/css" />
-    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
-    <script type="text/javascript" src="../../_static/jquery.js"></script>
-    <script type="text/javascript" src="../../_static/underscore.js"></script>
-    <script type="text/javascript" src="../../_static/doctools.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../../_static/classic.css?v=2bf1fcf8" />
+    <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+    
+    <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
   </head><body>
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related" role="navigation" aria-label="Related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -27,7 +26,8 @@
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="nav-item nav-item-0"><a href="../../index.html">script_inception_public  documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li> 
+          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">bfdtd.bristolFDTD_generator_functions</a></li> 
       </ul>
     </div>  
 
@@ -40,14 +40,14 @@
 <span></span><span class="ch">#!/usr/bin/env python3</span>
 <span class="c1"># -*- coding: utf-8 -*-</span>
 
-<span class="kn">import</span> <span class="nn">sys</span>
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">tempfile</span>
-<span class="kn">import</span> <span class="nn">argparse</span>
-<span class="kn">import</span> <span class="nn">textwrap</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">tempfile</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">argparse</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">textwrap</span>
 
-<span class="kn">from</span> <span class="nn">utilities.getuserdir</span> <span class="k">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">utilities.common</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">utilities.getuserdir</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">utilities.common</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
 
 <span class="c1">########################</span>
 <span class="c1"># GENERATOR FUNCTIONS</span>
@@ -59,8 +59,10 @@
 <span class="c1"># measurement objects</span>
 
 <span class="c1"># files</span>
-<div class="viewcode-block" id="GEOcommand"><a class="viewcode-back" href="../../bfdtd.html#bfdtd.bristolFDTD_generator_functions.GEOcommand">[docs]</a><span class="k">def</span> <span class="nf">GEOcommand</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">BASENAME</span><span class="p">):</span>
-  <span class="sd">&#39;&#39;&#39; CMD file generation &#39;&#39;&#39;</span>
+<div class="viewcode-block" id="GEOcommand">
+<a class="viewcode-back" href="../../bfdtd.html#bfdtd.bristolFDTD_generator_functions.GEOcommand">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">GEOcommand</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">BASENAME</span><span class="p">):</span>
+<span class="w">  </span><span class="sd">&#39;&#39;&#39; CMD file generation &#39;&#39;&#39;</span>
 
   <span class="c1">#open file</span>
   <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">FILE</span><span class="p">:</span>
@@ -98,8 +100,11 @@
     <span class="c1">#close file</span>
     <span class="n">FILE</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="GEOin"><a class="viewcode-back" href="../../bfdtd.html#bfdtd.bristolFDTD_generator_functions.GEOin">[docs]</a><span class="k">def</span> <span class="nf">GEOin</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">file_list</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">use_relpath</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-  <span class="sd">&#39;&#39;&#39; IN file generation &#39;&#39;&#39;</span>
+
+<div class="viewcode-block" id="GEOin">
+<a class="viewcode-back" href="../../bfdtd.html#bfdtd.bristolFDTD_generator_functions.GEOin">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">GEOin</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">file_list</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">use_relpath</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">  </span><span class="sd">&#39;&#39;&#39; IN file generation &#39;&#39;&#39;</span>
   
   <span class="c1"># check if file already exists</span>
   <span class="k">if</span> <span class="ow">not</span> <span class="n">overwrite</span> <span class="ow">and</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
@@ -115,8 +120,11 @@
         <span class="n">f_final</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">f</span><span class="p">),</span> <span class="n">start</span><span class="o">=</span><span class="n">dstdir</span><span class="p">)</span>
       <span class="n">FILE</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">f_final</span><span class="p">))</span></div>
 
-<div class="viewcode-block" id="GEOshellscript"><a class="viewcode-back" href="../../bfdtd.html#bfdtd.bristolFDTD_generator_functions.GEOshellscript">[docs]</a><span class="k">def</span> <span class="nf">GEOshellscript</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">BASENAME</span><span class="p">,</span> <span class="n">EXE</span> <span class="o">=</span> <span class="s1">&#39;fdtd&#39;</span><span class="p">,</span> <span class="n">WORKDIR</span> <span class="o">=</span> <span class="s1">&#39;$JOBDIR&#39;</span><span class="p">,</span> <span class="n">WALLTIME</span> <span class="o">=</span> <span class="mi">12</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">PPN</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
-  <span class="sd">&#39;&#39;&#39;</span>
+
+<div class="viewcode-block" id="GEOshellscript">
+<a class="viewcode-back" href="../../bfdtd.html#bfdtd.bristolFDTD_generator_functions.GEOshellscript">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">GEOshellscript</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">BASENAME</span><span class="p">,</span> <span class="n">EXE</span> <span class="o">=</span> <span class="s1">&#39;fdtd&#39;</span><span class="p">,</span> <span class="n">WORKDIR</span> <span class="o">=</span> <span class="s1">&#39;$JOBDIR&#39;</span><span class="p">,</span> <span class="n">WALLTIME</span> <span class="o">=</span> <span class="mi">12</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">PPN</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+<span class="w">  </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">  .. todo:: simplify it + merge with GEOshellscript_advanced by adding options</span>
 <span class="sd">  .. todo:: Test if cd ${PBS_O_WORKDIR} also works if the job is not submitted from the directory containing the script.</span>
 <span class="sd">  &#39;&#39;&#39;</span>
@@ -130,14 +138,14 @@
     <span class="n">FILE</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">textwrap</span><span class="o">.</span><span class="n">dedent</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;</span><span class="se">\</span>
 <span class="s1">    #!/bin/bash</span>
 <span class="s1">    #</span>
-<span class="s1">    #PBS -l nodes=1:ppn=</span><span class="si">{:d}</span><span class="s1"></span>
+<span class="s1">    #PBS -l nodes=1:ppn=</span><span class="si">{:d}</span>
 <span class="s1">    #PBS -l walltime=</span><span class="si">{:d}</span><span class="s1">:00:00</span>
 <span class="s1">    #PBS -mabe</span>
 <span class="s1">    #PBS -joe</span>
 <span class="s1">    #</span>
 <span class="s1">    </span>
-<span class="s1">    export WORKDIR=</span><span class="si">{}</span><span class="s1"></span>
-<span class="s1">    export EXE=</span><span class="si">{}</span><span class="s1"></span>
+<span class="s1">    export WORKDIR=</span><span class="si">{}</span>
+<span class="s1">    export EXE=</span><span class="si">{}</span>
 <span class="s1">    </span>
 <span class="s1">    if [ -z ${{PBS_O_WORKDIR+x}} ]</span>
 <span class="s1">    then</span>
@@ -156,6 +164,7 @@
 <span class="s1">    </span>
 <span class="s1">    $EXE </span><span class="si">{}</span><span class="s1">.in &gt; </span><span class="si">{}</span><span class="s1">.out</span>
 <span class="s1">    &#39;&#39;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">PPN</span><span class="p">,</span> <span class="n">WALLTIME</span><span class="p">,</span> <span class="n">WORKDIR</span><span class="p">,</span> <span class="n">EXE</span><span class="p">,</span> <span class="n">BASENAME</span><span class="p">,</span> <span class="n">BASENAME</span><span class="p">)</span> <span class="p">))</span></div>
+
     
     <span class="c1">##write file</span>
     <span class="c1">#FILE.write(&quot;#!/bin/bash\n&quot;)</span>
@@ -177,8 +186,10 @@
     <span class="c1">##close file</span>
     <span class="c1">#FILE.close()</span>
 
-<div class="viewcode-block" id="GEOshellscript_advanced"><a class="viewcode-back" href="../../bfdtd.html#bfdtd.bristolFDTD_generator_functions.GEOshellscript_advanced">[docs]</a><span class="k">def</span> <span class="nf">GEOshellscript_advanced</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">BASENAME</span><span class="p">,</span> <span class="n">probe_col</span><span class="p">,</span> <span class="n">EXE</span> <span class="o">=</span> <span class="s1">&#39;fdtd&#39;</span><span class="p">,</span> <span class="n">WORKDIR</span> <span class="o">=</span> <span class="s1">&#39;$JOBDIR&#39;</span><span class="p">,</span> <span class="n">WALLTIME</span> <span class="o">=</span> <span class="mi">12</span><span class="p">):</span>
-  <span class="sd">&#39;&#39;&#39;</span>
+<div class="viewcode-block" id="GEOshellscript_advanced">
+<a class="viewcode-back" href="../../bfdtd.html#bfdtd.bristolFDTD_generator_functions.GEOshellscript_advanced">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">GEOshellscript_advanced</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">BASENAME</span><span class="p">,</span> <span class="n">probe_col</span><span class="p">,</span> <span class="n">EXE</span> <span class="o">=</span> <span class="s1">&#39;fdtd&#39;</span><span class="p">,</span> <span class="n">WORKDIR</span> <span class="o">=</span> <span class="s1">&#39;$JOBDIR&#39;</span><span class="p">,</span> <span class="n">WALLTIME</span> <span class="o">=</span> <span class="mi">12</span><span class="p">):</span>
+<span class="w">  </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">  .. todo:: maybe create a submission function in python...</span>
 <span class="sd">  &#39;&#39;&#39;</span>
 
@@ -217,10 +228,13 @@
     <span class="c1">#close file</span>
     <span class="n">FILE</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
 
-<span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="n">argv</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="n">argv</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
   <span class="k">return</span>
 
-<div class="viewcode-block" id="main"><a class="viewcode-back" href="../../bfdtd.html#bfdtd.bristolFDTD_generator_functions.main">[docs]</a><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+<div class="viewcode-block" id="main">
+<a class="viewcode-back" href="../../bfdtd.html#bfdtd.bristolFDTD_generator_functions.main">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
   <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">()</span>
   <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;DSTDIR&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">tempfile</span><span class="o">.</span><span class="n">gettempdir</span><span class="p">(),</span> <span class="n">nargs</span><span class="o">=</span><span class="s1">&#39;?&#39;</span><span class="p">)</span>
   <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-v&#39;</span><span class="p">,</span> <span class="s1">&#39;--verbose&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;count&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;verbosity&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;verbosity level&#39;</span><span class="p">)</span>
@@ -238,32 +252,32 @@
   
   <span class="k">return</span> <span class="mi">0</span></div>
 
+
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
   <span class="n">main</span><span class="p">()</span>
 </pre></div>
 
+            <div class="clearer"></div>
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
         <div class="sphinxsidebarwrapper">
-<div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../../search.html" method="get">
-      <input type="text" name="q" />
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
       <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
     </form>
     </div>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related" role="navigation" aria-label="Related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -273,12 +287,13 @@
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="nav-item nav-item-0"><a href="../../index.html">script_inception_public  documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li> 
+          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">bfdtd.bristolFDTD_generator_functions</a></li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2014, Mike Taverne.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.9.
+    &#169; Copyright 2014, Mike Taverne.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
     </div>
   </body>
 </html>

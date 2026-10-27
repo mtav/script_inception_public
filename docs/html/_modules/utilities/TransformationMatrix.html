@@ -1,23 +1,22 @@
+<!DOCTYPE html>
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en" data-content_root="../../">
   <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>utilities.TransformationMatrix &#8212; script_inception_public  documentation</title>
-    <link rel="stylesheet" href="../../_static/classic.css" type="text/css" />
-    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
-    <script type="text/javascript" src="../../_static/jquery.js"></script>
-    <script type="text/javascript" src="../../_static/underscore.js"></script>
-    <script type="text/javascript" src="../../_static/doctools.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../../_static/classic.css?v=2bf1fcf8" />
+    <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+    
+    <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
   </head><body>
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related" role="navigation" aria-label="Related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -27,7 +26,8 @@
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="nav-item nav-item-0"><a href="../../index.html">script_inception_public  documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li> 
+          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">utilities.TransformationMatrix</a></li> 
       </ul>
     </div>  
 
@@ -37,13 +37,15 @@
           <div class="body" role="main">
             
   <h1>Source code for utilities.TransformationMatrix</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">numpy</span>
-<span class="kn">import</span> <span class="nn">numpy.matlib</span>
-<span class="kn">import</span> <span class="nn">sys</span>
-<span class="kn">import</span> <span class="nn">math</span>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy.matlib</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
 
-<div class="viewcode-block" id="applyTransformation"><a class="viewcode-back" href="../../utilities.html#utilities.TransformationMatrix.applyTransformation">[docs]</a><span class="k">def</span> <span class="nf">applyTransformation</span><span class="p">(</span><span class="n">M</span><span class="p">,</span> <span class="n">voxel</span><span class="p">):</span>
-  <span class="sd">&#39;&#39;&#39;</span>
+<div class="viewcode-block" id="applyTransformation">
+<a class="viewcode-back" href="../../utilities.html#utilities.TransformationMatrix.applyTransformation">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">applyTransformation</span><span class="p">(</span><span class="n">M</span><span class="p">,</span> <span class="n">voxel</span><span class="p">):</span>
+<span class="w">  </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">  Applies 4x4 transformation matrix M to list, array or matrix voxel of size 3 or 4.</span>
 <span class="sd">  </span>
 <span class="sd">  * If voxel is of size 4, the 4th element will not be affected (Useful for power)!</span>
@@ -69,8 +71,11 @@
 
   <span class="k">return</span> <span class="p">[</span><span class="n">location</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span><span class="n">location</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span><span class="n">location</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span><span class="n">power</span><span class="p">]</span></div>
 
-<div class="viewcode-block" id="Identity"><a class="viewcode-back" href="../../utilities.html#utilities.TransformationMatrix.Identity">[docs]</a><span class="k">def</span> <span class="nf">Identity</span><span class="p">(</span><span class="n">size</span><span class="p">):</span>
-  <span class="sd">&#39;&#39;&#39;Create an identity matrix.</span>
+
+<div class="viewcode-block" id="Identity">
+<a class="viewcode-back" href="../../utilities.html#utilities.TransformationMatrix.Identity">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">Identity</span><span class="p">(</span><span class="n">size</span><span class="p">):</span>
+<span class="w">  </span><span class="sd">&#39;&#39;&#39;Create an identity matrix.</span>
 <span class="sd">  </span>
 <span class="sd">  :param int size: The size of the identity matrix to construct [2, 4].</span>
 <span class="sd">  </span>
@@ -78,18 +83,24 @@
 <span class="sd">  :rtype: Matrix</span>
 <span class="sd">  &#39;&#39;&#39;</span>
   <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">matlib</span><span class="o">.</span><span class="n">identity</span><span class="p">(</span><span class="n">size</span><span class="p">)</span></div>
+
     
-<div class="viewcode-block" id="rotationMatrix"><a class="viewcode-back" href="../../utilities.html#utilities.TransformationMatrix.rotationMatrix">[docs]</a><span class="k">def</span> <span class="nf">rotationMatrix</span><span class="p">(</span><span class="n">axis_point</span><span class="p">,</span> <span class="n">axis_direction</span><span class="p">,</span> <span class="n">angle_degrees</span><span class="p">):</span>
-  <span class="sd">&#39;&#39;&#39; return a rotation matrix for a rotation around an arbitrary axis &#39;&#39;&#39;</span>
+<div class="viewcode-block" id="rotationMatrix">
+<a class="viewcode-back" href="../../utilities.html#utilities.TransformationMatrix.rotationMatrix">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">rotationMatrix</span><span class="p">(</span><span class="n">axis_point</span><span class="p">,</span> <span class="n">axis_direction</span><span class="p">,</span> <span class="n">angle_degrees</span><span class="p">):</span>
+<span class="w">  </span><span class="sd">&#39;&#39;&#39; return a rotation matrix for a rotation around an arbitrary axis &#39;&#39;&#39;</span>
   <span class="n">axis_direction</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">axis_direction</span><span class="p">)</span>
   <span class="n">axis_point</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">axis_point</span><span class="p">)</span>
   <span class="n">T</span> <span class="o">=</span> <span class="n">Translation</span><span class="p">(</span><span class="n">axis_point</span><span class="p">)</span>
   <span class="n">Tinv</span> <span class="o">=</span> <span class="n">Translation</span><span class="p">(</span><span class="o">-</span><span class="n">axis_point</span><span class="p">)</span>
   <span class="n">R</span> <span class="o">=</span> <span class="n">Rotation</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="n">angle_degrees</span><span class="p">),</span> <span class="mi">4</span><span class="p">,</span> <span class="n">axis_direction</span><span class="p">)</span>
   <span class="k">return</span> <span class="n">T</span><span class="o">*</span><span class="n">R</span><span class="o">*</span><span class="n">Tinv</span></div>
+
     
-<div class="viewcode-block" id="Rotation"><a class="viewcode-back" href="../../utilities.html#utilities.TransformationMatrix.Rotation">[docs]</a><span class="k">def</span> <span class="nf">Rotation</span><span class="p">(</span><span class="n">angle_rad</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">axis</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
-  <span class="sd">&#39;&#39;&#39;Create a matrix representing a rotation.</span>
+<div class="viewcode-block" id="Rotation">
+<a class="viewcode-back" href="../../utilities.html#utilities.TransformationMatrix.Rotation">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">Rotation</span><span class="p">(</span><span class="n">angle_rad</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">axis</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">  </span><span class="sd">&#39;&#39;&#39;Create a matrix representing a rotation.</span>
 <span class="sd">  </span>
 <span class="sd">  :param float angle_rad: The angle of rotation desired, in radians.</span>
 <span class="sd">  :param int size: The size of the rotation matrix to construct [2, 4].</span>
@@ -198,8 +209,11 @@
   
   <span class="k">return</span> <span class="n">mat</span></div>
 
-<div class="viewcode-block" id="Scale"><a class="viewcode-back" href="../../utilities.html#utilities.TransformationMatrix.Scale">[docs]</a><span class="k">def</span> <span class="nf">Scale</span><span class="p">(</span><span class="n">factor</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-  <span class="sd">&#39;&#39;&#39;Create a matrix representing a scaling.</span>
+
+<div class="viewcode-block" id="Scale">
+<a class="viewcode-back" href="../../utilities.html#utilities.TransformationMatrix.Scale">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">Scale</span><span class="p">(</span><span class="n">factor</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">  </span><span class="sd">&#39;&#39;&#39;Create a matrix representing a scaling.</span>
 <span class="sd">  </span>
 <span class="sd">  :param float factor: The factor of scaling to apply.</span>
 <span class="sd">  :param int size: The size of the scale matrix to construct [2, 4].</span>
@@ -236,8 +250,11 @@
       <span class="n">mat</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">+</span> <span class="p">((</span><span class="n">factor</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">tvec</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">*</span> <span class="n">tvec</span><span class="p">[</span><span class="mi">2</span><span class="p">]))</span>
     <span class="k">return</span> <span class="n">mat</span></div>
 
-<div class="viewcode-block" id="Translation"><a class="viewcode-back" href="../../utilities.html#utilities.TransformationMatrix.Translation">[docs]</a><span class="k">def</span> <span class="nf">Translation</span><span class="p">(</span><span class="n">vector</span><span class="p">):</span>
-  <span class="sd">&#39;&#39;&#39;Create a matrix representing a translation.</span>
+
+<div class="viewcode-block" id="Translation">
+<a class="viewcode-back" href="../../utilities.html#utilities.TransformationMatrix.Translation">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">Translation</span><span class="p">(</span><span class="n">vector</span><span class="p">):</span>
+<span class="w">  </span><span class="sd">&#39;&#39;&#39;Create a matrix representing a translation.</span>
 <span class="sd">  </span>
 <span class="sd">  :param Vector vector: The translation vector.</span>
 <span class="sd">  :return: An identity matrix with a translation.</span>
@@ -249,14 +266,18 @@
   <span class="n">mat</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="n">vector</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
   <span class="k">return</span> <span class="n">mat</span></div>
 
-<div class="viewcode-block" id="Unit"><a class="viewcode-back" href="../../utilities.html#utilities.TransformationMatrix.Unit">[docs]</a><span class="k">def</span> <span class="nf">Unit</span><span class="p">(</span><span class="n">vec</span><span class="p">):</span>
-  <span class="sd">&#39;&#39;&#39; return unit vector parallel to vec. &#39;&#39;&#39;</span>
+
+<div class="viewcode-block" id="Unit">
+<a class="viewcode-back" href="../../utilities.html#utilities.TransformationMatrix.Unit">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">Unit</span><span class="p">(</span><span class="n">vec</span><span class="p">):</span>
+<span class="w">  </span><span class="sd">&#39;&#39;&#39; return unit vector parallel to vec. &#39;&#39;&#39;</span>
   <span class="n">vec</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">vec</span><span class="p">)</span>
   <span class="n">tot</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">vec</span><span class="p">)</span>
   <span class="k">if</span> <span class="n">tot</span> <span class="o">&gt;</span> <span class="mf">0.0</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">vec</span><span class="o">/</span><span class="n">tot</span>
   <span class="k">else</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">vec</span></div>
+
 
   <span class="c1"># potentially faster version (also does not require numpy)</span>
   <span class="c1">#tot = Mag2(vec)</span>
@@ -265,40 +286,45 @@
   <span class="c1">#else:</span>
     <span class="c1">#return vec</span>
 
-<div class="viewcode-block" id="Mag2"><a class="viewcode-back" href="../../utilities.html#utilities.TransformationMatrix.Mag2">[docs]</a><span class="k">def</span> <span class="nf">Mag2</span><span class="p">(</span><span class="n">vec</span><span class="p">):</span>
-  <span class="sd">&#39;&#39;&#39; return the magnitude squared (faster than Mag for comparisons) &#39;&#39;&#39;</span>
+<div class="viewcode-block" id="Mag2">
+<a class="viewcode-back" href="../../utilities.html#utilities.TransformationMatrix.Mag2">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">Mag2</span><span class="p">(</span><span class="n">vec</span><span class="p">):</span>
+<span class="w">  </span><span class="sd">&#39;&#39;&#39; return the magnitude squared (faster than Mag for comparisons) &#39;&#39;&#39;</span>
   <span class="k">return</span> <span class="n">vec</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">vec</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">vec</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">vec</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">vec</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">*</span><span class="n">vec</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span></div>
 
-<div class="viewcode-block" id="Mag"><a class="viewcode-back" href="../../utilities.html#utilities.TransformationMatrix.Mag">[docs]</a><span class="k">def</span> <span class="nf">Mag</span><span class="p">(</span><span class="n">vec</span><span class="p">):</span>
-  <span class="sd">&#39;&#39;&#39; return the magnitude (rho in spherical coordinate system) &#39;&#39;&#39;</span>
+
+<div class="viewcode-block" id="Mag">
+<a class="viewcode-back" href="../../utilities.html#utilities.TransformationMatrix.Mag">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">Mag</span><span class="p">(</span><span class="n">vec</span><span class="p">):</span>
+<span class="w">  </span><span class="sd">&#39;&#39;&#39; return the magnitude (rho in spherical coordinate system) &#39;&#39;&#39;</span>
   <span class="k">return</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">Mag2</span><span class="p">(</span><span class="n">vec</span><span class="p">))</span></div>
+
 
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
   <span class="k">pass</span>
 </pre></div>
 
+            <div class="clearer"></div>
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
         <div class="sphinxsidebarwrapper">
-<div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../../search.html" method="get">
-      <input type="text" name="q" />
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
       <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
     </form>
     </div>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related" role="navigation" aria-label="Related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -308,12 +334,13 @@
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="nav-item nav-item-0"><a href="../../index.html">script_inception_public  documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li> 
+          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">utilities.TransformationMatrix</a></li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2014, Mike Taverne.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.9.
+    &#169; Copyright 2014, Mike Taverne.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
     </div>
   </body>
 </html>
