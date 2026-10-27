@@ -9,6 +9,12 @@ See also: `src/docs/README-doc-generation.txt`
 
 ## SyntaxWarning: invalid-escape-sequence (W605)
 ```
+ruff check --select W605 src
+```
+```
+ruff check --select W605 --fix src
+```
+```
 ruff check --select W605 --fix --unsafe-fixes src
 ```
 

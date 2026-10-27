@@ -188,9 +188,9 @@ def create_wired_mesh(me, thick):
 				f2 = n[f[i]][2]
 				skin_edges(me2, n_idx[k], n_idx[k2], f1, f2)
 
-	print 'vert count', len(me2.verts)
-        print 'edge count', len(me2.edges)
-        print 'face count', len(me2.faces)
+				print('vert count', len(me2.verts))
+				print('edge count', len(me2.edges))
+				print('face count', len(me2.faces))
 
 	scn = bpy.data.scenes.active
 	ob = scn.objects.new(me2, me2.name)
@@ -237,7 +237,7 @@ def main():
 	if is_editmode: Window.EditMode(1)
 
 	# Timing the script is a good way to be aware on any speed hits when scripting
-	print 'My Script finished in %.2f seconds' % (sys.time()-t)
+	print('My Script finished in %.2f seconds' % (sys.time()-t))
 	Window.WaitCursor(0)
 	
 	

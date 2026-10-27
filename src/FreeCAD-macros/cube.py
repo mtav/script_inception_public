@@ -13,7 +13,7 @@ class myCommand(draftTools.Creator):
 
         def __init__(self):
                 # general setup, we define everything we'll need at startup
-                print "Starting command..."
+                print("Starting command...")
                 # The Activated function of the Creator defines several variables such as self.view
                 draftTools.Creator.Activated(self,"Cube")
                 # we use the point UI of the draft Toolbar, which has X,Y and Z input fields
@@ -62,7 +62,7 @@ class myCommand(draftTools.Creator):
                 elif arg["Type"] == "SoMouseButtonEvent":
                         if (arg["State"] == "DOWN") and (arg["Button"] == "BUTTON1"):
                                 # this will be executed in case of mouse button 1 pressed
-                                print "Got point: ",point
+                                print("Got point: ", point)
                                 if len(self.points) == 0:
                                         # this is our first clicked point      
                                         self.linetracker.p1(point)
@@ -124,7 +124,7 @@ class myCommand(draftTools.Creator):
                         r.finalize()
                 # then we call the generic finish function of our creator object
                 draftTools.Creator.finish(self)
-                print "Finished!"
+                print("Finished!")
 
 #  finally, we execute our code!
 myCommand()

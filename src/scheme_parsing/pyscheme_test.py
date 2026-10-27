@@ -8,12 +8,12 @@ import sys
 from glob import glob
 
 def parseFile(filename):
-  print "Processing "+filename;
-  FILE = open(filename,'r');
-  str = FILE.read();
-  FILE.close();
+  print("Processing "+filename)
+  FILE = open(filename,'r')
+  str = FILE.read()
+  FILE.close()
   program = pyscheme.parser.parse('('+str+')')
-  print program
+  print(program)
 
 
 if __name__ == '__main__':
