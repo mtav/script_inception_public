@@ -25,6 +25,14 @@ Example output from **RCD-bandgap-plots-plot.py**:
     * **RCD-bandgap-plots_wrapper.sh** : Bash script running RCD-bandgap-plots.sh for multiple refractive index values and post-processing the data.
     * **quick-demo.sh** : Quick demo script running two radius sweeps and plotting the results.
 
+## Setup
+Add these search paths to your environment, where *SIP_DIR* is where you cloned this repository to:
+```
+export GUILE_LOAD_PATH=${SIP_DIR}/src/MPB/library:.
+export PYTHONPATH=$PYTHONPATH:${SIP_DIR}/src
+export PATH=${PATH}:${SIP_DIR}/src/bin
+```
+
 ## Basic usage:
 ```
 mkdir output-nrod_1.00.nbg_2.40
