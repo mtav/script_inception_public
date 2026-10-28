@@ -1,6 +1,10 @@
 #!/bin/bash
 set -eu
 
+##### Usage:
+# RCD-bandgap-plots.sh NROD NBG RSTART RSTOP RSTEP RESOLUTION KINTERP
+# RCD-bandgap-plots.sh 2.4 1 0 0.30 0.1 16 3
+
 # for c in 1.0 1.1 1.2 1.3 1.4
 # do
 #   mpb _c=${c} woodpile-FCT.ctl | tee woodpile-FCT_c-${c}.log
@@ -16,10 +20,17 @@ set -eu
 # nrod=2.40
 # nbg=1.00
 
+# refractive index values
 nrod=${1:-2.40}
 nbg=${2:-1.00}
+
+# start/stop radius values
 rstart=${3:-0}
 rstop=${4:-0.32}
+
+rstep=${5:-0.01}
+resolution=${6:-100}
+kinterp=${7:-9}
 
 nrod=$(printf "%.2f" ${nrod})
 nbg=$(printf "%.2f" ${nbg})
@@ -41,10 +52,10 @@ FLAGS=""
 # for rn in $(seq 0.24 0.01 0.26)
 # for rn in $(seq 0.15 0.01 0.32)
 # for rn in $(seq 0.00 0.01 0.32)
-for rn in $(seq ${rstart} 0.01 ${rstop})
+for rn in $(seq ${rstart} ${rstep} ${rstop})
 do
   rn_string=$(printf "%.2f" ${rn})
   echo "---> rn=${rn_string} nrod=${nrod} nbg=${nbg}"
-  mpb_wrapper.py ${FLAGS} --outfile "${DSTDIR}/nrod_${nrod}.nbg_${nbg}.rn_${rn_string}.out" r=${rn} inside-index=${nrod} outside-index=${nbg} resolution=100 RCD-bandgap-plots.ctl
+  mpb_wrapper.py ${FLAGS} --outfile "${DSTDIR}/nrod_${nrod}.nbg_${nbg}.rn_${rn_string}.out" r=${rn} inside-index=${nrod} outside-index=${nbg} resolution=${resolution} k-interp=${kinterp} RCD-bandgap-plots.ctl
   rm -v "${DSTDIR}/nrod_${nrod}.nbg_${nbg}.rn_${rn_string}_epsilon.h5"
 done
